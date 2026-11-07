@@ -23,7 +23,6 @@ COPY content/java /app/content/java
 COPY docs/curriculum/sources.md /app/docs/curriculum/sources.md
 RUN useradd --system --uid 10001 academy && chown -R academy /app
 USER academy
-ENV ACADEMY_CONTENT_SHOWUNPUBLISHED=false
 EXPOSE 10000
 # Render sets PORT; the container is sized for a small instance.
 ENTRYPOINT ["sh", "-c", "exec java -XX:MaxRAMPercentage=60 -jar /app/app.jar --server.port=${PORT:-10000}"]

@@ -18,6 +18,9 @@ services:
         fromDatabase: { name: academy-db, property: password }
       - key: ACADEMY_REGISTRATION_OPEN
         value: "false"
+      # Every lesson is still IN_REVIEW; the single learner is also the reviewer, so show them.
+      - key: ACADEMY_CONTENT_SHOWUNPUBLISHED
+        value: "true"
       - key: ACADEMY_OWNER_EMAIL
         sync: false
       - key: ACADEMY_OWNER_PASSWORD
