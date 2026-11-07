@@ -1,0 +1,31 @@
+id: j7-l4.2-write-diff
+type: write
+title: "A useful assertion message"
+lesson: j7-l4.2
+role: ladder
+assesses: [o1]
+concepts: [J7.12]
+evidence: [IMPL]
+misconceptions: [MC177]
+difficulty: 2
+prompt: |
+  A good failing test says where it went wrong. Write `firstDifference(expected, actual)`: `same` if the lists are equal, otherwise `index N: expected X but was Y` for the first position (from 0) where they differ. A list that ends early shows `<missing>` in its place.
+entry:
+  methods:
+    - {name: firstDifference, params: [{name: expected, type: "List<String>"}, {name: actual, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {name: "equal lists", method: firstDifference, args: [["a", "b"], ["a", "b"]], expect: "same"}
+    - {name: "a changed element", method: firstDifference, args: [["a", "b", "c"], ["a", "x", "c"]], expect: "index 1: expected b but was x"}
+    - {name: "the actual list is short", method: firstDifference, args: [["a", "b"], ["a"]], expect: "index 1: expected b but was <missing>"}
+  hidden:
+    - {name: "the actual list is long", method: firstDifference, args: [["a"], ["a", "b"]], expect: "index 1: expected <missing> but was b"}
+    - {name: "both empty", method: firstDifference, args: [[], []], expect: "same"}
+    - {name: "expected is empty", method: firstDifference, args: [[], ["a"]], expect: "index 0: expected <missing> but was a"}
+    - {name: "order matters", method: firstDifference, args: [["a", "b"], ["b", "a"]], expect: "index 0: expected a but was b"}
+    - {name: "the first position", method: firstDifference, args: [["200", "OK"], ["404", "OK"]], expect: "index 0: expected 200 but was 404"}
+    - {name: "an extra element", method: firstDifference, args: [["x", "y", "z"], ["x", "y", "z", "w"]], expect: "index 3: expected <missing> but was w"}
+hints:
+  h1: "Loop to the length of the longer list."
+  h2: "What should be reported for a position one list does not have?"
+ai_assisted: true

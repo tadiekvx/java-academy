@@ -1,0 +1,39 @@
+id: j1-l2.3-modify-pizza
+type: modify
+title: New pizza supplier
+lesson: j1-l2.3
+role: ladder
+assesses: [o4]
+concepts: [J1.02]
+evidence: [MOD]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `pizzasNeeded` works out how many whole pizzas to order so that every person gets
+  `slicesEach` slices. It's correct for pizzas cut into **8** slices.
+
+  The pizzeria has changed supplier, and pizzas are now cut into **6** slices. Change
+  `pizzasNeeded` so it gives the right answer for 6-slice pizzas. It must still round up, so
+  nobody goes without. Update the comment too.
+entry:
+  methods:
+    - name: pizzasNeeded
+      params: [{name: people, type: int}, {name: slicesEach, type: int}]
+      returns: int
+tests:
+  visible:
+    - {name: exactly one pizza, args: [3, 2], expect: 1}
+    - {name: just over one pizza, args: [4, 2], expect: 2}
+    - {name: one hungry person, args: [1, 6], expect: 1}
+  hidden:
+    - {name: nobody, args: [0, 3], expect: 0}
+    - {name: one slice over, args: [1, 7], expect: 2}
+    - {name: twelve slices, args: [3, 4], expect: 2}
+    - {name: six single slices, args: [6, 1], expect: 1}
+    - {name: seven single slices, args: [7, 1], expect: 2}
+    - {name: a big group, args: [12, 3], expect: 6}
+    - {name: twenty-five slices, args: [5, 5], expect: 5}
+hints:
+  h1: Look at the two numbers in the return line. What does each one have to do with the size of a pizza?
+  h2: "The 8 is the slices per pizza, and the 7 is one less than that. Both need to change."
+ai_assisted: true

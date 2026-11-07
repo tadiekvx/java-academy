@@ -1,0 +1,114 @@
+id: j6-a1-slow-report
+title: "The slow, wrong report"
+category: C
+status: in_review
+summary: "Take over an inherited JDBC report: fix a wrong 'null', remove an N+1 loop, and answer a review about injection."
+brief: |
+  You have inherited the customer totals report from a developer who has left. It queries the database through JDBC. Three things are wrong with it, and they arrive as two tickets and a code review:
+
+  1. **A wrong answer** (ticket 611).
+  2. **A slow report** (ticket 612): one query per customer.
+  3. **An unsafe query** (review): the city is joined into the SQL string.
+
+  Fix them one at a time, running all the checks after each, and say in your design note what you would commit separately.
+estimated_hours: 3
+prerequisites: [j6-l1.3, j6-l3.1, j4-l4.2, j6-l4.2]
+concepts: [J6.03, J6.08, J6.12]
+requirements:
+  - "A customer with no open account shows `0.00`."
+  - "The report runs one query, not one per customer."
+  - "The city is a bound parameter, and `null` still means every customer."
+constraints:
+  - "Fix one ticket at a time."
+  - "Run all the checks after every change."
+acceptance:
+  - "Given a customer without open accounts, then the report shows 0.00."
+  - "Given the report, then it is one joined, grouped query."
+  - "Given a city with an apostrophe, then the report works."
+milestones:
+  - id: m1
+    title: "Ticket 611: 'null' in the report"
+    instructions: |
+      **Ticket 611:** *"The customer totals report prints `Alan Turing|null` and `Barbara Liskov|null`. A customer with no open account should show `0.00`."*
+
+      Reproduce it with `customerTotals(null)`, find the cause, and make the smallest fix. Don't restructure anything yet.
+    entry:
+      methods:
+        - {name: customerTotals, params: [{name: city, type: "String"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "every customer", method: customerTotals, args: [null], expect: ["Ada Lovelace|1250.00", "Alan Turing|0.00", "Barbara Liskov|0.00", "Edsger Dijkstra|780.25", "Grace Hopper|300.50"]}
+        - {name: "one city", method: customerTotals, args: ["Cape Town"], expect: ["Ada Lovelace|1250.00", "Edsger Dijkstra|780.25"]}
+        - {name: "a customer with no open account", method: customerTotals, args: ["Durban"], expect: ["Barbara Liskov|0.00"]}
+      hidden:
+        - {name: "one customer with one account", method: customerTotals, args: ["Johannesburg"], expect: ["Grace Hopper|300.50"]}
+        - {name: "an unknown city", method: customerTotals, args: ["Nowhere"], expect: []}
+        - {name: "an empty city", method: customerTotals, args: [""], expect: []}
+        - {name: "case matters", method: customerTotals, args: ["cape town"], expect: []}
+        - {name: "every customer again", method: customerTotals, args: [null], expect: ["Ada Lovelace|1250.00", "Alan Turing|0.00", "Barbara Liskov|0.00", "Edsger Dijkstra|780.25", "Grace Hopper|300.50"]}
+  - id: m2
+    title: "Ticket 612: it is slow"
+    instructions: |
+      **Ticket 612:** *"The report takes forever on the real database: it runs one extra query for every customer."* That is the N+1 pattern from the lessons.
+
+      Replace the loop with **one query** that joins customers to their open accounts and groups by customer. Keep every answer the same, including customers with no open account. The check looks for `LEFT JOIN` and `GROUP BY` in your source.
+    entry:
+      methods:
+        - {name: customerTotals, params: [{name: city, type: "String"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "every customer", method: customerTotals, args: [null], expect: ["Ada Lovelace|1250.00", "Alan Turing|0.00", "Barbara Liskov|0.00", "Edsger Dijkstra|780.25", "Grace Hopper|300.50"]}
+        - {name: "one city", method: customerTotals, args: ["Cape Town"], expect: ["Ada Lovelace|1250.00", "Edsger Dijkstra|780.25"]}
+        - {name: "a customer with no open account", method: customerTotals, args: ["Durban"], expect: ["Barbara Liskov|0.00"]}
+        - {name: "one joined, grouped query", source_contains: ["LEFT JOIN", "GROUP BY"]}
+      hidden:
+        - {name: "one customer with one account", method: customerTotals, args: ["Johannesburg"], expect: ["Grace Hopper|300.50"]}
+        - {name: "an unknown city", method: customerTotals, args: ["Nowhere"], expect: []}
+        - {name: "an empty city", method: customerTotals, args: [""], expect: []}
+        - {name: "case matters", method: customerTotals, args: ["cape town"], expect: []}
+        - {name: "every customer again", method: customerTotals, args: [null], expect: ["Ada Lovelace|1250.00", "Alan Turing|0.00", "Barbara Liskov|0.00", "Edsger Dijkstra|780.25", "Grace Hopper|300.50"]}
+  - id: m3
+    title: "Review: do not build SQL from the city"
+    instructions: |
+      The reviewer writes:
+
+      > *"The city goes straight into the SQL string. A city like `Cote d'Ivoire` breaks the query, and a crafted value can do worse. Please use a bound parameter."*
+
+      Bind the city as a parameter. `null` must still mean every customer.
+    entry:
+      methods:
+        - {name: customerTotals, params: [{name: city, type: "String"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "every customer", method: customerTotals, args: [null], expect: ["Ada Lovelace|1250.00", "Alan Turing|0.00", "Barbara Liskov|0.00", "Edsger Dijkstra|780.25", "Grace Hopper|300.50"]}
+        - {name: "one city", method: customerTotals, args: ["Cape Town"], expect: ["Ada Lovelace|1250.00", "Edsger Dijkstra|780.25"]}
+        - {name: "a customer with no open account", method: customerTotals, args: ["Durban"], expect: ["Barbara Liskov|0.00"]}
+        - {name: "no concatenated city", source_not_contains: ["c.city = '\" + city"]}
+      hidden:
+        - {name: "one customer with one account", method: customerTotals, args: ["Johannesburg"], expect: ["Grace Hopper|300.50"]}
+        - {name: "an unknown city", method: customerTotals, args: ["Nowhere"], expect: []}
+        - {name: "an empty city", method: customerTotals, args: [""], expect: []}
+        - {name: "case matters", method: customerTotals, args: ["cape town"], expect: []}
+        - {name: "every customer again", method: customerTotals, args: [null], expect: ["Ada Lovelace|1250.00", "Alan Turing|0.00", "Barbara Liskov|0.00", "Edsger Dijkstra|780.25", "Grace Hopper|300.50"]}
+        - {name: "a city with an apostrophe", method: customerTotals, args: ["Cote d'Ivoire"], expect: []}
+        - {name: "an injection attempt matches nothing", method: customerTotals, args: ["' OR '1'='1"], expect: []}
+rubric:
+  - criterion: "Reproduce, then fix"
+    zero: "Changed code without reproducing the ticket"
+    one: "Fixed it but did not show the failing call first"
+    two: "Reproduced the ticket with a specific call, found the cause, made the smallest fix"
+  - criterion: "Removing N+1"
+    zero: "Left the per-customer query in place"
+    one: "Reduced the queries but changed an answer"
+    two: "One grouped query, every earlier check still passing"
+  - criterion: "Handling review"
+    zero: "Ignored the comment, or broke the null case"
+    one: "Bound the parameter but changed behaviour"
+    two: "Bound parameter, null still means all customers, apostrophes work"
+  - criterion: "Design note"
+    zero: "Missing or only describes the code"
+    one: "Describes the changes but not the reasoning"
+    two: "Explains the three causes and how each fix was kept separate and checked"
+design_note_prompt: |
+  In 150 words or fewer: What caused the 'null'? Why does a loop of queries get slower with more customers, and how did your query avoid it? Why is a bound parameter safer than a quoted string? What would your commits have been?
+ai_assisted: true

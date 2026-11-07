@@ -1,0 +1,35 @@
+id: j1-l7.3-write-check
+type: write
+title: "Your own check helper"
+lesson: j1-l7.3
+role: ladder
+assesses: [o1]
+concepts: [J1.14]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `check(String name, int expected, int actual)` so that it **returns** a `String`:
+
+  - if `expected` equals `actual`: `PASS ` followed by the name;
+  - otherwise: `FAIL ` followed by the name, then `: expected `, the expected value, ` but got `, and the actual value.
+
+  For example, `check("sum", 5, 6)` returns `FAIL sum: expected 5 but got 6`.
+entry:
+  methods:
+    - {name: check, params: [{name: name, type: "String"}, {name: expected, type: "int"}, {name: actual, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: check, args: ["sum", 5, 5], expect: "PASS sum"}
+    - {method: check, args: ["sum", 5, 6], expect: "FAIL sum: expected 5 but got 6"}
+    - {method: check, args: ["zero", 0, 0], expect: "PASS zero"}
+  hidden:
+    - {method: check, args: ["negative", -3, -3], expect: "PASS negative"}
+    - {method: check, args: ["big", 1000, 999], expect: "FAIL big: expected 1000 but got 999"}
+    - {method: check, args: ["a b", 7, 8], expect: "FAIL a b: expected 7 but got 8"}
+    - {method: check, args: ["same", 42, 42], expect: "PASS same"}
+    - {method: check, args: ["swap", 10, 3], expect: "FAIL swap: expected 10 but got 3"}
+hints:
+  h1: "Compare first. For the failing case, join the pieces carefully, with the exact spaces and colon."
+  h2: "if (expected == actual) return \"PASS \" + name; return \"FAIL \" + name + \": expected \" + expected + \" but got \" + actual;"
+ai_assisted: true

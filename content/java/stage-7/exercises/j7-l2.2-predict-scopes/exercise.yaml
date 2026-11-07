@@ -1,0 +1,21 @@
+id: j7-l2.2-predict-scopes
+type: predict
+title: "One instance or many"
+lesson: j7-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J7.06]
+evidence: [MIST]
+misconceptions: [MC171]
+difficulty: 1
+prompt: |
+  A hand-written container hands out a bean either as a singleton (one per name) or as a prototype (a new one every time). Predict the exact output.
+expected_output: |
+  same singleton=true
+  same prototype=false
+  created=3
+  ids=1,1,2,3
+hints:
+  h1: "How many objects does the singleton call create, however often it is asked?"
+  h2: "What does the static counter record?"
+ai_assisted: true

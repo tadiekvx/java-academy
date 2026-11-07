@@ -1,0 +1,31 @@
+id: j1-l2.4-retrieve-username
+type: write
+title: "Usernames"
+lesson: j1-l2.4
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: string-building
+prompt: |
+  Complete `username` so it returns the first letter of the first name followed by the whole last name, all in lower case. For example, `username("Grace", "Hopper")` should be `"ghopper"`.
+entry:
+  methods:
+    - {name: username, params: [{name: first, type: "String"}, {name: last, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["Grace", "Hopper"], expect: "ghopper"}
+    - {args: ["ada", "LOVELACE"], expect: "alovelace"}
+    - {args: ["Linus", "Torvalds"], expect: "ltorvalds"}
+  hidden:
+    - {name: "one-letter names", args: ["A", "B"], expect: "ab"}
+    - {name: "long names", args: ["Margaret", "Hamilton"], expect: "mhamilton"}
+    - {name: "odd capitals", args: ["kEN", "tHOMPSON"], expect: "kthompson"}
+    - {name: "another name", args: ["Barbara", "Liskov"], expect: "bliskov"}
+    - {name: "and another", args: ["Dennis", "Ritchie"], expect: "dritchie"}
+hints:
+  h1: "You need the first character of one string, joined to another string, then everything in lower case."
+  h2: "Join first.charAt(0) and last, put that in parentheses, and call toLowerCase() on it."
+ai_assisted: true

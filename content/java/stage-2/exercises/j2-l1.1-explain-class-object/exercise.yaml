@@ -1,0 +1,32 @@
+id: j2-l1.1-explain-class-object
+type: explain
+title: "Class, object, constructor"
+lesson: j2-l1.1
+role: ladder
+assesses: [o3]
+concepts: [J2.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A friend says: "I don't get what the difference is between a class and an object, and why I need a constructor." Using a `Student` class with a `name` and a `grade` as your example, explain (a) what the class is, (b) what an object is and how you make one, and (c) what the constructor does and what goes wrong without one.
+rubric:
+  criteria: |
+    A full answer says the class is the blueprint describing the fields every student has; an object is one actual student made with new, with its own values; and the constructor runs when you write new and sets the fields so the object starts in a usable state (without it, fields hold defaults such as null and 0 until you set each by hand).
+  levels:
+    - score: 2
+      descriptor: "Explains the class as the description and the object as one instance made with new with its own field values, and says the constructor sets up the fields when new runs, with the default values as the alternative."
+      samples:
+        - "The Student class describes what every student has: a name and a grade. An object is one particular student, made with new Student(\"Ada\", 90), and it has its own name and grade. The constructor runs when new is called and sets those fields, so without it the fields would just be null and 0 until I set each one myself."
+        - "A class is a blueprint and an object is a thing built from it. I can build many students from one class and each keeps its own values. The constructor is the code that fills in the name and grade at the moment of new, so the student is ready to use straight away."
+    - score: 1
+      descriptor: "Explains one or two of the three ideas correctly, but confuses class and object or doesn't say what the constructor does."
+      samples:
+        - "A class is like an object."
+        - "The constructor makes the object."
+    - score: 0
+      descriptor: "Incorrect, for example says an object is a kind of variable type or that a constructor deletes the object."
+      samples:
+        - "An object is the blueprint."
+        - "A constructor ends the program."
+ai_assisted: true

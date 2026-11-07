@@ -1,0 +1,21 @@
+id: j10-l1.2-predict-ports
+type: predict
+title: "One service, two adapters"
+lesson: j10-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J10.02]
+evidence: [MIST]
+misconceptions: [MC199]
+difficulty: 1
+prompt: |
+  `TransferService` knows only the `Ledger` port. The program wires it once to an in-memory adapter and once to an adapter that always fails. Predict the exact output.
+expected_output: |
+  ok
+  rejected
+  entries=[a->b:50]
+  unavailable
+hints:
+  h1: "Which transfers reach the ledger at all?"
+  h2: "What does the service do when the adapter throws?"
+ai_assisted: true

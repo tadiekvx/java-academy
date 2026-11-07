@@ -1,0 +1,20 @@
+id: j6-l2.2-predict-visibility
+type: predict
+title: "What a second connection sees"
+lesson: j6-l2.2
+role: ladder
+assesses: [o3]
+concepts: [J6.06]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Two connections, one transaction. The first inserts an account and then a transaction that the constraint rejects; the rollback should undo the first statement. Predict what the second connection sees afterwards.
+expected_output: |
+  own accounts=5
+  accounts=5
+  transactions=6
+hints:
+  h1: "What does a rollback undo?"
+  h2: "What does the second connection see before a commit?"
+ai_assisted: true

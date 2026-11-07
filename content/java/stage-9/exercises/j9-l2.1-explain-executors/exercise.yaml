@@ -1,0 +1,32 @@
+id: j9-l2.1-explain-executors
+type: explain
+title: "Why not just new Thread"
+lesson: j9-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J9.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A service handles each incoming task with `new Thread(task).start()`. Explain three problems with this once the load grows, and how an `ExecutorService` addresses each. Say what `Future.get()` gives you that a bare thread does not, and what happens if you forget to shut an executor down.
+rubric:
+  criteria: |
+    Creating a thread per task is expensive and unbounded: a burst can create thousands of threads and exhaust memory, there is no queue or limit, and results and exceptions are lost because Runnable returns nothing. An ExecutorService reuses a fixed number of threads, queues extra tasks, and returns a Future per task: get() waits for the result and rethrows a task's exception wrapped in an ExecutionException. An executor that is never shut down keeps its worker threads alive, so the program may not exit; ExecutorService can be shut down (shutdown lets submitted tasks finish) and is AutoCloseable.
+  levels:
+    - score: 2
+      descriptor: "The answer gives three problems with per-task threads, matches each executor feature, and explains get() and shutdown."
+      samples:
+        - "Thread per task is costly to create, unbounded (a burst can run out of memory) and gives no way to return a value or an exception. An executor reuses a fixed set of threads, queues the rest, and returns a Future: get() waits for the result and rethrows failures as ExecutionException. If you never shut it down its worker threads keep the program alive, so use shutdown or try-with-resources."
+        - "Creation cost, no limit and no results. A pool bounds the threads and queues work, and futures carry the value or the error. Forgetting to close leaves non-daemon workers running."
+    - score: 1
+      descriptor: "The answer names some problems or features without linking them."
+      samples:
+        - "Executors reuse threads, which is faster."
+        - "Futures let you get a result."
+    - score: 0
+      descriptor: "The answer sees no benefit."
+      samples:
+        - "new Thread is simpler and just as good."
+        - "Executors are only for very large programs."
+ai_assisted: true

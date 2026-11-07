@@ -1,0 +1,32 @@
+id: j5-l3.1-explain-stack
+type: explain
+title: "Frames and overflow"
+lesson: j5-l3.1
+role: ladder
+assesses: [o3]
+concepts: [J5.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) What two parts must a correct recursive method have? (b) What is a stack frame, and what happens to the frames when the base case is reached? (c) A recursive method that is correct for small inputs throws `StackOverflowError` for an input of 500,000. Why does that happen, and what could you do?
+rubric:
+  criteria: |
+    A full answer says a base case and a recursive case that moves toward it; that each call gets a frame holding its own variables, piled up until the base case answers and then unwound with each returning to the one below; and that a very deep recursion needs more frames than the stack allows so it overflows, and you can rewrite it as a loop (or reduce the depth, for example by halving).
+  levels:
+    - score: 2
+      descriptor: "States base case and progress-making recursive case, explains frames pile up with their own variables and unwind after the base case, and explains that depth 500,000 exceeds the stack's limit with a fix such as a loop or a halving approach."
+      samples:
+        - "It needs a base case and a recursive case that makes the problem smaller. Each call gets its own stack frame with its own variables; they pile up until the base case returns, then they unwind one by one. With 500,000 levels there are too many frames for the stack, so it throws StackOverflowError. I could turn it into a loop, or change the algorithm so the depth is smaller, like halving the problem."
+        - "A base case and a recursive step towards it. Frames hold each call's locals, stack up, and unwind after the base case. 500,000 deep is more than the stack allows, so use a loop instead."
+    - score: 1
+      descriptor: "Answers two of the three parts well, or gives the right ideas without a fix."
+      samples:
+        - "A base case and a recursive case."
+        - "It overflows because it is too deep."
+    - score: 0
+      descriptor: "Incorrect, for example says the stack frames are deleted by the garbage collector, or that StackOverflowError means the base case was reached."
+      samples:
+        - "A StackOverflowError means it finished."
+        - "You need to add more memory to the loop."
+ai_assisted: true

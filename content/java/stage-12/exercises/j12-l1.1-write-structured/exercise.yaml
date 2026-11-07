@@ -1,0 +1,32 @@
+id: j12-l1.1-write-structured
+type: write
+title: "A log line a machine can read"
+lesson: j12-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J12.01]
+evidence: [IMPL]
+misconceptions: [MC214]
+difficulty: 3
+prompt: |
+  Free-text logs are hard to search. A structured log line is one JSON object per event. Write `structuredLog(level, message, fields)` returning an object with `level` first, `message` second, then one member per field in order. Each field is `key=value` (split at the **first** `=`). A value that is a whole number (optionally with a leading minus) is written as a JSON number, anything else as a string. Escape `"` and `\` in strings. No spaces in the output.
+entry:
+  methods:
+    - {name: structuredLog, params: [{name: level, type: "String"}, {name: message, type: "String"}, {name: fields, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {name: "numbers stay numbers", method: structuredLog, args: ["INFO", "transfer applied", ["account=7", "cents=500"]], expect: "{\"level\":\"INFO\",\"message\":\"transfer applied\",\"account\":7,\"cents\":500}"}
+    - {name: "a string and a number", method: structuredLog, args: ["WARN", "slow query", ["table=transactions", "ms=2100"]], expect: "{\"level\":\"WARN\",\"message\":\"slow query\",\"table\":\"transactions\",\"ms\":2100}"}
+    - {name: "no fields", method: structuredLog, args: ["INFO", "started", []], expect: "{\"level\":\"INFO\",\"message\":\"started\"}"}
+  hidden:
+    - {name: "quotes in the message", method: structuredLog, args: ["ERROR", "said \"no\"", ["who=ada"]], expect: "{\"level\":\"ERROR\",\"message\":\"said \\\"no\\\"\",\"who\":\"ada\"}"}
+    - {name: "a backslash in a value", method: structuredLog, args: ["INFO", "x", ["path=C:\\temp"]], expect: "{\"level\":\"INFO\",\"message\":\"x\",\"path\":\"C:\\\\temp\"}"}
+    - {name: "an equals sign in a value", method: structuredLog, args: ["INFO", "x", ["expr=a=b"]], expect: "{\"level\":\"INFO\",\"message\":\"x\",\"expr\":\"a=b\"}"}
+    - {name: "negative and zero-padded numbers", method: structuredLog, args: ["INFO", "x", ["delta=-5", "id=007"]], expect: "{\"level\":\"INFO\",\"message\":\"x\",\"delta\":-5,\"id\":007}"}
+    - {name: "an empty value is a string", method: structuredLog, args: ["INFO", "x", ["empty="]], expect: "{\"level\":\"INFO\",\"message\":\"x\",\"empty\":\"\"}"}
+    - {name: "non-ASCII text is kept", method: structuredLog, args: ["INFO", "café", ["city=Zürich"]], expect: "{\"level\":\"INFO\",\"message\":\"café\",\"city\":\"Zürich\"}"}
+    - {name: "a decimal is treated as a string here", method: structuredLog, args: ["INFO", "x", ["ratio=1.5"]], expect: "{\"level\":\"INFO\",\"message\":\"x\",\"ratio\":\"1.5\"}"}
+hints:
+  h1: "Build the text by appending pieces in order."
+  h2: "Check the value with a regular expression for a whole number."
+ai_assisted: true

@@ -1,0 +1,38 @@
+id: j1-l2.2-retrieve-steps
+type: write
+title: Step counter
+lesson: j1-l2.2
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.03]
+evidence: [IMPL]
+misconceptions: [MC01]
+difficulty: 2
+variant_group: variable-updates
+prompt: |
+  Your step counter shows `start` steps when you wake up. Then, in this order:
+
+  1. you walk to school: 1200 steps,
+  2. you go for a run: 3400 steps,
+  3. the counter corrects itself by taking away 500 steps it counted twice.
+
+  Complete `stepsAtBedtime` so it returns the count at the end of the day. Use a variable and
+  update it one step at a time. For example, `stepsAtBedtime(10)` is `4110`.
+entry:
+  methods:
+    - {name: stepsAtBedtime, params: [{name: start, type: int}], returns: int}
+tests:
+  visible:
+    - {args: [0], expect: 4100}
+    - {args: [1], expect: 4101}
+    - {args: [10], expect: 4110}
+  hidden:
+    - {name: five, args: [5], expect: 4105}
+    - {name: a hundred, args: [100], expect: 4200}
+    - {name: a negative start, args: [-11], expect: 4089}
+    - {name: three, args: [3], expect: 4103}
+    - {name: fifty, args: [50], expect: 4150}
+hints:
+  h1: Create a variable holding start, then write one line per change.
+  h2: "steps = steps + 1200; then + 3400; then - 500; then return steps."
+ai_assisted: true

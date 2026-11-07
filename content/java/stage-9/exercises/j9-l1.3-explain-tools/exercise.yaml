@@ -1,0 +1,32 @@
+id: j9-l1.3-explain-tools
+type: explain
+title: "Lock, atomic or neither"
+lesson: j9-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J9.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  For each situation say whether you would use a `synchronized` block (or a `ReentrantLock`), an atomic class, or no coordination at all, and why: (a) a request counter incremented by many threads; (b) moving money between two accounts, which must change two balances together; (c) a list of results that each worker thread builds privately and the main thread reads after joining.
+rubric:
+  criteria: |
+    (a) An atomic: one variable, one update, and the atomic classes support lock-free thread-safe updates of single variables. (b) A lock: two variables must change together, which an atomic on each cannot guarantee; hold a lock around both changes (and, with more than one lock, take them in a fixed order, next lessons). (c) None: no data is shared while the workers run, and join gives the reader a safe view afterwards.
+  levels:
+    - score: 2
+      descriptor: "The answer chooses correctly for all three with the reason (single variable, multi-variable invariant, no sharing)."
+      samples:
+        - "(a) AtomicLong or LongAdder: a single variable updated in one step, no lock needed. (b) A lock around both balance changes, because the two variables must change together and atomics on each cannot ensure that. (c) Nothing: each worker owns its list and join makes the results visible, so there is no sharing to protect."
+        - "Counter: atomic. Transfer: synchronized or a ReentrantLock covering both accounts, since it is a multi-variable invariant. Private result lists: no coordination, thread confinement plus join."
+    - score: 1
+      descriptor: "The answer chooses correctly for two of the three or gives no reasons."
+      samples:
+        - "Atomic for the counter and a lock for the transfer."
+        - "Use synchronized everywhere to be safe."
+    - score: 0
+      descriptor: "The answer misjudges the cases."
+      samples:
+        - "No coordination is needed for any of them as long as the code is fast."
+        - "An atomic is enough for the money transfer."
+ai_assisted: true

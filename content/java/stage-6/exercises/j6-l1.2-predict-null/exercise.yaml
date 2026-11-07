@@ -1,0 +1,22 @@
+id: j6-l1.2-predict-null
+type: predict
+title: "What does a query with NULL return"
+lesson: j6-l1.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J6.02]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below runs four queries over the small bank fixture: an equality against the NULL city, an `IS NULL` check, a `NOT IN` whose subquery contains that NULL, and two count queries. Predict the exact output.
+expected_output: |
+  equal null=0
+  is null=1
+  not in=0
+  count rows=5
+  count named=5|4
+hints:
+  h1: "Why does `city = NULL` return nothing?"
+  h2: "What does `COUNT(city)` count?"
+ai_assisted: true

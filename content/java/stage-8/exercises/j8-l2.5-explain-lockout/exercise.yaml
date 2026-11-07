@@ -1,0 +1,32 @@
+id: j8-l2.5-explain-lockout
+type: explain
+title: "Lockout and its cost"
+lesson: j8-l2.5
+role: ladder
+assesses: [o1, o2]
+concepts: [J8.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team locks an account for 30 minutes after 5 failed logins, counting failures per source IP address, and shows the message 'No account with that email' for unknown users. Explain two weaknesses in what they built, and one cost of lockout itself that the team should plan for.
+rubric:
+  criteria: |
+    Counting per IP address lets an attacker rotate through many addresses and still try unlimited passwords against one account; the OWASP guidance says the counter should belong to the account. The specific message tells an attacker which email addresses have accounts (user enumeration); responses must be generic whatever the reason. A cost of lockout is that an attacker can lock out real customers on purpose by failing logins for their account, a denial of service, so the team needs a recovery path (for example a timed unlock or a reset flow) and monitoring.
+  levels:
+    - score: 2
+      descriptor: "The answer names both weaknesses with the reason, and a cost of lockout."
+      samples:
+        - "Per-IP counting can be beaten with many addresses, so the counter should be per account. 'No account with that email' lets an attacker find which emails are registered, so every failure should look the same. Lockout can itself be abused to lock real users out, so there needs to be a timed unlock or recovery."
+        - "The failure count should follow the account, not the IP, or an attacker can spread guesses over many IPs. The message enumerates users; use one generic message. The cost: deliberately failing logins can lock a customer out, so plan recovery and alerts."
+    - score: 1
+      descriptor: "The answer names one weakness or no cost."
+      samples:
+        - "The message gives away which emails exist."
+        - "Count per account instead of per IP."
+    - score: 0
+      descriptor: "The answer approves the design."
+      samples:
+        - "It is helpful to tell users exactly what was wrong."
+        - "Per IP is the best way to block attackers."
+ai_assisted: true

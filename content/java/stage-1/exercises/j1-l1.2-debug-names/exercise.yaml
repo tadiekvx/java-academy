@@ -1,0 +1,26 @@
+id: j1-l1.2-debug-names
+type: debug
+title: Names that don't exist
+lesson: j1-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J1.13, J1.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 1
+prompt: |
+  This program should print two lines, but Java says it `cannot find symbol`. Read each error,
+  including the `symbol:` line, and fix the program so it prints:
+  
+  ```
+  Names matter
+  Capitals matter too
+  ```
+tests:
+  visible:
+    - {name: prints the right lines, stdin: "", stdout_equals: "Names matter\nCapitals matter too"}
+starter_compiles: false
+hints:
+  h1: "Look at the symbol: line under each error. Which name couldn't Java find?"
+  h2: "One line uses io with a lower-case i; the other spells println with a capital I instead of a lower-case l."
+ai_assisted: true

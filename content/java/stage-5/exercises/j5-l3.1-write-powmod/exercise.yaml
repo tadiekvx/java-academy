@@ -1,0 +1,32 @@
+id: j5-l3.1-write-powmod
+type: write
+title: "Fast power, recursively"
+lesson: j5-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J5.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `powMod(base, exp, mod)`: `base` raised to the power `exp`, **remainder `mod`**, using recursion that **halves `exp`** each time (`base^exp = (base^(exp/2))²`, times another `base` if `exp` is odd). `exp` goes up to 10^18, so multiplying `exp` times is impossible. Take the remainder at each step so numbers stay below `mod²`. (`mod` is at most 10^9.)
+entry:
+  methods:
+    - {name: powMod, params: [{name: base, type: "long"}, {name: exp, type: "long"}, {name: mod, type: "long"}], returns: "long"}
+tests:
+  visible:
+    - {method: powMod, args: [2, 10, 1000], expect: 24}
+    - {method: powMod, args: [3, 0, 7], expect: 1}
+    - {method: powMod, args: [5, 3, 13], expect: 8}
+  hidden:
+    - {method: powMod, args: [2, 1000000000000000000, 1000000007], expect: 719476260}
+    - {method: powMod, args: [7, 123456789012345678, 998244353], expect: 531087328}
+    - {method: powMod, args: [10, 1, 7], expect: 3}
+    - {method: powMod, args: [1, 1000000000000000000, 5], expect: 1}
+    - {method: powMod, args: [999999999, 999999999999999999, 1000000000], expect: 999999999}
+    - {method: powMod, args: [0, 5, 3], expect: 0}
+    - {method: powMod, args: [6, 0, 1], expect: 0}
+hints:
+  h1: "Base case: exp 0 gives 1 (mod mod). Otherwise compute the power of exp / 2, square it, and multiply by base once more when exp is odd."
+  h2: "long half = powMod(base, exp / 2, mod); long result = half * half % mod; if (exp % 2 == 1) result = result * (base % mod) % mod;"
+ai_assisted: true

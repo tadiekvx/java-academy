@@ -1,0 +1,32 @@
+id: j3-l1.1-explain-choose
+type: explain
+title: "Which collection?"
+lesson: j3-l1.1
+role: ladder
+assesses: [o3]
+concepts: [J3.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Choose a collection for each of these, and say why: (a) the last ten pages a user visited, newest last, where visiting the same page twice counts twice; (b) the set of user ids that have already claimed a coupon, where only "has this id claimed it?" matters; (c) a list of tags with no repeats, shown in the order the author typed them; (d) the unique words in a text, shown alphabetically.
+rubric:
+  criteria: |
+    A full answer chooses List/ArrayList for (a) because order and duplicates matter, a HashSet (or any Set) for (b) because only membership matters, LinkedHashSet for (c) for no duplicates in insertion order, and TreeSet for (d) for unique and sorted.
+  levels:
+    - score: 2
+      descriptor: "Gives List for (a), a Set such as HashSet for (b), LinkedHashSet for (c) and TreeSet for (d), each with a correct reason about order, duplicates or membership."
+      samples:
+        - "(a) an ArrayList, because order and repeats matter. (b) a HashSet, because I only need to ask whether an id is in it. (c) a LinkedHashSet, which drops repeats and keeps insertion order. (d) a TreeSet, which keeps unique items sorted."
+        - "(a) List. (b) HashSet for fast membership. (c) LinkedHashSet for no duplicates in the order typed. (d) TreeSet for sorted unique words."
+    - score: 1
+      descriptor: "Gets two or three right, or names collections without reasons."
+      samples:
+        - "(a) List (b) Set (c) List (d) Set"
+        - "Use a Set for all of them."
+    - score: 0
+      descriptor: "Incorrect, for example uses a HashSet for the ordered or sorted cases."
+      samples:
+        - "HashSet for everything."
+        - "A list for (b) and (d)."
+ai_assisted: true

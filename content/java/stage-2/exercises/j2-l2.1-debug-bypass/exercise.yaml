@@ -1,0 +1,32 @@
+id: j2-l2.1-debug-bypass
+type: debug
+title: "Going round the rule"
+lesson: j2-l2.1
+role: ladder
+assesses: [o3]
+concepts: [J2.05]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Thermostat` has a rule in `setTarget`: only values from 10 to 30 are accepted, and anything else is ignored. But `run` still ends up with out-of-range values. Find the route around the rule and close it: make the field `private`, and make `run` use `setTarget`.
+entry:
+  methods:
+    - {name: run, params: [{name: values, type: "int[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: run, args: [[5, 25]], expect: 25}
+    - {method: run, args: [[35]], expect: 20}
+    - {method: run, args: [[12, 8, 29]], expect: 29}
+    - {name: "the field is private", source_contains: ["private int target"]}
+    - {name: "run goes through the setter", source_contains: ["th.setTarget("]}
+  hidden:
+    - {method: run, args: [[]], expect: 20}
+    - {method: run, args: [[10]], expect: 10}
+    - {method: run, args: [[30, 31]], expect: 30}
+    - {method: run, args: [[9, 9, 9]], expect: 20}
+    - {method: run, args: [[15, 40, 22, -3]], expect: 22}
+hints:
+  h1: "The rule is in setTarget. Does run ever call it?"
+  h2: "Make target private and call th.setTarget(v) instead of assigning th.target = v."
+ai_assisted: true

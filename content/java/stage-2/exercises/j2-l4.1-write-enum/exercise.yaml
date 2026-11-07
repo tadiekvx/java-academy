@@ -1,0 +1,30 @@
+id: j2-l4.1-write-enum
+type: write
+title: "Drink sizes"
+lesson: j2-l4.1
+role: ladder
+assesses: [o2]
+concepts: [J2.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Give each `Size` its volume: `SMALL` is 250 ml, `MEDIUM` 330 ml and `LARGE` 500 ml. Store it in a field set by a constructor, and return it from `ml()`. The driver adds up the volumes of a list of size names.
+entry:
+  methods:
+    - {name: total, params: [{name: names, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: total, args: [["small", "large"]], expect: 750}
+    - {method: total, args: [["medium"]], expect: 330}
+    - {method: total, args: [[]], expect: 0}
+  hidden:
+    - {method: total, args: [["small", "small", "small"]], expect: 750}
+    - {method: total, args: [["LARGE", "Medium"]], expect: 830}
+    - {method: total, args: [["large", "large"]], expect: 1000}
+    - {method: total, args: [["medium", "small", "large"]], expect: 1080}
+    - {method: total, args: [["SMALL"]], expect: 250}
+hints:
+  h1: "Each constant takes a number in brackets, so the enum needs a constructor and a field to store it."
+  h2: "SMALL(250), MEDIUM(330), LARGE(500); private final int ml; Size(int ml) { this.ml = ml; } int ml() { return ml; }"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j5-l2.6-explain-heap
+type: explain
+title: "Why logarithmic, and why not sorted?"
+lesson: j5-l2.6
+role: ladder
+assesses: [o2]
+concepts: [J5.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) State the two properties of a min-heap. (b) Explain why `add` and `poll` cost O(log n) while `peek` costs O(1). (c) A learner prints a `PriorityQueue` of 5, 1, 3, 4, 2 with `for (int x : pq)` and the order isn't sorted. Is that a bug? How do you get the values out in order?
+rubric:
+  criteria: |
+    A full answer states that a min-heap is a complete binary tree where every parent is no larger than its children; that add and poll move one value up or down a single path through about log2 n levels, whereas peek just reads the root; and that it's not a bug because only the parent-child ordering is guaranteed (the documentation says the iterator has no particular order), so you poll repeatedly or sort a copy.
+  levels:
+    - score: 2
+      descriptor: "States the complete shape and the parent-no-larger-than-children property, explains that add and poll walk one path of about log n levels while peek reads the root, and says iteration order isn't guaranteed so poll repeatedly or sort a copy."
+      samples:
+        - "A min-heap is a complete binary tree, and each parent is less than or equal to its children, so the smallest is at the root. add and poll only move one value up or down a single path, which has about log2 n levels, so they're O(log n); peek just reads the root so it's O(1). The unsorted printing isn't a bug: the heap only orders parents against children and the iterator makes no promise of order, so you poll repeatedly, or sort a copy, to get sorted values."
+        - "(a) Complete tree, parent <= children. (b) Sifting moves along one root-to-leaf path of about log n levels; peek reads index 0. (c) Not a bug: iteration isn't sorted. Use poll in a loop to get them in order."
+    - score: 1
+      descriptor: "Answers some parts correctly, for example the properties and the costs but not the iteration point."
+      samples:
+        - "Parents are smaller than children."
+        - "It isn't a bug, poll them in order."
+    - score: 0
+      descriptor: "Incorrect, for example says the array of a heap is sorted, or that the iteration order is a bug in PriorityQueue."
+      samples:
+        - "A heap is a sorted array."
+        - "It's a bug in PriorityQueue."
+ai_assisted: true

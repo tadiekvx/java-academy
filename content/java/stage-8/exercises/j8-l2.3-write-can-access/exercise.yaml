@@ -1,0 +1,33 @@
+id: j8-l2.3-write-can-access
+type: write
+title: "Who may do what"
+lesson: j8-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J8.07]
+evidence: [IMPL]
+misconceptions: [MC184]
+difficulty: 3
+prompt: |
+  Write `canAccess(role, user, action, owner)`. An `action` other than `read` or `write` is always refused. `admin` may do both. `teller` may only read any account. `customer` may only read an account whose owner is that same (non-empty) user. Any other role is refused (deny by default).
+entry:
+  methods:
+    - {name: canAccess, params: [{name: role, type: "String"}, {name: user, type: "String"}, {name: action, type: "String"}, {name: owner, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {name: "own account", method: canAccess, args: ["customer", "ada", "read", "ada"], expect: true}
+    - {name: "someone else's account", method: canAccess, args: ["customer", "ada", "read", "grace"], expect: false}
+    - {name: "teller cannot write", method: canAccess, args: ["teller", "tess", "write", "ada"], expect: false}
+  hidden:
+    - {name: "admin may write", method: canAccess, args: ["admin", "root", "write", "ada"], expect: true}
+    - {name: "teller reads any", method: canAccess, args: ["teller", "tess", "read", "grace"], expect: true}
+    - {name: "customers cannot write", method: canAccess, args: ["customer", "ada", "write", "ada"], expect: false}
+    - {name: "an unknown role", method: canAccess, args: ["visitor", "bob", "read", "bob"], expect: false}
+    - {name: "empty user and owner", method: canAccess, args: ["customer", "", "read", ""], expect: false}
+    - {name: "an unknown action", method: canAccess, args: ["admin", "root", "delete", "ada"], expect: false}
+    - {name: "role names are exact", method: canAccess, args: ["Customer", "ada", "read", "ada"], expect: false}
+    - {name: "actions are exact", method: canAccess, args: ["customer", "ada", "READ", "ada"], expect: false}
+hints:
+  h1: "Start by refusing everything, then allow the cases the rules name."
+  h2: "What does a customer need to be true about the owner?"
+ai_assisted: true

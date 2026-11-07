@@ -1,0 +1,33 @@
+id: j4-l3.2-write-fake
+type: write
+title: "A clock you control"
+lesson: j4-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J4.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Greeter.greet` takes a `Clock`, so a test can decide what time it is. Write the **test double** `FakeClock`: a class that `implements Clock`, is constructed with an hour (`new FakeClock(9)`), and whose `hour()` returns exactly that hour. The driver then checks the greeting for a chosen hour.
+entry:
+  methods:
+    - {name: run, params: [{name: hour, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [9], expect: "Good morning"}
+    - {method: run, args: [14], expect: "Good afternoon"}
+    - {method: run, args: [20], expect: "Good evening"}
+    - {name: "FakeClock implements Clock", source_contains: ["FakeClock implements Clock"]}
+  hidden:
+    - {method: run, args: [0], expect: "Good morning"}
+    - {method: run, args: [11], expect: "Good morning"}
+    - {method: run, args: [12], expect: "Good afternoon"}
+    - {method: run, args: [17], expect: "Good afternoon"}
+    - {method: run, args: [18], expect: "Good evening"}
+    - {method: run, args: [23], expect: "Good evening"}
+starter_compiles: false
+hints:
+  h1: "A fake is just a small class that implements the interface. Store the hour you're given and return it."
+  h2: "class FakeClock implements Clock { private final int hour; FakeClock(int hour) { this.hour = hour; } public int hour() { return hour; } }"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j0-l0.1-explain-launcher
+type: explain
+title: "What does java Hello.java do?"
+lesson: j0-l0.1
+role: ladder
+assesses: [o3]
+concepts: [J0.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You type `java Hello.java` (with the `.java`). What does the java command do, and what files exist afterwards? Why is this convenient for a small program, and why isn't it enough for a bigger one?
+rubric:
+  criteria: |
+    A full answer says java compiles the source in memory and runs it straight away, leaving no .class file; convenient because it's one command for a single small file; not enough for bigger programs with several files or that should be compiled once and run many times.
+  levels:
+    - score: 2
+      descriptor: "Says the source is compiled in memory and run at once, with no class file left behind, and gives one reason it suits small programs and one why bigger programs need a proper compile."
+      samples:
+        - "It compiles Hello.java in memory and runs it straight away, so no Hello.class is created. That's quick for a small single-file program, but with lots of files you need to compile properly, and you'd rather not recompile every time you run."
+        - "java compiles and runs the file in one go and leaves only Hello.java. It's great for scripts, but a big program has many files and is compiled once into class files."
+    - score: 1
+      descriptor: "Says it runs the file in one step but misses that no class file is left, or doesn't give a reason about bigger programs."
+      samples:
+        - "It compiles and runs it in one command."
+        - "It runs the .java file directly without javac."
+    - score: 0
+      descriptor: "Incorrect, for example says it needs javac first, or that it only works on class files."
+      samples:
+        - "You must run javac first, and then java Hello.java."
+        - "It runs the .class file."
+ai_assisted: true

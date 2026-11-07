@@ -1,0 +1,30 @@
+id: j8-l2.5-write-login-response
+type: write
+title: "A login answer that tells nothing extra"
+lesson: j8-l2.5
+role: ladder
+assesses: [o2]
+concepts: [J8.09]
+evidence: [IMPL, MIST]
+misconceptions: [MC186]
+difficulty: 2
+prompt: |
+  Write `loginResponse(userExists, passwordOk, locked)`. A success is `200|ok` and needs an existing user, the right password and an account that is not locked. **Every** failure, whatever the reason, must be exactly `401|Invalid credentials`, so an attacker learns nothing about which accounts exist or which are locked.
+entry:
+  methods:
+    - {name: loginResponse, params: [{name: userExists, type: "boolean"}, {name: passwordOk, type: "boolean"}, {name: locked, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {name: "success", method: loginResponse, args: [true, true, false], expect: "200|ok"}
+    - {name: "wrong password", method: loginResponse, args: [true, false, false], expect: "401|Invalid credentials"}
+    - {name: "no such user", method: loginResponse, args: [false, false, false], expect: "401|Invalid credentials"}
+  hidden:
+    - {name: "locked, right password", method: loginResponse, args: [true, true, true], expect: "401|Invalid credentials"}
+    - {name: "locked, wrong password", method: loginResponse, args: [true, false, true], expect: "401|Invalid credentials"}
+    - {name: "no user, password flag set", method: loginResponse, args: [false, true, false], expect: "401|Invalid credentials"}
+    - {name: "no user, locked flag set", method: loginResponse, args: [false, false, true], expect: "401|Invalid credentials"}
+    - {name: "inconsistent flags", method: loginResponse, args: [false, true, true], expect: "401|Invalid credentials"}
+hints:
+  h1: "How many different failure messages should there be?"
+  h2: "Can a locked account succeed with the right password?"
+ai_assisted: true

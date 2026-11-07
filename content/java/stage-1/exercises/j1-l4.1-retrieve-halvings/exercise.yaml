@@ -1,0 +1,31 @@
+id: j1-l4.1-retrieve-halvings
+type: write
+title: "Halving until one"
+lesson: j1-l4.1
+role: retrieval
+assesses: [o1]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: while-counting
+prompt: |
+  Complete `halvings` so it returns how many times you can halve `n` (with integer division, `n / 2`) before it reaches 1. For example, 8 → 4 → 2 → 1 is 3 halvings. `n` is always at least 1.
+entry:
+  methods:
+    - {name: halvings, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [8], expect: 3}
+    - {args: [1], expect: 0}
+    - {args: [10], expect: 3}
+  hidden:
+    - {name: "two", args: [2], expect: 1}
+    - {name: "three", args: [3], expect: 1}
+    - {name: "1024", args: [1024], expect: 10}
+    - {name: "a thousand", args: [1000], expect: 9}
+    - {name: "seven", args: [7], expect: 2}
+hints:
+  h1: "Keep halving while n is greater than 1, counting the passes."
+  h2: "while (n > 1) { n = n / 2; count++; } return count;"
+ai_assisted: true

@@ -1,0 +1,27 @@
+id: j1-l4.5-debug-limit
+type: debug
+title: "Days of the month"
+lesson: j1-l4.5
+role: ladder
+assesses: [o3]
+concepts: [J1.07]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program asks for a day of the month (1 to 31). People report that it won't accept 31. Find and fix the bug.
+tests:
+  visible:
+    - {name: "middle", stdin: "15\n", stdout_contains: ["Day accepted: 15"]}
+    - {name: "first day", stdin: "1\n", stdout_contains: ["Day accepted: 1"]}
+    - {name: "last day", stdin: "31\n", stdout_contains: ["Day accepted: 31"]}
+  hidden:
+    - {name: "too big then good", stdin: "32\n31\n", stdout_contains: ["Day accepted: 31"]}
+    - {name: "zero then good", stdin: "0\n1\n", stdout_contains: ["Day accepted: 1"]}
+    - {name: "text then good", stdin: "x\n30\n", stdout_contains: ["Day accepted: 30"]}
+    - {name: "empty then good", stdin: "\n2\n", stdout_contains: ["Day accepted: 2"]}
+    - {name: "spaces", stdin: " 31 \n", stdout_contains: ["Day accepted: 31"]}
+hints:
+  h1: "Try the boundary value 31 by hand. Is 31 < 31?"
+  h2: "Use <= 31 so the last day is included."
+ai_assisted: true

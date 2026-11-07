@@ -1,0 +1,31 @@
+id: j2-l5.1-debug-sum
+type: debug
+title: "One bad entry ruins everything"
+lesson: j2-l5.1
+role: ladder
+assesses: [o3]
+concepts: [J2.12]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `sumValid` should add up the entries that are numbers and **skip** the ones that aren't, so `{"1", "x", "3"}` gives `4`. It returns `0` as soon as one entry is bad. Fix it: catch only the exception you expect, and make a bad entry affect only itself.
+entry:
+  methods:
+    - {name: sumValid, params: [{name: parts, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: sumValid, args: [["1", "x", "3"]], expect: 4}
+    - {method: sumValid, args: [["5", "6"]], expect: 11}
+    - {method: sumValid, args: [[]], expect: 0}
+    - {name: "catches the specific exception, not Exception", source_contains: ["catch (NumberFormatException"], source_not_contains: ["catch (Exception"]}
+  hidden:
+    - {method: sumValid, args: [["x", "y"]], expect: 0}
+    - {method: sumValid, args: [[" 4 ", "z", "-1"]], expect: 3}
+    - {method: sumValid, args: [["10", "", "20", "abc", "30"]], expect: 60}
+    - {method: sumValid, args: [["7"]], expect: 7}
+    - {method: sumValid, args: [["a", "2", "b"]], expect: 2}
+hints:
+  h1: "Where does the try block sit? Which entries does the catch affect?"
+  h2: "Move try/catch inside the loop, and catch NumberFormatException instead of Exception."
+ai_assisted: true

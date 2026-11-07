@@ -1,0 +1,32 @@
+id: j0-l0.3-explain-errors
+type: explain
+title: "Which error is this?"
+lesson: j0-l0.3
+role: ladder
+assesses: [o3, o1]
+concepts: [J0.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A learner types `java Hello.class` and sees: `Error: Could not find or load main class Hello.class`. A second learner compiles `Hello2.java`, which holds `public class Greeter`, and sees: `class Greeter is public, should be declared in a file named Greeter.java`. For each, say what the mistake is and exactly what to type or change instead.
+rubric:
+  criteria: |
+    A full answer says the first learner gave java a file name instead of a class name and should type java Hello; and that the second has a public class whose name doesn't match its file, so should rename the file to Greeter.java or the class to Hello2.
+  levels:
+    - score: 2
+      descriptor: "Correctly diagnoses both: java needs the class name (java Hello, no .class), and a public class must match its file name, so rename the file to Greeter.java or the class to Hello2."
+      samples:
+        - "The first typed the file name; java wants the class name, so java Hello. The second has public class Greeter in Hello2.java, but a public class has to be in a file with its own name, so rename the file to Greeter.java or change the class to Hello2."
+        - "java Hello.class is wrong because java takes a class name, not a file, so it should be java Hello. In the other, the class name and file name don't match, so rename one of them to match."
+    - score: 1
+      descriptor: "Diagnoses one error correctly, or gives the cause without saying what to type or change."
+      samples:
+        - "The first should use java Hello."
+        - "The class and the file name have to match."
+    - score: 0
+      descriptor: "Incorrect, for example blames the install or says to add a semicolon."
+      samples:
+        - "Reinstall Java."
+        - "Both are missing semicolons."
+ai_assisted: true

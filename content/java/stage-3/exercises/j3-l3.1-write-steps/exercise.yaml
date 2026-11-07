@@ -1,0 +1,32 @@
+id: j3-l3.1-write-steps
+type: write
+title: "Steps as functions"
+lesson: j3-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J3.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `applySteps` chains steps such as `"double,inc,square"` with `andThen`, and it is written. You write `stepFor(String name)`, which returns a `Function<Integer, Integer>` as a lambda: `"double"` multiplies by 2, `"inc"` adds 1, `"square"` multiplies the number by itself, and `"negate"` flips the sign.
+entry:
+  methods:
+    - {name: applySteps, params: [{name: steps, type: "String"}, {name: start, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: applySteps, args: ["double,inc", 5], expect: 11}
+    - {method: applySteps, args: ["square", 7], expect: 49}
+    - {method: applySteps, args: ["", 3], expect: 3}
+    - {name: "uses lambdas", source_contains: ["->"]}
+  hidden:
+    - {method: applySteps, args: ["negate", 4], expect: -4}
+    - {method: applySteps, args: ["inc,inc,inc", 0], expect: 3}
+    - {method: applySteps, args: ["double,double,double", 1], expect: 8}
+    - {method: applySteps, args: ["inc,square", 2], expect: 9}
+    - {method: applySteps, args: ["square,negate", 3], expect: -9}
+    - {method: applySteps, args: ["negate,negate", -8], expect: -8}
+hints:
+  h1: "Return a different lambda for each step name. They take an Integer and return an Integer."
+  h2: "case \"square\" -> x -> x * x;"
+ai_assisted: true

@@ -1,0 +1,22 @@
+id: j1-l6.2-predict-alias
+type: predict
+title: "One array or two?"
+lesson: j1-l6.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.10]
+evidence: [MIST]
+misconceptions: [MC12]
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. For each line, ask: how many arrays are there?
+expected_output: |
+  [10, 2, 3]
+  [10, 2, 3]
+  [1, 20, 3]
+  true
+  false
+hints:
+  h1: "b is another name for a's array. c is a separate copy."
+  h2: "Changing b[0] changes a too. c's change is only in c. a and c now differ."
+ai_assisted: true

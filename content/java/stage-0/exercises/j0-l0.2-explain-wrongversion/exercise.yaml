@@ -1,0 +1,32 @@
+id: j0-l0.2-explain-wrongversion
+type: explain
+title: "Installed 25, but it says 17"
+lesson: j0-l0.2
+role: ladder
+assesses: [o3]
+concepts: [J0.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You installed Java 25, but `java -version` still says 17. List the likely causes in the order you'd check them, and what you'd do about each.
+rubric:
+  criteria: |
+    A full answer lists: terminal not reopened after installing; an older java earlier on the PATH (find it with which java / where java and reorder or remove it); possibly an old JAVA_HOME pointing at the old JDK; and says to re-check both java -version and javac -version afterwards.
+  levels:
+    - score: 2
+      descriptor: "Gives at least two correct causes with a check or fix for each (reopen the terminal; an old java earlier on the PATH, found with which/where; an old JAVA_HOME), and says to re-check."
+      samples:
+        - "First reopen the terminal in case it hasn't noticed. Then run which java (or where java) to see which one it's using; if it's the old one, put the new one first in the PATH or remove the old. Also check JAVA_HOME. Then run java -version and javac -version again."
+        - "Probably the old Java is earlier in the PATH. I'd close and reopen the terminal, use where java to find which is running, fix the order, and check JAVA_HOME points at 25."
+    - score: 1
+      descriptor: "Gives one correct cause or fix, or several without saying how to check."
+      samples:
+        - "The old one is probably first in the PATH."
+        - "Reopen the terminal and try again."
+    - score: 0
+      descriptor: "Incorrect, for example says to reinstall repeatedly, or that Java can't have two versions installed."
+      samples:
+        - "You can't have two versions, so uninstall the computer's Java."
+        - "Reinstall Java 25 again and again."
+ai_assisted: true

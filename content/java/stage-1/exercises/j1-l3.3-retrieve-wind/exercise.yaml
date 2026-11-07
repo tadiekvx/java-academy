@@ -1,0 +1,31 @@
+id: j1-l3.3-retrieve-wind
+type: write
+title: "Wind speeds"
+lesson: j1-l3.3
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: if-chains
+prompt: |
+  Complete `windDescription`: below 1 mph is `"Calm"`, below 13 is `"Breeze"`, below 39 is `"Windy"`, and anything else is `"Gale"`.
+entry:
+  methods:
+    - {name: windDescription, params: [{name: mph, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [0], expect: "Calm"}
+    - {args: [20], expect: "Windy"}
+    - {args: [50], expect: "Gale"}
+  hidden:
+    - {name: "exactly 1", args: [1], expect: "Breeze"}
+    - {name: "just under 13", args: [12], expect: "Breeze"}
+    - {name: "exactly 13", args: [13], expect: "Windy"}
+    - {name: "just under 39", args: [38], expect: "Windy"}
+    - {name: "exactly 39", args: [39], expect: "Gale"}
+hints:
+  h1: "Each band is 'below the next limit'. Which limit should be checked first?"
+  h2: "Check mph < 1, then < 13, then < 39, with Gale in the else."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j2-l5.3-write-report
+type: write
+title: "Catch at the boundary"
+lesson: j2-l5.3
+role: ladder
+assesses: [o2]
+concepts: [J2.14]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `total` adds up text numbers and throws a `NumberFormatException` if one isn't a number. It shouldn't catch anything: it can't say anything useful. `report` is the **boundary** that talks to the person. Write it so that it returns `total=<n>` normally, and `error: could not read the numbers` if any entry is bad. Leave `total` alone.
+entry:
+  methods:
+    - {name: report, params: [{name: items, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: report, args: [["1", "2", "3"]], expect: "total=6"}
+    - {method: report, args: [["1", "x"]], expect: "error: could not read the numbers"}
+    - {method: report, args: [[]], expect: "total=0"}
+    - {name: "catches the specific exception", source_contains: ["catch (NumberFormatException"], source_not_contains: ["catch (Exception"]}
+  hidden:
+    - {method: report, args: [["10"]], expect: "total=10"}
+    - {method: report, args: [[" 5 ", "6"]], expect: "total=11"}
+    - {method: report, args: [["a"]], expect: "error: could not read the numbers"}
+    - {method: report, args: [["1", "2", "", "4"]], expect: "error: could not read the numbers"}
+    - {method: report, args: [["-3", "3"]], expect: "total=0"}
+    - {method: report, args: [["7", "7.5"]], expect: "error: could not read the numbers"}
+hints:
+  h1: "Put the call to total inside try in report, and catch the exception that parseInt throws."
+  h2: "try { return \"total=\" + total(items); } catch (NumberFormatException e) { return \"error: could not read the numbers\"; }"
+ai_assisted: true

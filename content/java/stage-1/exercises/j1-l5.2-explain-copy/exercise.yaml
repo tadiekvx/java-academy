@@ -1,0 +1,37 @@
+id: j1-l5.2-explain-copy
+type: explain
+title: "Why didn't cost change?"
+lesson: j1-l5.2
+role: ladder
+assesses: [o2]
+concepts: [J1.08]
+evidence: [EXPL]
+misconceptions: [MC13]
+difficulty: 2
+prompt: |
+  In the code below, `cost` is still 100 after the call, even though `addTax` changes `price`. Explain why, and how you'd get the new value into `cost`.
+
+  ```java
+  int cost = 100;
+  addTax(cost);
+  ```
+rubric:
+  criteria: |
+    A full answer says the parameter price is a copy of cost's value, so changing price doesn't affect cost; the method has to return the new value and the caller stores it, as in cost = addTax(cost).
+  levels:
+    - score: 2
+      descriptor: "Says the parameter is a separate copy of the value so changes to it don't affect cost, and that the new value must be returned and stored (cost = addTax(cost))."
+      samples:
+        - "price is a copy of cost's value, not the variable itself, so changing price only changes the copy. To update cost, addTax has to return the new value and you write cost = addTax(cost);."
+        - "Arguments are passed by copying the value. cost and price are separate variables. You need to return the result and assign it back."
+    - score: 1
+      descriptor: "Says the method has a copy, or says to return the value, but not both."
+      samples:
+        - "Because price is a copy."
+        - "You should return the value from the method."
+    - score: 0
+      descriptor: "Incorrect, for example says Java forgot to update it, or that cost and price are the same variable."
+      samples:
+        - "cost should have changed, it's a bug in Java."
+        - "price and cost are the same thing so it should change."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j10-l1.3-explain-decision
+type: explain
+title: "Write the decision down"
+lesson: j10-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J10.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team of four, with one product and one database, is asked whether to split Brightbank into separate payments, accounts and reporting services. Write the ADR for the decision you would recommend: a title, the status, the context (what forces apply), the decision, and the consequences, good and bad. Use what the readings say about when a monolith is the better start.
+rubric:
+  criteria: |
+    A good record recommends a modular monolith for now and says why. Context: four developers, one product, one database, transactions across accounts and payments, no independent scaling or deployment need yet. Decision: keep one deployable application, with clear module boundaries and dependency rules, and revisit if a module needs to scale or deploy on its own. Consequences: good, a single transaction, no network failures between modules, simple deployment and testing; bad, a single deploy unit and shared database, and discipline needed to keep module boundaries from eroding. It should note that services bring a cost (the microservice premium: more to deploy and operate, plus the failures of lesson 10.2) and that systems built as services from scratch have often run into serious trouble.
+  levels:
+    - score: 2
+      descriptor: "The answer is a complete ADR with context forces, a decision, and both good and bad consequences, grounded in the readings."
+      samples:
+        - "# Keep Brightbank a modular monolith. Status: proposed. Context: four developers, one product and database, payments and accounts must change balances in one transaction. Decision: stay one deployable, with modules and dependency rules; revisit when a part needs independent scaling or deployment. Consequences: simple deployment and real transactions, no network failures between modules; but one deploy unit and the risk of boundaries eroding. Services carry an operating premium, and starting with them has often gone badly."
+        - "Title: One application, clear modules. Status: accepted. Context: small team, one database, strong consistency needed between accounts and payments. Decision: no split now. Consequences: easier operation and testing, a single transaction; harder to scale parts separately and boundaries must be enforced by us. Revisit if the team grows or a module needs its own release cycle."
+    - score: 1
+      descriptor: "The answer states a decision without a context or the bad consequences."
+      samples:
+        - "Decision: stay with a monolith because it is simpler."
+        - "We should split into services because that is modern."
+    - score: 0
+      descriptor: "The answer gives no reasoned decision."
+      samples:
+        - "Whatever the senior developer prefers."
+        - "Do both at once so nobody can complain."
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j1-l3.4-debug-default
+type: debug
+title: "The missing medal"
+lesson: j1-l3.4
+role: ladder
+assesses: [o1]
+concepts: [J1.06]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `medal` should return `"gold"`, `"silver"` or `"bronze"` for places 1, 2 and 3, and `"none"` for any other place. It doesn't compile. Read the error and fix it.
+entry:
+  methods:
+    - {name: medal, params: [{name: place, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [1], expect: "gold"}
+    - {args: [3], expect: "bronze"}
+    - {args: [4], expect: "none"}
+  hidden:
+    - {name: "second", args: [2], expect: "silver"}
+    - {name: "zero", args: [0], expect: "none"}
+    - {name: "tenth", args: [10], expect: "none"}
+    - {name: "negative", args: [-1], expect: "none"}
+    - {name: "fifth", args: [5], expect: "none"}
+starter_compiles: false
+hints:
+  h1: "Read the error: what does Java say the switch doesn't do?"
+  h2: "Add default -> \"none\"; as the last case."
+ai_assisted: true

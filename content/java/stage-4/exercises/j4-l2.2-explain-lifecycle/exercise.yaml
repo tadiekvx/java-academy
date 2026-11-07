@@ -1,0 +1,44 @@
+id: j4-l2.2-explain-lifecycle
+type: explain
+title: "What ran, and in what order?"
+lesson: j4-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J4.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You run `mvn package` and see these steps:
+
+  ```
+  --- resources:3.5.0:resources ---
+  --- compiler:3.16.0:compile ---
+  --- resources:3.5.0:testResources ---
+  --- compiler:3.16.0:testCompile ---
+  --- surefire:3.5.6:test ---
+  --- jar:3.5.1:jar ---
+  BUILD SUCCESS
+  ```
+
+  (a) You asked for `package`. Why did tests run, and why before the jar? (b) If the surefire step had reported a failing test, what would have happened to the `jar` step, and why? (c) What does `mvn test` do differently from `mvn package`?
+rubric:
+  criteria: |
+    A full answer says running a phase runs all earlier phases in the lifecycle (compile, test, then package), so the tests ran as part of reaching package and before the jar; a failing test stops the build so the jar step would not run and no jar would be made; and mvn test stops after the test phase without packaging.
+  levels:
+    - score: 2
+      descriptor: "Says Maven runs every earlier phase before the requested one so compile and test come before package, says a failing test stops the build so the jar step doesn't run, and says mvn test stops after the test phase."
+      samples:
+        - "Maven runs all the phases before the one you ask for, in order: compile, test, then package. So the tests ran on the way and before the jar. If a test had failed, the build would have stopped there and the jar step would never have run, so there'd be no jar. mvn test stops after the test phase and doesn't package."
+        - "(a) Requesting package runs everything earlier, including test. (b) The jar step wouldn't run: a failure stops the build. (c) mvn test stops at the tests."
+    - score: 1
+      descriptor: "Answers one or two parts, or says the right things without the reason."
+      samples:
+        - "Test runs before package."
+        - "The jar wouldn't be made."
+    - score: 0
+      descriptor: "Incorrect, for example says the jar is built first, or that failing tests are ignored."
+      samples:
+        - "The jar is built before the tests."
+        - "Failing tests don't affect the build."
+ai_assisted: true

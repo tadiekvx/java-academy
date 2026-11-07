@@ -1,0 +1,21 @@
+id: j2-l1.1-predict-objects
+type: predict
+title: "Each object has its own fields"
+lesson: j2-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J2.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out exactly what this program prints, one line per `IO.println`. Think about which object each line looks at, and what a field holds if it was never set.
+expected_output: |
+  5
+  9
+  null
+  false
+hints:
+  h1: "Are a and b the same object? What does the constructor set, and what is left alone?"
+  h2: "a and b are separate objects. The constructor only sets size, so label is null and open is false."
+ai_assisted: true

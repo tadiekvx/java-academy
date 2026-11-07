@@ -1,0 +1,32 @@
+id: j2-l4.1-explain-choose
+type: explain
+title: "Class, record or enum?"
+lesson: j2-l4.1
+role: ladder
+assesses: [o3]
+concepts: [J2.10]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  For each of these, say whether you'd use a **class**, a **record** or an **enum**, with a one-line reason: (a) a bank account with a balance that changes; (b) a pair of map coordinates; (c) the four seasons; (d) the result of a search: a name and a score that never change once created.
+rubric:
+  criteria: |
+    A full answer says class for the account (identity and changing state), record for the coordinates (just values, equal if the components are equal), enum for the seasons (a small fixed set), and record for the search result (immutable data).
+  levels:
+    - score: 2
+      descriptor: "Chooses class for (a), record for (b) and (d), enum for (c), each with a correct reason (identity and changing state; just values; a fixed set known in advance; immutable data)."
+      samples:
+        - "(a) class, because an account has identity and its balance changes. (b) record, because it's just two values and equal coordinates are the same. (c) enum, because the seasons are a small fixed set. (d) record, since it only carries data that never changes."
+        - "Account: class (identity, mutable state). Coordinates: record (pure values). Seasons: enum (fixed set). Search result: record (immutable data carrier)."
+    - score: 1
+      descriptor: "Gets two or three of the four right, or gives choices without reasons."
+      samples:
+        - "(a) class (b) record (c) enum (d) class"
+        - "Record for most of them."
+    - score: 0
+      descriptor: "Incorrect, for example uses an enum for the account or a class for everything with no reasoning."
+      samples:
+        - "They should all be enums."
+        - "Use a class for everything."
+ai_assisted: true

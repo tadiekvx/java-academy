@@ -1,0 +1,32 @@
+id: j9-l1.3-write-atomic
+type: write
+title: "The same counter, lock-free"
+lesson: j9-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J9.03]
+evidence: [IMPL]
+misconceptions: [MC189]
+difficulty: 2
+prompt: |
+  Write `countWithAtomic(threads, perThread)` with the same behaviour, but use an `AtomicLong` and its `incrementAndGet` method instead of a lock. (Hint: `counter.set(counter.get() + 1)` is a read and a write, so it is a race again.)
+entry:
+  methods:
+    - {name: countWithAtomic, params: [{name: threads, type: "int"}, {name: perThread, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {name: "two threads", method: countWithAtomic, args: [2, 1000], expect: 2000}
+    - {name: "four threads", method: countWithAtomic, args: [4, 50000], expect: 200000}
+    - {name: "one thread", method: countWithAtomic, args: [1, 10], expect: 10}
+    - {name: "uses AtomicLong", source_contains: ["AtomicLong"]}
+    - {name: "uses an atomic update", source_contains: ["incrementAndGet"]}
+  hidden:
+    - {name: "eight threads", method: countWithAtomic, args: [8, 25000], expect: 200000}
+    - {name: "many increments", method: countWithAtomic, args: [4, 200000], expect: 800000}
+    - {name: "no threads", method: countWithAtomic, args: [0, 100], expect: 0}
+    - {name: "no work", method: countWithAtomic, args: [3, 0], expect: 0}
+    - {name: "six threads", method: countWithAtomic, args: [6, 30000], expect: 180000}
+hints:
+  h1: "The atomic class does the read-add-write as one step."
+  h2: "Why is get() followed by set() not the same?"
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j2-l1.3-debug-null
+type: debug
+title: "The captain who isn't there"
+lesson: j2-l1.3
+role: ladder
+assesses: [o3]
+concepts: [J2.03]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `captainName(name, hasCaptain)` should return the captain's name, or `"none"` if the team has no captain. It crashes with a `NullPointerException` when there's no captain. Fix it.
+entry:
+  methods:
+    - {name: captainName, params: [{name: name, type: "String"}, {name: hasCaptain, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {method: captainName, args: ["Ada", true], expect: "Ada"}
+    - {method: captainName, args: ["Ada", false], expect: "none"}
+    - {method: captainName, args: ["", true], expect: ""}
+  hidden:
+    - {method: captainName, args: ["Bo", true], expect: "Bo"}
+    - {method: captainName, args: ["Bo", false], expect: "none"}
+    - {method: captainName, args: ["none", true], expect: "none"}
+    - {method: captainName, args: ["Zed", false], expect: "none"}
+    - {method: captainName, args: ["X", true], expect: "X"}
+hints:
+  h1: "What is team.captain when hasCaptain is false?"
+  h2: "Check team.captain == null before reading .name, and return \"none\" in that case."
+ai_assisted: true

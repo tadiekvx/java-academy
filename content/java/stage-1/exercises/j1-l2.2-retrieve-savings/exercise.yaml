@@ -1,0 +1,38 @@
+id: j1-l2.2-retrieve-savings
+type: write
+title: Pocket money
+lesson: j1-l2.2
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.03]
+evidence: [IMPL]
+misconceptions: [MC01]
+difficulty: 2
+variant_group: variable-updates
+prompt: |
+  You have `start` pounds saved. This month, in this order:
+
+  1. you're given 50 pounds,
+  2. you spend 12 pounds,
+  3. a savings challenge triples whatever you have left.
+
+  Complete `savingsAfterMonth` so it returns your savings at the end. Use a variable and update it
+  one step at a time. For example, `savingsAfterMonth(10)` is `144`.
+entry:
+  methods:
+    - {name: savingsAfterMonth, params: [{name: start, type: int}], returns: int}
+tests:
+  visible:
+    - {args: [0], expect: 114}
+    - {args: [1], expect: 117}
+    - {args: [10], expect: 144}
+  hidden:
+    - {name: five, args: [5], expect: 129}
+    - {name: a hundred, args: [100], expect: 414}
+    - {name: a negative start, args: [-11], expect: 81}
+    - {name: three, args: [3], expect: 123}
+    - {name: fifty, args: [50], expect: 264}
+hints:
+  h1: Create a variable holding start, then write one line per step.
+  h2: "savings = savings + 50; then savings = savings - 12; then savings = savings * 3; then return it."
+ai_assisted: true

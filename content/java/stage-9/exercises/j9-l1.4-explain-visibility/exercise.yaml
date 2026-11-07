@@ -1,0 +1,32 @@
+id: j9-l1.4-explain-visibility
+type: explain
+title: "Why a flag might never be seen"
+lesson: j9-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J9.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A worker thread runs `while (running) { work(); }` where `running` is an ordinary `boolean` field. The main thread later sets `running = false`, but the worker sometimes keeps going for ever. Explain why this can happen in terms of the Java memory model's happens-before relation, and what changing the field to `volatile` guarantees.
+rubric:
+  criteria: |
+    Without synchronization there is no happens-before edge between the main thread's write and the worker's reads, so the memory model does not require the worker ever to see the new value; the compiler or hardware may keep reading a stale copy. Declaring the field volatile makes a write to it synchronize-with all subsequent reads of it by any thread, which creates the happens-before edge, so the worker will see the update. It does not make compound actions atomic.
+  levels:
+    - score: 2
+      descriptor: "The answer names the missing happens-before edge, says the stale read is allowed, and states what volatile provides and does not."
+      samples:
+        - "There is no happens-before relationship between the write and the worker's reads, so the worker may keep seeing the old value and the JVM is allowed to cache it. A volatile write synchronizes-with later reads of that variable, so the worker is guaranteed to see the change. It only gives visibility, not atomic compound updates."
+        - "Plain fields give no visibility guarantee across threads. volatile creates the happens-before edge from the write to subsequent reads, so the loop ends. It does not make count++ safe."
+    - score: 1
+      descriptor: "The answer says volatile fixes visibility without the memory-model reasoning."
+      samples:
+        - "The worker has a cached copy; volatile forces it to read the real one."
+        - "Make the flag volatile."
+    - score: 0
+      descriptor: "The answer misattributes the cause."
+      samples:
+        - "The main thread did not run long enough to set the flag."
+        - "Booleans are not thread safe so the value is corrupted."
+ai_assisted: true

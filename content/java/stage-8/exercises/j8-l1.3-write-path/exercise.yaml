@@ -1,0 +1,34 @@
+id: j8-l1.3-write-path
+type: write
+title: "Staying inside a directory"
+lesson: j8-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J8.03]
+evidence: [IMPL, DEBUG]
+misconceptions: [MC180]
+difficulty: 3
+prompt: |
+  A download endpoint serves files from a base directory such as `/srv/files`. Write `safePath(base, userPath)` returning the normalised full path, or `rejected` if the user's path is absolute or would leave the base directory (for example by using `..`). A path that stays inside is returned with `.` and `..` segments resolved.
+entry:
+  methods:
+    - {name: safePath, params: [{name: base, type: "String"}, {name: userPath, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a plain file", method: safePath, args: ["/srv/files", "report.txt"], expect: "/srv/files/report.txt"}
+    - {name: "an escape", method: safePath, args: ["/srv/files", "../etc/passwd"], expect: "rejected"}
+    - {name: "a subdirectory", method: safePath, args: ["/srv/files", "a/b.txt"], expect: "/srv/files/a/b.txt"}
+  hidden:
+    - {name: "dots that stay inside", method: safePath, args: ["/srv/files", "a/../b.txt"], expect: "/srv/files/b.txt"}
+    - {name: "dots that escape", method: safePath, args: ["/srv/files", "a/../../x"], expect: "rejected"}
+    - {name: "an absolute path", method: safePath, args: ["/srv/files", "/etc/passwd"], expect: "rejected"}
+    - {name: "the parent itself", method: safePath, args: ["/srv/files", ".."], expect: "rejected"}
+    - {name: "the base itself", method: safePath, args: ["/srv/files", ""], expect: "/srv/files"}
+    - {name: "single dots", method: safePath, args: ["/srv/files", "a/./b"], expect: "/srv/files/a/b"}
+    - {name: "a name that starts with dots", method: safePath, args: ["/srv/files", "..hidden/x"], expect: "/srv/files/..hidden/x"}
+    - {name: "escape after going in", method: safePath, args: ["/srv/files", "a/b/../../.."], expect: "rejected"}
+    - {name: "an absolute path that points inside is still refused", method: safePath, args: ["/srv/files", "/srv/files/a.txt"], expect: "rejected"}
+hints:
+  h1: "Resolve the path first, then check where it ended up."
+  h2: "What does `resolve` do with an absolute argument?"
+ai_assisted: true

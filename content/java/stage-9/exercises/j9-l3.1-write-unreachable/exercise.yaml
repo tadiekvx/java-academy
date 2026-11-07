@@ -1,0 +1,31 @@
+id: j9-l3.1-write-unreachable
+type: write
+title: "What the collector may free"
+lesson: j9-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J9.09]
+evidence: [IMPL]
+misconceptions: [MC195]
+difficulty: 3
+prompt: |
+  A garbage collector keeps every object it can reach by following references from the **roots** (local variables, static fields and so on) and may free the rest. Each entry `A>B` means object A holds a reference to object B. Write `unreachable(edges, roots)` returning the objects that cannot be reached from any root, sorted alphabetically. Objects are all the names that appear in `edges` or `roots`. Note that objects which only reference each other, in a cycle, are still unreachable.
+entry:
+  methods:
+    - {name: unreachable, params: [{name: edges, type: "List<String>"}, {name: roots, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "one orphan", method: unreachable, args: [["main>list", "list>item", "orphan>item"], ["main"]], expect: ["orphan"]}
+    - {name: "a cycle nobody reaches", method: unreachable, args: [["a>b", "b>a"], ["main"]], expect: ["a", "b"]}
+    - {name: "only a root", method: unreachable, args: [[], ["x"]], expect: []}
+  hidden:
+    - {name: "a long chain and one orphan", method: unreachable, args: [["main>a", "a>b", "b>c", "x>c"], ["main"]], expect: ["x"]}
+    - {name: "a reachable cycle", method: unreachable, args: [["m>a", "a>m"], ["m"]], expect: []}
+    - {name: "two roots", method: unreachable, args: [["a>b", "c>d"], ["a", "c"]], expect: []}
+    - {name: "no roots at all", method: unreachable, args: [["a>b", "b>c"], []], expect: ["a", "b", "c"]}
+    - {name: "a cycle reached from a root, and an orphan", method: unreachable, args: [["r>x", "x>y", "y>z", "z>x", "q>z"], ["r"]], expect: ["q"]}
+    - {name: "a self-reference with no root", method: unreachable, args: [["a>a"], []], expect: ["a"]}
+hints:
+  h1: "Start from the roots and mark everything you can reach."
+  h2: "An object that something references can still be garbage."
+ai_assisted: true

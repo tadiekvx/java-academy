@@ -1,0 +1,32 @@
+id: j11-l2.2-write-rollout
+type: write
+title: "A rolling update with health checks"
+lesson: j11-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J11.06]
+evidence: [IMPL]
+misconceptions: [MC210]
+difficulty: 3
+prompt: |
+  A rolling update replaces `replicas` copies of a service with a new version, `batch` at a time, numbered from 1. For each batch the trace has `update:LOW-HIGH`; then the batch is checked: `health` lists the result of each batch (`ok` or `bad`; batches beyond the list are `ok`). A healthy batch adds `healthy:LOW-HIGH`. A **bad** batch stops the rollout and rolls back **everything updated so far**, adding `rollback:1-HIGH`. If all batches are healthy, finish with `done`. If `replicas` or `batch` is below 1, return just `invalid`. Write `rolloutTrace(replicas, batch, health)`.
+entry:
+  methods:
+    - {name: rolloutTrace, params: [{name: replicas, type: "int"}, {name: batch, type: "int"}, {name: health, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "two batches, all fine", method: rolloutTrace, args: [4, 2, []], expect: ["update:1-2", "healthy:1-2", "update:3-4", "healthy:3-4", "done"]}
+    - {name: "the second batch is bad", method: rolloutTrace, args: [4, 2, ["ok", "bad"]], expect: ["update:1-2", "healthy:1-2", "update:3-4", "rollback:1-4"]}
+    - {name: "nothing to update", method: rolloutTrace, args: [0, 1, []], expect: ["invalid"]}
+  hidden:
+    - {name: "a short last batch", method: rolloutTrace, args: [5, 2, []], expect: ["update:1-2", "healthy:1-2", "update:3-4", "healthy:3-4", "update:5-5", "healthy:5-5", "done"]}
+    - {name: "the first batch is bad", method: rolloutTrace, args: [5, 2, ["bad"]], expect: ["update:1-2", "rollback:1-2"]}
+    - {name: "all at once", method: rolloutTrace, args: [6, 6, []], expect: ["update:1-6", "healthy:1-6", "done"]}
+    - {name: "one at a time, the third is bad", method: rolloutTrace, args: [6, 1, ["ok", "ok", "bad", "ok"]], expect: ["update:1-1", "healthy:1-1", "update:2-2", "healthy:2-2", "update:3-3", "rollback:1-3"]}
+    - {name: "a batch size of zero", method: rolloutTrace, args: [3, 0, []], expect: ["invalid"]}
+    - {name: "three batches", method: rolloutTrace, args: [7, 3, ["ok", "ok", "ok"]], expect: ["update:1-3", "healthy:1-3", "update:4-6", "healthy:4-6", "update:7-7", "healthy:7-7", "done"]}
+    - {name: "the batch is larger than the fleet", method: rolloutTrace, args: [2, 5, ["bad"]], expect: ["update:1-2", "rollback:1-2"]}
+hints:
+  h1: "Round the number of batches up."
+  h2: "On a bad batch, stop immediately."
+ai_assisted: true

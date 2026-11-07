@@ -1,0 +1,35 @@
+id: j7-l1.4-write-route
+type: write
+title: "Routing a request"
+lesson: j7-l1.4
+role: ladder
+assesses: [o1]
+concepts: [J7.04]
+evidence: [IMPL]
+misconceptions: [MC169]
+difficulty: 3
+prompt: |
+  Write `route(method, path)`, the routing table for an accounts API. `/accounts`: GET is `list-accounts`, POST is `create-account`. `/accounts/{id}` (the id is digits): GET `get-account:ID`, PUT `replace-account:ID`, DELETE `delete-account:ID`. `/accounts/{id}/transactions`: GET `list-transactions:ID`. A known path with another method is `method-not-allowed`. Anything else, including a trailing slash or an id that is not digits, is `not-found`.
+entry:
+  methods:
+    - {name: route, params: [{name: method, type: "String"}, {name: path, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "list", method: route, args: ["GET", "/accounts"], expect: "list-accounts"}
+    - {name: "one account", method: route, args: ["GET", "/accounts/7"], expect: "get-account:7"}
+    - {name: "wrong method on a known path", method: route, args: ["DELETE", "/accounts"], expect: "method-not-allowed"}
+  hidden:
+    - {name: "create", method: route, args: ["POST", "/accounts"], expect: "create-account"}
+    - {name: "replace", method: route, args: ["PUT", "/accounts/12"], expect: "replace-account:12"}
+    - {name: "delete", method: route, args: ["DELETE", "/accounts/12"], expect: "delete-account:12"}
+    - {name: "a sub-resource", method: route, args: ["GET", "/accounts/7/transactions"], expect: "list-transactions:7"}
+    - {name: "a sub-resource, wrong method", method: route, args: ["POST", "/accounts/7/transactions"], expect: "method-not-allowed"}
+    - {name: "an id that is not a number", method: route, args: ["GET", "/accounts/abc"], expect: "not-found"}
+    - {name: "a trailing slash", method: route, args: ["GET", "/accounts/"], expect: "not-found"}
+    - {name: "an unknown collection", method: route, args: ["GET", "/customers"], expect: "not-found"}
+    - {name: "an empty path", method: route, args: ["GET", ""], expect: "not-found"}
+    - {name: "POST on one account", method: route, args: ["POST", "/accounts/7"], expect: "method-not-allowed"}
+hints:
+  h1: "Split the path on `/` and look at how many parts there are."
+  h2: "When is a path known but the method wrong, and when is the path unknown?"
+ai_assisted: true

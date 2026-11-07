@@ -1,0 +1,101 @@
+id: j9-l1.5-explain-dump
+type: explain
+title: "Reading a thread dump"
+lesson: j9-l1.5
+role: ladder
+assesses: [o2]
+concepts: [J9.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program deadlocks every time (a latch makes sure both threads hold their first lock before asking for the second). Its source and the deadlock section of a real thread dump, taken with `jcmd <pid> Thread.print` while it was stuck, follow.
+
+  ```java
+  import java.util.concurrent.CountDownLatch;
+
+  public class Deadlock {
+      static final Object ACCOUNT_A = new Object();
+      static final Object ACCOUNT_B = new Object();
+
+      public static void main(String[] args) throws Exception {
+          CountDownLatch bothHoldOne = new CountDownLatch(2);
+          Thread t1 = new Thread(() -> transfer(ACCOUNT_A, ACCOUNT_B, bothHoldOne), "transfer-A-to-B");
+          Thread t2 = new Thread(() -> transfer(ACCOUNT_B, ACCOUNT_A, bothHoldOne), "transfer-B-to-A");
+          t1.start();
+          t2.start();
+          t1.join();
+          t2.join();
+      }
+
+      static void transfer(Object from, Object to, CountDownLatch latch) {
+          synchronized (from) {
+              latch.countDown();
+              try {
+                  latch.await();
+              } catch (InterruptedException e) {
+                  return;
+              }
+              synchronized (to) {
+                  System.out.println("moved");
+              }
+          }
+      }
+  }
+  ```
+
+  ```text
+  $ jcmd <pid> Thread.print   (excerpt)
+  Found one Java-level deadlock:
+  =============================
+  "transfer-A-to-B":
+    waiting to lock monitor 0x0000007c06cc6680 (object 0x0000007010617dd8, a java.lang.Object),
+    which is held by "transfer-B-to-A"
+
+  "transfer-B-to-A":
+    waiting to lock monitor 0x0000007c06cc65a0 (object 0x0000007010617dc8, a java.lang.Object),
+    which is held by "transfer-A-to-B"
+
+  Java stack information for the threads listed above:
+  ===================================================
+  "transfer-A-to-B":
+  	at Deadlock.transfer(Deadlock.java:26)
+  	- waiting to lock <0x0000007010617dd8> (a java.lang.Object)
+  	- locked <0x0000007010617dc8> (a java.lang.Object)
+  	at Deadlock.lambda$main$0(Deadlock.java:9)
+  	at Deadlock$$Lambda/0x00000f0001040210.run(Unknown Source)
+  	at java.lang.Thread.runWith(java.base@25.0.5.0.3/Thread.java:1487)
+  	at java.lang.Thread.run(java.base@25.0.5.0.3/Thread.java:1474)
+  "transfer-B-to-A":
+  	at Deadlock.transfer(Deadlock.java:26)
+  	- waiting to lock <0x0000007010617dc8> (a java.lang.Object)
+  	- locked <0x0000007010617dd8> (a java.lang.Object)
+  	at Deadlock.lambda$main$1(Deadlock.java:10)
+  	at Deadlock$$Lambda/0x00000f0001040440.run(Unknown Source)
+  	at java.lang.Thread.runWith(java.base@25.0.5.0.3/Thread.java:1487)
+  	at java.lang.Thread.run(java.base@25.0.5.0.3/Thread.java:1474)
+
+  Found 1 deadlock.
+  ```
+
+  Answer: which two threads are deadlocked, which lock each holds and wants, which line of the source each is stuck on, and how to remove the deadlock without removing the locks.
+rubric:
+  criteria: |
+    The threads transfer-A-to-B and transfer-B-to-A are deadlocked. Each holds one monitor and waits for the one the other holds: transfer-A-to-B holds the lock on ACCOUNT_A (…dc8) and waits for ACCOUNT_B (…dd8), transfer-B-to-A the opposite. Both are stuck at the inner synchronized(to) on line 26. The fix is a global lock order: always take the locks in the same order whatever the direction of the transfer (for example by account id), so no thread can hold the second lock while waiting for the first.
+  levels:
+    - score: 2
+      descriptor: "The answer names both threads, the lock each holds and wants, the line, and proposes a consistent lock order."
+      samples:
+        - "transfer-A-to-B and transfer-B-to-A. The first holds the lock at ...dc8 (ACCOUNT_A) and waits for ...dd8; the second holds ...dd8 and waits for ...dc8. Both are blocked on line 26, the inner synchronized. Fix: acquire the two locks in a fixed global order, such as by account id, in both directions."
+        - "The dump says it found one deadlock between the two transfer threads: each locked its from-account and is waiting for the other's. They wait at Deadlock.transfer line 26. Always lock the lower-numbered account first so the cycle cannot form."
+    - score: 1
+      descriptor: "The answer identifies the deadlock but not the fix, or the fix but not the evidence."
+      samples:
+        - "The two transfer threads are deadlocked on each other's locks."
+        - "Use a lock order."
+    - score: 0
+      descriptor: "The answer misreads the dump."
+      samples:
+        - "The program is slow because it waits for a latch."
+        - "Only one thread is blocked, the other is fine."
+ai_assisted: true

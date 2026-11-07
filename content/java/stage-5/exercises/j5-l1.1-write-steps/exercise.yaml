@@ -1,0 +1,45 @@
+id: j5-l1.1-write-steps
+type: write
+title: "Formulas, not loops"
+lesson: j5-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J5.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Each method asks for the number of times a loop's statement would run, for a given `n`. Write the answer **directly**, without running the loop: the checks use sizes (up to a billion) where running the loop would take far too long.
+
+  - `triangular(n)`: `for (int i = 0; i < n; i++) for (int j = i; j < n; j++) count++;`
+  - `halvings(n)`: `while (n > 1) { n = n / 2; count++; }`
+  - `doublings(n)`: `for (int k = 1; k < n; k *= 2) count++;`
+
+  All three are 0 when `n` is 0 or 1 or less, as the loops show.
+entry:
+  methods:
+    - {name: triangular, params: [{name: n, type: "int"}], returns: "long"}
+    - {name: halvings, params: [{name: n, type: "int"}], returns: "int"}
+    - {name: doublings, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: triangular, args: [4], expect: 10}
+    - {method: halvings, args: [1000], expect: 9}
+    - {method: doublings, args: [9], expect: 4}
+  hidden:
+    - {method: triangular, args: [0], expect: 0}
+    - {method: triangular, args: [1], expect: 1}
+    - {method: triangular, args: [100000], expect: 5000050000}
+    - {method: triangular, args: [2000000000], expect: 2000000001000000000}
+    - {method: halvings, args: [1], expect: 0}
+    - {method: halvings, args: [1024], expect: 10}
+    - {method: halvings, args: [1000000000], expect: 29}
+    - {method: doublings, args: [1], expect: 0}
+    - {method: doublings, args: [2], expect: 1}
+    - {method: doublings, args: [1024], expect: 10}
+    - {method: doublings, args: [1025], expect: 11}
+    - {method: doublings, args: [1000000000], expect: 30}
+hints:
+  h1: "triangular is the sum n + (n-1) + ... + 1. The other two count how many times you can halve, or double, before reaching n."
+  h2: "triangular: n * (n + 1) / 2 (use long). halvings and doublings are short loops: they take about log2(n) passes."
+ai_assisted: true

@@ -1,0 +1,36 @@
+id: j8-l2.2-write-verify
+type: write
+title: "Verifying a signed token"
+lesson: j8-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J8.06]
+evidence: [IMPL, MIST]
+misconceptions: [MC183]
+difficulty: 4
+prompt: |
+  A token is `header.payload.signature`, each part base64url text; the signature is HMAC-SHA256 of `header.payload` with the shared secret. Write `verifyToken(token, secret, now)` (times are seconds). In this order: not three dot-separated parts, or a header/payload part that is not valid base64url → `malformed`; a header that does not say `"alg":"HS256"` → `unsupported-alg` (this refuses `none`); a signature that does not match (compare with `MessageDigest.isEqual`) → `bad-signature`; no numeric `exp` claim → `malformed`; `now` at or after `exp` → `expired`; otherwise `valid`.
+entry:
+  methods:
+    - {name: verifyToken, params: [{name: token, type: "String"}, {name: secret, type: "String"}, {name: now, type: "long"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a valid token", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 1000], expect: "valid"}
+    - {name: "the moment it expires", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 2000], expect: "expired"}
+    - {name: "a changed payload", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MjAwMH0.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 1000], expect: "bad-signature"}
+    - {name: "compares signatures with MessageDigest.isEqual", source_contains: ["MessageDigest.isEqual"]}
+  hidden:
+    - {name: "one second before expiry", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 1999], expect: "valid"}
+    - {name: "long expired", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 5000], expect: "expired"}
+    - {name: "algorithm none", method: verifyToken, args: ["eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.", "k3y-for-tests", 1000], expect: "unsupported-alg"}
+    - {name: "signed with another secret", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.9VCG_bwybQ-ck2RZlyMlYRTUes3QRoSATPnQPJqyEpc", "k3y-for-tests", 1000], expect: "bad-signature"}
+    - {name: "two parts", method: verifyToken, args: ["only.two", "k3y-for-tests", 1000], expect: "malformed"}
+    - {name: "four parts", method: verifyToken, args: ["a.b.c.d", "k3y-for-tests", 1000], expect: "malformed"}
+    - {name: "not base64url", method: verifyToken, args: ["!!!.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 1000], expect: "malformed"}
+    - {name: "no expiry claim", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEifQ.3yyaLdMvrdDPGowUFDc2I1wWOsuvDmwKdRGBJOtX7IM", "k3y-for-tests", 1000], expect: "malformed"}
+    - {name: "another algorithm", method: verifyToken, args: ["eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZGEiLCJleHAiOjIwMDB9.WkkZSNWK629BqKc3l0w4tfI6pZGdu68cDKlyp6SYP1U", "k3y-for-tests", 1000], expect: "unsupported-alg"}
+    - {name: "tampered and expired: the signature is checked first", method: verifyToken, args: ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MjAwMH0.T2ttnOCX5hrZqOX9FkovJpYyEUuCMZEGxTdGFdjo96A", "k3y-for-tests", 9999], expect: "bad-signature"}
+hints:
+  h1: "Check things in the order the exercise lists them."
+  h2: "The HMAC covers the first two parts exactly as they appear, joined by a dot."
+ai_assisted: true

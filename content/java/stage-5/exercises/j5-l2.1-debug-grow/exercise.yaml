@@ -1,0 +1,30 @@
+id: j5-l2.1-debug-grow
+type: debug
+title: "The list that grows too late"
+lesson: j5-l2.1
+role: ladder
+assesses: [o3]
+concepts: [J5.03]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This `IntList` works for up to 4 values, then crashes with an `ArrayIndexOutOfBoundsException`. Find the off-by-one in the growth check and fix it.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [3], expect: "size=3 capacity=4 sum=3 badIndex=true"}
+    - {method: run, args: [5], expect: "size=5 capacity=8 sum=10 badIndex=true"}
+    - {method: run, args: [0], expect: "size=0 capacity=4 sum=0 badIndex=true"}
+  hidden:
+    - {method: run, args: [4], expect: "size=4 capacity=4 sum=6 badIndex=true"}
+    - {method: run, args: [8], expect: "size=8 capacity=8 sum=28 badIndex=true"}
+    - {method: run, args: [9], expect: "size=9 capacity=16 sum=36 badIndex=true"}
+    - {method: run, args: [100], expect: "size=100 capacity=128 sum=4950 badIndex=true"}
+    - {method: run, args: [1000], expect: "size=1000 capacity=1024 sum=499500 badIndex=true"}
+hints:
+  h1: "When exactly is the array full? What's the first value of size for which data[size] is out of range?"
+  h2: "The array is full when size == data.length, so grow when that is true, before storing."
+ai_assisted: true

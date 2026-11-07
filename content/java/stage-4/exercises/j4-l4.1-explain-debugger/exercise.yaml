@@ -1,0 +1,32 @@
+id: j4-l4.1-explain-debugger
+type: explain
+title: "Debugger or logs?"
+lesson: j4-l4.1
+role: ladder
+assesses: [o3, o1]
+concepts: [J4.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A method `totalFor(customerId)` returns the wrong total for **one** customer, id 4,271, out of 100,000. (a) Describe how you'd use a debugger to find out why: which kind of breakpoint, what you'd inspect, and which stepping commands. (b) The same bug appears only on the production server, where you can't attach a debugger. What do you do instead, and what would make the log lines useful? (c) Name one thing you must never write to a log.
+rubric:
+  criteria: |
+    A full answer describes a conditional breakpoint (customerId == 4271) at the start of the method, inspecting the variables and the collection being summed, stepping over lines and into calls to see where the value goes wrong; for production says to add log lines at a suitable level with the customer id and the values going in and out and read them afterwards; and says never log passwords, tokens, card numbers or personal data.
+  levels:
+    - score: 2
+      descriptor: "Describes a conditional breakpoint on the id, inspecting variables and stepping over and into lines to find where the value goes wrong; says to use logging with the customer id and the key values at a suitable level in production; and names something never to log such as passwords or personal data."
+      samples:
+        - "I'd put a conditional breakpoint at the top of totalFor that only pauses when customerId == 4271, then inspect the variables and the list of items being added, and step over each line, or into any call that looks suspicious, until I see the total go wrong. On production I'd add log lines, at DEBUG so I can switch them on, with the customer id and the values going in and out, then read the log after reproducing it. I'd never log passwords, tokens or personal details."
+        - "a) Conditional breakpoint for id 4271, inspect variables, step over and into. b) Log the id and intermediate values at DEBUG and read the logs. c) Never log passwords or card numbers."
+    - score: 1
+      descriptor: "Answers some parts, for example the debugger part but not the logging part, or without the conditional breakpoint."
+      samples:
+        - "Use a breakpoint and step through."
+        - "Add log lines."
+    - score: 0
+      descriptor: "Incorrect, for example says to restart the server, or to log the customer's password to see what happens."
+      samples:
+        - "Restart the server and hope."
+        - "Log the password to check."
+ai_assisted: true

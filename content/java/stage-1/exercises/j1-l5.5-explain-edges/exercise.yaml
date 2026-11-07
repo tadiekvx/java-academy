@@ -1,0 +1,32 @@
+id: j1-l5.5-explain-edges
+type: explain
+title: "Why test the edges?"
+lesson: j1-l5.5
+role: ladder
+assesses: [o3]
+concepts: [J1.14]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A method `isTeenager(age)` passes the tests for ages 15, 8 and 40. A colleague says that isn't enough tests. Which ages would you add, and why those?
+rubric:
+  criteria: |
+    A full answer names the boundary ages (12, 13, 19, 20), and explains that bugs usually hide at the edges of a rule, such as > instead of >=, so ordinary values in the middle can pass even when the method is wrong.
+  levels:
+    - score: 2
+      descriptor: "Names boundary ages (12/13 and 19/20) and says mistakes like > versus >= only show up at the boundaries, which typical values don't test."
+      samples:
+        - "I'd add 12, 13, 19 and 20. A mistake like using > instead of >= only shows up exactly at 13 or 19. 15, 8 and 40 would pass either way."
+        - "The edges of the range: 12 and 20 just outside, 13 and 19 just inside. Bugs usually hide at the boundaries, and the middle values don't catch them."
+    - score: 1
+      descriptor: "Suggests testing more or extreme ages, without naming the boundaries or saying why they matter."
+      samples:
+        - "Test more ages, like 0 and 100."
+        - "Add some more tests."
+    - score: 0
+      descriptor: "Incorrect, for example says three tests are always enough, or that more tests slow it down."
+      samples:
+        - "Three tests is plenty."
+        - "Tests aren't needed if the method looks right."
+ai_assisted: true

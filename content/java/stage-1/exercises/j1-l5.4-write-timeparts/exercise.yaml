@@ -1,0 +1,32 @@
+id: j1-l5.4-write-timeparts
+type: write
+title: "Time in words"
+lesson: j1-l5.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `describe(totalSeconds)` so it returns a string like `2h 5m 9s`. For example, 7509 seconds is `"2h 5m 9s"`, and 59 seconds is `"0h 0m 59s"`. Split the work into small helper methods of your own.
+entry:
+  methods:
+    - {name: describe, params: [{name: totalSeconds, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [7509], expect: "2h 5m 9s"}
+    - {args: [59], expect: "0h 0m 59s"}
+    - {args: [3600], expect: "1h 0m 0s"}
+  hidden:
+    - {name: "zero", args: [0], expect: "0h 0m 0s"}
+    - {name: "one minute", args: [60], expect: "0h 1m 0s"}
+    - {name: "one of each", args: [3661], expect: "1h 1m 1s"}
+    - {name: "almost a day", args: [86399], expect: "23h 59m 59s"}
+    - {name: "a day", args: [86400], expect: "24h 0m 0s"}
+    - {name: "just under two minutes", args: [119], expect: "0h 1m 59s"}
+starter_compiles: false
+hints:
+  h1: "Three small jobs: hours, minutes left, seconds left. Which operators give a whole part and a remainder?"
+  h2: "hours = s / 3600; minutes = s % 3600 / 60; seconds = s % 60. Join them with \"h \", \"m \" and \"s\"."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j1-l3.1-explain-convert
+type: explain
+title: "Why convert?"
+lesson: j1-l3.1
+role: ladder
+assesses: [o3, o4]
+concepts: [J1.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Explain why a program has to call `Integer.parseInt` on what `IO.readln` returns before it can do arithmetic with it. What happens if the person types `ten` instead of `10`?
+rubric:
+  criteria: |
+    A full answer says IO.readln always returns a String (text), so + would join rather than add; parseInt converts the text to an int; if the text isn't a whole number, such as ten, parseInt fails with a NumberFormatException and the program stops.
+  levels:
+    - score: 2
+      descriptor: "Says readln returns text (a String) so arithmetic like + would join or wouldn't work, parseInt turns it into an int, and typing ten causes a NumberFormatException (the program crashes)."
+      samples:
+        - "IO.readln always gives you a String, even if you typed digits, so \"10\" + 1 would be \"101\". parseInt turns \"10\" into the number 10. If you type ten it can't convert it and you get a NumberFormatException, so the program stops."
+        - "Input is text. To add you need a number, which is what Integer.parseInt makes. With 'ten' it throws NumberFormatException because ten isn't digits."
+    - score: 1
+      descriptor: "Gets one half: either why conversion is needed or what happens with ten, but not both, or is vague."
+      samples:
+        - "Because readln gives a String and you can't do maths with Strings."
+        - "If you type ten the program crashes."
+    - score: 0
+      descriptor: "Incorrect, for example says parseInt understands words, or that conversion isn't needed."
+      samples:
+        - "parseInt would turn ten into 10."
+        - "You only need parseInt for decimals."
+ai_assisted: true

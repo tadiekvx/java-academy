@@ -1,0 +1,32 @@
+id: j3-l3.1-write-rules
+type: write
+title: "A rule as a lambda"
+lesson: j3-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J3.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `filterBy` keeps the items that a rule accepts, and it is written. You write `ruleFor(String rule)`, which returns a `Predicate<String>` as a lambda for each rule: `"long"` (more than 5 characters), `"short"` (3 characters or fewer), `"capital"` (starts with an upper-case letter; an empty string doesn't), and anything else means `"nonempty"` (not empty).
+entry:
+  methods:
+    - {name: filterBy, params: [{name: items, type: "List<String>"}, {name: rule, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {method: filterBy, args: [["banana", "fig", "Kiwi"], "long"], expect: ["banana"]}
+    - {method: filterBy, args: [["a", "abcd", "ab"], "short"], expect: ["a", "ab"]}
+    - {method: filterBy, args: [["Ada", "bo", ""], "capital"], expect: ["Ada"]}
+    - {name: "uses lambdas", source_contains: ["->"]}
+  hidden:
+    - {method: filterBy, args: [["", "x"], "nonempty"], expect: ["x"]}
+    - {method: filterBy, args: [["sixsix", "five5"], "long"], expect: ["sixsix"]}
+    - {method: filterBy, args: [["abc", "abcd"], "short"], expect: ["abc"]}
+    - {method: filterBy, args: [["Zed", "zed", "", "Q"], "capital"], expect: ["Zed", "Q"]}
+    - {method: filterBy, args: [[], "long"], expect: []}
+    - {method: filterBy, args: [["a", ""], "other"], expect: ["a"]}
+hints:
+  h1: "Each rule is a lambda taking a String s and returning a boolean. A switch on the rule name can return a different lambda for each case."
+  h2: "case \"long\" -> s -> s.length() > 5;"
+ai_assisted: true

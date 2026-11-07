@@ -1,0 +1,34 @@
+id: j12-l2.2-modify-fee
+type: modify
+title: "Add a rule without breaking the quirks"
+lesson: j12-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J12.06]
+evidence: [MOD]
+misconceptions: [MC219]
+difficulty: 3
+prompt: |
+  `fee` calculates a shipping fee in cents, and it has quirks that customers' invoices depend on (the `ZA` zone ignores a part of a kilogram, an express fee uses integer arithmetic, and so on). Change nothing about those results. Add one rule: a parcel for the `LOCAL` zone of **20000 grams or more** is free (fee 0, and express does not change that). All other results must stay exactly as they are, even where you think they are wrong. Pin the old behaviour down first (a characterization test), then make the change.
+entry:
+  methods:
+    - {name: fee, params: [{name: grams, type: "int"}, {name: zone, type: "String"}, {name: express, type: "boolean"}], returns: "int"}
+tests:
+  visible:
+    - {name: "a small local parcel", method: fee, args: [500, "LOCAL", false], expect: 500}
+    - {name: "exactly 20 kg is free", method: fee, args: [20000, "LOCAL", false], expect: 0}
+    - {name: "the ZA quirk", method: fee, args: [1999, "ZA", false], expect: 1050}
+  hidden:
+    - {name: "the local base", method: fee, args: [1000, "LOCAL", false], expect: 500}
+    - {name: "just over the base, express", method: fee, args: [1001, "LOCAL", true], expect: 900}
+    - {name: "just under free", method: fee, args: [19999, "LOCAL", false], expect: 4300}
+    - {name: "free even with express", method: fee, args: [30000, "LOCAL", true], expect: 0}
+    - {name: "heavy parcels in other zones still cost", method: fee, args: [30000, "ZA", false], expect: 5400}
+    - {name: "ZA with express, integer arithmetic", method: fee, args: [2500, "ZA", true], expect: 1800}
+    - {name: "another zone", method: fee, args: [999, "EU", false], expect: 2500}
+    - {name: "another zone with express", method: fee, args: [4200, "EU", true], expect: 6150}
+    - {name: "free at the limit with express", method: fee, args: [20000, "LOCAL", true], expect: 0}
+hints:
+  h1: "Add the new rule before the existing calculation."
+  h2: "Do not tidy the quirks: the invoices depend on them."
+ai_assisted: true

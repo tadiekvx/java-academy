@@ -1,0 +1,31 @@
+id: j5-l3.3-write-components
+type: write
+title: "How many separate groups?"
+lesson: j5-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J5.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `components(n, edges)`: the number of **connected components** in an undirected graph with nodes `0..n-1` (a node with no edges is a component of its own). `buildGraph` is written for you. Start a search from every node you haven't visited yet, and count the starts.
+entry:
+  methods:
+    - {name: components, params: [{name: n, type: "int"}, {name: edges, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: components, args: [6, ["0-1", "1-2", "3-4"]], expect: 3}
+    - {method: components, args: [3, []], expect: 3}
+    - {method: components, args: [4, ["0-1", "1-2", "2-3"]], expect: 1}
+  hidden:
+    - {method: components, args: [1, []], expect: 1}
+    - {method: components, args: [5, ["0-1", "1-2", "2-0"]], expect: 3}
+    - {method: components, args: [7, ["0-1", "2-3", "4-5"]], expect: 4}
+    - {method: components, args: [4, ["0-3", "3-1", "1-2"]], expect: 1}
+    - {method: components, args: [6, ["0-1", "0-2", "0-3", "0-4", "0-5"]], expect: 1}
+    - {method: components, args: [8, ["0-1", "2-3", "1-2", "5-6"]], expect: 4}
+hints:
+  h1: "Keep a visited array. For each unvisited node, count one component and visit everything reachable from it."
+  h2: "for each node: if (!visited[node]) { count++; dfs(graph, node, visited); }"
+ai_assisted: true

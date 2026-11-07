@@ -1,0 +1,33 @@
+id: j8-l2.4-write-csrf
+type: write
+title: "The CSRF decision"
+lesson: j8-l2.4
+role: ladder
+assesses: [o1]
+concepts: [J8.08]
+evidence: [IMPL]
+misconceptions: [MC185]
+difficulty: 2
+prompt: |
+  Browsers attach cookies to cross-site requests automatically, so a session cookie alone cannot prove the request was meant. Spring Security's answer is a CSRF token the page must add itself, in a header. Write `csrfDecision(method, tokenPresent, tokenMatches)` returning `allow` or `reject`: the safe methods GET, HEAD, OPTIONS and TRACE (RFC 9110) are `allow`; any other method is `allow` only if a token is present and matches. Method names are exact capitals.
+entry:
+  methods:
+    - {name: csrfDecision, params: [{name: method, type: "String"}, {name: tokenPresent, type: "boolean"}, {name: tokenMatches, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a read needs no token", method: csrfDecision, args: ["GET", false, false], expect: "allow"}
+    - {name: "a write with the right token", method: csrfDecision, args: ["POST", true, true], expect: "allow"}
+    - {name: "a write without a token", method: csrfDecision, args: ["DELETE", false, false], expect: "reject"}
+  hidden:
+    - {name: "a wrong token", method: csrfDecision, args: ["POST", true, false], expect: "reject"}
+    - {name: "put", method: csrfDecision, args: ["PUT", true, true], expect: "allow"}
+    - {name: "head", method: csrfDecision, args: ["HEAD", false, false], expect: "allow"}
+    - {name: "options", method: csrfDecision, args: ["OPTIONS", false, false], expect: "allow"}
+    - {name: "trace", method: csrfDecision, args: ["TRACE", false, false], expect: "allow"}
+    - {name: "patch without a token", method: csrfDecision, args: ["PATCH", false, true], expect: "reject"}
+    - {name: "lower case is not a known safe method but is not rejected as a method", method: csrfDecision, args: ["post", true, true], expect: "allow"}
+    - {name: "lower case get is not the safe GET", method: csrfDecision, args: ["get", false, false], expect: "reject"}
+hints:
+  h1: "Which methods never change state?"
+  h2: "A token that is present but wrong must be refused."
+ai_assisted: true

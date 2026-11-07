@@ -1,0 +1,30 @@
+id: j4-l3.2-write-exception-tests
+type: write
+title: "Test the error cases"
+lesson: j4-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J4.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  `parsePercent(text)` turns text such as `"42%"` into the number 42. The rule: the text must be digits followed by `%`, and the value must be **0 to 100**; anything else must throw an **`IllegalArgumentException`**. `CorrectParser` follows it; five mutants don't (one accepts 101, one rejects 100, one doesn't need the `%`, one throws the **wrong exception type**, one accepts negative numbers). Write `allPass(Parser p)` using the helpers `returns` and `throwsIAE`, so that it's `true` for the correct parser and `false` for every mutant.
+entry:
+  methods:
+    - {name: run, params: [{name: which, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["correct"], expect: "pass"}
+    - {method: run, args: ["mutant1"], expect: "fail"}
+    - {method: run, args: ["mutant4"], expect: "fail"}
+  hidden:
+    - {method: run, args: ["mutant2"], expect: "fail"}
+    - {method: run, args: ["mutant3"], expect: "fail"}
+    - {method: run, args: ["mutant5"], expect: "fail"}
+    - {method: run, args: ["correct"], expect: "pass"}
+    - {method: run, args: ["mutant1"], expect: "fail"}
+hints:
+  h1: "Check valid values at both ends (0 and 100), and invalid ones: just over the limit, no percent sign, letters, a negative number, empty text. Use throwsIAE for the invalid ones so the exception type is checked too."
+  h2: "returns(p, \"100%\", 100) && throwsIAE(p, \"101%\") && throwsIAE(p, \"50\") && throwsIAE(p, \"-5%\")"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j2-l4.2-explain-sealed
+type: explain
+title: "Why no default?"
+lesson: j2-l4.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J2.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate adds `default -> 0;` to a `switch` over a sealed `Txn` interface "to be safe". Explain what the compiler does for a sealed type when there is **no** `default`, what happens when someone later adds a fourth kind of transaction with and without the `default`, and why the teammate's change makes the code less safe.
+rubric:
+  criteria: |
+    A full answer says that for a sealed type the compiler knows every permitted kind and checks the switch covers them all; without default, adding a fourth kind makes every switch over Txn fail to compile until it handles it; with default, the new kind silently falls into the default branch and gives a wrong result at run time, so the error moves from compile time to run time.
+  levels:
+    - score: 2
+      descriptor: "Says the compiler checks completeness for a sealed type; without default adding a kind causes compile errors that show every switch to update; with default the new kind silently takes the default branch, so the bug appears at run time."
+      samples:
+        - "With a sealed type the compiler knows all the permitted kinds, so it checks every case is covered. If someone adds a fourth kind, every switch without a default stops compiling, which tells you exactly where to update. With default -> 0 the new kind would silently return 0, so the mistake only shows up at run time, which is worse."
+        - "Without a default the compiler guarantees the switch handles every kind. A new kind then causes a compile error in each switch. A default branch makes the compiler accept it and quietly sends the new kind down the default path, hiding the bug until run time."
+    - score: 1
+      descriptor: "Says default hides problems or that the compiler checks coverage, but doesn't connect it to adding a new kind."
+      samples:
+        - "Default hides the problem."
+        - "The compiler checks all the cases are covered."
+    - score: 0
+      descriptor: "Incorrect, for example says default is always required or makes the code safer."
+      samples:
+        - "A switch always needs a default."
+        - "Default makes it safer."
+ai_assisted: true

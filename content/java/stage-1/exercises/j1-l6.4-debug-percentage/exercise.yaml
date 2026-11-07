@@ -1,0 +1,31 @@
+id: j1-l6.4-debug-percentage
+type: debug
+title: "Nothing to divide by"
+lesson: j1-l6.4
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.12]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 1
+variant_group: exceptions
+prompt: |
+  `percentage` should return the percentage `part` makes of `total` (a whole number, rounded down). If `total` is 0, it should return 0. It crashes with an `ArithmeticException` when `total` is 0. Find and fix the bug.
+entry:
+  methods:
+    - {name: percentage, params: [{name: part, type: "int"}, {name: total, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [1, 4], expect: 25}
+    - {args: [0, 10], expect: 0}
+    - {args: [5, 0], expect: 0}
+  hidden:
+    - {name: "both zero", args: [0, 0], expect: 0}
+    - {name: "all of it", args: [10, 10], expect: 100}
+    - {name: "a third", args: [1, 3], expect: 33}
+    - {name: "three quarters", args: [3, 4], expect: 75}
+    - {name: "nothing to divide by", args: [7, 0], expect: 0}
+hints:
+  h1: "Which input makes the division impossible?"
+  h2: "Check total == 0 first and return 0."
+ai_assisted: true

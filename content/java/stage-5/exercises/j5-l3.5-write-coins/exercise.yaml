@@ -1,0 +1,31 @@
+id: j5-l3.5-write-coins
+type: write
+title: "The fewest coins"
+lesson: j5-l3.5
+role: ladder
+assesses: [o2]
+concepts: [J5.13]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `minCoins(int[] coins, int amount)`: the **fewest coins** (each kind usable any number of times) that add up to `amount`, or `-1` if it's impossible. With coins `{1, 5, 6}` and amount 10 the answer is 2 (5 + 5), which taking the biggest coin first misses. The checks go up to an amount of 100,000.
+entry:
+  methods:
+    - {name: minCoins, params: [{name: coins, type: "int[]"}, {name: amount, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: minCoins, args: [[1, 5, 6], 10], expect: 2}
+    - {method: minCoins, args: [[2], 3], expect: -1}
+    - {method: minCoins, args: [[1], 0], expect: 0}
+  hidden:
+    - {method: minCoins, args: [[1, 5, 10, 25], 63], expect: 6}
+    - {method: minCoins, args: [[5, 7], 11], expect: -1}
+    - {method: minCoins, args: [[3, 7], 100000], expect: 14288}
+    - {method: minCoins, args: [[1, 3, 4], 6], expect: 2}
+    - {method: minCoins, args: [[2, 5, 10], 27], expect: 4}
+    - {method: minCoins, args: [[9, 6, 5, 1], 11], expect: 2}
+hints:
+  h1: "best[a] is the fewest coins for amount a. Try each coin as the last one: 1 + best[a - coin]. best[0] is 0, and unreachable amounts need a marker."
+  h2: "best[a] = Math.min(best[a], best[a - coin] + 1);"
+ai_assisted: true

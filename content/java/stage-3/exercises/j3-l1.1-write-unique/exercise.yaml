@@ -1,0 +1,30 @@
+id: j3-l1.1-write-unique
+type: write
+title: "Unique, in order"
+lesson: j3-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J3.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `unique(List<String> names)`: return a new list with the duplicates removed, keeping each name's **first** position. `[b, a, b, c]` becomes `[b, a, c]`.
+entry:
+  methods:
+    - {name: unique, params: [{name: names, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {method: unique, args: [["b", "a", "b", "c"]], expect: ["b", "a", "c"]}
+    - {method: unique, args: [[]], expect: []}
+    - {method: unique, args: [["x", "x", "x"]], expect: ["x"]}
+  hidden:
+    - {method: unique, args: [["b", "a"]], expect: ["b", "a"]}
+    - {method: unique, args: [["pear", "apple", "pear", "fig", "apple"]], expect: ["pear", "apple", "fig"]}
+    - {method: unique, args: [["z", "y", "x"]], expect: ["z", "y", "x"]}
+    - {method: unique, args: [["a"]], expect: ["a"]}
+    - {method: unique, args: [["c", "b", "a", "b", "c"]], expect: ["c", "b", "a"]}
+hints:
+  h1: "Which Set keeps the order that things were first added?"
+  h2: "new ArrayList<>(new LinkedHashSet<>(names))"
+ai_assisted: true

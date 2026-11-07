@@ -1,0 +1,21 @@
+id: j1-l3.3-predict-branches
+type: predict
+title: "Which branch?"
+lesson: j1-l3.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [MIST]
+misconceptions: [MC11]
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. For each call, work out which branch runs first.
+expected_output: |
+  large
+  medium
+  small
+  fits
+hints:
+  h1: "Check the conditions from the top; the first true one wins."
+  h2: "10 is not >= 100 but is >= 10, so it's medium. size(50) is \"medium\", so the if prints fits."
+ai_assisted: true

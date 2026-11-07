@@ -1,0 +1,80 @@
+id: j11-l1.3-explain-compose
+type: explain
+title: "Reading a Compose file and its run"
+lesson: j11-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J11.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a Compose file that runs this platform's backend with a PostgreSQL database, and what Docker reported when it was started on this machine.
+
+  ```yaml
+  services:
+    db:
+      image: postgres:18-alpine
+      environment:
+        POSTGRES_USER: academy
+        POSTGRES_DB: academy
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U academy -d academy"]
+        interval: 3s
+        timeout: 3s
+        retries: 20
+    app:
+      build: .
+      depends_on:
+        db:
+          condition: service_healthy
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/academy
+        SPRING_DATASOURCE_USERNAME: academy
+        SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      ports:
+        - "8093:8080"
+  ```
+
+  ```text
+  $ docker compose -p bbdemo ps
+  SERVICE   IMAGE                STATUS                    PORTS
+  app       bbdemo-app           Up 9 seconds              0.0.0.0:8093->8080/tcp, [::]:8093->8080/tcp
+  db        postgres:18-alpine   Up 12 seconds (healthy)   5432/tcp
+
+  $ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8093/api/curriculum
+  200
+
+  $ docker compose -p bbdemo logs app | grep -E "Started|Flyway|Database:|Loaded"
+  2026-11-07T17:03:59.968Z  INFO 1 --- [academy] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://db:5432/academy (PostgreSQL 18.6)
+  2026-11-07T17:04:00.331Z  INFO 1 --- [academy] [           main] academy.content.ContentRepository        : Loaded 126 lessons and 494 exercises from /content/java
+  2026-11-07T17:04:00.582Z  INFO 1 --- [academy] [           main] academy.AcademyApplication               : Started AcademyApplication in 1.565 seconds (process running for 1.809)
+  ```
+
+  ```text
+  $ docker compose -p bbdemo port db 5432
+  :0
+  ```
+
+  Explain: (1) what `depends_on` with `condition: service_healthy` achieves and what would go wrong without it; (2) how the app finds the database (look at the URL host); (3) why the database service has no `ports` entry, and what the last output shows; (4) where the database password comes from, and why that is better than writing it into the Compose file or the image; (5) what the log line 'Loaded 126 lessons and 494 exercises' tells you about the image.
+rubric:
+  criteria: |
+    (1) The app starts only after the database's healthcheck reports it healthy; without it the app could start first and fail to connect, or crash and need restarting. (2) By the service name `db`: Compose puts the services on one network where each service is reachable by its name, so the URL is jdbc:postgresql://db:5432/academy. (3) Only the app needs to be reachable from outside; the database is reachable by the app on the internal network but not published to the host, which shrinks the attack surface, and `docker compose port db 5432` printing `:0` confirms nothing is published. (4) It is interpolated from the environment (here an env file) as ${DB_PASSWORD}; keeping the value out of the file and out of the image means it is not committed to version control or baked into every copy of the image, and each environment can supply its own. (5) The content directory was copied into the image: it contains the 126 lessons and 494 exercises, so the image is self-contained.
+  levels:
+    - score: 2
+      descriptor: "The answer covers all five points correctly with the reasons."
+      samples:
+        - "(1) The app waits until postgres reports healthy; otherwise it could start before the database accepts connections and fail. (2) Through the service name db on the Compose network. (3) Only the app is published; the db is internal, and the :0 output shows no host port is mapped. (4) ${DB_PASSWORD} comes from the environment or env file, so it is not in the repository or the image and can differ per environment. (5) The content is inside the image: 126 lessons and 494 exercises were loaded from it."
+        - "Healthcheck gating means app starts after the db is ready. The host name is db, resolved by Compose's network. The db is not published, which reduces exposure; docker compose port shows nothing mapped. The password is interpolated from the environment instead of being hard-coded. The log shows the image carries the whole content."
+    - score: 1
+      descriptor: "The answer covers some points."
+      samples:
+        - "The app uses the db host name and waits for the database."
+        - "The password is a variable."
+    - score: 0
+      descriptor: "The answer misreads the file."
+      samples:
+        - "The app connects to localhost:5432."
+        - "The password is stored in the image so it can be reused."
+ai_assisted: true

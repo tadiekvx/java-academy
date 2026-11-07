@@ -1,0 +1,22 @@
+id: j1-l6.5-predict-trace
+type: predict
+title: "Follow the printed values"
+lesson: j1-l6.5
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.13]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program prints its working as it goes. Predict exactly what it prints.
+expected_output: |
+  spaces: 2
+  3
+  0
+  spaces: 0
+  1
+hints:
+  h1: "Each call to countWords prints its 'spaces' line before it returns, unless the text is empty."
+  h2: "\"hello big world\" has 2 spaces, so it prints spaces: 2 and returns 3. The empty text returns 0 straight away. \"one\" has no spaces."
+ai_assisted: true

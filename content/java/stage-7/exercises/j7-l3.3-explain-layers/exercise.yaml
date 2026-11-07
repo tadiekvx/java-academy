@@ -1,0 +1,32 @@
+id: j7-l3.3-explain-layers
+type: explain
+title: "Where does each concern live"
+lesson: j7-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J7.10]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team has put request parsing, a SQL query and a balance rule all inside one controller method. Explain how you would split it into controller, service and repository, and say which layer should own the transaction, the validation of the request, the business rule and the SQL.
+rubric:
+  criteria: |
+    The controller handles HTTP: it reads the request, triggers validation, calls the service and returns the result or lets an exception become a response. The service holds the business rule and defines the transaction boundary, so several repository calls commit or roll back together (as in Stage 6). The repository owns the SQL and nothing else. Each layer can then be tested separately and the SQL can change without touching the HTTP code.
+  levels:
+    - score: 2
+      descriptor: "The answer assigns request handling, rule, transaction and SQL to the right layers, with a benefit."
+      samples:
+        - "The controller parses the request, validates it and calls the service. The service applies the balance rule and owns the transaction, so its repository calls commit together. The repository holds the SQL. This way each layer can be tested alone and the SQL can change without changing the HTTP code."
+        - "Controller: HTTP in and out, plus validation of the body. Service: the business rule and the transaction around several repository calls. Repository: only queries. Then I can test the rule with a fake repository."
+    - score: 1
+      descriptor: "The answer names the layers without assigning the concerns."
+      samples:
+        - "Split it into controller, service and repository."
+        - "Put the SQL in a repository and keep the controller small."
+    - score: 0
+      descriptor: "The answer keeps the concerns together."
+      samples:
+        - "One method is simpler, splitting only adds files."
+        - "Put the SQL in the controller so it is close to the request."
+ai_assisted: true

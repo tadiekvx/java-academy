@@ -1,0 +1,32 @@
+id: j1-l3.4-explain-choice
+type: explain
+title: "switch or else-if?"
+lesson: j1-l3.4
+role: ladder
+assesses: [o3]
+concepts: [J1.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A shop gives 10% off orders of £50 or more and 20% off orders of £100 or more. Would you write this with a switch or an else-if chain? Explain why.
+rubric:
+  criteria: |
+    A full answer chooses an else-if chain, because the rule depends on ranges (50 or more, 100 or more), and switch cases can only match exact values.
+  levels:
+    - score: 2
+      descriptor: "Chooses else-if and explains that the conditions are ranges, which switch cases can't express because they match exact values."
+      samples:
+        - "An else-if chain, because the discounts depend on ranges like 'at least 50'. A switch can only match exact values, like case 50, so it can't say 'or more'."
+        - "else-if. switch is for exact values, and you can't list every possible order total. Ranges like >= 100 need if conditions."
+    - score: 1
+      descriptor: "Chooses else-if but the reason is vague or missing, or mentions ranges without saying switch only handles exact values."
+      samples:
+        - "else-if, because it's easier."
+        - "An if chain because there are only two discounts."
+    - score: 0
+      descriptor: "Chooses switch, or gives an incorrect reason."
+      samples:
+        - "A switch, with case 50 and case 100."
+        - "switch, because it's always better than if."
+ai_assisted: true

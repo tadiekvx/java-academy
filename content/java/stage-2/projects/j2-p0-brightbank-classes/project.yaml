@@ -1,0 +1,85 @@
+id: j2-p0-brightbank-classes
+title: "Brightbank as a class"
+category: A
+status: in_review
+summary: "A guided first refactor: turn Stage 1's array-and-methods account into an Account class, one small step at a time."
+brief: |
+  In Stage 1 you wrote Brightbank as an `int[]` of transactions and loose methods. This guided project rebuilds the same ideas as a **class**, in three small milestones. Each milestone explains what to write and why; you fill in the code.
+
+  The next project, **Brightbank as classes** (`j2-p1-brightbank`), is independent: it gives you only requirements. Do this one first if you want a gentler start.
+estimated_hours: 2
+prerequisites: [j2-l1.2, j2-l2.1, j2-l2.2]
+concepts: [J2.01, J2.02, J2.05, J2.06]
+milestones:
+  - id: m1
+    title: "A class that remembers its balance"
+    instructions: |
+      In Stage 1 the account was an `int[]`; to find the balance you called a method and passed the array. A **class** keeps the data and the methods together.
+
+      **Step 1.** Give `Account` a `private int balance` field (it starts at 0), and a `private final int overdraftLimit`.
+      **Step 2.** Make the constructor store `overdraftLimit` (use `this.overdraftLimit = overdraftLimit;`).
+      **Step 3.** `deposit(int amount)` adds the amount to `balance`. Don't forget it must also be recorded in the history (next milestone), but for now the balance matters.
+      **Step 4.** `balance()` returns the balance.
+
+      The check deposits a list of amounts and reads the balance.
+    entry:
+      methods:
+        - {name: m1, params: [{name: amounts, type: "int[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [[100, 250]], expect: "balance=350"}
+        - {args: [[]], expect: "balance=0"}
+        - {args: [[5]], expect: "balance=5"}
+      hidden:
+        - {name: "four ones", args: [[1, 1, 1, 1]], expect: "balance=4"}
+        - {name: "one large deposit", args: [[1000]], expect: "balance=1000"}
+        - {name: "zero deposits", args: [[0, 0]], expect: "balance=0"}
+        - {name: "five deposits", args: [[10, 20, 30, 40, 50]], expect: "balance=150"}
+        - {name: "a negative amount just adds", args: [[-5, 10]], expect: "balance=5"}
+  - id: m2
+    title: "Withdrawals and the overdraft rule"
+    instructions: |
+      A withdrawal is allowed only if the balance after it **doesn't fall below minus the overdraft limit**. With an overdraft of 100, a balance of -100 is fine; -101 is not.
+
+      **Step 1.** `withdraw(int amount)` checks `balance - amount < -overdraftLimit`. If so, return `false` and **change nothing**.
+      **Step 2.** Otherwise subtract the amount and return `true`.
+
+      The check treats positive numbers as deposits and negative numbers as withdrawals of that size, and counts how many were refused.
+    entry:
+      methods:
+        - {name: m2, params: [{name: overdraft, type: "int"}, {name: amounts, type: "int[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [0, [100, -30, -200]], expect: "balance=70 refused=1"}
+        - {args: [50, [-50, -1]], expect: "balance=-50 refused=1"}
+        - {args: [0, []], expect: "balance=0 refused=0"}
+      hidden:
+        - {name: "exactly to the limit", args: [100, [-100]], expect: "balance=-100 refused=0"}
+        - {name: "one past the limit", args: [100, [-101]], expect: "balance=0 refused=1"}
+        - {name: "exactly to zero then refused", args: [0, [100, -100, -1]], expect: "balance=0 refused=1"}
+        - {name: "uses the overdraft", args: [10, [5, -15, -1]], expect: "balance=-10 refused=1"}
+        - {name: "all refused", args: [0, [-1, -1, -1]], expect: "balance=0 refused=3"}
+  - id: m3
+    title: "A history that can't be changed from outside"
+    instructions: |
+      Every successful deposit and withdrawal should be recorded as a `Transaction` (a record holding the amount; negative for a withdrawal).
+
+      **Step 1.** Add a `private final List<Transaction> history = new ArrayList<>();` field, and `history.add(new Transaction(...))` in `deposit` and in a successful `withdraw`.
+      **Step 2.** `history()` returns the list, **but a copy**: `return new ArrayList<>(history);`. If you return the field itself, code outside can call `clear()` on it and wipe your account's history. (This is the *defensive copy* idea from the lesson on immutability.)
+
+      The check deposits some amounts, then tries to clear the list it was given, and looks at the history again.
+    entry:
+      methods:
+        - {name: m3, params: [{name: amounts, type: "int[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [[100, 250]], expect: "history=2 afterTamper=2"}
+        - {args: [[]], expect: "history=0 afterTamper=0"}
+        - {args: [[5, 5, 5]], expect: "history=3 afterTamper=3"}
+      hidden:
+        - {name: "one deposit", args: [[1]], expect: "history=1 afterTamper=1"}
+        - {name: "four deposits", args: [[10, 20, 30, 40]], expect: "history=4 afterTamper=4"}
+        - {name: "zero is not recorded by the check", args: [[0]], expect: "history=0 afterTamper=0"}
+        - {name: "equal deposits", args: [[7, 7]], expect: "history=2 afterTamper=2"}
+        - {name: "negative amounts are skipped by the driver", args: [[100, -5, 50]], expect: "history=2 afterTamper=2"}
+ai_assisted: true

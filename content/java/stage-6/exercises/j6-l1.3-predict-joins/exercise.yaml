@@ -1,0 +1,29 @@
+id: j6-l1.3-predict-joins
+type: predict
+title: "Reading a grouped join"
+lesson: j6-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J6.03]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below prints how many accounts each customer holds and what those accounts total. Predict the exact output, including what a customer without accounts contributes.
+expected_output: |
+  counts
+  customer 1|Ada Lovelace|2
+  customer 2|Grace Hopper|1
+  customer 3|Alan Turing|1
+  customer 4|Edsger Dijkstra|1
+  customer 5|Barbara Liskov|0
+  totals
+  customer 1|1250.00
+  customer 2|300.50
+  customer 3|0.00
+  customer 4|780.25
+  customer 5|null
+hints:
+  h1: "Why does Barbara Liskov appear with count 0?"
+  h2: "Why does the second line show null for a customer without accounts?"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j2-l3.1-write-notifier
+type: write
+title: "A second notifier"
+lesson: j2-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J2.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Email` is written. Write `Sms`, which implements `Notifier`: its `send` returns `"sms: "` followed by the message **cut to its first 10 characters** (shorter messages are left whole). `notifyBy` chooses between them by name.
+entry:
+  methods:
+    - {name: notifyBy, params: [{name: channel, type: "String"}, {name: message, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: notifyBy, args: ["email", "Hello"], expect: "email: Hello"}
+    - {method: notifyBy, args: ["sms", "Your parcel has arrived"], expect: "sms: Your parce"}
+    - {method: notifyBy, args: ["sms", "Short"], expect: "sms: Short"}
+    - {name: "Sms implements Notifier", source_contains: ["class Sms implements Notifier"]}
+  hidden:
+    - {method: notifyBy, args: ["sms", "Exactly 10"], expect: "sms: Exactly 10"}
+    - {method: notifyBy, args: ["sms", "Exactly 11!"], expect: "sms: Exactly 11"}
+    - {method: notifyBy, args: ["sms", ""], expect: "sms: "}
+    - {method: notifyBy, args: ["email", "A very long email message indeed"], expect: "email: A very long email message indeed"}
+    - {method: notifyBy, args: ["sms", "0123456789ABC"], expect: "sms: 0123456789"}
+starter_compiles: false
+hints:
+  h1: "Implement send with public. Cut the message only when it's longer than 10 characters, using substring(0, 10)."
+  h2: "String shortened = message.length() > 10 ? message.substring(0, 10) : message; return \"sms: \" + shortened;"
+ai_assisted: true

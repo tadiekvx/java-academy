@@ -1,0 +1,32 @@
+id: j5-l2.5-debug-insert
+type: debug
+title: "The subtree that disappears"
+lesson: j5-l2.5
+role: ladder
+assesses: [o3]
+concepts: [J5.07]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  This `IntBst` works for a root and its two children, but inserting a third level loses values: after inserting `5, 3, 1`, the tree doesn't contain 3. Find the bug in the private `insert` and fix it.
+entry:
+  methods:
+    - {name: run, params: [{name: values, type: "int[]"}, {name: probe, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [[5, 3, 8, 1, 4], 4], expect: "inorder=[1, 3, 4, 5, 8] size=5 height=3 contains=true"}
+    - {method: run, args: [[], 1], expect: "inorder=[] size=0 height=0 contains=false"}
+    - {method: run, args: [[2, 1, 3], 9], expect: "inorder=[1, 2, 3] size=3 height=2 contains=false"}
+  hidden:
+    - {method: run, args: [[5, 3, 8, 1, 4, 7, 9, 2], 6], expect: "inorder=[1, 2, 3, 4, 5, 7, 8, 9] size=8 height=4 contains=false"}
+    - {method: run, args: [[1, 2, 3, 4, 5], 5], expect: "inorder=[1, 2, 3, 4, 5] size=5 height=5 contains=true"}
+    - {method: run, args: [[5, 5, 5], 5], expect: "inorder=[5] size=1 height=1 contains=true"}
+    - {method: run, args: [[9, 7, 5, 3, 1], 3], expect: "inorder=[1, 3, 5, 7, 9] size=5 height=5 contains=true"}
+    - {method: run, args: [[10, 5, 15, 3, 7, 12, 18, 1], 12], expect: "inorder=[1, 3, 5, 7, 10, 12, 15, 18] size=8 height=4 contains=true"}
+    - {method: run, args: [[-3, 0, -7, 4, -1], -7], expect: "inorder=[-7, -3, -1, 0, 4] size=5 height=3 contains=true"}
+    - {method: run, args: [[7], 8], expect: "inorder=[7] size=1 height=1 contains=false"}
+hints:
+  h1: "Compare node.left = new Node(value) with what the node.left already holds. What happens to an existing left child?"
+  h2: "Recurse: node.left = insert(node.left, value) and node.right = insert(node.right, value)."
+ai_assisted: true

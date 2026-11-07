@@ -1,0 +1,30 @@
+id: j1-l5.2-debug-copy
+type: debug
+title: "The price that never changes"
+lesson: j1-l5.2
+role: ladder
+assesses: [o2]
+concepts: [J1.08]
+evidence: [DEBUG]
+misconceptions: [MC13]
+difficulty: 2
+prompt: |
+  `applyDiscount` is supposed to take 10% off a price, so `applyDiscount(2000)` is 1800. It returns 2000 every time. Find and fix the bug (the parameter is a copy, so look at what the method hands back).
+entry:
+  methods:
+    - {name: applyDiscount, params: [{name: price, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [2000], expect: 1800}
+    - {args: [500], expect: 450}
+    - {args: [0], expect: 0}
+  hidden:
+    - {name: "hundred", args: [100], expect: 90}
+    - {name: "odd", args: [99], expect: 90}
+    - {name: "awkward", args: [12345], expect: 11111}
+    - {name: "ten", args: [10], expect: 9}
+    - {name: "one", args: [1], expect: 1}
+hints:
+  h1: "Which value does the method return: the new price, or the old one?"
+  h2: "Return the reduced price: return reduced;"
+ai_assisted: true

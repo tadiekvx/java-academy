@@ -1,0 +1,175 @@
+id: j1-p1-finance
+title: "Personal finance calculator"
+category: A
+status: in_review
+summary: "Turn a month's income and expenses into a clear summary with a savings rate and a verdict."
+brief: |
+  You'll build a small program that helps someone understand their month: how much they earned, how much they spent, how much is left, what percentage of their income they saved, and a one-word verdict.
+
+  It's a **guided build**: each milestone has an explanation and its own tests, and uses an idea from an earlier lesson. Work in order: later milestones call the methods you write in earlier ones.
+
+  All money is stored as **whole pence in an `int`** (so £12.34 is `1234`). That avoids the rounding surprises of `double`; you'll learn the details in [Arithmetic](/lessons/j1-l2.3).
+estimated_hours: 3
+prerequisites: [j1-l4.5, j1-l5.4, j1-l6.3]
+concepts: [J1.05, J1.07, J1.08, J1.09, J1.10, J1.11]
+constraints:
+  - "Money is whole pence in an int, never a double."
+  - "Build the answer from small methods; don't repeat a calculation."
+milestones:
+  - id: m1
+    title: "Add up the expenses"
+    instructions: |
+      **Goal:** `totalExpenses` returns the sum of every amount in the array (whole pence).
+
+      **How:** this is the *sum* pattern from [Loop patterns](/lessons/j1-l4.4), applied to an array ([Arrays](/lessons/j1-l6.1)). Start a total at 0 and add each element with an enhanced `for` loop. The sum of an empty array is 0.
+
+      **Check:** edge cases are an empty array and a single expense.
+    entry:
+      methods:
+        - {name: totalExpenses, params: [{name: expenses, type: "int[]"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [[]], expect: 0}
+        - {args: [[5000]], expect: 5000}
+        - {args: [[120000, 30000]], expect: 150000}
+      hidden:
+        - {name: "small ones", args: [[1, 1, 1]], expect: 3}
+        - {name: "four expenses", args: [[100, 200, 300, 400]], expect: 1000}
+        - {name: "one big expense", args: [[999999]], expect: 999999}
+        - {name: "zeros", args: [[0, 0]], expect: 0}
+        - {name: "rounds to a pound", args: [[1999, 1]], expect: 2000}
+        - {name: "five", args: [[7, 13, 21, 34, 55]], expect: 130}
+  - id: m2
+    title: "Work out the savings"
+    instructions: |
+      **Goal:** `savings` returns income minus total expenses. It can be negative if the person overspent.
+
+      **How:** don't re-write the loop: **call** `totalExpenses` ([Parameters and return values](/lessons/j1-l5.2)). Small methods built from smaller ones are easier to check.
+    entry:
+      methods:
+        - {name: savings, params: [{name: income, type: "int"}, {name: expenses, type: "int[]"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [200000, [120000, 30000]], expect: 50000}
+        - {args: [1000, []], expect: 1000}
+        - {args: [1000, [1500]], expect: -500}
+      hidden:
+        - {name: "nothing at all", args: [0, []], expect: 0}
+        - {name: "exactly spent", args: [500, [500]], expect: 0}
+        - {name: "three small", args: [100, [30, 30, 30]], expect: 10}
+        - {name: "no income", args: [0, [100]], expect: -100}
+        - {name: "big", args: [250000, [99999, 1]], expect: 150000}
+        - {name: "overspent by one", args: [1, [2]], expect: -1}
+  - id: m3
+    title: "Savings rate"
+    instructions: |
+      **Goal:** the savings as a whole-number percentage of income (rounded **down**, toward zero). If income is 0, the rate is 0.
+
+      **How:** `savings(...) * 100 / income`. Multiply **before** you divide, or integer division throws the fraction away ([Arithmetic](/lessons/j1-l2.3)). Guard the zero case first ([Exceptions and stack traces](/lessons/j1-l6.4)).
+
+      **Check:** negative savings give a negative rate. A rate of 66.67% is 66.
+    entry:
+      methods:
+        - {name: savingsRatePercent, params: [{name: income, type: "int"}, {name: expenses, type: "int[]"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [200000, [120000, 30000]], expect: 25}
+        - {args: [0, [100]], expect: 0}
+        - {args: [1000, [1500]], expect: -50}
+      hidden:
+        - {name: "two thirds rounds down", args: [300, [100]], expect: 66}
+        - {name: "negative with a remainder", args: [300, [400]], expect: -33}
+        - {name: "spent everything", args: [1000, [1000]], expect: 0}
+        - {name: "spent nothing", args: [1000, []], expect: 100}
+        - {name: "tiny numbers", args: [7, [3]], expect: 57}
+        - {name: "saved one pence", args: [100000, [99999]], expect: 0}
+  - id: m4
+    title: "A verdict"
+    instructions: |
+      **Goal:** 20% or more is `"Great"`, 10% or more is `"Good"`, 0% or more is `"Tight"`, and anything below 0 is `"Overspending"`.
+
+      **How:** an else-if chain ([Making decisions](/lessons/j1-l3.3)). Check the most demanding condition first, and test the boundaries 20, 19, 10, 9, 0 and -1.
+    entry:
+      methods:
+        - {name: verdict, params: [{name: ratePercent, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [25], expect: "Great"}
+        - {args: [12], expect: "Good"}
+        - {args: [-5], expect: "Overspending"}
+      hidden:
+        - {name: "exactly 20", args: [20], expect: "Great"}
+        - {name: "just under 20", args: [19], expect: "Good"}
+        - {name: "exactly 10", args: [10], expect: "Good"}
+        - {name: "just under 10", args: [9], expect: "Tight"}
+        - {name: "exactly 0", args: [0], expect: "Tight"}
+        - {name: "just below zero", args: [-1], expect: "Overspending"}
+        - {name: "everything saved", args: [100], expect: "Great"}
+  - id: m5
+    title: "Format money"
+    instructions: |
+      **Goal:** show whole pence as pounds, like `£12.34`. Negative amounts show the sign first: `-£1.05`. Always two digits of pence.
+
+      **How:** use `/ 100` for pounds and `% 100` for pence ([Arithmetic](/lessons/j1-l2.3)). Work with the **absolute value** (`Math.abs`) so negative numbers don't give negative pence. Add a leading `0` when the pence are below 10 ([Working with strings](/lessons/j1-l2.4)).
+
+      **Check:** 5 pence is `£0.05`, not `£0.5`.
+    entry:
+      methods:
+        - {name: formatMoney, params: [{name: pence, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [1234], expect: "£12.34"}
+        - {args: [5], expect: "£0.05"}
+        - {args: [-105], expect: "-£1.05"}
+      hidden:
+        - {name: "zero", args: [0], expect: "£0.00"}
+        - {name: "exactly a pound", args: [100], expect: "£1.00"}
+        - {name: "large", args: [99999], expect: "£999.99"}
+        - {name: "negative pence", args: [-5], expect: "-£0.05"}
+        - {name: "ten pence", args: [10], expect: "£0.10"}
+        - {name: "one pound one", args: [101], expect: "£1.01"}
+        - {name: "minus a thousand pounds", args: [-100000], expect: "-£1000.00"}
+  - id: m6
+    title: "The summary"
+    instructions: |
+      **Goal:** return three lines, joined with `\n` (no `\n` after the last line):
+
+      ```
+      Income: £2000.00
+      Expenses: £1500.00
+      Savings: £500.00 (25%) - Great
+      ```
+
+      **How:** build each line from the methods you've already written. Don't repeat any calculation.
+    entry:
+      methods:
+        - {name: summary, params: [{name: income, type: "int"}, {name: expenses, type: "int[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [200000, [120000, 30000]], expect: "Income: £2000.00\nExpenses: £1500.00\nSavings: £500.00 (25%) - Great"}
+        - {args: [1000, [1500]], expect: "Income: £10.00\nExpenses: £15.00\nSavings: -£5.00 (-50%) - Overspending"}
+        - {args: [0, []], expect: "Income: £0.00\nExpenses: £0.00\nSavings: £0.00 (0%) - Tight"}
+      hidden:
+        - {name: "overspending with remainder", args: [300, [400]], expect: "Income: £3.00\nExpenses: £4.00\nSavings: -£1.00 (-33%) - Overspending"}
+        - {name: "tiny expenses", args: [100000, [1999, 1]], expect: "Income: £1000.00\nExpenses: £20.00\nSavings: £980.00 (98%) - Great"}
+        - {name: "break even", args: [5000, [5000]], expect: "Income: £50.00\nExpenses: £50.00\nSavings: £0.00 (0%) - Tight"}
+        - {name: "awkward numbers", args: [123456, [100, 200, 300, 400]], expect: "Income: £1234.56\nExpenses: £10.00\nSavings: £1224.56 (99%) - Great"}
+        - {name: "one pence", args: [1, []], expect: "Income: £0.01\nExpenses: £0.00\nSavings: £0.01 (100%) - Great"}
+  - id: m7
+    title: "Put it together: the whole program"
+    instructions: |
+      **Goal:** make `main` a complete program. It asks `Monthly income in pence: `, then keeps asking `Expense in pence (or done): ` until the person types `done`, then prints `summary(income, expenses)`.
+
+      **How:** you don't know how many expenses there will be, so collect them in an `ArrayList<Integer>` ([ArrayList](/lessons/j1-l6.3)), then copy them into an `int[]` for your methods. The loop is the one from [Input validation loops](/lessons/j1-l4.5): read, check for `done`, and repeat. Use the **Input for Run** box to try it out before you check it.
+
+      Input is always valid here; validating it is a stretch goal for later.
+    tests:
+      visible:
+        - {name: "typical month", stdin: "200000\n120000\n30000\ndone\n", stdout_contains: ["Income: £2000.00\nExpenses: £1500.00\nSavings: £500.00 (25%) - Great"]}
+        - {name: "one tiny expense", stdin: "1000\n1\ndone\n", stdout_contains: ["Income: £10.00\nExpenses: £0.01\nSavings: £9.99 (99%) - Great"]}
+      hidden:
+        - {name: "one expense", stdin: "100000\n20000\ndone\n", stdout_contains: ["Income: £1000.00\nExpenses: £200.00\nSavings: £800.00 (80%) - Great"]}
+        - {name: "overspent", stdin: "5000\n4000\n3000\ndone\n", stdout_contains: ["Income: £50.00\nExpenses: £70.00\nSavings: -£20.00 (-40%) - Overspending"]}
+        - {name: "no expenses", stdin: "7500\ndone\n", stdout_contains: ["Income: £75.00\nExpenses: £0.00\nSavings: £75.00 (100%) - Great"]}
+        - {name: "many expenses", stdin: "250000\n100\n200\n300\n400\n500\ndone\n", stdout_contains: ["Income: £2500.00\nExpenses: £15.00\nSavings: £2485.00 (99%) - Great"]}
+ai_assisted: true

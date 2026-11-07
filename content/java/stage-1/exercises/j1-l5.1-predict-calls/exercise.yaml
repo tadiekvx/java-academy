@@ -1,0 +1,21 @@
+id: j1-l5.1-predict-calls
+type: predict
+title: "Follow the calls"
+lesson: j1-l5.1
+role: ladder
+assesses: [o2]
+concepts: [J1.08]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Work out each call's returned value before you use it.
+expected_output: |
+  12
+  18
+  Item 3
+  9
+hints:
+  h1: "Work out the innermost call first."
+  h2: "triple(triple(2)) is triple(6), which is 18. 15 - 6 is 9."
+ai_assisted: true

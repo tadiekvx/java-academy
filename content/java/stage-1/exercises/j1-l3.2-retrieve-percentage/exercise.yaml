@@ -1,0 +1,31 @@
+id: j1-l3.2-retrieve-percentage
+type: write
+title: "A valid percentage"
+lesson: j1-l3.2
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: boolean-ranges
+prompt: |
+  Complete `isValidPercentage` so it returns `true` for whole numbers from 0 to 100, including both, and `false` otherwise.
+entry:
+  methods:
+    - {name: isValidPercentage, params: [{name: value, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: [50], expect: true}
+    - {args: [-5], expect: false}
+    - {args: [150], expect: false}
+  hidden:
+    - {name: "exactly 0", args: [0], expect: true}
+    - {name: "exactly 100", args: [100], expect: true}
+    - {name: "just over", args: [101], expect: false}
+    - {name: "just under", args: [-1], expect: false}
+    - {name: "one", args: [1], expect: true}
+hints:
+  h1: "Both limits are allowed. Which operators include the boundary?"
+  h2: "value >= 0 && value <= 100"
+ai_assisted: true

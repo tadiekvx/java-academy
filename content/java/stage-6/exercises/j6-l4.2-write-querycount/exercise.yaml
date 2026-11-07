@@ -1,0 +1,32 @@
+id: j6-l4.2-write-querycount
+type: write
+title: "Counting the queries"
+lesson: j6-l4.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J6.12]
+evidence: [IMPL]
+misconceptions: [MC164]
+difficulty: 2
+prompt: |
+  A report shows the accounts of every customer in a list of `customers` customers. Write `queryCount(customers, strategy)`, the number of queries the report runs. `"lazy"` loads the customer list with one query and then each customer's accounts with one query per customer. `"join-fetch"` loads everything in one query. `"batch-10"` loads the customer list with one query and then the accounts in batches of 10 customers, one query per batch. Any other strategy returns -1.
+entry:
+  methods:
+    - {name: queryCount, params: [{name: customers, type: "int"}, {name: strategy, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {name: "lazy loading, three customers", method: queryCount, args: [3, "lazy"], expect: 4}
+    - {name: "one query for all", method: queryCount, args: [3, "join-fetch"], expect: 1}
+    - {name: "batches of ten", method: queryCount, args: [25, "batch-10"], expect: 4}
+  hidden:
+    - {name: "no customers still costs the first query", method: queryCount, args: [0, "lazy"], expect: 1}
+    - {name: "no customers, no batches", method: queryCount, args: [0, "batch-10"], expect: 1}
+    - {name: "exactly one full batch", method: queryCount, args: [10, "batch-10"], expect: 2}
+    - {name: "one customer over a full batch", method: queryCount, args: [11, "batch-10"], expect: 3}
+    - {name: "a long list", method: queryCount, args: [1000, "lazy"], expect: 1001}
+    - {name: "a long list, one query", method: queryCount, args: [1000, "join-fetch"], expect: 1}
+    - {name: "an unknown strategy", method: queryCount, args: [5, "eager"], expect: -1}
+hints:
+  h1: "Which query loads the list of customers, and does it run for every strategy?"
+  h2: "How many batches of 10 do you need for 11 customers?"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j1-l5.4-explain-split
+type: explain
+title: "Why split it up?"
+lesson: j1-l5.4
+role: ladder
+assesses: [o3]
+concepts: [J1.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A programmer wrote a 40-line `isStrong` method with all the checks inside it. A colleague suggests splitting it into `hasDigit`, `hasCapital` and a short `isStrong`. Give two reasons the split version is better.
+rubric:
+  criteria: |
+    A full answer gives two valid reasons, such as: each helper can be tested on its own; mistakes are easier to find; the short method reads like the rule; the helpers can be reused; names explain what each part does.
+  levels:
+    - score: 2
+      descriptor: "Gives two clear, valid reasons (testable alone, easier to find mistakes, reads like the rule, reusable, descriptive names)."
+      samples:
+        - "Each helper can be tested separately, so if the password check is wrong you can find which part. And isStrong then reads just like the rule, with length, digit and capital joined by &&."
+        - "The helpers have names that explain what they do, and hasDigit can be reused somewhere else."
+    - score: 1
+      descriptor: "Gives one valid reason, or two vague ones."
+      samples:
+        - "It's easier to read."
+        - "It's neater and shorter."
+    - score: 0
+      descriptor: "Gives no valid reason, or an incorrect one."
+      samples:
+        - "It runs faster."
+        - "Java doesn't allow methods longer than 20 lines."
+ai_assisted: true

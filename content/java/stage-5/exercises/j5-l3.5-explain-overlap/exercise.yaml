@@ -1,0 +1,32 @@
+id: j5-l3.5-explain-overlap
+type: explain
+title: "Why remember the answers?"
+lesson: j5-l3.5
+role: ladder
+assesses: [o3]
+concepts: [J5.13]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The plain recursive `fib(40)` makes 331,160,281 calls; a memoised version makes about 80. (a) Explain why the plain version does so much repeated work. (b) What are "overlapping subproblems", and how is that different from merge sort, which also splits a problem? (c) Why does greedy ("always take the biggest coin") fail for coins 1, 5 and 6 and amount 10, and what does the table do instead?
+rubric:
+  criteria: |
+    A full answer says the plain version recomputes the same smaller Fibonacci values many times because fib(n-1) and fib(n-2) both need the same lower values; that overlapping subproblems are the same subproblem needed again and again, whereas merge sort's halves are independent so nothing is repeated; and that greedy takes 6+1+1+1+1 (five coins) while 5+5 is two, because a locally best choice doesn't give the best total, whereas the table considers every coin as the last one using the best answers to smaller amounts.
+  levels:
+    - score: 2
+      descriptor: "Explains that the plain version recomputes the same values repeatedly, defines overlapping subproblems and contrasts them with merge sort's independent halves, and explains that greedy gives five coins versus two while the table tries every coin using best answers for smaller amounts."
+      samples:
+        - "fib(n-1) and fib(n-2) both call the same smaller values, so the plain version computes them again and again. Overlapping subproblems means the same subproblem is needed many times; merge sort splits into independent halves so nothing is repeated. For 10p with 1, 5 and 6, greedy takes 6+1+1+1+1 which is five coins, but 5+5 is two. The table tries each coin as the last coin and uses the best answers for smaller amounts, so it finds two."
+        - "The same Fibonacci numbers are recalculated many times. Overlapping subproblems are repeated questions, unlike merge sort's separate halves. Greedy picks 6 first and ends up with five coins, while 5+5 uses two; the table checks every option from the smaller amounts."
+    - score: 1
+      descriptor: "Answers two parts well, or explains the repetition without the contrast or the coin example."
+      samples:
+        - "It recalculates the same values."
+        - "Greedy gives the wrong answer."
+    - score: 0
+      descriptor: "Incorrect, for example says memoisation makes the computer faster by using a cache, or that greedy is always optimal."
+      samples:
+        - "Memoisation uses the CPU cache."
+        - "Greedy is always best."
+ai_assisted: true

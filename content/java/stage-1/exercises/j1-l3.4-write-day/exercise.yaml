@@ -1,0 +1,31 @@
+id: j1-l3.4-write-day
+type: write
+title: "Day names"
+lesson: j1-l3.4
+role: ladder
+assesses: [o1]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: switch-mapping
+prompt: |
+  Complete `dayName` with a switch expression: 1 is `"Monday"` through to 7, `"Sunday"`. Any other number gives `"Unknown"`.
+entry:
+  methods:
+    - {name: dayName, params: [{name: day, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [1], expect: "Monday"}
+    - {args: [5], expect: "Friday"}
+    - {args: [0], expect: "Unknown"}
+  hidden:
+    - {name: "Sunday", args: [7], expect: "Sunday"}
+    - {name: "Tuesday", args: [2], expect: "Tuesday"}
+    - {name: "Saturday", args: [6], expect: "Saturday"}
+    - {name: "too big", args: [8], expect: "Unknown"}
+    - {name: "negative", args: [-1], expect: "Unknown"}
+hints:
+  h1: "One case per day, and a default for everything else."
+  h2: "return switch (day) { case 1 -> \"Monday\"; … case 7 -> \"Sunday\"; default -> \"Unknown\"; };"
+ai_assisted: true

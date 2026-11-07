@@ -1,0 +1,32 @@
+id: j5-l2.2-explain-compare
+type: explain
+title: "Linked list or array list?"
+lesson: j5-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J5.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You are choosing between a singly linked list (with only a head reference) and an array-based list for each task. For each, say which you would use and why, in terms of the cost of the operations: (a) read the 5,000th item, many times; (b) add and remove items at the **front** constantly; (c) add items at the end, millions of times, and read them back by position.
+rubric:
+  criteria: |
+    A full answer chooses the array list for (a) because get by position is constant time while a linked list walks 5,000 links; the linked list for (b) because adding or removing at the head is constant time while an array must shift every element (though an ArrayDeque would be better still); and the array list for (c) because adding at the end is amortised constant and reading by position is constant, while a head-only linked list must walk the whole chain to add at the end.
+  levels:
+    - score: 2
+      descriptor: "Chooses array list for (a), linked list (or a deque) for (b), and array list for (c), each with the cost reasoning: constant-time indexed access versus walking links, constant-time head operations versus shifting, amortised constant append versus walking to the end."
+      samples:
+        - "(a) Array list: get by position is constant time, but a linked list has to walk 5,000 links each time. (b) Linked list: adding and removing at the head is constant, whereas an array has to shift every element. (c) Array list: appending is amortised constant and reading by position is constant, while a linked list with only a head walks the whole chain to add at the end."
+        - "a: array-based, because indexed access is O(1). b: linked, because front operations are O(1) and an array would shift everything (an ArrayDeque is even better). c: array-based, since add at the end is amortised O(1) and get(i) is O(1); the linked list needs to walk to the end each time."
+    - score: 1
+      descriptor: "Gets two of the three right, or chooses correctly without the cost reasoning."
+      samples:
+        - "(a) array (b) linked (c) linked"
+        - "Array for reading and linked for the front."
+    - score: 0
+      descriptor: "Incorrect, for example says linked lists are always faster, or always slower."
+      samples:
+        - "Linked lists are always faster."
+        - "Arrays are always better."
+ai_assisted: true

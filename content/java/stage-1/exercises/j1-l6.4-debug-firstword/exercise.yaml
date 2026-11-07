@@ -1,0 +1,31 @@
+id: j1-l6.4-debug-firstword
+type: debug
+title: "A word with no space"
+lesson: j1-l6.4
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.12]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+variant_group: exceptions
+prompt: |
+  `firstWordLength` should return the length of the first word in some text: the number of characters before the first space, or the length of the whole text if there's no space. It crashes with a `StringIndexOutOfBoundsException` for one-word texts. Find and fix the bug.
+entry:
+  methods:
+    - {name: firstWordLength, params: [{name: text, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["hello world"], expect: 5}
+    - {args: ["hello"], expect: 5}
+    - {args: [""], expect: 0}
+  hidden:
+    - {name: "starts with a space", args: [" leading"], expect: 0}
+    - {name: "short words", args: ["a b c"], expect: 1}
+    - {name: "one long word", args: ["longword"], expect: 8}
+    - {name: "one letter", args: ["x"], expect: 1}
+    - {name: "double space", args: ["two  spaces"], expect: 3}
+hints:
+  h1: "What does indexOf return when the text has no space?"
+  h2: "It returns -1. Handle that case separately and return text.length()."
+ai_assisted: true

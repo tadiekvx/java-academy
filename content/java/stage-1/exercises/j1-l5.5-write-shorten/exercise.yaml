@@ -1,0 +1,37 @@
+id: j1-l5.5-write-shorten
+type: write
+title: "Tests as a specification"
+lesson: j1-l5.5
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.14]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You aren't told in words what `shorten(text, limit)` should do. Work it out from the examples the tests show, then write it.
+
+  | Call | Result |
+  |---|---|
+  | `shorten("hello world", 5)` | `"hello"` |
+  | `shorten("hi", 5)` | `"hi"` |
+  | `shorten("exactly", 7)` | `"exactly"` |
+entry:
+  methods:
+    - {name: shorten, params: [{name: text, type: "String"}, {name: limit, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["hello world", 5], expect: "hello"}
+    - {args: ["hi", 5], expect: "hi"}
+    - {args: ["exactly", 7], expect: "exactly"}
+  hidden:
+    - {name: "empty text", args: ["", 3], expect: ""}
+    - {name: "limit zero", args: ["abc", 0], expect: ""}
+    - {name: "limit one", args: ["abc", 1], expect: "a"}
+    - {name: "long text", args: ["a longer sentence here", 8], expect: "a longer"}
+    - {name: "huge limit", args: ["short", 100], expect: "short"}
+starter_compiles: false
+hints:
+  h1: "Look at the second and third examples: what happens when the text is already short enough?"
+  h2: "If text.length() <= limit return text; otherwise return text.substring(0, limit)."
+ai_assisted: true

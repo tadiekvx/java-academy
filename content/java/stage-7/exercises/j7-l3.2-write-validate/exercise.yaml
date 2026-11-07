@@ -1,0 +1,32 @@
+id: j7-l3.2-write-validate
+type: write
+title: "Declared constraints, written by hand"
+lesson: j7-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J7.09]
+evidence: [IMPL]
+misconceptions: [MC174]
+difficulty: 2
+prompt: |
+  Bean Validation lets you declare constraints on a request object; here you write the checks by hand to see what they do. Write `validate(owner, currency, openingCents)` returning every violation, in this field order: `owner: must not be blank` (blank means empty or only spaces), `currency: must be a 3-letter code` (exactly three capital letters), `openingCents: must not be negative`. A valid request returns an empty list. Report all violations, not just the first.
+entry:
+  methods:
+    - {name: validate, params: [{name: owner, type: "String"}, {name: currency, type: "String"}, {name: openingCents, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "a valid request", method: validate, args: ["Ada", "ZAR", 1000], expect: []}
+    - {name: "no owner", method: validate, args: ["", "ZAR", 1000], expect: ["owner: must not be blank"]}
+    - {name: "two problems", method: validate, args: ["Ada", "zar", -1], expect: ["currency: must be a 3-letter code", "openingCents: must not be negative"]}
+  hidden:
+    - {name: "only spaces, zero is allowed", method: validate, args: ["   ", "ZAR", 0], expect: ["owner: must not be blank"]}
+    - {name: "too short", method: validate, args: ["Ada", "ZA", 5], expect: ["currency: must be a 3-letter code"]}
+    - {name: "too long", method: validate, args: ["Ada", "ZARR", 5], expect: ["currency: must be a 3-letter code"]}
+    - {name: "a digit", method: validate, args: ["Ada", "Z4R", 5], expect: ["currency: must be a 3-letter code"]}
+    - {name: "everything is wrong", method: validate, args: ["", "", -5], expect: ["owner: must not be blank", "currency: must be a 3-letter code", "openingCents: must not be negative"]}
+    - {name: "zero opening is valid", method: validate, args: ["Grace", "USD", 0], expect: []}
+    - {name: "the smallest int", method: validate, args: ["Ada", "ZAR", -2147483648], expect: ["openingCents: must not be negative"]}
+hints:
+  h1: "Check every field, and add a message for each failure."
+  h2: "What is the difference between empty and blank?"
+ai_assisted: true

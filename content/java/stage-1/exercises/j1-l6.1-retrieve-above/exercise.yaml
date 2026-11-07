@@ -1,0 +1,32 @@
+id: j1-l6.1-retrieve-above
+type: write
+title: "How many above?"
+lesson: j1-l6.1
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: array-patterns
+prompt: |
+  Write a method called `countAbove` that is given an `int[]` called `values` and an `int` called `limit` (in that order), and returns how many elements are **greater than** `limit`.
+entry:
+  methods:
+    - {name: countAbove, params: [{name: values, type: "int[]"}, {name: limit, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [[4, 8, 15, 16], 10], expect: 2}
+    - {args: [[], 5], expect: 0}
+    - {args: [[3, 3, 3], 3], expect: 0}
+  hidden:
+    - {name: "all above", args: [[1, 2, 3], 0], expect: 3}
+    - {name: "none above", args: [[1, 2, 3], 3], expect: 0}
+    - {name: "negatives", args: [[-1, -2, 5], -2], expect: 2}
+    - {name: "one element", args: [[10], 9], expect: 1}
+    - {name: "half", args: [[5, 6, 7, 8, 9], 7], expect: 2}
+starter_compiles: false
+hints:
+  h1: "It's the count pattern."
+  h2: "count++ whenever value > limit."
+ai_assisted: true

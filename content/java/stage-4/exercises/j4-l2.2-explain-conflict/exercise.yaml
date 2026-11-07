@@ -1,0 +1,40 @@
+id: j4-l2.2-explain-conflict
+type: explain
+title: "Which version runs?"
+lesson: j4-l2.2
+role: ladder
+assesses: [o3]
+concepts: [J4.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The verbose dependency tree of a project shows:
+
+  ```
+  +- org.apache.commons:commons-text:jar:1.11.0:compile
+  |  \- (org.apache.commons:commons-lang3:jar:3.13.0:compile - omitted for conflict with 3.9)
+  \- org.apache.commons:commons-lang3:jar:3.9:compile
+  ```
+
+  (a) Which version of `commons-lang3` will the project use, and why? (b) What is the risk to `commons-text`? (c) Give two ways to remove the problem, and say how you would check that it's gone.
+rubric:
+  criteria: |
+    A full answer says the project will use 3.9 because Maven picks the nearest definition and the direct declaration is nearer than the one under commons-text; the risk is that commons-text was built for 3.13.0 and may call things 3.9 lacks, failing at run time (for example NoSuchMethodError); and fixes are to remove the direct declaration (so 3.13.0 is used) or declare the newer version explicitly, checking with mvn dependency:tree.
+  levels:
+    - score: 2
+      descriptor: "Says 3.9 is used because Maven picks the nearest definition and the direct declaration is nearer, says commons-text expects 3.13.0 so could fail at run time, and gives two fixes (remove the direct declaration or declare the newer version) checked with dependency:tree."
+      samples:
+        - "It uses 3.9: Maven chooses the nearest definition, and the direct declaration is nearer than the 3.13.0 under commons-text. The risk is that commons-text was built against 3.13.0 and might call methods that 3.9 doesn't have, so it could fail at run time, perhaps with NoSuchMethodError. I could remove my direct declaration so 3.13.0 is used, or declare 3.13.0 or newer myself. I'd check by running mvn dependency:tree again and looking at which version is used."
+        - "(a) 3.9, since the direct dependency is nearest. (b) commons-text may need features from 3.13.0 and break at run time. (c) Remove the direct 3.9 or change it to the newer version, then check the tree."
+    - score: 1
+      descriptor: "Answers one or two parts, for example the version but not the reason or the risk."
+      samples:
+        - "It uses 3.9."
+        - "Remove the dependency."
+    - score: 0
+      descriptor: "Incorrect, for example says the newest version is always chosen, or that there is no risk."
+      samples:
+        - "Maven always picks the newest version."
+        - "There's no problem as it still compiles."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j4-l4.3-explain-respond
+type: explain
+title: "Reply to the reviewer"
+lesson: j4-l4.3
+role: ladder
+assesses: [o3]
+concepts: [J4.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A reviewer leaves three comments on your pull request: (1) "`==` on strings is a bug here; use `equals`." (2) "This method is too long, please split it into five." (your method is 12 lines and reads clearly) (3) "Why is this loop `<=`? I think it reads one past the end." (you've checked, and `<=` is correct because the array is 1-based in this data format). Say how you respond to each: what you change, what you discuss, and how you word it. Then explain what **technical debt** is, and give one example of debt you might knowingly take on in this PR and how you'd record it.
+rubric:
+  criteria: |
+    A full answer accepts (1) as a real bug and fixes it, thanking the reviewer; politely questions (2) by explaining the method is short and reads clearly while offering to extract a helper if they point to a specific part; answers (3) with the evidence that the format is 1-based, ideally adding a comment or a test so it's clear, rather than just changing it; defines technical debt as the future cost of a shortcut taken now, and gives an example such as a TODO to add validation or a missing test, recorded in a ticket or a TODO with the reason.
+  levels:
+    - score: 2
+      descriptor: "Fixes (1) gratefully, politely pushes back on (2) with reasons and an offer, explains (3) with the 1-based evidence and adds a clarifying comment or test, and defines technical debt as the future cost of a shortcut with a recorded example such as a TODO or ticket."
+      samples:
+        - "(1) Good catch, I'll change it to equals and say so. (2) I'd explain that it's only 12 lines and reads straight through, and ask which part they'd split, offering to extract a helper if there's a clear one. (3) I'd reply that <= is right because the data format is 1-based, and add a short comment (and a test) so it's obvious. Technical debt is the future cost of a shortcut taken now, like skipping input validation to ship; I'd record it as a ticket or a TODO that says why, so it can be planned."
+        - "Accept 1 and fix it. Politely discuss 2, explaining it's short and clear and asking what to split. Explain 3 with the 1-based format and add a comment. Technical debt is the cost later of a shortcut now; I'd log it in a ticket."
+    - score: 1
+      descriptor: "Handles some of the comments well, or explains debt without an example of recording it."
+      samples:
+        - "I'd fix the == and explain the loop."
+        - "Debt is a shortcut."
+    - score: 0
+      descriptor: "Incorrect, for example says to ignore reviewers, change everything without thought, or reply rudely."
+      samples:
+        - "Ignore the comments I disagree with."
+        - "Change everything they say."
+ai_assisted: true

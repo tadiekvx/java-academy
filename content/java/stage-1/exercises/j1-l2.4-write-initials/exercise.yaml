@@ -1,0 +1,31 @@
+id: j1-l2.4-write-initials
+type: write
+title: "Initials"
+lesson: j1-l2.4
+role: ladder
+assesses: [o1, o2, o4]
+concepts: [J1.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: string-building
+prompt: |
+  Complete `initials` so it returns someone's initials in capitals, each followed by a full stop. For example, `initials("ada", "Lovelace")` should be `"A.L."`.
+entry:
+  methods:
+    - {name: initials, params: [{name: first, type: "String"}, {name: last, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["Ada", "Lovelace"], expect: "A.L."}
+    - {args: ["grace", "hopper"], expect: "G.H."}
+    - {args: ["Alan", "Turing"], expect: "A.T."}
+  hidden:
+    - {name: "one-letter names", args: ["x", "y"], expect: "X.Y."}
+    - {name: "mixed capitals", args: ["katherine", "Johnson"], expect: "K.J."}
+    - {name: "hyphenated surname", args: ["Tim", "berners-lee"], expect: "T.B."}
+    - {name: "already capitals", args: ["ZOE", "QUINN"], expect: "Z.Q."}
+    - {name: "all lower case", args: ["margaret", "hamilton"], expect: "M.H."}
+hints:
+  h1: "Which method gives you the first character of a string? Which one makes capitals?"
+  h2: "Join first.charAt(0), \".\", last.charAt(0) and \".\", then call toUpperCase() on the whole result and return it."
+ai_assisted: true

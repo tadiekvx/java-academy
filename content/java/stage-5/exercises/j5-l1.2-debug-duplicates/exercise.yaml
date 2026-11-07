@@ -1,0 +1,30 @@
+id: j5-l1.2-debug-duplicates
+type: debug
+title: "Correct, but far too slow"
+lesson: j5-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J5.02]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `hasDuplicate` gives the right answer, but the checks also run it on **100,000 values** with a 2-second limit, and it times out. The driver `run` builds the list (with one repeat at the very end when `duplicate` is true). Find the accidental quadratic and make `hasDuplicate` linear.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}, {name: duplicate, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [5, true], expect: "true"}
+    - {method: run, args: [5, false], expect: "false"}
+    - {method: run, args: [0, true], expect: "false"}
+  hidden:
+    - {method: run, args: [1, true], expect: "true"}
+    - {method: run, args: [100000, false], expect: "false"}
+    - {method: run, args: [100000, true], expect: "true"}
+    - {method: run, args: [50000, false], expect: "false"}
+    - {method: run, args: [2, true], expect: "true"}
+hints:
+  h1: "Two loops over the same list make n squared work. What data structure answers \"have I seen this?\" in constant time?"
+  h2: "Keep a HashSet of what you've seen; if add returns false, it's a repeat."
+ai_assisted: true

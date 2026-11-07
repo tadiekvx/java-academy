@@ -1,0 +1,19 @@
+id: j1-l4.2-predict-table
+type: predict
+title: "Trace the total"
+lesson: j1-l4.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Draw a trace table with columns for `i` and `total`, then predict exactly what this prints.
+expected_output: |
+  15
+  11
+hints:
+  h1: "i takes the values 2, 5, 8, then 11. Which of those pass the check?"
+  h2: "Passes with i = 2, 5 and 8 add up to 15. Then i becomes 11, which fails the check, so i is 11 at the end."
+ai_assisted: true

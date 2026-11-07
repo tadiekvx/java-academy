@@ -1,0 +1,58 @@
+id: j11-l2.1-explain-workflow
+type: explain
+title: "Reading a workflow"
+lesson: j11-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J11.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a GitHub Actions workflow file for this repository. It was written for the course and has **not** been run.
+
+  ```yaml
+  name: ci
+  on: [push, pull_request]
+
+  jobs:
+    test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-java@v4
+          with:
+            distribution: temurin
+            java-version: "25"
+        - run: mvn -B -f backend/pom.xml test
+
+    image:
+      needs: test
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - run: docker build -t academy:${{ github.sha }} .
+
+  ```
+
+  Explain: when it runs; what the two jobs do; what `needs: test` means and what happens to the `image` job if a test fails; why a pipeline like this is stored in the repository next to the code; and name two things a team would add before relying on it for releases.
+rubric:
+  criteria: |
+    The workflow runs on every push and pull request. The test job checks out the code, installs Java 25 (Temurin) and runs the backend's Maven tests; the image job checks out the code and builds a Docker image tagged with the commit hash. `needs: test` makes the image job wait for the test job and run only if it succeeded, so a failed test means no image is built. Keeping the pipeline in the repository (pipeline as code) versions it with the code, lets it be reviewed like code, and makes the build reproducible for anyone. Before relying on it for releases a team would add things such as a vulnerability scan of the image, publishing the image to a registry, caching dependencies, pinning action versions, a deployment step with a smoke test, and secrets handled through the platform's secret store.
+  levels:
+    - score: 2
+      descriptor: "The answer describes the trigger, both jobs, the `needs` behaviour, the pipeline-as-code benefit and two sensible additions."
+      samples:
+        - "It runs on every push and pull request. test checks out, sets up Java 25 and runs mvn test; image checks out and builds a Docker image tagged with the commit SHA. needs: test means image waits and is skipped if tests fail. Having it in the repo means it is versioned and reviewed with the code. Before releases I would add an image scan and push to a registry, and probably a deploy plus smoke test."
+        - "Triggers: push and PR. Jobs: tests, then an image build gated by needs. If a test fails the image job does not run. As code it is reviewed and reproducible. To add: scanning, registry publishing, caching, pinned versions."
+    - score: 1
+      descriptor: "The answer describes the jobs without the dependency or the additions."
+      samples:
+        - "It runs the tests and builds an image."
+        - "It runs on push."
+    - score: 0
+      descriptor: "The answer misreads the workflow."
+      samples:
+        - "The image job runs at the same time as the test job whatever the result."
+        - "It deploys to production."
+ai_assisted: true

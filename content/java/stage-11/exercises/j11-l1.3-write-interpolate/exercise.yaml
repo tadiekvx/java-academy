@@ -1,0 +1,33 @@
+id: j11-l1.3-write-interpolate
+type: write
+title: "Compose variable substitution"
+lesson: j11-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J11.03]
+evidence: [IMPL]
+misconceptions: [MC207]
+difficulty: 4
+prompt: |
+  Compose files use Bash-like substitution. Write `substitute(template, env)`, where `env` is a list of `NAME=value`. `${NAME}` becomes the value, or the empty string if NAME is unset. `${NAME:-fallback}` becomes the fallback if NAME is unset **or empty**. `${NAME-fallback}` becomes the fallback only if NAME is **unset**. `$$` becomes a single `$`. Everything else is copied unchanged.
+entry:
+  methods:
+    - {name: substitute, params: [{name: template, type: "String"}, {name: env, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a set variable", method: substitute, args: ["password: ${DB_PASSWORD}", ["DB_PASSWORD=s3cret"]], expect: "password: s3cret"}
+    - {name: "a default for an unset variable", method: substitute, args: ["tag: ${TAG:-latest}", []], expect: "tag: latest"}
+    - {name: "a literal dollar", method: substitute, args: ["price: $$5", []], expect: "price: $5"}
+  hidden:
+    - {name: "empty counts as unset for :-", method: substitute, args: ["a=${X:-d}", ["X="]], expect: "a=d"}
+    - {name: "empty is set for -", method: substitute, args: ["a=${X-d}", ["X="]], expect: "a="}
+    - {name: "unset for -", method: substitute, args: ["a=${X-d}", []], expect: "a=d"}
+    - {name: "two variables", method: substitute, args: ["${A}${B}", ["A=1", "B=2"]], expect: "12"}
+    - {name: "unset with no default is empty", method: substitute, args: ["${MISSING}", []], expect: ""}
+    - {name: "a default containing a dash", method: substitute, args: ["x=${Y:-a-b}", []], expect: "x=a-b"}
+    - {name: "nothing to do", method: substitute, args: ["no variables here", ["A=1"]], expect: "no variables here"}
+    - {name: "a connection string", method: substitute, args: ["url=jdbc:postgresql://${HOST:-db}:${PORT:-5432}/academy", ["HOST=localhost"]], expect: "url=jdbc:postgresql://localhost:5432/academy"}
+hints:
+  h1: "Use one regular expression that matches `$$` or a braced variable."
+  h2: "`:-` and `-` differ for a variable that is set but empty."
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j2-l2.2-write-scores
+type: write
+title: "A class that guards its array"
+lesson: j2-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J2.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Scores` keeps the array it is given, and hands out its own array. The driver `run` then tries to damage the object twice: by changing the original array after building `Scores`, and by writing into the array that `all()` returns. Make `Scores` take **defensive copies**, so that `max()` still returns the largest of the values it was *originally* given.
+entry:
+  methods:
+    - {name: run, params: [{name: input, type: "int[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: run, args: [[3, 9, 4]], expect: 9}
+    - {method: run, args: [[5]], expect: 5}
+    - {method: run, args: [[-4, -1, -8]], expect: -1}
+  hidden:
+    - {method: run, args: [[1, 2]], expect: 2}
+    - {method: run, args: [[7, 7, 7]], expect: 7}
+    - {method: run, args: [[10, 0, 20, 5]], expect: 20}
+    - {method: run, args: [[100]], expect: 100}
+    - {method: run, args: [[-5, 50, -5]], expect: 50}
+hints:
+  h1: "There are two routes: the array going in, and the array coming out. Which of them does the starter copy?"
+  h2: "this.values = values.clone(); and return values.clone();"
+ai_assisted: true

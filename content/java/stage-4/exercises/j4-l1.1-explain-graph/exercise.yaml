@@ -1,0 +1,44 @@
+id: j4-l1.1-explain-graph
+type: explain
+title: "Read the history"
+lesson: j4-l1.1
+role: ladder
+assesses: [o2, o3]
+concepts: [J4.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is the output of `git log --graph --oneline` in a repository:
+
+  ```
+  *   8ef0284 Merge free-delivery into main
+  |\
+  | * 78ee5d6 Add free delivery rule
+  * | 1736485 Add a README
+  |/
+  * e506a4b Add withDiscount
+  * 9303b85 Add the price calculator
+  ```
+
+  (a) Which commit is the merge commit, and how many parents does it have? (b) From which commit did the two lines of work split? (c) Why did this merge create a commit, where a merge that Git can fast-forward doesn't? (d) What is a branch, in terms of these commits?
+rubric:
+  criteria: |
+    A full answer says 8ef0284 is the merge commit with two parents (78ee5d6 and 1736485); the work split at e506a4b; both main (the README commit) and the free-delivery branch had their own new commits, so Git had to combine them, whereas a fast-forward is only possible when the target hasn't moved; and a branch is a movable pointer to one of these commits.
+  levels:
+    - score: 2
+      descriptor: "Identifies 8ef0284 as the merge commit with two parents, e506a4b as the split point, explains both lines had new commits so a merge commit was needed (a fast-forward only moves a pointer when one side hasn't moved), and says a branch is a pointer to a commit."
+      samples:
+        - "(a) 8ef0284 is the merge commit, and it has two parents: the free-delivery commit 78ee5d6 and the README commit 1736485. (b) They split at e506a4b, Add withDiscount. (c) main had its own new commit (the README) as well as the branch, so Git had to combine two lines of work with a merge commit; a fast-forward only works when main hasn't moved. (d) A branch is a movable pointer to a commit."
+        - "The merge commit is 8ef0284 with two parents. Both lines come from e506a4b. Because both sides had new commits, a merge commit was needed rather than a fast-forward. A branch is just a pointer to a commit."
+    - score: 1
+      descriptor: "Answers some parts, for example finds the merge commit but not why it was needed, or doesn't say what a branch is."
+      samples:
+        - "8ef0284 is the merge."
+        - "It split earlier."
+    - score: 0
+      descriptor: "Incorrect, for example says the merge commit is the oldest one, or that a branch is a copy of the files."
+      samples:
+        - "The merge commit is 9303b85."
+        - "A branch is a folder copy of the project."
+ai_assisted: true

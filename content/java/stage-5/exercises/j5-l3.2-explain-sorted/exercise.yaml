@@ -1,0 +1,32 @@
+id: j5-l3.2-explain-sorted
+type: explain
+title: "Sorted first, then search"
+lesson: j5-l3.2
+role: ladder
+assesses: [o3]
+concepts: [J5.10]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) Why must the data be sorted for binary search, and what does `Arrays.binarySearch` promise if it isn't? (b) What does `Arrays.binarySearch` return when the key is absent, and what does `-4` tell you? (c) You must answer 1,000 membership queries about a list of 1,000,000 numbers. Compare scanning for each query with sorting once and then binary searching, in rough numbers of steps.
+rubric:
+  criteria: |
+    A full answer says each step discards half the data on the assumption that the order tells you which half to keep, and the documentation says the results are undefined for unsorted data; that an absent key returns -(insertion point) - 1 so -4 means it would be inserted at index 3; and that scanning costs about 1,000 x 1,000,000 = 10^9 steps whereas sorting about 20 million steps plus 1,000 searches of about 20 steps is far cheaper.
+  levels:
+    - score: 2
+      descriptor: "Says binary search discards half based on the order so unsorted data gives undefined results, says absent returns -(insertion point) - 1 so -4 means index 3, and compares about 10^9 steps for scanning with about 2 x 10^7 for sorting plus searching."
+      samples:
+        - "Binary search throws half the data away by comparing with the middle, which only works if the data is in order, so on unsorted data the result is undefined. For an absent key it returns -(insertion point) - 1, so -4 means the key would go at index 3. Scanning 1,000 times over a million items is about 10^9 steps; sorting once is about 20 million steps and then each of the 1,000 searches is about 20 steps, so sorting is much cheaper."
+        - "It relies on the order to know which half to keep, otherwise it's undefined. Absent returns -(ip)-1, so -4 is insertion point 3. 1,000 scans is about a billion steps; sort plus 1,000 binary searches is about 20 million."
+    - score: 1
+      descriptor: "Gets two of the three parts right, or gives them without numbers."
+      samples:
+        - "It has to be sorted, otherwise undefined."
+        - "-4 means it would be inserted at index 3."
+    - score: 0
+      descriptor: "Incorrect, for example says binary search works on any data, or that -1 means index 0 was found."
+      samples:
+        - "Binary search works on any list."
+        - "-4 means the key is at index 4."
+ai_assisted: true

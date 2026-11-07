@@ -1,0 +1,32 @@
+id: j3-l4.2-explain-trust
+type: explain
+title: "Why check the data?"
+lesson: j3-l4.2
+role: ladder
+assesses: [o3]
+concepts: [J3.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate's import code does `Integer.parseInt(line.split(",")[1])` for every line of a customer's CSV, and it crashes at line 4,031 of 10,000. (a) Give three kinds of bad line that could cause a crash like this. (b) Say what the code should do about a bad line, instead of crashing. (c) Say what the person who supplied the file needs to be told.
+rubric:
+  criteria: |
+    A full answer lists three kinds of bad line (a header row, a blank line, a missing field or non-numeric amount, an extra comma) and says the code should validate each line, skip the bad ones and carry on, and then report which lines (line numbers and reasons) were rejected, alongside what was imported.
+  levels:
+    - score: 2
+      descriptor: "Gives three kinds of bad line (such as a header, a blank line, a missing or text amount, a stray comma), says to validate and skip while continuing, and says to report which lines were rejected with line numbers and reasons."
+      samples:
+        - "A header row, a blank line, and a line with a missing or non-numeric amount like \"food,\" or \"food,abc\" could all crash it. The code should check each line, skip the bad ones and keep going. Then it should report the rejected lines, with line numbers and why, as well as what was imported, so the customer can fix them."
+        - "Blank lines, a header, and a line with too few fields or text where a number should be. The importer should validate each line and skip the bad ones instead of crashing. The customer should be told the line numbers and the problem with each rejected line."
+    - score: 1
+      descriptor: "Names some bad lines and says to validate, but doesn't say how to report them, or the reverse."
+      samples:
+        - "A blank line could crash it. Check the lines first."
+        - "Tell them which lines failed."
+    - score: 0
+      descriptor: "Incorrect, for example says the file is simply wrong and the program should be allowed to crash."
+      samples:
+        - "The customer's file is wrong so it's fine to crash."
+        - "Catch Exception and ignore it."
+ai_assisted: true

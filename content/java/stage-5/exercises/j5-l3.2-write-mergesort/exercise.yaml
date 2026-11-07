@@ -1,0 +1,34 @@
+id: j5-l3.2-write-mergesort
+type: write
+title: "Merge sort"
+lesson: j5-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J5.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 5
+prompt: |
+  Write `mergeSort(int[] values)`: return a **new** sorted array (smallest first), using merge sort: split in half, sort each half recursively, merge. Don't use `Arrays.sort` or `List.sort`. The checks also sort 200,000 values under a 2-second limit, which an O(n²) sort can't do.
+entry:
+  methods:
+    - {name: mergeSort, params: [{name: values, type: "int[]"}], returns: "int[]"}
+    - {name: run, params: [{name: n, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: mergeSort, args: [[5, 2, 9, 1]], expect: [1, 2, 5, 9]}
+    - {method: mergeSort, args: [[]], expect: []}
+    - {method: mergeSort, args: [[3]], expect: [3]}
+    - {name: "no library sort", source_contains: ["mergeSort("], source_not_contains: ["Arrays.sort", ".sort(", "Stream"]}
+  hidden:
+    - {method: mergeSort, args: [[2, 1]], expect: [1, 2]}
+    - {method: mergeSort, args: [[4, 4, 4, 1, 1]], expect: [1, 1, 4, 4, 4]}
+    - {method: mergeSort, args: [[-5, 3, -1, 0, 7, -9]], expect: [-9, -5, -1, 0, 3, 7]}
+    - {method: mergeSort, args: [[1, 2, 3, 4, 5]], expect: [1, 2, 3, 4, 5]}
+    - {method: mergeSort, args: [[9, 8, 7, 6, 5, 4, 3, 2, 1]], expect: [1, 2, 3, 4, 5, 6, 7, 8, 9]}
+    - {method: run, args: [200000], expect: "sorted=true sum=100000665344 first=0 last=1000001"}
+    - {method: run, args: [1000], expect: "sorted=true sum=502960954 first=0 last=999938"}
+hints:
+  h1: "Base case: 0 or 1 items are already sorted. Otherwise split at the middle, sort both halves, then merge by repeatedly taking the smaller front item, and copy whatever is left."
+  h2: "int[] left = mergeSort(Arrays.copyOfRange(values, 0, mid)); int[] right = mergeSort(Arrays.copyOfRange(values, mid, values.length));"
+ai_assisted: true

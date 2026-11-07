@@ -1,0 +1,31 @@
+id: j3-l5.3-write-table
+type: write
+title: "Aligned columns"
+lesson: j3-l5.3
+role: ladder
+assesses: [o2]
+concepts: [J3.12]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `table(String[] names, int[] pence)`: one line per item, with the **name left-aligned in 10 characters** and the price (as `£1.99`, built from whole pence) **right-aligned in 8 characters**, lines joined by `\n` (none after the last). For `"Tea"` and `150` the line is `Tea         £1.50`. Use `String.format` or `formatted`.
+entry:
+  methods:
+    - {name: table, params: [{name: names, type: "String[]"}, {name: pence, type: "int[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: table, args: [["Tea", "Cake"], [150, 275]], expect: "Tea          £1.50\nCake         £2.75"}
+    - {method: table, args: [[], []], expect: ""}
+    - {method: table, args: [["Milk"], [99]], expect: "Milk         £0.99"}
+    - {name: "uses a format", source_contains: ["format"]}
+  hidden:
+    - {method: table, args: [["a"], [5]], expect: "a            £0.05"}
+    - {method: table, args: [["Sandwich", "Soup"], [1000, 0]], expect: "Sandwich    £10.00\nSoup         £0.00"}
+    - {method: table, args: [["Pie"], [12345]], expect: "Pie        £123.45"}
+    - {method: table, args: [["X", "Y", "Z"], [1, 10, 100]], expect: "X            £0.01\nY            £0.10\nZ            £1.00"}
+    - {method: table, args: [["Longername"], [5]], expect: "Longername   £0.05"}
+hints:
+  h1: "%-10s pads a name on the right to 10 wide; %8s pads the price on the left to 8 wide. Build the pounds-and-pence text from whole pence."
+  h2: "String.format(\"%-10s%8s\", names[i], money)"
+ai_assisted: true

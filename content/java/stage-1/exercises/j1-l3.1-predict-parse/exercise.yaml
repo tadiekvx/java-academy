@@ -1,0 +1,21 @@
+id: j1-l3.1-predict-parse
+type: predict
+title: "Text or number?"
+lesson: j1-l3.1
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.05]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Which values are text, and which are numbers?
+expected_output: |
+  121
+  13
+  1212
+  24
+hints:
+  h1: "typed is a String; number is an int. What does + do with each?"
+  h2: "Text + anything joins, so typed + 1 is \"121\". number + 1 adds. typed + number joins \"12\" and 12."
+ai_assisted: true

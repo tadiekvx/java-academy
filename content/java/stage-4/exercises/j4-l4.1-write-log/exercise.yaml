@@ -1,0 +1,31 @@
+id: j4-l4.1-write-log
+type: write
+title: "A log with levels"
+lesson: j4-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J4.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `SimpleLog`. It's created with a **threshold** level (`"DEBUG"`, `"INFO"`, `"WARN"` or `"ERROR"`, in increasing order of severity). `log(level, message)` returns `"[LEVEL] message"` if `level` is **at or above** the threshold, and an empty string if it's below. An unknown level name must throw an `IllegalArgumentException` (the driver turns that into `unknown level`). The driver feeds in entries such as `"WARN:disk almost full"`.
+entry:
+  methods:
+    - {name: run, params: [{name: threshold, type: "String"}, {name: entries, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["INFO", ["DEBUG:loading", "INFO:order placed", "ERROR:disk full"]], expect: "[INFO] order placed|[ERROR] disk full"}
+    - {method: run, args: ["DEBUG", ["DEBUG:a"]], expect: "[DEBUG] a"}
+    - {method: run, args: ["ERROR", []], expect: ""}
+  hidden:
+    - {method: run, args: ["WARN", ["INFO:x", "WARN:y", "ERROR:z"]], expect: "[WARN] y|[ERROR] z"}
+    - {method: run, args: ["ERROR", ["WARN:w", "ERROR:e"]], expect: "[ERROR] e"}
+    - {method: run, args: ["DEBUG", ["INFO:i", "DEBUG:d"]], expect: "[INFO] i|[DEBUG] d"}
+    - {method: run, args: ["TRACE", ["INFO:x"]], expect: "unknown level"}
+    - {method: run, args: ["INFO", ["LOUD:x"]], expect: "unknown level"}
+    - {method: run, args: ["INFO", ["INFO:a:b"]], expect: "[INFO] a:b"}
+hints:
+  h1: "Turn each level name into a number (DEBUG 0 up to ERROR 3). A message is logged when its number is at least the threshold's. Format it as [LEVEL] message."
+  h2: "if (rank(level) >= threshold) return \"[\" + level + \"] \" + message;"
+ai_assisted: true

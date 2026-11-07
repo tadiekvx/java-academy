@@ -1,0 +1,32 @@
+id: j5-l3.4-explain-why
+type: explain
+title: "Why Dijkstra?"
+lesson: j5-l3.4
+role: ladder
+assesses: [o3]
+concepts: [J5.12]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) Show with a small example why BFS can give the wrong answer when edges have weights. (b) In one or two sentences, explain why taking the cheapest queued node first lets Dijkstra finalise that node's cost. (c) Why does a negative edge weight break the argument?
+rubric:
+  criteria: |
+    A full answer gives an example where the route with fewer edges costs more (for example a direct edge of weight 5 against two edges of weight 1 each, where BFS picks the single edge); explains that when a node is taken from the priority queue every other route to it must go through a node that is already at least as costly and add a non-negative weight, so it cannot be cheaper; and says a negative weight could make a later route cheaper than one already finalised.
+  levels:
+    - score: 2
+      descriptor: "Gives a valid example where fewer edges cost more (such as a single edge of 5 versus two edges of 1 and 1), explains that other routes go through nodes costing at least as much plus a non-negative weight so can't be cheaper, and says a negative edge could later reduce a finalised cost."
+      samples:
+        - "If A to C is one edge of weight 5 but A to D to C is two edges of weight 1 each, BFS picks the one-edge route, which costs 5 instead of 2. When Dijkstra takes the cheapest queued node, any other route to it has to pass through a node that is already at least as expensive and then add a weight that isn't negative, so it can't be cheaper. A negative edge breaks that, because a later step could make the total smaller than a cost we already finalised."
+        - "(a) One edge of weight 10 versus three edges of weight 1: BFS takes the one edge. (b) Everything else in the queue costs at least as much, and adding non-negative weights can't lower that. (c) A negative weight could lower a cost after the node was finalised."
+    - score: 1
+      descriptor: "Gets one or two parts right, for example the example but not the reasoning."
+      samples:
+        - "BFS counts edges not weights."
+        - "Negative weights are a problem."
+    - score: 0
+      descriptor: "Incorrect, for example says BFS works on weighted graphs, or that Dijkstra works with negative weights."
+      samples:
+        - "BFS works fine for weights."
+        - "Dijkstra handles negative edges."
+ai_assisted: true

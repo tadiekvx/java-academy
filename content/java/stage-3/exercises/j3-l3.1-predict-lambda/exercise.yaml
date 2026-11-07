@@ -1,0 +1,23 @@
+id: j3-l3.1-predict-lambda
+type: predict
+title: "Read the lambdas"
+lesson: j3-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J3.05]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints.
+expected_output: |
+  15
+  true
+  false
+  12
+  hi
+  [fig, pear, apple]
+hints:
+  h1: "Work out each lambda's job. isEmpty.negate() is the opposite question. The sort compares lengths."
+  h2: "addBase adds the captured 10. negate flips true to false. The words sort by length: fig (3), pear (4), apple (5)."
+ai_assisted: true

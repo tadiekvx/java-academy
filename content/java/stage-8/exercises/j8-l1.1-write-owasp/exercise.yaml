@@ -1,0 +1,30 @@
+id: j8-l1.1-write-owasp
+type: write
+title: "Finding the category"
+lesson: j8-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J8.01]
+evidence: [IMPL]
+misconceptions: [MC178]
+difficulty: 2
+prompt: |
+  Map a weakness to its category in the **OWASP Top 10:2025** (the 2025 list, not older ones). Write `owaspFor(weakness)` returning the category as `A01 Broken Access Control` style text for: `missing-ownership-check` (A01), `sql-built-from-input` (A05), `vulnerable-dependency` (A03), `no-login-lockout` (A07), `failed-logins-not-logged` (A09). Anything else is `unmapped`.
+entry:
+  methods:
+    - {name: owaspFor, params: [{name: weakness, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "an access-control gap", method: owaspFor, args: ["missing-ownership-check"], expect: "A01 Broken Access Control"}
+    - {name: "injection", method: owaspFor, args: ["sql-built-from-input"], expect: "A05 Injection"}
+    - {name: "not on the list", method: owaspFor, args: ["something-else"], expect: "unmapped"}
+  hidden:
+    - {name: "authentication", method: owaspFor, args: ["no-login-lockout"], expect: "A07 Authentication Failures"}
+    - {name: "logging", method: owaspFor, args: ["failed-logins-not-logged"], expect: "A09 Security Logging and Alerting Failures"}
+    - {name: "supply chain", method: owaspFor, args: ["vulnerable-dependency"], expect: "A03 Software Supply Chain Failures"}
+    - {name: "empty", method: owaspFor, args: [""], expect: "unmapped"}
+    - {name: "exact names only", method: owaspFor, args: ["MISSING-OWNERSHIP-CHECK"], expect: "unmapped"}
+hints:
+  h1: "Use the exact A-numbers and names of the 2025 list."
+  h2: "What should an unknown weakness return?"
+ai_assisted: true

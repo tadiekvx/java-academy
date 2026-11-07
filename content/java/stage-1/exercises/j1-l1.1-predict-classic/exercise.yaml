@@ -1,0 +1,20 @@
+id: j1-l1.1-predict-classic
+type: predict
+title: The traditional form
+lesson: j1-l1.1
+role: ladder
+assesses: [o4, o2]
+concepts: [J1.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  This program is written the way you'll see in most other Java material, with a class around
+  `main` and `System.out.println` for printing. Predict exactly what it prints, then run it.
+expected_output: |
+  Same idea,
+  longer form.
+hints:
+  h1: Read System.out.println as IO.println and System.out.print as IO.print. Everything else is the same.
+  h2: "The first two statements build one line; the third prints a whole line."
+ai_assisted: true

@@ -1,0 +1,21 @@
+id: j1-l2.3-predict-precedence
+type: predict
+title: Which part goes first?
+lesson: j1-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J1.02]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Predict exactly what this program prints, one value per line. Then run it and compare.
+expected_output: |
+  14
+  20
+  50
+  3
+hints:
+  h1: Multiplication and division happen before addition and subtraction.
+  h2: Operators at the same level are worked out from left to right, so 20 / 2 happens before * 5.
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j2-l4.1-write-record
+type: write
+title: "A rectangle that can't be negative"
+lesson: j2-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J2.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Rect` is a record. Finish it: `area()` should return `w * h`, and a **compact constructor** should refuse a negative width or height with an `IllegalArgumentException`. (Zero is allowed.) The driver shows the record's own `toString`, e.g. `Rect[w=3, h=4] area=12`, or `rejected`.
+entry:
+  methods:
+    - {name: run, params: [{name: w, type: "int"}, {name: h, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [3, 4], expect: "Rect[w=3, h=4] area=12"}
+    - {method: run, args: [-1, 4], expect: "rejected"}
+    - {method: run, args: [0, 0], expect: "Rect[w=0, h=0] area=0"}
+    - {name: "validates in a compact constructor", source_contains: ["Rect {"]}
+  hidden:
+    - {method: run, args: [5, -2], expect: "rejected"}
+    - {method: run, args: [0, 7], expect: "Rect[w=0, h=7] area=0"}
+    - {method: run, args: [10, 10], expect: "Rect[w=10, h=10] area=100"}
+    - {method: run, args: [-3, -3], expect: "rejected"}
+    - {method: run, args: [1, 1], expect: "Rect[w=1, h=1] area=1"}
+hints:
+  h1: "Add a constructor with no parameter list inside the record, and check the components inside it."
+  h2: "Rect { if (w < 0 || h < 0) throw new IllegalArgumentException(\"negative size\"); }  and  int area() { return w * h; }"
+ai_assisted: true

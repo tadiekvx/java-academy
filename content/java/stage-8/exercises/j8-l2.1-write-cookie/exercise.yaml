@@ -1,0 +1,31 @@
+id: j8-l2.1-write-cookie
+type: write
+title: "Reading a Set-Cookie header"
+lesson: j8-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J8.05]
+evidence: [IMPL]
+misconceptions: [MC182]
+difficulty: 2
+prompt: |
+  Write `describeCookie(header)` for the value of a `Set-Cookie` header (attributes are separated by `; `). Return `name=NAME httpOnly=true|false secure=true|false`, where NAME is the cookie name (the part before the first `=`) and attribute names are matched ignoring letter case.
+entry:
+  methods:
+    - {name: describeCookie, params: [{name: header, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a session cookie", method: describeCookie, args: ["JSESSIONID=ABC123; Path=/; HttpOnly"], expect: "name=JSESSIONID httpOnly=true secure=false"}
+    - {name: "a token cookie", method: describeCookie, args: ["XSRF-TOKEN=t0k3n; Path=/"], expect: "name=XSRF-TOKEN httpOnly=false secure=false"}
+    - {name: "both flags", method: describeCookie, args: ["a=b; Secure; HttpOnly"], expect: "name=a httpOnly=true secure=true"}
+  hidden:
+    - {name: "lower case", method: describeCookie, args: ["sid=1; httponly"], expect: "name=sid httpOnly=true secure=false"}
+    - {name: "upper case", method: describeCookie, args: ["sid=1; SECURE"], expect: "name=sid httpOnly=false secure=true"}
+    - {name: "an empty value", method: describeCookie, args: ["sid="], expect: "name=sid httpOnly=false secure=false"}
+    - {name: "an equals sign in the value", method: describeCookie, args: ["sid=a=b; Path=/"], expect: "name=sid httpOnly=false secure=false"}
+    - {name: "several attributes", method: describeCookie, args: ["sid=1; Max-Age=60; Path=/; Secure"], expect: "name=sid httpOnly=false secure=true"}
+    - {name: "a similar name", method: describeCookie, args: ["sid=1; HttpOnlyish"], expect: "name=sid httpOnly=false secure=false"}
+hints:
+  h1: "Split on `; `, then split the first part at the first `=`."
+  h2: "Compare each attribute name in lower case."
+ai_assisted: true

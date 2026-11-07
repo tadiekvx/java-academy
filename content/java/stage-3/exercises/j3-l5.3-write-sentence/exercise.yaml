@@ -1,0 +1,31 @@
+id: j3-l5.3-write-sentence
+type: write
+title: "A list as a sentence"
+lesson: j3-l5.3
+role: ladder
+assesses: [o1]
+concepts: [J3.12]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `sentence(List<String> items)` using a `StringBuilder`: an empty list is `nothing`; one item is just that item; two items are `a and b`; more are `a, b and c` (commas between all but the last two, and `and` before the last).
+entry:
+  methods:
+    - {name: sentence, params: [{name: items, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {method: sentence, args: [["a", "b", "c"]], expect: "a, b and c"}
+    - {method: sentence, args: [[]], expect: "nothing"}
+    - {method: sentence, args: [["x"]], expect: "x"}
+    - {name: "uses a StringBuilder", source_contains: ["StringBuilder"]}
+  hidden:
+    - {method: sentence, args: [["tea", "coffee"]], expect: "tea and coffee"}
+    - {method: sentence, args: [["a", "b", "c", "d"]], expect: "a, b, c and d"}
+    - {method: sentence, args: [["only one"]], expect: "only one"}
+    - {method: sentence, args: [["red", "green", "blue"]], expect: "red, green and blue"}
+    - {method: sentence, args: [["1", "2", "3", "4", "5"]], expect: "1, 2, 3, 4 and 5"}
+hints:
+  h1: "Handle the empty list first. In the loop, decide what to add before each item except the first: \" and \" before the last, otherwise \", \"."
+  h2: "sb.append(i == items.size() - 1 ? \" and \" : \", \");"
+ai_assisted: true

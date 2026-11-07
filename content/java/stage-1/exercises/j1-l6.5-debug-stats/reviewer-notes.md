@@ -1,0 +1,1 @@
+Three bugs: smallest initialised to 0 (fails for all-positive or negative arrays); largest uses `<` (finds the smallest); loop starts at 1 so the first element is missed in the sum. The `two-of-three` solution fixes the first two but not the loop start, so it must still fail.

@@ -1,0 +1,32 @@
+id: j8-l2.2-explain-session-vs-token
+type: explain
+title: "Session or token"
+lesson: j8-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J8.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Brightbank's web app and a planned mobile app both need to sign customers in. A colleague wants signed JWTs valid for 30 days stored in the browser's local storage, 'because tokens are stateless and scale better'. Argue for the choice you would make for the web app, covering revocation, where the credential is stored, and what the `exp` claim does and does not give you. This platform uses a server session and cookie; say what that trades away.
+rubric:
+  criteria: |
+    A JWT is verified by its signature and exp claim alone, which is why no server lookup is needed, but that also means it cannot be revoked before exp unless the server keeps a list, which is state again. A 30-day token is a long-lived bearer credential: whoever copies it is the customer, and local storage is readable by any script on the page, so one XSS bug exposes it. A session cookie can be marked HttpOnly, and logging out or banning a user takes effect at once because the server owns the session. The price of a server session is server-side state to store and share between instances. For the web app a session cookie is the better default; tokens suit cases such as service-to-service calls or a mobile client that needs a different mechanism.
+  levels:
+    - score: 2
+      descriptor: "The answer covers revocation, storage and exp, and states what the session design costs."
+      samples:
+        - "I would use a session cookie for the web app. A JWT cannot be revoked before exp without keeping server state, which defeats the point, and 30 days is a long time for a stolen token to work. In local storage any injected script can read it, whereas the session cookie can be HttpOnly. The exp claim only stops the token being accepted after that time. The cost of sessions is state on the server that must be shared if there are several instances."
+        - "Sessions: logout and bans work immediately, the id is HttpOnly. A long-lived JWT in local storage is exposed to XSS and cannot be cancelled early. exp just limits the lifetime. What the session trades away is statelessness, so sessions need storage and sharing across servers."
+    - score: 1
+      descriptor: "The answer prefers one with only one reason."
+      samples:
+        - "Sessions are safer because they can be revoked."
+        - "Tokens are stateless so they scale better."
+    - score: 0
+      descriptor: "The answer treats a signature as confidentiality or ignores storage."
+      samples:
+        - "A signed token is secret so storing it anywhere is fine."
+        - "Tokens are always better because they are modern."
+ai_assisted: true

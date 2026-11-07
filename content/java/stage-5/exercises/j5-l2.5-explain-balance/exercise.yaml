@@ -1,0 +1,32 @@
+id: j5-l2.5-explain-balance
+type: explain
+title: "Why did the tree become a list?"
+lesson: j5-l2.5
+role: ladder
+assesses: [o3]
+concepts: [J5.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A developer builds a BST by inserting 1,000,000 customer ids read from a file in ascending order, and lookups are very slow. (a) Describe the shape of the tree and the cost of a lookup. (b) About how tall would a balanced tree of a million values be, and what does that mean for lookups? (c) Name a Java class that avoids the problem, and what it promises.
+rubric:
+  criteria: |
+    A full answer says that inserting in ascending order puts every value to the right of the previous one so the tree is a chain of height about 1,000,000 and a lookup is O(n); a balanced tree of a million values is about 20 levels tall so a lookup takes about 20 steps; and TreeMap (or TreeSet) is a balanced tree that guarantees log(n) time for get, put, containsKey and remove.
+  levels:
+    - score: 2
+      descriptor: "Says ascending insertion builds a chain of height about a million with O(n) lookups, a balanced tree has about 20 levels so about 20 steps, and names TreeMap or TreeSet which guarantees log(n) operations."
+      samples:
+        - "Every new id is larger than the last so it goes to the right each time, making a chain with height about a million, and a lookup walks up to a million nodes. A balanced tree of a million values is only about 20 levels tall, so a lookup takes about 20 steps. TreeMap uses a self-balancing tree and guarantees log(n) time for get, put, containsKey and remove."
+        - "The tree is degenerate: a linked list to the right, height about 1,000,000 and O(n) lookup. Balanced would be around 20 deep. Use TreeMap, which is guaranteed O(log n)."
+    - score: 1
+      descriptor: "Gets the degenerate shape or the balanced height or the Java class, but not all three."
+      samples:
+        - "It becomes a linked list."
+        - "Use TreeMap."
+    - score: 0
+      descriptor: "Incorrect, for example says the tree is balanced or the problem is the file read."
+      samples:
+        - "The tree is balanced because it is sorted."
+        - "The disk is slow."
+ai_assisted: true

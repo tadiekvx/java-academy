@@ -1,0 +1,21 @@
+id: j1-l5.2-predict-copies
+type: predict
+title: "Copies and results"
+lesson: j1-l5.2
+role: ladder
+assesses: [o1, o2, o3]
+concepts: [J1.08]
+evidence: [MIST]
+misconceptions: [MC13]
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Remember that a parameter is a copy.
+expected_output: |
+  5
+  15
+  15
+  20
+hints:
+  h1: "The call bump(score) doesn't change score by itself. Only an assignment does."
+  h2: "bump(5) returns 15 but score stays 5. Then score = bump(score) stores 15. bump(bump(0)) is bump(10), which is 20."
+ai_assisted: true

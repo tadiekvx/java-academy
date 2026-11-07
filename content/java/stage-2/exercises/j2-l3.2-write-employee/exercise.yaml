@@ -1,0 +1,34 @@
+id: j2-l3.2-write-employee
+type: write
+title: "Fill in the missing step"
+lesson: j2-l3.2
+role: ladder
+assesses: [o1, o3]
+concepts: [J2.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Employee` is abstract: `pay()` is `base + bonus()`, and each kind of employee supplies its own `bonus()`. Write `Manager` (bonus is a tenth of the base pay, in whole pounds) and `Engineer` (a fixed bonus of 500). Each must `extend Employee` and call `super(name, base)`.
+entry:
+  methods:
+    - {name: payFor, params: [{name: role, type: "String"}, {name: base, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: payFor, args: ["manager", 3000], expect: 3300}
+    - {method: payFor, args: ["engineer", 3000], expect: 3500}
+    - {method: payFor, args: ["manager", 0], expect: 0}
+    - {name: "Manager extends Employee", source_contains: ["class Manager extends Employee"]}
+    - {name: "Engineer extends Employee", source_contains: ["class Engineer extends Employee"]}
+    - {name: "calls super", source_contains: ["super(name, base)"]}
+  hidden:
+    - {method: payFor, args: ["manager", 5], expect: 5}
+    - {method: payFor, args: ["manager", 9999], expect: 10998}
+    - {method: payFor, args: ["engineer", 0], expect: 500}
+    - {method: payFor, args: ["engineer", 12345], expect: 12845}
+    - {method: payFor, args: ["manager", 100], expect: 110}
+starter_compiles: false
+hints:
+  h1: "Each subclass: extends Employee, a constructor that calls super(name, base), and an int bonus() method."
+  h2: "class Manager extends Employee { Manager(String name, int base) { super(name, base); } int bonus() { return base / 10; } }"
+ai_assisted: true

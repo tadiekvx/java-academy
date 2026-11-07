@@ -1,0 +1,30 @@
+id: j5-l3.1-write-subsets
+type: write
+title: "Every subset, by backtracking"
+lesson: j5-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J5.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `subsets(String letters)`: every subset of the letters (all different), including the empty one, each written with its letters in their **original order**. Return them sorted by length, then alphabetically: for `"abc"` that's `["", "a", "b", "c", "ab", "ac", "bc", "abc"]`. Use recursion: for each letter, try leaving it out and putting it in.
+entry:
+  methods:
+    - {name: subsets, params: [{name: letters, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {method: subsets, args: ["abc"], expect: ["", "a", "b", "c", "ab", "ac", "bc", "abc"]}
+    - {method: subsets, args: [""], expect: [""]}
+    - {method: subsets, args: ["x"], expect: ["", "x"]}
+  hidden:
+    - {method: subsets, args: ["ab"], expect: ["", "a", "b", "ab"]}
+    - {method: subsets, args: ["cba"], expect: ["", "a", "b", "c", "ba", "ca", "cb", "cba"]}
+    - {method: subsets, args: ["abcd"], expect: ["", "a", "b", "c", "d", "ab", "ac", "ad", "bc", "bd", "cd", "abc", "abd", "acd", "bcd", "abcd"]}
+    - {method: subsets, args: ["zy"], expect: ["", "y", "z", "zy"]}
+    - {method: subsets, args: ["hello"], expect: ["", "e", "h", "l", "l", "o", "el", "el", "eo", "he", "hl", "hl", "ho", "ll", "lo", "lo", "ell", "elo", "elo", "hel", "hel", "heo", "hll", "hlo", "hlo", "llo", "ello", "hell", "helo", "helo", "hllo", "hello"]}
+hints:
+  h1: "Base case: when every letter has been decided, record what you chose. Otherwise recurse twice: once without the current letter, once with it."
+  h2: "collect(letters, index + 1, chosen, out); collect(letters, index + 1, chosen + letters.charAt(index), out);"
+ai_assisted: true

@@ -1,0 +1,21 @@
+id: j3-l1.1-predict-remove
+type: predict
+title: "remove: index or value?"
+lesson: j3-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J3.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints.
+expected_output: |
+  [10, 30, 20]
+  [10, 30]
+  [10, 30]
+  true
+hints:
+  h1: "remove(1) with an int removes the item at that position. remove(Integer.valueOf(x)) removes a matching value."
+  h2: "Index 1 is the first 20, so [10, 30, 20]. Then the value 20 is removed, leaving [10, 30]. Removing 99 changes nothing."
+ai_assisted: true

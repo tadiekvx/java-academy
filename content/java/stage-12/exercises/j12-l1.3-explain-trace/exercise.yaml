@@ -1,0 +1,43 @@
+id: j12-l1.3-explain-trace
+type: explain
+title: "Reading a trace"
+lesson: j12-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J12.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a trace for one slow `POST /transfers` request. It is a constructed teaching example (not captured from a real system); times are in milliseconds from the start of the request.
+
+  ```text
+  root:-:0:1000
+  auth:root:10:60
+  transfer:root:60:960
+  debit:transfer:70:130
+  credit:transfer:140:900
+  notify:transfer:905:950
+  ```
+
+  Using self times, say where the time went, which span you would investigate first and why the root span's duration alone would not tell you that. What would you ask next about that span, and which other signal would you consult?
+rubric:
+  criteria: |
+    The root takes 1000 ms. Its direct child 'transfer' takes 900 ms and 'auth' 50 ms, so the root's own time is 50 ms. Within 'transfer' (900 ms) the children are debit 60, credit 760 and notify 45, which leaves 35 ms of its own. The self time of 'credit' is 760 ms (it has no children in the trace), so most of the request is spent inside the credit step itself, not in a deeper call. The root's duration shows only that the request was slow; self times show where. Next I would ask what the credit step is doing for 760 ms (a remote call, a slow query, a lock), look at that component's metrics (latency, connections in use) and its logs for the same time and request id.
+  levels:
+    - score: 2
+      descriptor: "The answer computes self times, identifies credit (760 ms) as the place, explains the limits of the root duration, and names follow-up questions and signals."
+      samples:
+        - "Root self time is 50, transfer 35, auth 50, debit 60, notify 45 and credit 760. The credit span has 760 ms of its own, so I would investigate that first. The root duration (1000 ms) only says the request was slow; it does not say where. I would ask what credit is waiting for (remote call, query, lock) and check its metrics and logs for the same time and request id."
+        - "The time is in credit: 760 ms self time out of 1000. Root duration cannot show that because it includes all its children. Next: what is credit doing, with the metrics for its dependency and the logs for that request."
+    - score: 1
+      descriptor: "The answer finds credit as slow without self-time reasoning or follow-up."
+      samples:
+        - "The credit span is the slowest."
+        - "Look at the logs."
+    - score: 0
+      descriptor: "The answer blames the root or auth."
+      samples:
+        - "The root span is slow so the problem is in the root."
+        - "Auth is first so it must be the cause."
+ai_assisted: true

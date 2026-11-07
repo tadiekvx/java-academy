@@ -1,0 +1,32 @@
+id: j5-l2.4-explain-hash
+type: explain
+title: "Why does hashCode matter?"
+lesson: j5-l2.4
+role: ladder
+assesses: [o2]
+concepts: [J5.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) What is a **collision** in a hash table, and give one example in Java? (b) Within a bucket, why must a lookup compare keys with `equals` and not just their hash codes? (c) Why must two keys that are `equals` have the same `hashCode`? (d) Why does the iteration order of a `HashMap` carry no guarantee?
+rubric:
+  criteria: |
+    A full answer says a collision is two keys going to the same bucket (for example "Aa" and "BB", which have the same hash code 2112); that different keys can share a hash code so only equals can tell them apart; that the bucket is chosen from the hash code so equal keys with different hash codes would be looked for in the wrong bucket and missed; and that entry positions depend on hash codes and table size, so the order isn't defined.
+  levels:
+    - score: 2
+      descriptor: "Defines a collision with a valid example, says only equals can distinguish keys that share a hash code, says equal keys with different hash codes would be searched for in the wrong bucket, and says iteration order depends on hash codes and table size so is unspecified."
+      samples:
+        - "A collision is two different keys ending up in the same bucket, like \"Aa\" and \"BB\" which both have hash code 2112. The hash code only picks the bucket, and different keys can share it, so equals has to decide which entry is the key. Equal keys must have the same hash code or they'd be looked up in the wrong bucket and not found. Iteration order depends on the hash codes and the table size, which is why HashMap doesn't promise any order."
+        - "(a) Two keys hashing to the same bucket, e.g. Aa and BB. (b) Same hash doesn't mean same key; equals does. (c) Otherwise the lookup goes to a different bucket and misses the entry. (d) Position depends on hashes and capacity, so it's unspecified."
+    - score: 1
+      descriptor: "Answers two or three parts well, or gives the right ideas without the example."
+      samples:
+        - "A collision is when two keys go to the same bucket."
+        - "equals decides."
+    - score: 0
+      descriptor: "Incorrect, for example says equal hash codes mean equal keys, or that order is insertion order."
+      samples:
+        - "Same hash code means same key."
+        - "HashMap keeps insertion order."
+ai_assisted: true

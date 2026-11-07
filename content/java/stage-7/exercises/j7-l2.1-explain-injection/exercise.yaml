@@ -1,0 +1,32 @@
+id: j7-l2.1-explain-injection
+type: explain
+title: "Constructor or setter"
+lesson: j7-l2.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J7.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate writes `TransferService` with a no-argument constructor and a `setNotifier` method, and forgets to call it in one place. Explain what goes wrong, which style Spring's documentation prefers for mandatory dependencies, and what constructor injection makes impossible.
+rubric:
+  criteria: |
+    Dependency injection means an object states its dependencies (constructor arguments, factory-method arguments or properties) and the container supplies them. The reference advises constructors for mandatory dependencies and setters for optional ones. With a setter, an object can exist without its notifier and fail later with a NullPointerException; with a constructor, the object cannot be built without it, and the field can be final.
+  levels:
+    - score: 2
+      descriptor: "The answer describes the failure, names the preferred style and what the constructor guarantees."
+      samples:
+        - "If nobody calls setNotifier, the service exists but its notifier is null and it fails later with a NullPointerException. Spring's documentation recommends constructors for mandatory dependencies and setters for optional ones. With constructor injection the object cannot be created without its notifier, and the field can be final."
+        - "The service is half built: it compiles but breaks at runtime when it uses the missing dependency. Use constructor injection for required collaborators, as the Spring reference suggests. Then the dependency is always present and the class is easy to test by passing a fake."
+    - score: 1
+      descriptor: "The answer prefers constructors without saying what goes wrong."
+      samples:
+        - "Constructor injection is better."
+        - "Use the constructor because Spring recommends it."
+    - score: 0
+      descriptor: "The answer sees no difference or prefers creating collaborators inside the class."
+      samples:
+        - "Both work the same, it is only style."
+        - "The service should just call new EmailNotifier() itself, then nothing can be forgotten."
+ai_assisted: true

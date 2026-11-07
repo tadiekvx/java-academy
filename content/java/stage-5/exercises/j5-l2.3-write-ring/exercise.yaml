@@ -1,0 +1,31 @@
+id: j5-l2.3-write-ring
+type: write
+title: "A circular queue"
+lesson: j5-l2.3
+role: ladder
+assesses: [o3]
+concepts: [J5.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `RingQueue`: a queue of `int`s with a **fixed capacity**, built on an `int[]` used as a ring. `offer(int)` returns `false` if the queue is full, otherwise adds at the back and returns `true`. `poll()` removes and returns the front item, and throws `NoSuchElementException` if it's empty. `size()` says how many items are stored. No shifting: use a head index and `%`. The driver prints `T`/`F` for offers, the value or `E` for polls, then the final size.
+entry:
+  methods:
+    - {name: run, params: [{name: capacity, type: "int"}, {name: ops, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [3, ["offer:1", "offer:2", "poll"]], expect: "T T 1 size=1"}
+    - {method: run, args: [2, ["poll"]], expect: "E size=0"}
+    - {method: run, args: [2, ["offer:1", "offer:2", "offer:3"]], expect: "T T F size=2"}
+    - {name: "built on an int array", source_contains: ["int[]"], source_not_contains: ["new ArrayDeque", "new LinkedList", "new ArrayList"]}
+  hidden:
+    - {method: run, args: [3, ["offer:1", "offer:2", "offer:3", "poll", "offer:4", "poll", "poll", "poll", "poll"]], expect: "T T T 1 T 2 3 4 E size=0"}
+    - {method: run, args: [1, ["offer:5", "offer:6", "poll", "offer:7", "poll"]], expect: "T F 5 T 7 size=0"}
+    - {method: run, args: [4, ["offer:1", "poll", "offer:2", "poll", "offer:3", "poll", "offer:4", "poll", "offer:5", "poll"]], expect: "T 1 T 2 T 3 T 4 T 5 size=0"}
+    - {method: run, args: [2, []], expect: "size=0"}
+    - {method: run, args: [3, ["offer:1", "offer:2", "poll", "poll", "offer:3", "offer:4", "offer:5", "offer:6"]], expect: "T T 1 2 T T T F size=3"}
+hints:
+  h1: "Keep a head index and a size. The next free slot is (head + size) % capacity. After polling, move head forward with % capacity."
+  h2: "items[(head + size) % items.length] = value;   head = (head + 1) % items.length;"
+ai_assisted: true

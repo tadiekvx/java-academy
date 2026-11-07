@@ -1,0 +1,30 @@
+id: j3-l4.1-write-roundtrip
+type: write
+title: "Save and load lines"
+lesson: j3-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J3.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `save(Path, List<String>)`, which writes the lines to the file, one per line, and `load(Path)`, which reads them back as a list. The driver `roundTrip` saves to a temporary file, loads, and joins the lines with `|`. Accented letters must survive.
+entry:
+  methods:
+    - {name: roundTrip, params: [{name: lines, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {method: roundTrip, args: [["a", "b", "c"]], expect: "a|b|c"}
+    - {method: roundTrip, args: [[]], expect: ""}
+    - {method: roundTrip, args: [["only"]], expect: "only"}
+  hidden:
+    - {method: roundTrip, args: [["café", "naïve"]], expect: "café|naïve"}
+    - {method: roundTrip, args: [["  indented", "trailing  "]], expect: "  indented|trailing  "}
+    - {method: roundTrip, args: [["a", "", "b"]], expect: "a||b"}
+    - {method: roundTrip, args: [["one line with spaces"]], expect: "one line with spaces"}
+    - {method: roundTrip, args: [["1", "2", "3", "4", "5"]], expect: "1|2|3|4|5"}
+hints:
+  h1: "Files.write(path, lines) writes a list of lines, and Files.readAllLines(path) reads them back. Both can throw IOException."
+  h2: "Files.write(path, lines); and return Files.readAllLines(path);"
+ai_assisted: true

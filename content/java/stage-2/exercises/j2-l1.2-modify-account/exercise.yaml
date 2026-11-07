@@ -1,0 +1,30 @@
+id: j2-l1.2-modify-account
+type: modify
+title: "Refuse an overdraft"
+lesson: j2-l1.2
+role: ladder
+assesses: [o3]
+concepts: [J2.02]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Account.withdraw` currently lets the balance go negative and always reports success. Change it so that a withdrawal bigger than the balance is **refused**: the balance is left alone and `withdraw` returns `false`. A successful withdrawal returns `true`. Don't change the method's name or parameters, because `run` already calls it.
+entry:
+  methods:
+    - {name: run, params: [{name: start, type: "int"}, {name: amounts, type: "int[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [100, [50, -30, -200]], expect: "120,1"}
+    - {method: run, args: [0, [-1]], expect: "0,0"}
+    - {method: run, args: [500, []], expect: "500,0"}
+  hidden:
+    - {method: run, args: [100, [-100]], expect: "0,1"}
+    - {method: run, args: [100, [-101]], expect: "100,0"}
+    - {method: run, args: [10, [-5, -5, -5]], expect: "0,2"}
+    - {method: run, args: [0, [20, -20, -1]], expect: "0,1"}
+    - {method: run, args: [1000, [-400, -400, -400, 50]], expect: "250,2"}
+hints:
+  h1: "Check the rule before changing the balance. What should happen to the balance when the withdrawal is refused?"
+  h2: "if (amount > balance) { return false; } balance -= amount; return true;"
+ai_assisted: true

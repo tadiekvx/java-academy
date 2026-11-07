@@ -1,0 +1,30 @@
+id: j1-l5.2-modify-fare
+type: modify
+title: "Long-distance surcharge"
+lesson: j1-l5.2
+role: ladder
+assesses: [o4]
+concepts: [J1.08]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Taxis now add a 200 pence surcharge for journeys over 10 miles. Change the program so `fare` includes it, **without** changing `distanceCost` or `bookingFee`. A 10-mile journey has no surcharge.
+entry:
+  methods:
+    - {name: fare, params: [{name: miles, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [4], expect: 900}
+    - {args: [10], expect: 1800}
+    - {args: [12], expect: 2300}
+  hidden:
+    - {name: "zero miles", args: [0], expect: 300}
+    - {name: "just over", args: [11], expect: 2150}
+    - {name: "one mile", args: [1], expect: 450}
+    - {name: "far", args: [50], expect: 8000}
+    - {name: "just under", args: [9], expect: 1650}
+hints:
+  h1: "Only fare needs to change. Add the surcharge when miles is more than 10."
+  h2: "Store the total in a variable, add 200 if miles > 10, then return it."
+ai_assisted: true

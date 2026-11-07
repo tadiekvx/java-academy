@@ -1,0 +1,49 @@
+id: j7-l1.1-explain-response
+type: explain
+title: "Reading a real response"
+lesson: j7-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J7.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is the start of a real response from this platform's own API, captured with `curl -i`. Say what the status line tells a client, what two of the headers are for, and why a client should check the status before reading the body.
+
+  ```text
+  $ curl -i http://localhost:8092/api/curriculum
+  HTTP/1.1 200 
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  X-Frame-Options: DENY
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Date: Sat, 07 Nov 2026 11:16:53 GMT
+
+  {"stages":[{"number":0,"title":"Your own machine","optional":true,"modules":[{"number":0,"title":"Running Java outside the browser","lessons":[{"id":"j0-l0.1","title":"What Java is made of","available":true,"status":"IN_REVIEW"},{"id":"j0-l0.2","t
+  [body continues]
+  ```
+rubric:
+  criteria: |
+    The status line gives the protocol version, a three-digit status code and a reason phrase, and the code tells the client whether the request worked. Headers are name/value metadata: Content-Type says how to read the body. A client must check the status first because an error response also has a body, with a different shape.
+  levels:
+    - score: 2
+      descriptor: "The answer reads the status line, explains two headers and says why status comes first."
+      samples:
+        - "The status line says HTTP/1.1 200, so the request worked. Content-Type: application/json says the body is JSON, and another header describes the connection or cache. A 404 or 500 also has a body, in a different format, so the client checks the status before parsing."
+        - "200 means success. Content-Type tells the client how to decode the body and Content-Length or Transfer-Encoding says how much body there is. If it skipped the status it could parse an error page as if it were the data."
+    - score: 1
+      descriptor: "The answer reads the status or a header but not why the status is checked first."
+      samples:
+        - "200 means OK, and Content-Type says it is JSON."
+        - "It is a success response with some headers and then JSON."
+    - score: 0
+      descriptor: "The answer treats the status as part of the body or ignores headers."
+      samples:
+        - "The body is what matters, the status and headers are just decoration."
+        - "The client reads the JSON to find out whether it worked."
+ai_assisted: true

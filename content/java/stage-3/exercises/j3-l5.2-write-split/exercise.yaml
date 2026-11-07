@@ -1,0 +1,31 @@
+id: j3-l5.2-write-split
+type: write
+title: "Share a bill without losing a penny"
+lesson: j3-l5.2
+role: ladder
+assesses: [o2]
+concepts: [J3.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `split(int totalPence, int people)`: share the total among the people so that the shares **add up exactly to the total**. Everyone pays the same, except that the leftover pennies go one each to the **first** people. `split(1000, 3)` is `[334, 333, 333]`. Return the list of shares in order. (`people` is at least 1.)
+entry:
+  methods:
+    - {name: split, params: [{name: totalPence, type: "int"}, {name: people, type: "int"}], returns: "List<Integer>"}
+tests:
+  visible:
+    - {method: split, args: [1000, 3], expect: [334, 333, 333]}
+    - {method: split, args: [100, 4], expect: [25, 25, 25, 25]}
+    - {method: split, args: [5, 1], expect: [5]}
+  hidden:
+    - {method: split, args: [0, 3], expect: [0, 0, 0]}
+    - {method: split, args: [1, 3], expect: [1, 0, 0]}
+    - {method: split, args: [2, 5], expect: [1, 1, 0, 0, 0]}
+    - {method: split, args: [999, 10], expect: [100, 100, 100, 100, 100, 100, 100, 100, 100, 99]}
+    - {method: split, args: [7, 7], expect: [1, 1, 1, 1, 1, 1, 1]}
+    - {method: split, args: [10, 3], expect: [4, 3, 3]}
+hints:
+  h1: "Everyone gets total / people. The leftover is total % people pennies; who pays one extra?"
+  h2: "shares.add(totalPence / people + (i < totalPence % people ? 1 : 0));"
+ai_assisted: true

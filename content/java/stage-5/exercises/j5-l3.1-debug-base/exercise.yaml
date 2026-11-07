@@ -1,0 +1,30 @@
+id: j5-l3.1-debug-base
+type: debug
+title: "The recursion that never stops"
+lesson: j5-l3.1
+role: ladder
+assesses: [o3]
+concepts: [J5.09]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `sumTo(n)` should return `1 + 2 + ... + n`, and `0` when `n` is 0 or negative. It throws a `StackOverflowError`. Find out why and fix it.
+entry:
+  methods:
+    - {name: sumTo, params: [{name: n, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {method: sumTo, args: [5], expect: 15}
+    - {method: sumTo, args: [0], expect: 0}
+    - {method: sumTo, args: [1], expect: 1}
+  hidden:
+    - {method: sumTo, args: [-3], expect: 0}
+    - {method: sumTo, args: [100], expect: 5050}
+    - {method: sumTo, args: [1000], expect: 500500}
+    - {method: sumTo, args: [2], expect: 3}
+    - {method: sumTo, args: [-1], expect: 0}
+hints:
+  h1: "What stops the calls? What happens to n as the calls go on, and what happens if n starts below zero?"
+  h2: "Add a base case: if (n <= 0) return 0;"
+ai_assisted: true

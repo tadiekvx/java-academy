@@ -1,0 +1,71 @@
+id: j9-l3.1-explain-gc-log
+type: explain
+title: "Reading a GC log"
+lesson: j9-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J9.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program allocates 4,000 blocks of 100,000 bytes and keeps every 40th one. Below are the program and the GC log that `-Xlog:gc` produced when it was run with a 64 MB heap (`-Xmx64m`), on this machine.
+
+  ```java
+  import java.util.ArrayList;
+  import java.util.List;
+
+  public class Churn {
+      public static void main(String[] args) {
+          List<byte[]> keep = new ArrayList<>();
+          long total = 0;
+          for (int i = 0; i < 4000; i++) {
+              byte[] block = new byte[100_000];
+              total += block.length;
+              if (i % 40 == 0) {
+                  keep.add(block);
+              }
+          }
+          System.out.println("allocated=" + total + " kept=" + keep.size());
+      }
+  }
+  ```
+
+  ```text
+  $ java -Xmx64m -Xlog:gc Churn
+  [0.002s][info][gc] Using G1
+  [0,012s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 35M->2M(64M) 0,262ms
+  [0,012s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 30M->2M(64M) 0,153ms
+  [0,013s][info][gc] GC(2) Pause Young (Normal) (G1 Evacuation Pause) 37M->3M(64M) 0,222ms
+  [0,014s][info][gc] GC(3) Pause Young (Normal) (G1 Evacuation Pause) 38M->4M(64M) 0,212ms
+  [0,014s][info][gc] GC(4) Pause Young (Normal) (G1 Evacuation Pause) 38M->5M(64M) 0,204ms
+  [0,015s][info][gc] GC(5) Pause Young (Normal) (G1 Evacuation Pause) 39M->6M(64M) 0,139ms
+  [0,015s][info][gc] GC(6) Pause Young (Normal) (G1 Evacuation Pause) 40M->7M(64M) 0,143ms
+  [0,015s][info][gc] GC(7) Pause Young (Normal) (G1 Evacuation Pause) 41M->7M(64M) 0,145ms
+  [0,016s][info][gc] GC(8) Pause Young (Normal) (G1 Evacuation Pause) 41M->8M(64M) 0,156ms
+  [0,016s][info][gc] GC(9) Pause Young (Normal) (G1 Evacuation Pause) 42M->9M(64M) 0,135ms
+  [0,017s][info][gc] GC(10) Pause Young (Normal) (G1 Evacuation Pause) 43M->10M(64M) 0,133ms
+  allocated=400000000 kept=100
+  ```
+
+  Explain: which collector ran, what a line such as `35M->2M(64M) 0,262ms` says, why the number after the arrow grows from 2M to 10M, and what the program's `kept=100` has to do with that final 10M.
+rubric:
+  criteria: |
+    G1, the default collector, was used. Each line is a young-generation collection: the heap held 35 MB before it, 2 MB after, with 64 MB of heap in total, and the pause lasted about a quarter of a millisecond. Almost all blocks are garbage the moment the loop moves on, so each collection frees nearly everything. The retained size grows because the program keeps every 40th block: 100 blocks of 100,000 bytes are about 10 MB, matching the 10M after the last collection. That growth is live data, not a leak in the collector.
+  levels:
+    - score: 2
+      descriptor: "The answer names G1, reads before/after/total and the pause, and explains the growth from the 100 kept blocks."
+      samples:
+        - "G1 (the log says Using G1). 35M->2M(64M) means the heap was 35 MB before the pause and 2 MB after, out of 64 MB, and the pause took about 0.26 ms. Most blocks die at once, so each young collection frees nearly all. The after-size climbs to 10M because 100 kept blocks of 100,000 bytes is about 10 MB of live data."
+        - "The collector was G1. Each line shows heap used before and after the pause, the total heap, and the pause time. The leftover grows because kept=100 blocks of ~100 KB each stay reachable, about 10 MB."
+    - score: 1
+      descriptor: "The answer reads the log but does not connect the growth to the kept blocks."
+      samples:
+        - "G1 ran and the heap went from 35M down to 2M each time."
+        - "The pauses are short because most memory was freed."
+    - score: 0
+      descriptor: "The answer misreads the log."
+      samples:
+        - "The program leaks memory because the number keeps growing."
+        - "The pauses show the program was slow."
+ai_assisted: true

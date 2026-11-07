@@ -1,0 +1,32 @@
+id: j9-l2.1-write-squares
+type: write
+title: "Fan out and collect"
+lesson: j9-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J9.06]
+evidence: [IMPL]
+misconceptions: [MC192]
+difficulty: 3
+prompt: |
+  Write `parallelSquares(values, threads)`: submit one task per value to a fixed pool of `threads` threads (at least 1) using an `ExecutorService`, collect the `Future` results, and return the squares **in the order of the input**. Close the executor when you are done (it is `AutoCloseable`, so try-with-resources works). The square is an ordinary `int` product.
+entry:
+  methods:
+    - {name: parallelSquares, params: [{name: values, type: "List<Integer>"}, {name: threads, type: "int"}], returns: "List<Integer>"}
+tests:
+  visible:
+    - {name: "four values", method: parallelSquares, args: [[1, 2, 3, 4], 2], expect: [1, 4, 9, 16]}
+    - {name: "no values", method: parallelSquares, args: [[], 3], expect: []}
+    - {name: "one thread", method: parallelSquares, args: [[-3, 5], 1], expect: [9, 25]}
+    - {name: "uses an ExecutorService", source_contains: ["ExecutorService"]}
+    - {name: "submits tasks and reads futures", source_contains: ["submit", ".get()"]}
+  hidden:
+    - {name: "twenty values keep their order", method: parallelSquares, args: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], 4], expect: [1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400]}
+    - {name: "an int overflow wraps", method: parallelSquares, args: [[50000], 2], expect: [-1794967296]}
+    - {name: "zero threads means one", method: parallelSquares, args: [[7, 7, 7], 0], expect: [49, 49, 49]}
+    - {name: "descending input", method: parallelSquares, args: [[100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1], 8], expect: [10000, 9801, 9604, 9409, 9216, 9025, 8836, 8649, 8464, 8281, 8100, 7921, 7744, 7569, 7396, 7225, 7056, 6889, 6724, 6561, 6400, 6241, 6084, 5929, 5776, 5625, 5476, 5329, 5184, 5041, 4900, 4761, 4624, 4489, 4356, 4225, 4096, 3969, 3844, 3721, 3600, 3481, 3364, 3249, 3136, 3025, 2916, 2809, 2704, 2601, 2500, 2401, 2304, 2209, 2116, 2025, 1936, 1849, 1764, 1681, 1600, 1521, 1444, 1369, 1296, 1225, 1156, 1089, 1024, 961, 900, 841, 784, 729, 676, 625, 576, 529, 484, 441, 400, 361, 324, 289, 256, 225, 196, 169, 144, 121, 100, 81, 64, 49, 36, 25, 16, 9, 4, 1]}
+    - {name: "zero and negatives", method: parallelSquares, args: [[0, -1, 1], 3], expect: [0, 1, 1]}
+hints:
+  h1: "Submit every task first; only then call get() on the futures, in order."
+  h2: "ExecutorService is AutoCloseable."
+ai_assisted: true

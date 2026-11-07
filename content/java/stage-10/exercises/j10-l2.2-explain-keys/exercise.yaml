@@ -1,0 +1,32 @@
+id: j10-l2.2-explain-keys
+type: explain
+title: "Designing the idempotency key"
+lesson: j10-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J10.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You are designing `POST /transfers` for a mobile app on a bad network. Describe how an idempotency key should work: who creates it, what the server stores, what it answers to a duplicate, what it answers when the same key arrives with a different body, and how long it should remember keys. Why can the server not use the transfer's amount and accounts as the key?
+rubric:
+  criteria: |
+    The client creates a unique key (for example a random UUID) for each intended operation and sends it with every attempt of that operation, in an Idempotency-Key header. The server stores, for each key, a fingerprint of the request body and the result; the first request is processed and its result stored. A repeat with the same key and body returns the stored result without redoing the work. The same key with a different body is a misuse and is refused (the draft standard describes a 422 problem response; some designs use 409). Keys must be remembered for at least as long as clients may retry, which is a design choice. Amount and accounts cannot be the key because two different, legitimate transfers can have the same amount between the same accounts, and they must both happen.
+  levels:
+    - score: 2
+      descriptor: "The answer covers who makes the key, what is stored, the duplicate answer, the mismatch answer, retention and why content is not the key."
+      samples:
+        - "The client generates a unique key per intended transfer and resends it on every retry. The server stores the key with the request body and the result. A duplicate with the same body returns the stored result and does nothing; the same key with a different body is rejected (422 or 409). Keys are kept at least as long as retries could occur. The content cannot be the key because two real transfers of the same amount between the same accounts must both be applied."
+        - "Key from the client, such as a UUID, in a header. Server saves key, body hash and response; replays the response for a duplicate; refuses a key reused with another body. Keep keys for the retry window. Using amount and accounts would merge separate identical transfers."
+    - score: 1
+      descriptor: "The answer names the key and the duplicate handling without the mismatch or the reason against content keys."
+      samples:
+        - "The client sends a unique key and the server ignores repeats."
+        - "Store the key in a table."
+    - score: 0
+      descriptor: "The answer lets the server invent the key or ignores repeats."
+      samples:
+        - "The server generates the key when it receives the request."
+        - "Using the amount as the key is fine."
+ai_assisted: true

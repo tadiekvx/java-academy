@@ -1,0 +1,32 @@
+id: j8-l2.3-explain-idor
+type: explain
+title: "The id in the URL"
+lesson: j8-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J8.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `GET /accounts/7` returns account 7 to any signed-in customer. Customer A notices their account is 7, tries 8, and sees customer B's balance. Name this flaw (with its OWASP Top 10:2025 category), say why hiding or randomising ids is not the fix, and describe the fix, using the guidance 'deny by default' and 'validate the permissions on every request'.
+rubric:
+  criteria: |
+    This is an insecure direct object reference, a case of A01 Broken Access Control: the server checks that the caller is signed in (authentication) but not that the account belongs to them (authorisation). Hard-to-guess ids only make the flaw harder to find; the OWASP guidance says to make sure lookup ids cannot be accessed even when guessed. The fix is an ownership check on every request on the server (the caller's identity from the session, compared with the account's owner), refusing by default, with a test that customer A is refused for customer B's account.
+  levels:
+    - score: 2
+      descriptor: "The answer names the flaw and category, explains why obscure ids do not fix it, and describes a server-side check on every request, deny by default, with a test."
+      samples:
+        - "It is an insecure direct object reference, A01 Broken Access Control. Being signed in proves who the caller is, not that account 7 or 8 is theirs. Random ids only hide the problem, since the id must not matter even if guessed. On every request the server should compare the session's user with the account's owner and refuse by default, and there should be a test that A cannot read B's account."
+        - "IDOR under A01 Broken Access Control. The fix is authorisation on the server for each request: look up the account, check its owner is the caller, otherwise 403 (or 404). Secret or random ids are not a defence, and the default must be deny. Add a test with two customers."
+    - score: 1
+      descriptor: "The answer names the flaw or the fix without the other parts."
+      samples:
+        - "It is broken access control. Check who owns the account."
+        - "Use random ids so people cannot guess them."
+    - score: 0
+      descriptor: "The answer treats being signed in as sufficient."
+      samples:
+        - "The user is signed in so it is allowed."
+        - "The front end should hide the other accounts."
+ai_assisted: true

@@ -1,0 +1,25 @@
+id: j5-l2.4-predict-buckets
+type: predict
+title: "Which bucket?"
+lesson: j5-l2.4
+role: ladder
+assesses: [o2]
+concepts: [J5.06]
+evidence: [MIST]
+misconceptions: []
+difficulty: 4
+prompt: |
+  `String.hashCode` is a fixed formula, so you can compute these by hand or by careful reasoning about collisions. Work out what this program prints (for each key: the key, its hash code, and its bucket among 8). Then it prints the bucket among 16 for the first three keys.
+expected_output: |
+  Aa 2112 0
+  BB 2112 0
+  pear 3436774 6
+  fig 101380 4
+  apple 93029210 2
+  Aa 0
+  BB 0
+  pear 6
+hints:
+  h1: "The hash code of a String is s[0]*31^(n-1) + ... + s[n-1]. \"Aa\" is 65*31 + 97, and \"BB\" is 66*31 + 66."
+  h2: "Aa and BB both give 2112, so they share a bucket. floorMod by 8 keeps the last three bits of the hash code."
+ai_assisted: true

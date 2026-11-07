@@ -1,0 +1,36 @@
+id: j12-l2.1-write-rollout
+type: write
+title: "A stable percentage rollout"
+lesson: j12-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J12.05]
+evidence: [IMPL]
+misconceptions: [MC218]
+difficulty: 3
+prompt: |
+  A feature flag turned on for a percentage of users must give the **same** answer for the same user every time, and different flags must pick different users. Write `inRollout(user, flag, percent)`: compute the CRC-32 checksum (`java.util.zip.CRC32`) of the UTF-8 bytes of `flag + ":" + user`, take it modulo 100, and return true if that is **below** `percent`. (0 is nobody, 100 is everybody.)
+entry:
+  methods:
+    - {name: inRollout, params: [{name: user, type: "String"}, {name: flag, type: "String"}, {name: percent, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {name: "a user and a flag", method: inRollout, args: ["ada", "new-ui", 50], expect: true}
+    - {name: "nobody", method: inRollout, args: ["ada", "new-ui", 0], expect: false}
+    - {name: "everybody", method: inRollout, args: ["ada", "new-ui", 100], expect: true}
+  hidden:
+    - {name: "user0 at 30 percent", method: inRollout, args: ["user0", "new-ui", 30], expect: true}
+    - {name: "user1 at 30 percent", method: inRollout, args: ["user1", "new-ui", 30], expect: false}
+    - {name: "user2 at 30 percent", method: inRollout, args: ["user2", "new-ui", 30], expect: false}
+    - {name: "user3 at 30 percent", method: inRollout, args: ["user3", "new-ui", 30], expect: false}
+    - {name: "user4 at 30 percent", method: inRollout, args: ["user4", "new-ui", 30], expect: true}
+    - {name: "user5 at 30 percent", method: inRollout, args: ["user5", "new-ui", 30], expect: false}
+    - {name: "user6 at 30 percent", method: inRollout, args: ["user6", "new-ui", 30], expect: false}
+    - {name: "another flag", method: inRollout, args: ["grace", "other-flag", 50], expect: false}
+    - {name: "empty user", method: inRollout, args: ["", "f", 50], expect: false}
+    - {name: "a user exactly on the boundary is not in", method: inRollout, args: ["user0", "new-ui", 9], expect: false}
+    - {name: "one percent more brings them in", method: inRollout, args: ["user0", "new-ui", 10], expect: true}
+hints:
+  h1: "The same input must always give the same output, so do not use randomness."
+  h2: "`<` against the percentage, not `<=`."
+ai_assisted: true

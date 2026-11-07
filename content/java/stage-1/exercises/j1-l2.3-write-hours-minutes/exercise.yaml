@@ -1,0 +1,37 @@
+id: j1-l2.3-write-hours-minutes
+type: write
+title: Film running time
+lesson: j1-l2.3
+role: ladder
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: split-units
+prompt: |
+  A film lasts `totalMinutes` minutes. Complete both methods:
+
+  - `wholeHours` returns the number of whole hours. For 135 minutes, that's `2`.
+  - `leftoverMinutes` returns the minutes left over after the whole hours. For 135 minutes, that's `15`.
+entry:
+  methods:
+    - {name: wholeHours, params: [{name: totalMinutes, type: int}], returns: int}
+    - {name: leftoverMinutes, params: [{name: totalMinutes, type: int}], returns: int}
+tests:
+  visible:
+    - {method: wholeHours, args: [135], expect: 2}
+    - {method: leftoverMinutes, args: [135], expect: 15}
+    - {method: wholeHours, args: [59], expect: 0}
+  hidden:
+    - {name: under an hour, method: leftoverMinutes, args: [59], expect: 59}
+    - {name: exactly one hour (hours), method: wholeHours, args: [60], expect: 1}
+    - {name: exactly one hour (minutes), method: leftoverMinutes, args: [60], expect: 0}
+    - {name: zero (hours), method: wholeHours, args: [0], expect: 0}
+    - {name: zero (minutes), method: leftoverMinutes, args: [0], expect: 0}
+    - {name: a long film, method: wholeHours, args: [600], expect: 10}
+    - {name: one minute over, method: leftoverMinutes, args: [601], expect: 1}
+hints:
+  h1: One operator gives the whole number of times 60 fits; the other gives what's left over.
+  h2: "Use totalMinutes / 60 for the hours and totalMinutes % 60 for the minutes."
+ai_assisted: true

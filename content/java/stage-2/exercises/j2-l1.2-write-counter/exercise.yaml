@@ -1,0 +1,30 @@
+id: j2-l1.2-write-counter
+type: write
+title: "A counter with behaviour"
+lesson: j2-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J2.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Finish `Counter`. It needs `increment()` (adds 1), `add(int amount)`, `reset()` (back to 0) and `value()` (returns the current count). The driver `run` applies a list of operations such as `"inc"`, `"add:5"` and `"reset"`, and returns the final value.
+entry:
+  methods:
+    - {name: run, params: [{name: ops, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: run, args: [["inc", "inc", "add:5"]], expect: 7}
+    - {method: run, args: [["add:10", "reset", "inc"]], expect: 1}
+    - {method: run, args: [[]], expect: 0}
+  hidden:
+    - {method: run, args: [["reset"]], expect: 0}
+    - {method: run, args: [["add:3", "add:4", "add:5"]], expect: 12}
+    - {method: run, args: [["inc", "reset", "reset", "inc", "inc"]], expect: 2}
+    - {method: run, args: [["add:-2", "inc"]], expect: -1}
+    - {method: run, args: [["add:100", "add:1"]], expect: 101}
+hints:
+  h1: "Each method works on the count field of the object it's called on. Fill in the four bodies."
+  h2: "increment: count++; add: count += amount; reset: count = 0; value: return count;"
+ai_assisted: true

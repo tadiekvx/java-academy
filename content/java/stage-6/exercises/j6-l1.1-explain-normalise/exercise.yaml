@@ -1,0 +1,35 @@
+id: j6-l1.1-explain-normalise
+type: explain
+title: "Why a join table"
+lesson: j6-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J6.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A bank wants customers and tags. Is two one-to-many relationships enough, or does the relationship itself have to be a join table?
+rubric:
+  criteria: |
+    The answer should put the relationship in its own table.
+
+    - **One-to-many:** the many side keeps a foreign key to the one side.
+    - **Many-to-many:** a junction table with one foreign key to each side and a primary key that pairs the two values.
+  levels:
+    - score: 2
+      descriptor: "The answer names the foreign key and the join table, and explains why."
+      samples:
+        - "A customer owns accounts: accounts.customer_id references customers.id."
+        - "For many-to-many, a junction table with both foreign keys and a composite primary key."
+    - score: 1
+      descriptor: "The answer gets one of the two halves right, or is vague about duplicates."
+      samples:
+        - "The answer names the foreign key but calls it a many-to-many."
+        - "The answer proposes a join table but forgets the unique pair."
+    - score: 0
+      descriptor: "The answer repeats one side instead of joining."
+      samples:
+        - "The answer stores the customer name inside the account row."
+        - "The answer proposes two one-to-many joins for a many-to-many."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j9-l1.2-write-schedule
+type: write
+title: "Simulate an interleaving"
+lesson: j9-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J9.02]
+evidence: [IMPL]
+misconceptions: [MC188]
+difficulty: 3
+prompt: |
+  A schedule lists the steps the threads take in order, as `thread:read` or `thread:write`. Every thread runs the same code: `read` copies the shared counter (initially 0) into the thread's private variable, `write` stores that private value plus one into the counter. A `write` with no earlier `read` by that thread uses 0, and a thread may read again. Write `finalValue(schedule)`, the counter after all the steps.
+entry:
+  methods:
+    - {name: finalValue, params: [{name: schedule, type: "List<String>"}], returns: "int"}
+tests:
+  visible:
+    - {name: "one after the other", method: finalValue, args: [["A:read", "A:write", "B:read", "B:write"]], expect: 2}
+    - {name: "both read first", method: finalValue, args: [["A:read", "B:read", "A:write", "B:write"]], expect: 1}
+    - {name: "nothing happens", method: finalValue, args: [[]], expect: 0}
+  hidden:
+    - {name: "three threads all lose", method: finalValue, args: [["A:read", "B:read", "C:read", "A:write", "B:write", "C:write"]], expect: 1}
+    - {name: "one thread twice", method: finalValue, args: [["A:read", "A:write", "A:read", "A:write"]], expect: 2}
+    - {name: "B reads again after A wrote", method: finalValue, args: [["A:read", "B:read", "A:write", "B:read", "B:write"]], expect: 2}
+    - {name: "a write without a read", method: finalValue, args: [["A:write"]], expect: 1}
+    - {name: "mixed", method: finalValue, args: [["A:read", "A:write", "B:read", "A:read", "A:write", "B:write"]], expect: 2}
+    - {name: "A writes last with an old value", method: finalValue, args: [["A:read", "B:read", "B:write", "A:write"]], expect: 1}
+    - {name: "each thread keeps its own read", method: finalValue, args: [["A:read", "B:read", "B:write", "C:read", "A:write"]], expect: 1}
+hints:
+  h1: "Each thread needs its own private value."
+  h2: "A later read replaces the earlier one."
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j3-l4.2-debug-fields
+type: debug
+title: "The missing last field"
+lesson: j3-l4.2
+role: ladder
+assesses: [o2]
+concepts: [J3.09]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `countFields(line)` should return how many comma-separated fields a line has, **including empty ones**: `"a,b,c"` has 3, and `"a,b,"` also has 3 (the last is empty). It says 2 for `"a,b,"`. Find out why and fix it.
+entry:
+  methods:
+    - {name: countFields, params: [{name: line, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {method: countFields, args: ["a,b,c"], expect: 3}
+    - {method: countFields, args: ["a,b,"], expect: 3}
+    - {method: countFields, args: ["a"], expect: 1}
+  hidden:
+    - {method: countFields, args: [""], expect: 1}
+    - {method: countFields, args: [",,"], expect: 3}
+    - {method: countFields, args: ["x,,z"], expect: 3}
+    - {method: countFields, args: [",a"], expect: 2}
+    - {method: countFields, args: ["one,two,three,four,"], expect: 5}
+hints:
+  h1: "What does split(\",\") do with empty fields at the end?"
+  h2: "Use split(\",\", -1) so trailing empty fields are kept."
+ai_assisted: true

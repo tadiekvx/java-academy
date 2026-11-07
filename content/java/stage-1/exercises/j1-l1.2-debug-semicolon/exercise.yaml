@@ -1,0 +1,28 @@
+id: j1-l1.2-debug-semicolon
+type: debug
+title: The missing semicolon
+lesson: j1-l1.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.13, J1.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 1
+variant_group: fix-compile-error
+prompt: |
+  This program should print three lines, but it doesn't compile. Run it, read the error
+  message, and fix the program so it prints:
+  
+  ```
+  Ready
+  Steady
+  Go
+  ```
+tests:
+  visible:
+    - {name: prints the right lines, stdin: "", stdout_equals: "Ready\nSteady\nGo"}
+starter_compiles: false
+hints:
+  h1: Run it and read the first error. Which line does it name, and what does it say Java expected?
+  h2: "';' expected on line 3: the statement on that line is missing the semicolon at its end."
+ai_assisted: true

@@ -1,0 +1,48 @@
+id: j4-l1.2-explain-remote
+type: explain
+title: "Fetch, status, pull"
+lesson: j4-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J4.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague pushed a commit to the shared repository. In your own copy you run:
+
+  ```
+  $ git fetch
+  From ../remote
+     91326d7..19328b5  main       -> origin/main
+
+  $ git status
+  On branch main
+  Your branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.
+
+  $ git pull
+  Updating 91326d7..19328b5
+  Fast-forward
+  ```
+
+  (a) What does `origin` refer to? (b) What did `git fetch` do, and what did it not do? (c) Why does `git status` say you're behind, and what did `git pull` do about it? (d) Why was the pull a fast-forward?
+rubric:
+  criteria: |
+    A full answer says origin is the default name for the remote server repository you cloned from; fetch downloaded the new commit into origin/main without changing your own main branch; status says behind because origin/main has a commit your branch lacks, and pull fetched and merged it into your branch; and it was a fast-forward because you had no commits of your own since, so Git just moved your branch pointer forward.
+  levels:
+    - score: 2
+      descriptor: "Says origin is the default name of the remote you cloned from, fetch downloaded the commit into origin/main but didn't change your branch, status reports behind because origin/main is ahead, pull fetches and merges it, and fast-forward happened because you had no new local commits."
+      samples:
+        - "Origin is the default name for the shared repository I cloned from. git fetch downloaded the colleague's commit into origin/main but left my own main alone. Status says I'm behind because origin/main has one commit my main doesn't. git pull fetches and merges it into my branch. It was a fast-forward because I hadn't made any commits since, so Git just moved my pointer forward."
+        - "origin is the remote. fetch only downloads. behind by 1 commit means the remote has something I don't. pull merges it, and it fast-forwarded because my branch hadn't diverged."
+    - score: 1
+      descriptor: "Answers some parts, for example what pull does but not what fetch leaves alone, or no reason for the fast-forward."
+      samples:
+        - "Pull gets the new commit."
+        - "origin is the server."
+    - score: 0
+      descriptor: "Incorrect, for example says fetch updates your branch, or that origin is your local branch."
+      samples:
+        - "fetch merges the changes into my branch."
+        - "origin is my own main branch."
+ai_assisted: true

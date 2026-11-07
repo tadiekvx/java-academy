@@ -1,0 +1,149 @@
+id: j9-a1-concurrent-bank
+title: "The bank that froze"
+category: C
+status: in_review
+summary: "Take over a bank's account store with a lost-update race and a deadlock: diagnose both, fix them with the right tools, and show the fix works for any number of accounts."
+brief: |
+  You have inherited a bank's in-memory account store. It uses a lock for each account, and customers complain about two things: a dashboard count that is too low, and payments that sometimes freeze.
+
+  The drivers at the bottom of the file start several threads against a `Bank` and report the result. Your job is to change only the `Bank` class:
+
+  1. **Ticket 901**: a counter that loses updates.
+  2. **Ticket 902**: a deadlock when two customers pay each other.
+  3. **Review**: show the fix works for a ring of accounts, not only two.
+
+  Passing the checks is evidence, not proof: a race can pass any number of runs. Your design note says why the fixed code is safe by construction.
+estimated_hours: 3
+prerequisites: [j9-l1.3, j9-l1.4, j9-l1.5]
+concepts: [J9.02, J9.03, J9.05]
+requirements:
+  - "The transfer counter equals the number of transfers made."
+  - "Opposite and circular transfers always finish."
+  - "No balance is ever wrong, and the sum of all balances never changes."
+constraints:
+  - "Change only the Bank class."
+  - "Keep one lock per account: do not replace them with one global lock."
+  - "Run all the checks after every change."
+acceptance:
+  - "Given 4 threads transferring in one direction, then the counter equals 4 times the transfers per thread."
+  - "Given transfers in opposite directions, then the run finishes within the time limit."
+  - "Given a ring of accounts, then every balance is unchanged."
+milestones:
+  - id: m1
+    title: "Ticket 901: the lost count"
+    instructions: |
+      **Ticket 901:** *"The transfer counter on the dashboard is lower than the number of transfers we made."*
+
+      `sameDirection(threads, perThread)` makes every thread move one unit from account 0 to account 1, `perThread` times. The balances come out right (they are protected by locks) but `transfers` is wrong. Find the cause and fix it with the right tool from lesson 9.1.3. Remember that `volatile` is not the answer to this one (lesson 9.1.4).
+    entry:
+      methods:
+        - {name: sameDirection, params: [{name: threads, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+        - {name: oppositeDirections, params: [{name: pairs, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+        - {name: ring, params: [{name: accounts, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {name: "four threads", method: sameDirection, args: [4, 50000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "two busy threads", method: sameDirection, args: [2, 100000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "one thread", method: sameDirection, args: [1, 1000], expect: "a=999000;b=1001000;transfers=1000"}
+      hidden:
+        - {name: "four threads", method: sameDirection, args: [4, 50000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "two busy threads", method: sameDirection, args: [2, 100000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "one thread", method: sameDirection, args: [1, 1000], expect: "a=999000;b=1001000;transfers=1000"}
+        - {name: "eight threads", method: sameDirection, args: [8, 20000], expect: "a=840000;b=1160000;transfers=160000"}
+        - {name: "no threads", method: sameDirection, args: [0, 100], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "no work", method: sameDirection, args: [3, 0], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "six threads", method: sameDirection, args: [6, 30000], expect: "a=820000;b=1180000;transfers=180000"}
+        - {name: "sixteen threads", method: sameDirection, args: [16, 5000], expect: "a=920000;b=1080000;transfers=80000"}
+  - id: m2
+    title: "Ticket 902: the frozen payments"
+    instructions: |
+      **Ticket 902:** *"Transfers freeze when customers pay each other at the same time."*
+
+      `oppositeDirections` runs transfers from 0 to 1 and from 1 to 0 together. A run that does not finish is reported as `timeout`. Work out why, using what you saw in the thread dump of lesson 9.1.5, and remove the deadlock **without** giving up the per-account locks (no single global lock).
+    entry:
+      methods:
+        - {name: sameDirection, params: [{name: threads, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+        - {name: oppositeDirections, params: [{name: pairs, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+        - {name: ring, params: [{name: accounts, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {name: "one pair, opposite directions", method: oppositeDirections, args: [1, 50000], expect: "a=1000000;b=1000000;transfers=100000"}
+        - {name: "two pairs", method: oppositeDirections, args: [2, 30000], expect: "a=1000000;b=1000000;transfers=120000"}
+        - {name: "a short run", method: oppositeDirections, args: [1, 100], expect: "a=1000000;b=1000000;transfers=200"}
+      hidden:
+        - {name: "one pair, opposite directions", method: oppositeDirections, args: [1, 50000], expect: "a=1000000;b=1000000;transfers=100000"}
+        - {name: "two pairs", method: oppositeDirections, args: [2, 30000], expect: "a=1000000;b=1000000;transfers=120000"}
+        - {name: "a short run", method: oppositeDirections, args: [1, 100], expect: "a=1000000;b=1000000;transfers=200"}
+        - {name: "four threads", method: sameDirection, args: [4, 50000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "two busy threads", method: sameDirection, args: [2, 100000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "one thread", method: sameDirection, args: [1, 1000], expect: "a=999000;b=1001000;transfers=1000"}
+        - {name: "eight threads", method: sameDirection, args: [8, 20000], expect: "a=840000;b=1160000;transfers=160000"}
+        - {name: "no threads", method: sameDirection, args: [0, 100], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "no work", method: sameDirection, args: [3, 0], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "six threads", method: sameDirection, args: [6, 30000], expect: "a=820000;b=1180000;transfers=180000"}
+        - {name: "sixteen threads", method: sameDirection, args: [16, 5000], expect: "a=920000;b=1080000;transfers=80000"}
+        - {name: "four pairs", method: oppositeDirections, args: [4, 20000], expect: "a=1000000;b=1000000;transfers=160000"}
+        - {name: "no pairs", method: oppositeDirections, args: [0, 100], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "one transfer each", method: oppositeDirections, args: [1, 1], expect: "a=1000000;b=1000000;transfers=2"}
+        - {name: "three pairs", method: oppositeDirections, args: [3, 40000], expect: "a=1000000;b=1000000;transfers=240000"}
+  - id: m3
+    title: "Review: does it hold for a ring"
+    instructions: |
+      The reviewer writes:
+
+      > *"I tried your fix with `ring(n, k)`: account i pays account i+1, and the last pays the first. Please make sure it works with any number of accounts."*
+
+      Check that your lock order is a rule that works for any pair of accounts, not a trick for two. Every earlier check must still pass.
+    entry:
+      methods:
+        - {name: sameDirection, params: [{name: threads, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+        - {name: oppositeDirections, params: [{name: pairs, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+        - {name: ring, params: [{name: accounts, type: "int"}, {name: perThread, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {name: "a ring of four", method: ring, args: [4, 20000], expect: "balances=1000000,1000000,1000000,1000000;transfers=80000"}
+        - {name: "a ring of two", method: ring, args: [2, 30000], expect: "balances=1000000,1000000;transfers=60000"}
+        - {name: "a ring of three", method: ring, args: [3, 10000], expect: "balances=1000000,1000000,1000000;transfers=30000"}
+      hidden:
+        - {name: "a ring of four", method: ring, args: [4, 20000], expect: "balances=1000000,1000000,1000000,1000000;transfers=80000"}
+        - {name: "a ring of two", method: ring, args: [2, 30000], expect: "balances=1000000,1000000;transfers=60000"}
+        - {name: "a ring of three", method: ring, args: [3, 10000], expect: "balances=1000000,1000000,1000000;transfers=30000"}
+        - {name: "one pair, opposite directions", method: oppositeDirections, args: [1, 50000], expect: "a=1000000;b=1000000;transfers=100000"}
+        - {name: "two pairs", method: oppositeDirections, args: [2, 30000], expect: "a=1000000;b=1000000;transfers=120000"}
+        - {name: "a short run", method: oppositeDirections, args: [1, 100], expect: "a=1000000;b=1000000;transfers=200"}
+        - {name: "four threads", method: sameDirection, args: [4, 50000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "two busy threads", method: sameDirection, args: [2, 100000], expect: "a=800000;b=1200000;transfers=200000"}
+        - {name: "one thread", method: sameDirection, args: [1, 1000], expect: "a=999000;b=1001000;transfers=1000"}
+        - {name: "eight threads", method: sameDirection, args: [8, 20000], expect: "a=840000;b=1160000;transfers=160000"}
+        - {name: "no threads", method: sameDirection, args: [0, 100], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "no work", method: sameDirection, args: [3, 0], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "six threads", method: sameDirection, args: [6, 30000], expect: "a=820000;b=1180000;transfers=180000"}
+        - {name: "sixteen threads", method: sameDirection, args: [16, 5000], expect: "a=920000;b=1080000;transfers=80000"}
+        - {name: "four pairs", method: oppositeDirections, args: [4, 20000], expect: "a=1000000;b=1000000;transfers=160000"}
+        - {name: "no pairs", method: oppositeDirections, args: [0, 100], expect: "a=1000000;b=1000000;transfers=0"}
+        - {name: "one transfer each", method: oppositeDirections, args: [1, 1], expect: "a=1000000;b=1000000;transfers=2"}
+        - {name: "three pairs", method: oppositeDirections, args: [3, 40000], expect: "a=1000000;b=1000000;transfers=240000"}
+        - {name: "a ring of eight", method: ring, args: [8, 15000], expect: "balances=1000000,1000000,1000000,1000000,1000000,1000000,1000000,1000000;transfers=120000"}
+        - {name: "a ring of five", method: ring, args: [5, 20000], expect: "balances=1000000,1000000,1000000,1000000,1000000;transfers=100000"}
+        - {name: "one account transferring to itself", method: ring, args: [1, 1000], expect: "balances=1000000;transfers=1000"}
+        - {name: "no work", method: ring, args: [6, 0], expect: "balances=1000000,1000000,1000000,1000000,1000000,1000000;transfers=0"}
+rubric:
+  - criterion: "Diagnosis"
+    zero: "Changed code without finding the cause"
+    one: "Found the cause of one problem by reasoning only"
+    two: "Explained both causes from evidence: the lost increments of an unprotected counter and the cycle of lock waits, citing the shape of the dump"
+  - criterion: "Right tool"
+    zero: "Used volatile for the counter, or a global lock for the deadlock"
+    one: "A correct fix that is heavier than needed"
+    two: "An atomic for the counter and a global lock order for the deadlock, keeping per-account locks"
+  - criterion: "Evidence of correctness"
+    zero: "No reasoning about why the fix is complete"
+    one: "Argued for the cases tested"
+    two: "Argued why the lock order prevents any cycle for any set of accounts, not only the ones in the checks"
+  - criterion: "Honesty about testing"
+    zero: "Claims the code is proven thread-safe because the checks pass"
+    one: "Notes the checks are probabilistic"
+    two: "States that passing checks do not prove absence of a race and says what was done to make the code safe by construction"
+design_note_prompt: |
+  In 200 words or fewer: What caused each ticket, and what in the code or in a thread dump would show it? Why did you choose an atomic for the counter and a lock order for the deadlock, and why is `volatile` or a single global lock the wrong answer in each case? Argue why your lock order cannot form a cycle for any set of accounts. Say honestly what the checks can and cannot prove.
+ai_assisted: true

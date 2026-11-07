@@ -1,0 +1,19 @@
+id: j1-l4.2-predict-strings
+type: predict
+title: "Building a string"
+lesson: j1-l4.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Trace `word` and `i` pass by pass, then predict exactly what this prints.
+expected_output: |
+  321
+  3
+hints:
+  h1: "Each pass joins the current i onto the end of word."
+  h2: "i is 3, then 2, then 1, so word becomes \"3\", \"32\", \"321\"."
+ai_assisted: true

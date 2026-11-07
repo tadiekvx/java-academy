@@ -1,0 +1,31 @@
+id: j1-l3.2-retrieve-working-age
+type: write
+title: "Working age"
+lesson: j1-l3.2
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: boolean-ranges
+prompt: |
+  Complete `isWorkingAge` so it returns `true` for ages 16 to 66, including both, and `false` otherwise.
+entry:
+  methods:
+    - {name: isWorkingAge, params: [{name: age, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: [30], expect: true}
+    - {args: [10], expect: false}
+    - {args: [70], expect: false}
+  hidden:
+    - {name: "exactly 16", args: [16], expect: true}
+    - {name: "exactly 66", args: [66], expect: true}
+    - {name: "just too young", args: [15], expect: false}
+    - {name: "just too old", args: [67], expect: false}
+    - {name: "middle", args: [40], expect: true}
+hints:
+  h1: "Both limits are allowed. Which operators include the boundary?"
+  h2: "age >= 16 && age <= 66"
+ai_assisted: true

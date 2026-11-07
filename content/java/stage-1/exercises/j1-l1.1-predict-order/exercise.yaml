@@ -1,0 +1,20 @@
+id: j1-l1.1-predict-order
+type: predict
+title: Top to bottom
+lesson: j1-l1.1
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Predict exactly what this program prints, one line at a time. Then run it and compare.
+expected_output: |
+  First
+  Second
+  Last
+hints:
+  h1: Statements run one at a time, from the top of main to the bottom. What does Java do with comments?
+  h2: The line starting with // is a comment, so Java ignores it completely, even though it looks like code.
+ai_assisted: true

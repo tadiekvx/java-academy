@@ -1,0 +1,31 @@
+id: j3-l3.2-modify-loop
+type: modify
+title: "Loop to stream"
+lesson: j3-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J3.06]
+evidence: [MOD]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `sumOfSquaresOfEvens` works, but it's a loop. **Rewrite it as a stream pipeline** with exactly the same behaviour: keep the even numbers (negative ones too), square each, and add them up. Don't use a `for` loop.
+entry:
+  methods:
+    - {name: sumOfSquaresOfEvens, params: [{name: values, type: "List<Integer>"}], returns: "int"}
+tests:
+  visible:
+    - {method: sumOfSquaresOfEvens, args: [[1, 2, 3, 4]], expect: 20}
+    - {method: sumOfSquaresOfEvens, args: [[]], expect: 0}
+    - {method: sumOfSquaresOfEvens, args: [[-2, 3]], expect: 4}
+    - {name: "it is a stream", source_contains: ["stream()"], source_not_contains: ["for ("]}
+  hidden:
+    - {method: sumOfSquaresOfEvens, args: [[1, 3, 5]], expect: 0}
+    - {method: sumOfSquaresOfEvens, args: [[0, 0]], expect: 0}
+    - {method: sumOfSquaresOfEvens, args: [[10, -10, 7]], expect: 200}
+    - {method: sumOfSquaresOfEvens, args: [[6]], expect: 36}
+    - {method: sumOfSquaresOfEvens, args: [[-4, -3, -2, -1]], expect: 20}
+hints:
+  h1: "filter keeps the even numbers; mapToInt squares them; sum adds them."
+  h2: "values.stream().filter(v -> v % 2 == 0).mapToInt(v -> v * v).sum();"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j5-l2.2-write-list
+type: write
+title: "A linked list from nodes"
+lesson: j5-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J5.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `IntLinkedList`, a **singly linked list of `int`s built from your own nodes** (no `LinkedList` or `ArrayList`). It needs `addFirst`, `addLast`, `removeFirst` (does nothing on an empty list), `reverse()` (changes the list in place), `size()` and a `toString()` that gives `[1, 2, 3]` (and `[]` when empty). The driver applies operations such as `"first:5"`, `"last:7"`, `"removeFirst"` and `"reverse"`.
+entry:
+  methods:
+    - {name: run, params: [{name: ops, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [["last:1", "last:2", "last:3"]], expect: "[1, 2, 3] size=3"}
+    - {method: run, args: [["first:1", "first:2", "reverse"]], expect: "[1, 2] size=2"}
+    - {method: run, args: [[]], expect: "[] size=0"}
+    - {name: "built from nodes, not library lists", source_contains: ["Node"], source_not_contains: ["new LinkedList", "new ArrayList"]}
+  hidden:
+    - {method: run, args: [["removeFirst"]], expect: "[] size=0"}
+    - {method: run, args: [["last:5", "removeFirst", "last:6"]], expect: "[6] size=1"}
+    - {method: run, args: [["last:1", "last:2", "last:3", "last:4", "reverse"]], expect: "[4, 3, 2, 1] size=4"}
+    - {method: run, args: [["reverse"]], expect: "[] size=0"}
+    - {method: run, args: [["first:3", "last:4", "first:2", "removeFirst", "reverse", "last:9"]], expect: "[4, 3, 9] size=3"}
+    - {method: run, args: [["last:1", "reverse", "reverse", "first:0"]], expect: "[0, 1] size=2"}
+hints:
+  h1: "Each node holds a value and a next reference. addFirst: point the new node at the old head, then move head. reverse: save next, turn the link, step forward."
+  h2: "Node next = current.next; current.next = previous; previous = current; current = next;"
+ai_assisted: true

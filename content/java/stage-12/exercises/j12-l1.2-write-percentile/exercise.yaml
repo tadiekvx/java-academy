@@ -1,0 +1,33 @@
+id: j12-l1.2-write-percentile
+type: write
+title: "The slow tail"
+lesson: j12-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J12.02]
+evidence: [IMPL]
+misconceptions: [MC215]
+difficulty: 3
+prompt: |
+  Latency is better described by percentiles than by the average. Using the **nearest-rank** method, the p-th percentile of n values is the value at position `ceil(p * n / 100)` (counting from 1, at least 1) in the sorted list. Write `percentile(values, p)` for p from 0 to 100; an empty list gives -1.
+entry:
+  methods:
+    - {name: percentile, params: [{name: values, type: "List<Integer>"}, {name: p, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {name: "the median", method: percentile, args: [[120, 118, 125, 130, 122, 119, 121, 124, 123, 4800], 50], expect: 122}
+    - {name: "the 95th percentile", method: percentile, args: [[120, 118, 125, 130, 122, 119, 121, 124, 123, 4800], 95], expect: 4800}
+    - {name: "the 99th percentile", method: percentile, args: [[120, 118, 125, 130, 122, 119, 121, 124, 123, 4800], 99], expect: 4800}
+  hidden:
+    - {name: "the maximum", method: percentile, args: [[120, 118, 125, 130, 122, 119, 121, 124, 123, 4800], 100], expect: 4800}
+    - {name: "p0 is the minimum", method: percentile, args: [[120, 118, 125, 130, 122, 119, 121, 124, 123, 4800], 0], expect: 118}
+    - {name: "no data", method: percentile, args: [[], 50], expect: -1}
+    - {name: "one value", method: percentile, args: [[7], 99], expect: 7}
+    - {name: "five values at p40", method: percentile, args: [[5, 1, 4, 2, 3], 40], expect: 2}
+    - {name: "even count, nearest rank", method: percentile, args: [[1, 2, 3, 4], 50], expect: 2}
+    - {name: "a hundred values", method: percentile, args: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100], 95], expect: 95}
+    - {name: "a tail value just outside p75", method: percentile, args: [[10, 10, 10, 500], 75], expect: 10}
+hints:
+  h1: "Sort a copy first."
+  h2: "Use the ceiling of p times n over 100, and never go below the first position."
+ai_assisted: true

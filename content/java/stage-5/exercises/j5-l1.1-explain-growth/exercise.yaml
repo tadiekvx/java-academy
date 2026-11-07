@@ -1,0 +1,32 @@
+id: j5-l1.1-explain-growth
+type: explain
+title: "Classify and compare"
+lesson: j5-l1.1
+role: ladder
+assesses: [o2, o3]
+concepts: [J5.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Classify each as O(1), O(log n), O(n), O(n log n) or O(n²), with one sentence of reasoning: (a) `values.get(0)` on an `ArrayList`; (b) a loop that adds up every element of an array; (c) `while (n > 1) n = n / 2;`; (d) for each element of a list, call `list.contains(x)` on the same list. Then say, for (b) and (d) with n = 1,000,000, roughly how many steps each takes, and give one thing big-O leaves out.
+rubric:
+  criteria: |
+    A full answer classifies (a) O(1), (b) O(n), (c) O(log n), (d) O(n²) because contains is itself a loop inside the loop; gives about a million steps for (b) and about a trillion (10^12) for (d); and names something big-O leaves out, such as constant factors, small n, or the machine.
+  levels:
+    - score: 2
+      descriptor: "Classifies a-d as O(1), O(n), O(log n), O(n²) with correct reasons (including that contains is a hidden inner loop), gives about a million for (b) and about 10^12 for (d), and names one thing big-O omits."
+      samples:
+        - "(a) O(1): ArrayList get is constant time. (b) O(n): one pass. (c) O(log n): it halves each time. (d) O(n squared): contains is a loop, so it's a loop inside a loop. For n = 1,000,000, (b) is about a million steps and (d) about a trillion. Big-O leaves out constant factors, so an O(n) method with heavy work per item can be slower than an O(n squared) one for small n."
+        - "a is O(1), b is O(n), c is O(log n), d is O(n^2) since contains scans the list for every element. At a million items b takes about 10^6 steps and d about 10^12. Big-O ignores constants and doesn't say anything about small inputs."
+    - score: 1
+      descriptor: "Gets three or four classifications right, or gives the classifications without the step counts or the omission."
+      samples:
+        - "(a) O(1) (b) O(n) (c) O(log n) (d) O(n)."
+        - "b is a million steps."
+    - score: 0
+      descriptor: "Incorrect, for example says (d) is O(n) because there is only one visible loop."
+      samples:
+        - "(d) is O(n) because there's one for loop."
+        - "They're all O(n)."
+ai_assisted: true

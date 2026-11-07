@@ -1,0 +1,20 @@
+id: j1-l4.4-predict-patterns
+type: predict
+title: "Which pattern?"
+lesson: j1-l4.4
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Name the pattern each loop uses.
+expected_output: |
+  2
+  5
+  -1
+hints:
+  h1: "The first loop counts; firstDigit finds the first. Character.isDigit is true for '0' to '9'."
+  h2: "\"Room\" has two o's. The first digit, 4, is at index 5. \"none\" has no digits, so -1."
+ai_assisted: true

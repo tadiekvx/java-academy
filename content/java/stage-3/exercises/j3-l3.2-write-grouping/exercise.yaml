@@ -1,0 +1,31 @@
+id: j3-l3.2-write-grouping
+type: write
+title: "How many of each length?"
+lesson: j3-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J3.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `countByLength(List<String> words)`: group the words by their length, count each group, and return the counts as `length=count` pairs, **shortest length first**, joined with commas, e.g. `3=2,5=1`. Use `Collectors.groupingBy` with a `TreeMap` and `Collectors.counting()`.
+entry:
+  methods:
+    - {name: countByLength, params: [{name: words, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {method: countByLength, args: [["fig", "pear", "kiwi", "apple", "plum"]], expect: "3=1,4=3,5=1"}
+    - {method: countByLength, args: [[]], expect: ""}
+    - {method: countByLength, args: [["a", "b"]], expect: "1=2"}
+    - {name: "uses groupingBy", source_contains: ["groupingBy"]}
+  hidden:
+    - {method: countByLength, args: [["abc", "de", "fgh", "i"]], expect: "1=1,2=1,3=2"}
+    - {method: countByLength, args: [["same", "size", "four"]], expect: "4=3"}
+    - {method: countByLength, args: [["x"]], expect: "1=1"}
+    - {method: countByLength, args: [["long", "longer", "longest", "a"]], expect: "1=1,4=1,6=1,7=1"}
+    - {method: countByLength, args: [["", "a", ""]], expect: "0=2,1=1"}
+hints:
+  h1: "Group with groupingBy(String::length, TreeMap::new, Collectors.counting()), then stream the entries and join."
+  h2: "counts.entrySet().stream().map(e -> e.getKey() + \"=\" + e.getValue()).collect(Collectors.joining(\",\"));"
+ai_assisted: true

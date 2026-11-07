@@ -1,0 +1,44 @@
+id: j4-l1.2-explain-conflict
+type: explain
+title: "Resolve it"
+lesson: j4-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J4.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  After `git merge fee-change`, Git says `CONFLICT (content): Merge conflict in Price.java` and the file contains:
+
+  ```
+  int withTax(int pence) {
+  <<<<<<< HEAD
+      return pence * 115 / 100;
+  =======
+      return pence * 125 / 100;
+  >>>>>>> fee-change
+  }
+  ```
+
+  (a) What do the three marker lines and the two code lines mean? (b) Give the steps to resolve it, once the team has agreed on 25%. (c) What command backs out of the merge if you'd rather start again, and what would be wrong with committing the file as it is?
+rubric:
+  criteria: |
+    A full answer says the section between <<<<<<< HEAD and ======= is the current branch's version (115) and between ======= and >>>>>>> fee-change is the other branch's (125); the steps are to edit the file to the intended version deleting all three marker lines, git add the file, and git commit; git merge --abort backs out; and committing with markers would put invalid text into the code and break the build.
+  levels:
+    - score: 2
+      descriptor: "Explains that the top section is the current branch's version (115) and the bottom is fee-change's (125), gives edit-add-commit with all markers deleted, names git merge --abort, and says committing the markers would break the code."
+      samples:
+        - "The part between <<<<<<< HEAD and ======= is my branch's version (15%), and the part between ======= and >>>>>>> fee-change is the other branch's (25%). To resolve it I edit the file to keep the 125 line and delete all three marker lines, then git add Price.java and git commit. git merge --abort goes back to before the merge. If I committed the file with the markers, the lines wouldn't be valid Java and the build would break."
+        - "(a) HEAD side is main's 115 and the other side is fee-change's 125. (b) Edit to the 125 version, remove the markers, git add, git commit. (c) git merge --abort; committing markers would leave invalid code in the file."
+    - score: 1
+      descriptor: "Answers some parts, for example the steps without explaining the markers, or no mention of abort or of the risk."
+      samples:
+        - "Edit the file and commit."
+        - "Use git merge --abort."
+    - score: 0
+      descriptor: "Incorrect, for example says to commit the file as it is, or that the markers are code to keep."
+      samples:
+        - "Just commit the file, the markers are fine."
+        - "Delete the file."
+ai_assisted: true

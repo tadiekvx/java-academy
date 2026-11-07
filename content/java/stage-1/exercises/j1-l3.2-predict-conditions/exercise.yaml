@@ -1,0 +1,22 @@
+id: j1-l3.2-predict-conditions
+type: predict
+title: "True or false?"
+lesson: j1-l3.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict whether each line prints `true` or `false`. Work out the comparisons first, then the `&&`, `||` and `!`.
+expected_output: |
+  true
+  false
+  true
+  true
+  false
+hints:
+  h1: "Work out each comparison on its own first, then combine them."
+  h2: "x >= 7 is true but x < 7 is false, so && gives false. x % 2 is 1, so x % 2 == 0 is false."
+ai_assisted: true

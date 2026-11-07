@@ -1,0 +1,31 @@
+id: j12-l1.2-write-budget
+type: write
+title: "How much failure is allowed"
+lesson: j12-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J12.02]
+evidence: [IMPL]
+misconceptions: [MC215]
+difficulty: 3
+prompt: |
+  An SLO of 99.9 percent of requests succeeding gives an **error budget** of 0.1 percent: the failures you can afford. The SLO is given in permille (99.9 percent is 999, 99 percent is 990). Write `errorBudgetLeft(sloPermille, total, failed)`: the number of failures allowed, `total * (1000 - sloPermille) / 1000` rounded down, minus the failures so far. A negative result means the budget is spent.
+entry:
+  methods:
+    - {name: errorBudgetLeft, params: [{name: sloPermille, type: "int"}, {name: total, type: "long"}, {name: failed, type: "long"}], returns: "long"}
+tests:
+  visible:
+    - {name: "a healthy month", method: errorBudgetLeft, args: [999, 1000000, 400], expect: 600}
+    - {name: "overspent", method: errorBudgetLeft, args: [999, 1000000, 1500], expect: -500}
+    - {name: "nothing failed yet", method: errorBudgetLeft, args: [990, 10000, 0], expect: 100}
+  hidden:
+    - {name: "rounds the allowance down", method: errorBudgetLeft, args: [999, 1999, 1], expect: 0}
+    - {name: "a perfect SLO has no budget", method: errorBudgetLeft, args: [1000, 500000, 0], expect: 0}
+    - {name: "no traffic", method: errorBudgetLeft, args: [999, 0, 0], expect: 0}
+    - {name: "large numbers need a long", method: errorBudgetLeft, args: [999, 5000000000, 4000000], expect: 1000000}
+    - {name: "exactly spent", method: errorBudgetLeft, args: [950, 100, 5], expect: 0}
+    - {name: "an SLO of nothing", method: errorBudgetLeft, args: [0, 1000, 1000], expect: 0}
+hints:
+  h1: "The budget is the share of requests that may fail."
+  h2: "Do the multiplication as long values."
+ai_assisted: true

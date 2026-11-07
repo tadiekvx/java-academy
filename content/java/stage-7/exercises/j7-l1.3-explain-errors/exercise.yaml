@@ -1,0 +1,32 @@
+id: j7-l1.3-explain-errors
+type: explain
+title: "Honest errors"
+lesson: j7-l1.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J7.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  An API returns `200 OK` with the body `{"error":"account not found"}` for a missing account, and `500` with a stack trace when the owner field is blank. Say what is wrong with each response, and what each should be.
+rubric:
+  criteria: |
+    A missing resource is 404 and a bad request body is a client error, 400: the status code is what generic clients, caches and monitoring read, so it must be truthful. A 500 means the server failed, and a stack trace leaks internals; the body should be a problem detail whose detail helps the client correct the request and whose status matches the HTTP status.
+  levels:
+    - score: 2
+      descriptor: "The answer fixes both statuses, explains why the status matters and rejects the stack trace."
+      samples:
+        - "The first should be 404 Not Found, because clients and monitoring read the status, not the body. The second is the client's mistake, so 400, not 500. A stack trace shows internals; return a problem detail with a helpful detail instead, using the same status in the body."
+        - "200 with an error body hides the failure from every generic client, so use 404. A blank owner is a bad request: 400. A 500 means the server broke, and the trace leaks code. Send application/problem+json with status, title and a detail the client can act on."
+    - score: 1
+      descriptor: "The answer fixes the statuses but not the leak, or gives no reason."
+      samples:
+        - "The first should be 404 and the second 400."
+        - "Return the right status codes."
+    - score: 0
+      descriptor: "The answer accepts the responses as they are."
+      samples:
+        - "It is fine because the client can read the error message in the body."
+        - "A 500 is right, anything wrong is a server error."
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j7-l1.3-write-problem
+type: write
+title: "A problem detail body"
+lesson: j7-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J7.03]
+evidence: [IMPL]
+misconceptions: [MC168]
+difficulty: 3
+prompt: |
+  RFC 9457 defines a JSON error body with `type`, `title`, `status` and `detail`. Write `problemJson(status, title, detail)` returning exactly `{"type":"about:blank","title":...,"status":...,"detail":...}` with no spaces, in that order, with `"` and `\` escaped inside the two strings. `status` is a JSON number.
+entry:
+  methods:
+    - {name: problemJson, params: [{name: status, type: "int"}, {name: title, type: "String"}, {name: detail, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a simple problem", method: problemJson, args: [404, "Not Found", "No account 7"], expect: "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No account 7\"}"}
+    - {name: "a validation problem", method: problemJson, args: [400, "Bad Request", "owner must not be blank"], expect: "{\"type\":\"about:blank\",\"title\":\"Bad Request\",\"status\":400,\"detail\":\"owner must not be blank\"}"}
+    - {name: "a conflict", method: problemJson, args: [409, "Conflict", "Account 7 already exists"], expect: "{\"type\":\"about:blank\",\"title\":\"Conflict\",\"status\":409,\"detail\":\"Account 7 already exists\"}"}
+  hidden:
+    - {name: "quotes are escaped", method: problemJson, args: [400, "Bad Request", "Field \"owner\" is missing"], expect: "{\"type\":\"about:blank\",\"title\":\"Bad Request\",\"status\":400,\"detail\":\"Field \\\"owner\\\" is missing\"}"}
+    - {name: "a backslash is escaped", method: problemJson, args: [500, "Internal Server Error", "C:\\temp"], expect: "{\"type\":\"about:blank\",\"title\":\"Internal Server Error\",\"status\":500,\"detail\":\"C:\\\\temp\"}"}
+    - {name: "an empty detail", method: problemJson, args: [404, "Not Found", ""], expect: "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"\"}"}
+    - {name: "non-ASCII text is kept", method: problemJson, args: [422, "Unprocessable Content", "Café closed"], expect: "{\"type\":\"about:blank\",\"title\":\"Unprocessable Content\",\"status\":422,\"detail\":\"Café closed\"}"}
+    - {name: "both escapes together", method: problemJson, args: [401, "Unauthorized", "Say \"hello\" \\ goodbye"], expect: "{\"type\":\"about:blank\",\"title\":\"Unauthorized\",\"status\":401,\"detail\":\"Say \\\"hello\\\" \\\\ goodbye\"}"}
+hints:
+  h1: "Build the string in the order type, title, status, detail."
+  h2: "Escape the backslash before you escape the quote."
+ai_assisted: true

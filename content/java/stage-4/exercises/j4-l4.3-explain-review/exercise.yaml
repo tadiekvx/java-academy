@@ -1,0 +1,43 @@
+id: j4-l4.3-explain-review
+type: explain
+title: "Write the review"
+lesson: j4-l4.3
+role: ladder
+assesses: [o2]
+concepts: [J4.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You're reviewing this pull request. The description says only "discount".
+
+  ```java
+  + public int discount(int price, String code) {
+  +     if (code == "SAVE10") {
+  +         return price - price * 10 / 100;
+  +     }
+  +     return price;
+  + }
+  ```
+
+  There are no tests in the PR. Write **three** review comments, each specific, kind and actionable. Mark each as "must fix" or "suggestion", and say what else you'd ask the author to add to the PR.
+rubric:
+  criteria: |
+    A full answer writes three specific comments: == compares references so the discount may never apply and should be "SAVE10".equals(code) (must fix, also covers null); the 10 is an unexplained magic number and the method name says nothing about a code, so use a named constant and a clearer name (suggestion); and there are no tests for the discount, the no-discount path, a null or unknown code, so add them (must fix); and asks for a fuller description saying what changed, why and how it was tested.
+  levels:
+    - score: 2
+      descriptor: "Gives three specific, polite, actionable comments (== on strings, magic number or naming, missing tests or null handling), labels their weight, and asks for a proper PR description."
+      samples:
+        - "1) Must fix: on line 2, == compares references, so code == \"SAVE10\" can be false even for equal text, and the discount would silently never apply. Please use \"SAVE10\".equals(code), which also avoids a NullPointerException. 2) Suggestion: the 10 is a magic number; a named constant like MEMBER_DISCOUNT_PERCENT would say what it means. 3) Must fix: there are no tests, so please add checks for a valid code, an unknown code, and a null code. Could you also expand the description to say what the discount is for and how you tested it?"
+        - "Must fix: use equals instead of == for the code string (reference comparison). Must fix: add tests covering the discount, no discount and null. Suggestion: name the 10, and the method, so a reader knows it applies a code. Please add a description of the change and testing."
+    - score: 1
+      descriptor: "Gives one or two good comments, or three vague ones, or doesn't label weight or ask for a description."
+      samples:
+        - "Don't use ==."
+        - "Add tests."
+    - score: 0
+      descriptor: "Incorrect or unhelpful, for example says the code is bad, or only comments on formatting."
+      samples:
+        - "This code is bad."
+        - "Put the brace on the next line."
+ai_assisted: true

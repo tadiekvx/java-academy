@@ -1,0 +1,145 @@
+id: j2-p1-brightbank
+title: "Brightbank as classes"
+category: B
+status: in_review
+summary: "Rebuild the Brightbank account as classes, then absorb a change request with two new account types."
+brief: |
+  In Stage 1 you wrote Brightbank as loose methods working on an `int[]` of transactions. Now it becomes a set of **classes**, which is what the object-oriented stage is for.
+
+  The pieces you are given: `Money.format`, a sealed `Transaction` type with `Deposit` and `Withdrawal` records, and the checked `InsufficientFundsException`. You write `Account`, and later `CurrentAccount` and `SavingsAccount`.
+
+  This is an **independent build**: the brief tells you the rules and the checks, and you decide how to structure the code. Halfway through, a **change request** arrives (milestone 4). How you built milestones 1 to 3 decides how easy it is to absorb.
+
+  There is one source file, so the compiler won't stop other code from touching your private fields (all the classes are in one file). The checks look at behaviour, so treat `private` as part of the job and respect it anyway.
+estimated_hours: 6
+prerequisites: [j2-l2.1, j2-l2.2, j2-l3.2, j2-l4.2, j2-l5.2]
+concepts: [J2.05, J2.06, J2.08, J2.11, J2.13]
+requirements:
+  - "Money is whole pence in an int."
+  - "A deposit or withdrawal must be positive, otherwise an IllegalArgumentException is thrown."
+  - "A refused withdrawal throws InsufficientFundsException and changes nothing."
+  - "The history lists successful transactions only, oldest first."
+constraints:
+  - "Account data is private."
+  - "Each rule is written once."
+  - "No `default` branch in the switch over `Transaction`."
+acceptance:
+  - "Given an overdraft of 10000, when 10000 is withdrawn from an empty account, then it's allowed; 10001 is refused with `short by 1`."
+  - "Given a history returned by `history()`, when the caller clears it, then the account's history is unchanged."
+  - "Given a current account with a balance of 1000, when 500 is withdrawn, then the balance is 450."
+  - "Given the change request, then milestones 1 to 3 still pass unchanged."
+milestones:
+  - id: m1
+    title: "The account and its rules"
+    instructions: |
+      Write `Account(int overdraftLimit)` with `deposit`, `withdraw` and `balance`. The rules:
+
+      - A deposit or withdrawal amount must be **positive**. Otherwise throw an `IllegalArgumentException` and change nothing.
+      - A withdrawal may take the balance down to **minus the overdraft limit**, and no further. If it would go past that, throw the (already written) `InsufficientFundsException`, with `shortBy` set to **how many pence too many** it asked for, and leave the balance alone.
+      - Make the account's data `private`.
+
+      The check calls `m1`, which applies a list of operations such as `"d:500"` and `"w:200"` and prints `ok`, `invalid` or `short by <n>` for each, then the final balance.
+    entry:
+      methods:
+        - {name: m1, params: [{name: overdraft, type: "int"}, {name: ops, type: "String[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [0, ["d:500", "w:200"]], expect: "ok ok balance 300"}
+        - {args: [0, ["w:100"]], expect: "short by 100 balance 0"}
+        - {args: [0, ["d:0", "w:-5"]], expect: "invalid invalid balance 0"}
+      hidden:
+        - {name: "exactly to the limit", args: [10000, ["w:10000"]], expect: "ok balance -10000"}
+        - {name: "one past the limit", args: [10000, ["w:10001"]], expect: "short by 1 balance 0"}
+        - {name: "exactly to zero", args: [0, ["d:100", "w:100"]], expect: "ok ok balance 0"}
+        - {name: "short by with some money", args: [500, ["d:100", "w:700", "w:100"]], expect: "ok short by 100 ok balance 0"}
+        - {name: "no operations", args: [0, []], expect: "balance 0"}
+        - {name: "mixed", args: [0, ["d:1", "d:1", "w:1", "w:5"]], expect: "ok ok ok short by 4 balance 1"}
+  - id: m2
+    title: "A history that can't be tampered with"
+    instructions: |
+      Record each **successful** deposit and withdrawal in the account's history, as a `Deposit` or `Withdrawal` record. `history()` returns the list of transactions, oldest first.
+
+      Refused operations aren't recorded. And code outside the account must not be able to change the account by changing the list it gets: the check tries to clear the list it receives, and add to it, then looks at the account again.
+
+      `m2` returns the number of transactions in the history, then the balance, e.g. `2 300`.
+    entry:
+      methods:
+        - {name: m2, params: [{name: ops, type: "String[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [["d:500", "w:200"]], expect: "2 300"}
+        - {args: [[]], expect: "0 0"}
+        - {args: [["w:100", "d:50"]], expect: "1 50"}
+      hidden:
+        - {name: "three deposits", args: [["d:100", "d:100", "d:100"]], expect: "3 300"}
+        - {name: "invalid only", args: [["d:0", "w:0"]], expect: "0 0"}
+        - {name: "refused withdrawal", args: [["d:100", "w:101"]], expect: "1 100"}
+        - {name: "back to zero", args: [["d:5", "w:5", "d:5", "w:5"]], expect: "4 0"}
+        - {name: "all refused", args: [["w:1", "w:2", "w:3"]], expect: "0 0"}
+  - id: m3
+    title: "The mini statement"
+    instructions: |
+      `miniStatement(count)` returns text lines separated by `\n` (none after the last line): the **most recent** `count` transactions, **newest first**, as `Deposit £5.00` or `Withdrawal £25.00` (use the supplied `Money.format`), then a final line `Balance: ` with the **whole** balance. If there are fewer than `count`, show them all. If there are none, only the balance line.
+
+      Write the lines with a pattern-matching `switch` over the sealed `Transaction` type, without a `default`, so a future transaction type can't be forgotten.
+    entry:
+      methods:
+        - {name: m3, params: [{name: overdraft, type: "int"}, {name: ops, type: "String[]"}, {name: count, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [0, ["d:10000", "w:2500"], 5], expect: "Withdrawal £25.00\nDeposit £100.00\nBalance: £75.00"}
+        - {args: [0, [], 3], expect: "Balance: £0.00"}
+        - {args: [0, ["d:5000", "w:1000", "d:250", "w:4000"], 2], expect: "Withdrawal £40.00\nDeposit £2.50\nBalance: £2.50"}
+      hidden:
+        - {name: "last three of six", args: [0, ["d:100", "d:100", "d:100", "d:100", "d:100", "d:100"], 3], expect: "Deposit £1.00\nDeposit £1.00\nDeposit £1.00\nBalance: £6.00"}
+        - {name: "count zero", args: [0, ["d:500", "w:200"], 0], expect: "Balance: £3.00"}
+        - {name: "overdrawn then paid in", args: [10000, ["w:300", "d:500"], 5], expect: "Deposit £5.00\nWithdrawal £3.00\nBalance: £2.00"}
+        - {name: "exactly one", args: [0, ["d:5"], 1], expect: "Deposit £0.05\nBalance: £0.05"}
+        - {name: "exactly all", args: [0, ["d:100", "w:1", "d:100"], 3], expect: "Deposit £1.00\nWithdrawal £0.01\nDeposit £1.00\nBalance: £1.99"}
+        - {name: "refused ones are not shown", args: [0, ["d:500", "w:900", "d:5"], 2], expect: "Deposit £0.05\nDeposit £5.00\nBalance: £5.05"}
+  - id: m4
+    title: "Change request: account types"
+    instructions: |
+      **A change request has arrived.** The bank now has two kinds of account. Add them **without breaking milestones 1 to 3** (a plain `Account` must keep working exactly as before):
+
+      - **`CurrentAccount`**: an overdraft limit of 10000 pence (£100), and a **fee of 50 pence on every successful withdrawal**. The fee is part of what a withdrawal costs: the withdrawal is refused if the amount **plus the fee** would pass the overdraft limit, and `shortBy` counts the fee. A successful withdrawal records the withdrawal and the fee as two transactions.
+      - **`SavingsAccount`**: **never** overdrawn (limit 0), no fee, and `addInterest(percent)` which deposits `balance * percent / 100` pence (**rounded down**) if that comes to more than 0.
+
+      Don't copy the withdrawal rules into the new classes: decide what is the same and what differs, and put each rule in one place.
+
+      `m4` uses `"current"` or `"savings"`, applies the operations (including `"i:5"` for 5 per cent interest on savings), and prints the results and the final balance.
+    entry:
+      methods:
+        - {name: m4, params: [{name: type, type: "String"}, {name: ops, type: "String[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: ["current", ["d:1000", "w:500"]], expect: "ok ok balance 450"}
+        - {args: ["savings", ["d:1000", "w:2000"]], expect: "ok short by 1000 balance 1000"}
+        - {args: ["savings", ["d:1000", "i:5"]], expect: "ok balance 1050"}
+      hidden:
+        - {name: "exactly to the limit with the fee", args: ["current", ["w:9950"]], expect: "ok balance -10000"}
+        - {name: "one past the limit", args: ["current", ["w:9951"]], expect: "short by 1 balance 0"}
+        - {name: "interest rounds down to 4", args: ["savings", ["d:99", "i:5"]], expect: "ok balance 103"}
+        - {name: "interest rounds down to 0", args: ["savings", ["d:10", "i:5"]], expect: "ok balance 10"}
+        - {name: "fee on each withdrawal", args: ["current", ["d:100", "w:100", "w:100"]], expect: "ok ok ok balance -200"}
+        - {name: "no overdraft", args: ["savings", ["d:100", "w:100", "w:1"]], expect: "ok ok short by 1 balance 0"}
+rubric:
+  - criterion: "Correctness at the edges"
+    zero: "Several milestones fail at the limits (exactly at the overdraft, zero, no transactions)"
+    one: "Typical cases pass and most limits"
+    two: "Every limit in the brief behaves as specified, including the fee"
+  - criterion: "Encapsulation"
+    zero: "Account data is public, or the history can be changed from outside"
+    one: "Fields are private but a copy or a check is missing in one route"
+    two: "Fields private, input checked, and the history can't be used to change the account"
+  - criterion: "Handling the change request"
+    zero: "Milestones 1 to 3 broke, or the withdrawal rules were copied into each subclass"
+    one: "It works, but some rule is written twice"
+    two: "The shared rules live once in Account; subclasses only supply what differs"
+  - criterion: "Design note"
+    zero: "Missing, or describes the code line by line"
+    one: "Explains the classes but not the choices"
+    two: "Explains each design choice (checked exception, copies, the fee hook) and what you would do if a third account type arrived"
+design_note_prompt: |
+  In 150 words or fewer: Which of your design choices made milestone 4 easier or harder? Why is `InsufficientFundsException` checked, while a negative amount throws an unchecked exception? What would you change if a third account type arrived?
+ai_assisted: true

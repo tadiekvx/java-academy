@@ -1,0 +1,33 @@
+id: j5-l2.5-write-bst
+type: write
+title: "A binary search tree"
+lesson: j5-l2.5
+role: ladder
+assesses: [o1]
+concepts: [J5.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `IntBst`, a binary search tree of `int`s **built from your own nodes** (no `TreeSet` or `TreeMap`, no sorting). `insert(int)` ignores a value that's already in the tree. It needs `contains`, `size()`, `height()` (the number of nodes on the longest path; 0 for an empty tree) and `inOrder()`, which returns the values as a `List<Integer>` in sorted order. The driver inserts the values and reports the results.
+entry:
+  methods:
+    - {name: run, params: [{name: values, type: "int[]"}, {name: probe, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [[5, 3, 8, 1, 4], 4], expect: "inorder=[1, 3, 4, 5, 8] size=5 height=3 contains=true"}
+    - {method: run, args: [[], 1], expect: "inorder=[] size=0 height=0 contains=false"}
+    - {method: run, args: [[2, 1, 3], 9], expect: "inorder=[1, 2, 3] size=3 height=2 contains=false"}
+    - {name: "built from nodes, not library trees", source_contains: ["Node"], source_not_contains: ["TreeSet", "TreeMap", "sort("]}
+  hidden:
+    - {method: run, args: [[5, 3, 8, 1, 4, 7, 9, 2], 6], expect: "inorder=[1, 2, 3, 4, 5, 7, 8, 9] size=8 height=4 contains=false"}
+    - {method: run, args: [[1, 2, 3, 4, 5], 5], expect: "inorder=[1, 2, 3, 4, 5] size=5 height=5 contains=true"}
+    - {method: run, args: [[5, 5, 5], 5], expect: "inorder=[5] size=1 height=1 contains=true"}
+    - {method: run, args: [[9, 7, 5, 3, 1], 3], expect: "inorder=[1, 3, 5, 7, 9] size=5 height=5 contains=true"}
+    - {method: run, args: [[10, 5, 15, 3, 7, 12, 18, 1], 12], expect: "inorder=[1, 3, 5, 7, 10, 12, 15, 18] size=8 height=4 contains=true"}
+    - {method: run, args: [[-3, 0, -7, 4, -1], -7], expect: "inorder=[-7, -3, -1, 0, 4] size=5 height=3 contains=true"}
+    - {method: run, args: [[7], 8], expect: "inorder=[7] size=1 height=1 contains=false"}
+hints:
+  h1: "Each node holds a value and left/right children. insert goes left if smaller and right if larger, recursing until it finds an empty spot. inOrder is left, then node, then right."
+  h2: "node.left = insert(node.left, value);  ...  inOrder(node.left, out); out.add(node.value); inOrder(node.right, out);"
+ai_assisted: true

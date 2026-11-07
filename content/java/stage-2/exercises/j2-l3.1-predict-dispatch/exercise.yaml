@@ -1,0 +1,22 @@
+id: j2-l3.1-predict-dispatch
+type: predict
+title: "Which sound?"
+lesson: j2-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J2.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints. Remember the **object** decides which code runs.
+expected_output: |
+  Woof
+  Beep
+  Meow
+  Woof
+  Beep
+hints:
+  h1: "Go through the array one object at a time. What class is each object?"
+  h2: "Dog, Robot, Cat, Dog, then zoo[1] again, which is the Robot."
+ai_assisted: true

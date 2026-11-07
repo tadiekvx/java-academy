@@ -1,0 +1,168 @@
+id: j1-p3-brightbank
+title: "Brightbank account logic"
+category: B
+status: in_review
+summary: "Build the rules of a bank account from requirements, then absorb a change request without breaking what you wrote."
+brief: |
+  **Brightbank** is the application you'll grow throughout this course. This is its first stage: the *rules* of a bank account, with no screens yet.
+
+  An account is represented by an `int[]` of **transactions** in whole pence: positive for a deposit, negative for a withdrawal. You'll write methods that compute the balance, decide whether a withdrawal is allowed, record a transaction, and produce a mini statement.
+
+  This is an **independent build**, with a twist: partway through, a **change request** arrives (milestone 6). The way you structured milestones 1–5 decides how painful it is, which is the lesson. Later in the course you'll come back and restructure this program with classes (Stage 2, object-oriented programming), and you'll see why parallel arrays and loose methods get awkward.
+estimated_hours: 5
+prerequisites: [j1-l5.4, j1-l6.2]
+concepts: [J1.02, J1.06, J1.08, J1.09, J1.10]
+requirements:
+  - "Money is whole pence in an int. Deposits are positive transactions; withdrawals are negative."
+  - "An overdraft limit is the most the balance may fall below zero."
+  - "Methods must not modify arrays passed in unless the milestone says so."
+constraints:
+  - "Write each rule once and reuse it."
+  - "No method longer than 25 lines."
+acceptance:
+  - "Given a balance of £10.00, an overdraft of £100, and a £110.00 withdrawal, then it is allowed; a £110.01 withdrawal is not."
+  - "Given 6 transactions and count 3, then the statement shows the 3 newest, newest first, and the balance of all 6."
+  - "Given the daily limit change request, then milestones 1 to 5 still pass unchanged."
+  - "Given a withdrawal of zero or a negative amount, then it is never allowed."
+milestones:
+  - id: m1
+    title: "Money as text"
+    instructions: |
+      `formatMoney(int pence)` returns whole pence as `£12.34`, with two digits of pence and a leading `-` for negatives (`-105` → `-£1.05`, `5` → `£0.05`). You may reuse your formatter from the receipt project, but write it again here from the specification.
+    entry:
+      methods:
+        - {name: formatMoney, params: [{name: pence, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [1234], expect: "£12.34"}
+        - {args: [5], expect: "£0.05"}
+        - {args: [-105], expect: "-£1.05"}
+      hidden:
+        - {name: "zero", args: [0], expect: "£0.00"}
+        - {name: "exactly a pound", args: [100], expect: "£1.00"}
+        - {name: "ten pence", args: [10], expect: "£0.10"}
+        - {name: "large", args: [99999], expect: "£999.99"}
+        - {name: "negative pence", args: [-5], expect: "-£0.05"}
+  - id: m2
+    title: "The balance"
+    instructions: |
+      `balance(transactions)` returns the account balance: the sum of every transaction (positive deposits, negative withdrawals). A new account's balance is 0.
+    entry:
+      methods:
+        - {name: balance, params: [{name: transactions, type: "int[]"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [[]], expect: 0}
+        - {args: [[10000, -2500]], expect: 7500}
+        - {args: [[5000, -1000, 250, -4000]], expect: 250}
+      hidden:
+        - {name: "ends at zero", args: [[-300, -200, 500]], expect: 0}
+        - {name: "overdrawn", args: [[-100]], expect: -100}
+        - {name: "small", args: [[1, 1, 1]], expect: 3}
+        - {name: "one left", args: [[100000, -99999]], expect: 1}
+        - {name: "zero transaction", args: [[0]], expect: 0}
+  - id: m3
+    title: "Can I withdraw?"
+    instructions: |
+      `canWithdraw(balance, amount, overdraftLimit)` says whether a withdrawal is allowed. The amount must be **positive** (you can't withdraw zero or a negative amount). After the withdrawal the balance must not fall below minus the overdraft limit: with a £100 (10000 pence) overdraft, a balance of -£100 is allowed but -£100.01 is not.
+    entry:
+      methods:
+        - {name: canWithdraw, params: [{name: balance, type: "int"}, {name: amount, type: "int"}, {name: overdraftLimit, type: "int"}], returns: "boolean"}
+    tests:
+      visible:
+        - {args: [5000, 2000, 0], expect: true}
+        - {args: [1000, 2000, 0], expect: false}
+        - {args: [1000, 2000, 5000], expect: true}
+      hidden:
+        - {name: "exactly to zero", args: [1000, 1000, 0], expect: true}
+        - {name: "exactly to the limit", args: [1000, 11000, 10000], expect: true}
+        - {name: "one over the limit", args: [1000, 11001, 10000], expect: false}
+        - {name: "zero amount", args: [1000, 0, 10000], expect: false}
+        - {name: "negative amount", args: [1000, -50, 10000], expect: false}
+        - {name: "already overdrawn", args: [-5000, 5000, 10000], expect: true}
+  - id: m4
+    title: "Record a transaction"
+    instructions: |
+      `withTransaction(transactions, amount)` returns a **new** array: the same transactions with `amount` added at the end. The original array must not be changed (other code may still be using it). Arrays can't grow, so the new one must be a copy.
+    entry:
+      methods:
+        - {name: withTransaction, params: [{name: transactions, type: "int[]"}, {name: amount, type: "int"}], returns: "int[]"}
+    tests:
+      visible:
+        - {args: [[], 500], expect: [500]}
+        - {args: [[10000], -2500], expect: [10000, -2500]}
+        - {args: [[1, 2, 3], 4], expect: [1, 2, 3, 4]}
+      hidden:
+        - {name: "zero amount", args: [[100, 200], 0], expect: [100, 200, 0]}
+        - {name: "repeated value", args: [[-5], -5], expect: [-5, -5]}
+        - {name: "four sevens", args: [[7, 7, 7, 7], 7], expect: [7, 7, 7, 7, 7]}
+        - {name: "large", args: [[0], 99999], expect: [0, 99999]}
+  - id: m5
+    title: "Mini statement"
+    instructions: |
+      `miniStatement(transactions, count)` returns a string of lines separated by `\n` (no `\n` after the last line):
+
+      - the **most recent** `count` transactions, **newest first**, one per line, as `Deposit £5.00` or `Withdrawal £25.00` (the amount is always shown positive; a transaction of zero counts as a deposit);
+      - then a last line `Balance: ` and the **whole** account balance (not just the shown transactions).
+
+      If there are fewer than `count` transactions, show them all. If there are none, there is only the balance line.
+    entry:
+      methods:
+        - {name: miniStatement, params: [{name: transactions, type: "int[]"}, {name: count, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [[], 5], expect: "Balance: £0.00"}
+        - {args: [[10000, -2500], 5], expect: "Withdrawal £25.00\nDeposit £100.00\nBalance: £75.00"}
+        - {args: [[5000, -1000, 250, -4000], 2], expect: "Withdrawal £40.00\nDeposit £2.50\nBalance: £2.50"}
+      hidden:
+        - {name: "last three of six", args: [[100, 100, 100, 100, 100, 100], 3], expect: "Deposit £1.00\nDeposit £1.00\nDeposit £1.00\nBalance: £6.00"}
+        - {name: "count zero", args: [[-300, -200, 500], 0], expect: "Balance: £0.00"}
+        - {name: "exactly one", args: [[10000], 1], expect: "Deposit £100.00\nBalance: £100.00"}
+        - {name: "exactly all", args: [[-300, -200, 500], 3], expect: "Deposit £5.00\nWithdrawal £2.00\nWithdrawal £3.00\nBalance: £0.00"}
+        - {name: "zero transactions", args: [[0, 0], 5], expect: "Deposit £0.00\nDeposit £0.00\nBalance: £0.00"}
+        - {name: "latest only", args: [[100, -100], 1], expect: "Withdrawal £1.00\nBalance: £0.00"}
+  - id: m6
+    title: "Change request: a daily limit"
+    instructions: |
+      **A change request has arrived.** The bank is adding a **daily withdrawal limit**. Without breaking milestones 1–5:
+
+      - `dailyWithdrawalRemaining(todaysTransactions, dailyLimit)` returns how much more may be withdrawn today: the limit minus the total already withdrawn today (deposits don't count). It's never below 0.
+      - `canWithdrawToday(balance, amount, overdraftLimit, todaysTransactions, dailyLimit)` allows a withdrawal only if `canWithdraw` would allow it **and** the amount doesn't exceed what remains of today's allowance.
+
+      Reuse what you already have; don't copy its logic.
+    entry:
+      methods:
+        - {name: dailyWithdrawalRemaining, params: [{name: todaysTransactions, type: "int[]"}, {name: dailyLimit, type: "int"}], returns: "int"}
+        - {name: canWithdrawToday, params: [{name: balance, type: "int"}, {name: amount, type: "int"}, {name: overdraftLimit, type: "int"}, {name: todaysTransactions, type: "int[]"}, {name: dailyLimit, type: "int"}], returns: "boolean"}
+    tests:
+      visible:
+        - {method: dailyWithdrawalRemaining, args: [[], 30000], expect: 30000}
+        - {method: dailyWithdrawalRemaining, args: [[-10000, 5000], 30000], expect: 20000}
+        - {method: canWithdrawToday, args: [100000, 5000, 0, [-10000], 30000], expect: true}
+      hidden:
+        - {name: "over the limit already", method: dailyWithdrawalRemaining, args: [[-40000], 30000], expect: 0}
+        - {name: "only deposits", method: dailyWithdrawalRemaining, args: [[5000], 30000], expect: 30000}
+        - {name: "exactly the allowance", method: canWithdrawToday, args: [100000, 20000, 0, [-10000], 30000], expect: true}
+        - {name: "one over the allowance", method: canWithdrawToday, args: [100000, 20001, 0, [-10000], 30000], expect: false}
+        - {name: "daily fine, balance not", method: canWithdrawToday, args: [1000, 5000, 0, [], 30000], expect: false}
+        - {name: "zero amount", method: canWithdrawToday, args: [100000, 0, 0, [], 30000], expect: false}
+rubric:
+  - criterion: "Correctness at the edges"
+    zero: "Several milestones fail on boundary values (exactly at a limit, empty, zero)"
+    one: "Passes typical cases and most boundaries"
+    two: "Every boundary in the brief behaves as specified, including the change request"
+  - criterion: "Reuse and decomposition"
+    zero: "The same logic written in several places"
+    one: "Some reuse, but some repetition remains"
+    two: "Each rule written once; later methods call earlier ones"
+  - criterion: "Handling the change request"
+    zero: "Milestones 1–5 broke when milestone 6 was added"
+    one: "Milestone 6 works but required copying logic"
+    two: "Milestone 6 was added by calling existing methods; milestones 1–5 still pass"
+  - criterion: "Design note"
+    zero: "Missing or describes the code line by line"
+    one: "Explains the split but not the money or array decisions"
+    two: "Explains why money is pence, why withTransaction copies, and what the change request taught you"
+design_note_prompt: |
+  In 150 words or fewer: Why did withTransaction have to copy the array? Which of your methods was easiest to change when the daily limit arrived, and which was hardest?
+ai_assisted: true

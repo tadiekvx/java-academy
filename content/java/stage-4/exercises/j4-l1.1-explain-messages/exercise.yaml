@@ -1,0 +1,32 @@
+id: j4-l1.1-explain-messages
+type: explain
+title: "Write better messages"
+lesson: j4-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J4.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Three commit messages from a repository's history are: `update`, `fixed it`, and `Changes to Price.java`. (a) Say what is wrong with them, in terms of what a reader needs. (b) Rewrite each one, assuming the changes were, in order: adding a 10% discount for members; fixing a rounding error that made tax too low by 1 penny on odd prices; and renaming `withTax` to `priceWithTax`. (c) Say when a message needs more than one line.
+rubric:
+  criteria: |
+    A full answer says the messages don't say what changed or why so the history can't be used to find a change; gives imperative summaries such as Add 10% discount for members, Fix tax rounding on odd prices, Rename withTax to priceWithTax; and says a longer body is needed when the reason isn't obvious from the summary.
+  levels:
+    - score: 2
+      descriptor: "Says the messages don't say what changed or why, gives three clear imperative rewrites matching the three changes, and says a body is needed when the reason isn't obvious from the summary line."
+      samples:
+        - "They don't say what changed or why, so someone searching the history later can't tell which commit did what. Better: \"Add 10% discount for members\", \"Fix tax rounding on odd prices\", \"Rename withTax to priceWithTax\". A message needs more than one line when the summary doesn't make the reason obvious, for example a bug fix that needs the cause explained."
+        - "(a) Too vague to tell what changed or why. (b) Add member discount of 10%; Fix 1p rounding error in tax on odd prices; Rename withTax to priceWithTax. (c) Add a body when the why isn't obvious."
+    - score: 1
+      descriptor: "Gives rewrites without explaining the problem, or explains the problem without good rewrites."
+      samples:
+        - "They're too vague."
+        - "Add member discount."
+    - score: 0
+      descriptor: "Incorrect, for example says short vague messages are best, or rewrites them in ways that don't match the changes."
+      samples:
+        - "Short messages like update are best."
+        - "Use the file name as the message."
+ai_assisted: true

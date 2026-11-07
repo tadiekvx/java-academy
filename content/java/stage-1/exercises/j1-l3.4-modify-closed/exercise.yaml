@@ -1,0 +1,30 @@
+id: j1-l3.4-modify-closed
+type: modify
+title: "Closed on Wednesdays"
+lesson: j1-l3.4
+role: ladder
+assesses: [o2]
+concepts: [J1.06]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A shop's app labels each day (1 = Monday … 7 = Sunday). The shop now closes on Wednesdays, so day 3 should give `"closed"`. Every other day keeps its label.
+entry:
+  methods:
+    - {name: dayType, params: [{name: day, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [3], expect: "closed"}
+    - {args: [1], expect: "weekday"}
+    - {args: [6], expect: "weekend"}
+  hidden:
+    - {name: "Tuesday", args: [2], expect: "weekday"}
+    - {name: "Thursday", args: [4], expect: "weekday"}
+    - {name: "Friday", args: [5], expect: "weekday"}
+    - {name: "Sunday", args: [7], expect: "weekend"}
+    - {name: "not a day", args: [0], expect: "unknown"}
+hints:
+  h1: "Day 3 needs its own case. What else must change so 3 isn't listed twice?"
+  h2: "Remove 3 from the weekday case and add case 3 -> \"closed\";"
+ai_assisted: true

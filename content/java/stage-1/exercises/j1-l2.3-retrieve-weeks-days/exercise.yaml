@@ -1,0 +1,36 @@
+id: j1-l2.3-retrieve-weeks-days
+type: write
+title: Weeks and days
+lesson: j1-l2.3
+role: retrieval
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: split-units
+prompt: |
+  A deadline is `days` days away. Complete both methods:
+
+  - `fullWeeks` returns the number of whole weeks. For 10 days, that's `1`.
+  - `extraDays` returns the days left over after the whole weeks. For 10 days, that's `3`.
+entry:
+  methods:
+    - {name: fullWeeks, params: [{name: days, type: int}], returns: int}
+    - {name: extraDays, params: [{name: days, type: int}], returns: int}
+tests:
+  visible:
+    - {method: fullWeeks, args: [10], expect: 1}
+    - {method: extraDays, args: [10], expect: 3}
+    - {method: fullWeeks, args: [6], expect: 0}
+  hidden:
+    - {name: under a week, method: extraDays, args: [6], expect: 6}
+    - {name: exactly two weeks (weeks), method: fullWeeks, args: [14], expect: 2}
+    - {name: exactly two weeks (days), method: extraDays, args: [14], expect: 0}
+    - {name: zero, method: fullWeeks, args: [0], expect: 0}
+    - {name: a year (weeks), method: fullWeeks, args: [365], expect: 52}
+    - {name: a year (days), method: extraDays, args: [365], expect: 1}
+hints:
+  h1: One operator gives the whole number of times 7 fits; the other gives what's left over.
+  h2: "Use days / 7 for the weeks and days % 7 for the extra days."
+ai_assisted: true

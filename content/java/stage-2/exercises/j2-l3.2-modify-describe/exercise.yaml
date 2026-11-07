@@ -1,0 +1,33 @@
+id: j2-l3.2-modify-describe
+type: modify
+title: "Build on the parent"
+lesson: j2-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J2.08]
+evidence: [MOD]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Car.describe()` replaces the parent's text. Change it to **build on** it with `super`, so a car is described as `a vehicle with 4 wheels`. Then add the class `ElectricCar` that extends `Car` and adds ` (electric)` to the end of the car's description. The driver already builds one of each.
+entry:
+  methods:
+    - {name: describe, params: [{name: kind, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: describe, args: ["vehicle"], expect: "a vehicle"}
+    - {method: describe, args: ["car"], expect: "a vehicle with 4 wheels"}
+    - {method: describe, args: ["electric"], expect: "a vehicle with 4 wheels (electric)"}
+    - {name: "Car builds on the parent", source_contains: ["super.describe()"]}
+    - {name: "ElectricCar extends Car", source_contains: ["class ElectricCar extends Car"]}
+  hidden:
+    - {method: describe, args: ["other"], expect: "a vehicle"}
+    - {method: describe, args: ["car"], expect: "a vehicle with 4 wheels"}
+    - {method: describe, args: ["electric"], expect: "a vehicle with 4 wheels (electric)"}
+    - {method: describe, args: [""], expect: "a vehicle"}
+    - {method: describe, args: ["vehicle"], expect: "a vehicle"}
+starter_compiles: false
+hints:
+  h1: "Use super.describe() in Car, and in ElectricCar too. The new class needs extends Car."
+  h2: "class ElectricCar extends Car { @Override String describe() { return super.describe() + \" (electric)\"; } }"
+ai_assisted: true

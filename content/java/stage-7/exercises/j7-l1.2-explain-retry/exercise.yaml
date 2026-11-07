@@ -1,0 +1,32 @@
+id: j7-l1.2-explain-retry
+type: explain
+title: "Why retries care about the method"
+lesson: j7-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J7.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A mobile app calls `POST /payments` and the connection drops before the response arrives. Explain why the app cannot simply retry, why a retry of `PUT /accounts/7` would be safe, and what an API designer can do so a payment can be retried.
+rubric:
+  criteria: |
+    An idempotent method has the same effect when repeated; PUT and DELETE are idempotent, POST is not, so a repeated POST may create a second payment. A PUT sets the state to the representation sent, so repeating it changes nothing further. A designer can make the operation idempotent, for example with a client-chosen request identifier that the server remembers, so a duplicate is recognised.
+  levels:
+    - score: 2
+      descriptor: "The answer separates idempotent from non-idempotent, explains the double payment and offers a remedy."
+      samples:
+        - "POST is not idempotent: if the first payment went through and only the response was lost, the retry creates a second one. PUT sets the account to the state sent, so doing it twice leaves the same state. To make payments retryable, the client sends a unique request id and the server returns the first result for a repeated id."
+        - "A retried POST can charge twice because each POST may create something new. PUT and DELETE are defined as idempotent so repeating them is safe. The fix is an idempotency key: the server stores the key and ignores the duplicate."
+    - score: 1
+      descriptor: "The answer says POST is unsafe to retry without saying why or how to fix it."
+      samples:
+        - "POST can create duplicates, PUT cannot."
+        - "You should not retry a POST, but PUT is fine."
+    - score: 0
+      descriptor: "The answer treats methods as interchangeable or blames the network."
+      samples:
+        - "POST and PUT do the same thing, so retrying either is fine."
+        - "The network is unreliable, so the app should keep retrying until it succeeds."
+ai_assisted: true

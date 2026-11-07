@@ -1,0 +1,32 @@
+id: j9-l1.2-explain-race
+type: explain
+title: "Why the test passed"
+lesson: j9-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J9.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team's test starts two threads that each increment a shared counter a thousand times and asserts the total is 2000. It passes on every developer machine and on the build server for a month, then fails once in production. Explain what a race condition is, why the test passed, and how you would test for it more reliably.
+rubric:
+  criteria: |
+    A race condition is a bug whose outcome depends on how the threads' steps interleave. The increment is a read, an add and a write; if two threads interleave, one update is lost. The test passed because the interleavings that lose an update are rare at that scale (a thousand quick increments often finish within one thread's time slice), and a passing test only shows one interleaving worked. To test reliably, force the bad interleaving with latches (as in the exercise), use many more iterations and threads, and above all prove the code safe by construction (a lock or an atomic) rather than by testing.
+  levels:
+    - score: 2
+      descriptor: "The answer defines the race, explains why passing proves little, and offers forced interleaving or construction-based safety."
+      samples:
+        - "A race is when the result depends on the order the threads interleave. count++ is read, add, write, so two threads can both read the same value and one update is lost. A thousand increments is so short that the threads may run one after another, so the test passes by luck. I would force the bad order with a latch, use more threads and iterations, and fix the code with an atomic or a lock so it is safe by design."
+        - "The bug exists only for some interleavings. The test hit lucky ones, because a short loop can finish inside one time slice. A passing test does not show absence of a race. Use latches to force the interleaving and make the counter atomic."
+    - score: 1
+      descriptor: "The answer defines the race without explaining the passing test, or the other way round."
+      samples:
+        - "A race is when threads interfere with each other."
+        - "The test was too small."
+    - score: 0
+      descriptor: "The answer says passing tests show there is no race."
+      samples:
+        - "If it passed for a month the code is correct and production was a freak event."
+        - "Races always crash the program, so a pass means there is none."
+ai_assisted: true

@@ -1,0 +1,66 @@
+id: j11-l1.4-explain-memory
+type: explain
+title: "Two ways to run out of memory"
+lesson: j11-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J11.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  These are real results from this machine. First, the heap the JVM chose in containers with different memory limits. Second, the same program (`Hog`, which holds `N` megabytes of arrays) run in a container limited to 128 MB, once with the default heap and once with `-Xmx1g`.
+
+  ```text
+  $ docker run --rm --memory=256m eclipse-temurin:25-jre-alpine java -XX:+PrintFlagsFinal -version | grep -E "MaxHeapSize|UseContainerSupport"
+   size_t MaxHeapSize = 132120576 {product} {ergonomic}
+   size_t SoftMaxHeapSize = 132120576 {manageable} {ergonomic}
+   bool UseContainerSupport = true {product} {default}
+
+  $ docker run --rm --memory=1g eclipse-temurin:25-jre-alpine java -XX:+PrintFlagsFinal -version | grep -E "MaxHeapSize"
+   size_t MaxHeapSize = 268435456 {product} {ergonomic}
+   size_t SoftMaxHeapSize = 268435456 {manageable} {ergonomic}
+  ```
+
+  ```text
+  $ docker run --name hog1 --memory=128m eclipse-temurin:25-jre-alpine java -cp . Hog 300
+  max heap seen by the JVM: 61 MB
+  holding 50 MB
+  Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+  	at Hog.main(Hog.java:10)
+  exit code: 1
+
+  $ docker run --name hog2 --memory=128m eclipse-temurin:25-jre-alpine java -Xmx1g -cp . Hog 300
+  max heap seen by the JVM: 989 MB
+  holding 50 MB
+  holding 100 MB
+  holding 150 MB
+  holding 200 MB
+  exit code: 137
+
+  $ docker inspect -f "{{.Name}} OOMKilled={{.State.OOMKilled}} ExitCode={{.State.ExitCode}}" hog1 hog2
+  /hog1 OOMKilled=false ExitCode=1
+  /hog2 OOMKilled=true ExitCode=137
+  ```
+
+  Explain: (1) what the first output shows about how the JVM sees a container's limit; (2) why the first run ended with an exception and exit code 1 while the second ended with exit code 137 and `OOMKilled=true`, and who stopped each; (3) which failure is easier to diagnose and why; (4) what you would set for a service that needs about 300 MB of heap, and what else uses memory in the container besides the heap.
+rubric:
+  criteria: |
+    (1) The JVM reads the container limit and sizes its default heap from it: 126 MB for a 256 MB limit, 256 MB for a 1 GB limit, 61 MB for 128 MB, so the heap is only part of the limit (about half for small containers and a quarter for the larger one here). (2) With the default heap (61 MB) the JVM itself ran out of heap and threw OutOfMemoryError: Java heap space, exit code 1, and the JVM chose to stop. With -Xmx1g the JVM believed it could use 989 MB, kept allocating, and the process exceeded the container's 128 MB, so the kernel's out-of-memory killer ended it with SIGKILL (137, OOMKilled=true) with no Java exception and no heap dump. (3) The first, because the JVM prints an exception with a stack trace and can write a heap dump; the second leaves only the exit code and OOMKilled flag. (4) Set the container limit above the heap with room for the rest: metaspace, thread stacks, code cache, native and direct buffers; for a 300 MB heap a limit of, say, 512 MB or more, with -XX:MaxRAMPercentage or -Xmx chosen so the heap stays below the limit, then verify under load.
+  levels:
+    - score: 2
+      descriptor: "The answer reads the heap sizes, distinguishes the two failures and who killed each, notes the diagnosability and gives a sizing rule with non-heap memory."
+      samples:
+        - "(1) The JVM sees the limit and picks a heap of 61 MB for 128 MB, 126 MB for 256 MB and 256 MB for 1 GB, so the heap is a fraction of the limit. (2) The first run threw OutOfMemoryError: Java heap space, exit 1, the JVM stopped itself. In the second -Xmx1g let the heap grow past the 128 MB container, so the kernel OOM killer sent SIGKILL: 137 and OOMKilled=true. (3) The first is easier: stack trace and possible heap dump; the second only shows an exit code. (4) For a 300 MB heap give the container well over that (for example 512 MB or 1 GB), because metaspace, thread stacks, code cache and native buffers also count, and set the heap flag below the limit, then test."
+        - "The JVM is container-aware: it sized its heap from the limit. Default heap OOM is a Java exception (exit 1). Forcing -Xmx1g in a 128 MB container let the process outgrow the limit so the kernel killed it (137, OOMKilled). The Java one is easier to debug. For 300 MB heap, set limit higher than heap plus off-heap memory."
+    - score: 1
+      descriptor: "The answer distinguishes the two failures without the sizing rule."
+      samples:
+        - "One was a Java OutOfMemoryError and the other was killed by the kernel."
+        - "The heap should be smaller than the container limit."
+    - score: 0
+      descriptor: "The answer treats both as the same or the limit as the heap."
+      samples:
+        - "Both mean the heap is too small, so just raise -Xmx."
+        - "The container limit is the heap size."
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j11-l3.2-write-plan
+type: write
+title: "What would change"
+lesson: j11-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J11.08]
+evidence: [IMPL]
+misconceptions: [MC213]
+difficulty: 3
+prompt: |
+  Infrastructure as code describes the **desired** state of resources in files; a tool compares it with the **current** state and prints a plan. Resources are `name=configuration`. Write `plan(desired, current)` returning the changes sorted by name: `+ name` to create (in desired only), `- name` to destroy (in current only), `~ name` to change (in both, configuration differs). Resources that are the same produce nothing.
+entry:
+  methods:
+    - {name: plan, params: [{name: desired, type: "List<String>"}, {name: current, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "one change", method: plan, args: [["web=2cpu", "db=large"], ["web=2cpu", "db=small"]], expect: ["~ db"]}
+    - {name: "a new environment", method: plan, args: [["web=2cpu"], []], expect: ["+ web"]}
+    - {name: "everything removed", method: plan, args: [[], ["web=2cpu"]], expect: ["- web"]}
+  hidden:
+    - {name: "nothing to do", method: plan, args: [["a=1", "b=2"], ["a=1", "b=2"]], expect: []}
+    - {name: "create, destroy and change, sorted", method: plan, args: [["c=1", "a=1"], ["b=1", "a=2"]], expect: ["~ a", "- b", "+ c"]}
+    - {name: "empty", method: plan, args: [[], []], expect: []}
+    - {name: "an equals sign inside the configuration", method: plan, args: [["x=a=b"], ["x=a=c"]], expect: ["~ x"]}
+    - {name: "creates are sorted", method: plan, args: [["z=1", "y=1", "x=1"], []], expect: ["+ x", "+ y", "+ z"]}
+    - {name: "two destroyed", method: plan, args: [["a=1"], ["a=1", "b=1", "c=1"]], expect: ["- b", "- c"]}
+hints:
+  h1: "Split each item at the first equals sign."
+  h2: "Walk the names of both sets in sorted order."
+ai_assisted: true

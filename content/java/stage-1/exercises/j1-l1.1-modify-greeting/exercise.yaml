@@ -1,0 +1,28 @@
+id: j1-l1.1-modify-greeting
+type: modify
+title: A new opening time
+lesson: j1-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.01]
+evidence: [MOD]
+misconceptions: []
+difficulty: 1
+prompt: |
+  This program prints a café's sign. The café has changed its hours. Change the program so it
+  prints exactly:
+
+  ```
+  Welcome to Café Java
+  Open 8am to 6pm
+  Closed on Mondays
+  ```
+
+  The second line has changed, and there's a new third line.
+tests:
+  visible:
+    - {name: prints the new sign exactly, stdin: "", stdout_equals: "Welcome to Café Java\nOpen 8am to 6pm\nClosed on Mondays"}
+hints:
+  h1: Compare the program's output with the new sign line by line. What's different, and what's missing?
+  h2: Change the text in the second println, then add a third IO.println for the new line.
+ai_assisted: true

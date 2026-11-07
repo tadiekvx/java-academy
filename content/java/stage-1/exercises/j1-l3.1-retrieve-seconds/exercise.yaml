@@ -1,0 +1,28 @@
+id: j1-l3.1-retrieve-seconds
+type: write
+title: "Minutes to seconds"
+lesson: j1-l3.1
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: read-convert
+prompt: |
+  Write a program that asks `Minutes: ` and prints `That's N seconds.` For example, with `3` it prints `That's 180 seconds.`
+tests:
+  visible:
+    - {name: "3", stdin: "3\n", stdout_contains: ["That's 180 seconds.\n"]}
+    - {name: "1", stdin: "1\n", stdout_contains: ["That's 60 seconds.\n"]}
+    - {name: "0", stdin: "0\n", stdout_contains: ["That's 0 seconds.\n"]}
+  hidden:
+    - {name: "ten", stdin: "10\n", stdout_contains: ["That's 600 seconds.\n"]}
+    - {name: "an hour", stdin: "60\n", stdout_contains: ["That's 3600 seconds.\n"]}
+    - {name: "a day", stdin: "1440\n", stdout_contains: ["That's 86400 seconds.\n"]}
+    - {name: "seven", stdin: "7\n", stdout_contains: ["That's 420 seconds.\n"]}
+    - {name: "two", stdin: "2\n", stdout_contains: ["That's 120 seconds.\n"]}
+hints:
+  h1: "Read the text, convert it to an int, then multiply."
+  h2: "int minutes = Integer.parseInt(IO.readln(\"Minutes: \")); then print \"That's \" + (minutes * 60) + \" seconds.\""
+ai_assisted: true

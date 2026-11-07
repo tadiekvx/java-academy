@@ -1,0 +1,32 @@
+id: j7-l1.1-write-requestline
+type: write
+title: "The request line"
+lesson: j7-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J7.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `parseRequestLine(line)`. A valid request line is a method of capital letters, a target and a version that starts with `HTTP/`, separated by single spaces. Return `METHOD|target|version`, or `invalid` for anything else.
+entry:
+  methods:
+    - {name: parseRequestLine, params: [{name: line, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a normal request line", method: parseRequestLine, args: ["GET /api/curriculum HTTP/1.1"], expect: "GET|/api/curriculum|HTTP/1.1"}
+    - {name: "a POST", method: parseRequestLine, args: ["POST /api/accounts HTTP/1.1"], expect: "POST|/api/accounts|HTTP/1.1"}
+    - {name: "the version is missing", method: parseRequestLine, args: ["GET /x"], expect: "invalid"}
+  hidden:
+    - {name: "two spaces are not allowed", method: parseRequestLine, args: ["GET  /x HTTP/1.1"], expect: "invalid"}
+    - {name: "the method is capitals", method: parseRequestLine, args: ["get /x HTTP/1.1"], expect: "invalid"}
+    - {name: "an empty line", method: parseRequestLine, args: [""], expect: "invalid"}
+    - {name: "another HTTP version", method: parseRequestLine, args: ["GET /x HTTP/2"], expect: "GET|/x|HTTP/2"}
+    - {name: "not HTTP", method: parseRequestLine, args: ["GET /x FTP/1.0"], expect: "invalid"}
+    - {name: "a digit in the method", method: parseRequestLine, args: ["G3T /x HTTP/1.1"], expect: "invalid"}
+    - {name: "a longer target", method: parseRequestLine, args: ["DELETE /api/accounts/7 HTTP/1.1"], expect: "DELETE|/api/accounts/7|HTTP/1.1"}
+hints:
+  h1: "How many parts should the line split into?"
+  h2: "Which check rejects `FTP/1.0`?"
+ai_assisted: true

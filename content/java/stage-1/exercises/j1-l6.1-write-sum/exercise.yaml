@@ -1,0 +1,32 @@
+id: j1-l6.1-write-sum
+type: write
+title: "Total of an array"
+lesson: j1-l6.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: array-patterns
+prompt: |
+  Write a method called `total` that is given an `int[]` called `values` and returns the sum of all its elements. The sum of an empty array is 0.
+entry:
+  methods:
+    - {name: total, params: [{name: values, type: "int[]"}], returns: "int"}
+tests:
+  visible:
+    - {args: [[4, 8, 15, 16]], expect: 43}
+    - {args: [[]], expect: 0}
+    - {args: [[-5, 5]], expect: 0}
+  hidden:
+    - {name: "one element", args: [[7]], expect: 7}
+    - {name: "ones", args: [[1, 1, 1, 1, 1]], expect: 5}
+    - {name: "mixed", args: [[100, -100, 100]], expect: 100}
+    - {name: "zeros", args: [[0, 0]], expect: 0}
+    - {name: "longer", args: [[10, 20, 30, 40, 50, 60]], expect: 210}
+starter_compiles: false
+hints:
+  h1: "It's the sum pattern, applied to an array."
+  h2: "int sum = 0; for (int value : values) sum += value; return sum;"
+ai_assisted: true

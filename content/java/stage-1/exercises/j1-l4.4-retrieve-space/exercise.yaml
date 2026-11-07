@@ -1,0 +1,31 @@
+id: j1-l4.4-retrieve-space
+type: write
+title: "The first space"
+lesson: j1-l4.4
+role: retrieval
+assesses: [o1, o3]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: loop-patterns
+prompt: |
+  Complete `firstSpace` using a loop (not `indexOf`) so it returns the index of the first space in some text, or -1 if there isn't one.
+entry:
+  methods:
+    - {name: firstSpace, params: [{name: text, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["hello world"], expect: 5}
+    - {args: ["nospace"], expect: -1}
+    - {args: [" start"], expect: 0}
+  hidden:
+    - {name: "empty", args: [""], expect: -1}
+    - {name: "several spaces", args: ["a b c"], expect: 1}
+    - {name: "space at the end", args: ["end "], expect: 3}
+    - {name: "double space", args: ["two  spaces"], expect: 3}
+    - {name: "one letter", args: ["x"], expect: -1}
+hints:
+  h1: "Find the first: return as soon as you find a match. What do you return if you never find one?"
+  h2: "Loop over the indexes; if charAt(i) == ' ' return i. After the loop, return -1."
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j6-l3.3-debug-leak
+type: debug
+title: "A connection left open"
+lesson: j6-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J6.10]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  The helper counts the rows of a table, but it never closes the connection it opens, so every call leaks one database session. Fix it so the connection is closed even when a statement fails, using try-with-resources, and keep the check that only known tables are counted.
+entry:
+  methods:
+    - {name: rowCount, params: [{name: table, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a known table", method: rowCount, args: ["customers"], expect: "5"}
+    - {name: "a known table with more rows", method: rowCount, args: ["transactions"], expect: "6"}
+    - {name: "an unknown table", method: rowCount, args: ["branches"], expect: "unknown"}
+    - {name: "closes the connection with try-with-resources", source_contains: ["try (Connection db = Db.open()"], source_not_contains: ["db.close();"]}
+  hidden:
+    - {name: "a known table", method: rowCount, args: ["accounts"], expect: "5"}
+    - {name: "an injection attempt is refused", method: rowCount, args: ["customers; DROP TABLE accounts"], expect: "unknown"}
+    - {name: "names are matched exactly", method: rowCount, args: ["ACCOUNTS"], expect: "unknown"}
+    - {name: "an empty name", method: rowCount, args: [""], expect: "unknown"}
+    - {name: "a known table with more rows", method: rowCount, args: ["transactions"], expect: "6"}
+hints:
+  h1: "Which resource does the helper own, and when does try-with-resources close it?"
+  h2: "Why does an unclosed connection keep a database session alive?"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j6-l1.4-explain-plan
+type: explain
+title: "Reading a query plan"
+lesson: j6-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J6.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A bank runs a report over a payments table with 50,000 rows. The mentor asks: what does this `EXPLAIN (ANALYZE, BUFFERS)` output tell you, and what would you change? The plan shows a sequential scan that removes 49,900 rows before the join, and after an index the same query is a bitmap heap scan.
+rubric:
+  criteria: |
+    A sequential scan reads every row and filters; an index lets the planner read only the rows that match. `EXPLAIN` prints the plan, `ANALYZE` runs it and adds actual numbers, and `BUFFERS` reports disk reads.
+  levels:
+    - score: 2
+      descriptor: "The answer names the scan, the filter and the cost, and says what an index changes."
+      samples:
+        - "Without the index the plan is a sequential scan that filters a customer id and removes most rows."
+        - "With the index the plan is a bitmap heap scan on the index column."
+    - score: 1
+      descriptor: "The answer names the plan but not what the numbers mean."
+      samples:
+        - "The answer quotes the plan without explaining the rows removed by the filter."
+        - "The answer says an index always helps without saying when it does not."
+    - score: 0
+      descriptor: "The answer reads the plan as a list of rows rather than a strategy."
+      samples:
+        - "The answer reads the numbers as a histogram instead of a scan strategy."
+        - "The answer ignores the execution time and buffer counts."
+ai_assisted: true

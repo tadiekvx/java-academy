@@ -1,0 +1,31 @@
+id: j1-l6.4-debug-last
+type: debug
+title: "The last element"
+lesson: j1-l6.4
+role: ladder
+assesses: [o1, o2, o3]
+concepts: [J1.12]
+evidence: [DEBUG]
+misconceptions: [MC15]
+difficulty: 2
+variant_group: exceptions
+prompt: |
+  `lastElement` should return the last element of an array, or -1 if the array is empty. It crashes with an `ArrayIndexOutOfBoundsException` for every array. Find and fix the bug.
+entry:
+  methods:
+    - {name: lastElement, params: [{name: values, type: "int[]"}], returns: "int"}
+tests:
+  visible:
+    - {args: [[4, 8, 15]], expect: 15}
+    - {args: [[]], expect: -1}
+    - {args: [[7]], expect: 7}
+  hidden:
+    - {name: "two", args: [[1, 2]], expect: 2}
+    - {name: "zero", args: [[0]], expect: 0}
+    - {name: "ends differently", args: [[9, 9, 9, 5]], expect: 5}
+    - {name: "negatives", args: [[-3, -2, -1]], expect: -1}
+    - {name: "five", args: [[10, 20, 30, 40, 50]], expect: 50}
+hints:
+  h1: "What is the last valid index? And what does the empty array need?"
+  h2: "Use values[values.length - 1], after checking for an empty array."
+ai_assisted: true

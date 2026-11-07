@@ -1,0 +1,30 @@
+id: j1-l2.4-debug-shout
+type: debug
+title: "The quiet shout"
+lesson: j1-l2.4
+role: ladder
+assesses: [o4]
+concepts: [J1.04]
+evidence: [DEBUG]
+misconceptions: [MC06]
+difficulty: 2
+prompt: |
+  `shout` should return the message in capitals with an exclamation mark, so `shout("hello")` gives `"HELLO!"`. It returns `"hello!"` instead. Find and fix the bug.
+entry:
+  methods:
+    - {name: shout, params: [{name: message, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["hello"], expect: "HELLO!"}
+    - {args: ["stop"], expect: "STOP!"}
+    - {args: ["Watch Out"], expect: "WATCH OUT!"}
+  hidden:
+    - {name: "one letter", args: ["a"], expect: "A!"}
+    - {name: "some capitals already", args: ["already LOUD"], expect: "ALREADY LOUD!"}
+    - {name: "two words", args: ["fire drill"], expect: "FIRE DRILL!"}
+    - {name: "repeated words", args: ["go go go"], expect: "GO GO GO!"}
+    - {name: "empty message", args: [""], expect: "!"}
+hints:
+  h1: "Does toUpperCase() change message, or give you something back?"
+  h2: "toUpperCase() returns a new string and leaves message unchanged. Use what it returns: return message.toUpperCase() + \"!\";"
+ai_assisted: true

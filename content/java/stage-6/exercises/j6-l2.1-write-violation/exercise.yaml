@@ -1,0 +1,30 @@
+id: j6-l2.1-write-violation
+type: write
+title: "Diagnosing a rejected write"
+lesson: j6-l2.1
+role: ladder
+assesses: [o1, o3]
+concepts: [J6.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write the statement for the operation, and read the SQLState of a statement the database rejects. Know what each class of violation means.
+entry:
+  methods:
+    - {name: violation, params: [{name: operation, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a foreign key that points nowhere", method: violation, args: ["orphan-account"], expect: "23506"}
+    - {name: "a balance below zero", method: violation, args: ["negative-balance"], expect: "23513"}
+    - {name: "a valid write", method: violation, args: ["valid"], expect: "ok"}
+  hidden:
+    - {name: "a primary key that repeats", method: violation, args: ["duplicate-account"], expect: "23505"}
+    - {name: "an operation that does not exist", method: violation, args: ["unknown"], expect: "unknown operation"}
+    - {name: "a foreign key that points nowhere", method: violation, args: ["orphan-account"], expect: "23506"}
+    - {name: "a balance below zero", method: violation, args: ["negative-balance"], expect: "23513"}
+    - {name: "a valid write", method: violation, args: ["valid"], expect: "ok"}
+hints:
+  h1: "What SQLState does a foreign key violation return?"
+  h2: "What SQLState does a check constraint return?"
+ai_assisted: true

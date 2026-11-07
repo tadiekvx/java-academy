@@ -1,0 +1,31 @@
+id: j10-l1.3-write-adr
+type: write
+title: "Does the record have its parts"
+lesson: j10-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J10.03]
+evidence: [IMPL]
+misconceptions: [MC200]
+difficulty: 2
+prompt: |
+  A short decision record (ADR) in Markdown has a title line (`# Title`) and the sections `## Status`, `## Context`, `## Decision` and `## Consequences`, each on a line of its own (surrounding spaces ignored). Write `adrMissing(markdown)` returning the names of the parts that are missing, in the order Title, Status, Context, Decision, Consequences. A complete record returns an empty list. `## Title` does not count as a title.
+entry:
+  methods:
+    - {name: adrMissing, params: [{name: markdown, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "a complete record", method: adrMissing, args: ["# Use PostgreSQL\n\n## Status\nAccepted\n\n## Context\nWe need transactions.\n\n## Decision\nPostgreSQL.\n\n## Consequences\nWe run a database server."], expect: []}
+    - {name: "most parts missing", method: adrMissing, args: ["# Use Kafka\n\n## Context\nWe need events."], expect: ["Status", "Decision", "Consequences"]}
+    - {name: "nothing at all", method: adrMissing, args: [""], expect: ["Title", "Status", "Context", "Decision", "Consequences"]}
+  hidden:
+    - {name: "a second-level heading is not a title", method: adrMissing, args: ["## Title\n## Status\n## Context\n## Decision\n## Consequences"], expect: ["Title"]}
+    - {name: "no consequences", method: adrMissing, args: ["# T\n## Status\n## Context\n## Decision"], expect: ["Consequences"]}
+    - {name: "the words in prose do not count", method: adrMissing, args: ["# T\nThe Status of the Decision and its Context and Consequences are discussed here."], expect: ["Status", "Context", "Decision", "Consequences"]}
+    - {name: "spaces around a heading are ignored", method: adrMissing, args: ["# T\n  ## Status  \n## Context\n## Decision\n## Consequences"], expect: []}
+    - {name: "a longer heading is not the section", method: adrMissing, args: ["# T\n## Statuses\n## Context\n## Decision\n## Consequences"], expect: ["Status"]}
+    - {name: "order of sections does not matter", method: adrMissing, args: ["# T\n## Consequences\n## Decision\n## Context\n## Status"], expect: []}
+hints:
+  h1: "Compare whole trimmed lines, not substrings."
+  h2: "A title starts with `# ` (one hash and a space)."
+ai_assisted: true

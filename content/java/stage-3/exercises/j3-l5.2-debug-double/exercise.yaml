@@ -1,0 +1,31 @@
+id: j3-l5.2-debug-double
+type: debug
+title: "The penny that wasn't there"
+lesson: j3-l5.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J3.11]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `addPrices("0.1", "0.2")` should return `0.3`, but returns `0.30000000000000004`. Find the cause and fix `addPrices` so it adds the two prices **exactly** and returns the sum as plain text (keeping the larger number of decimal places: `"1.50"` + `"2.5"` is `4.00`).
+entry:
+  methods:
+    - {name: addPrices, params: [{name: a, type: "String"}, {name: b, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: addPrices, args: ["0.1", "0.2"], expect: "0.3"}
+    - {method: addPrices, args: ["1.50", "2.5"], expect: "4.00"}
+    - {method: addPrices, args: ["10", "5"], expect: "15"}
+    - {name: "uses BigDecimal, not double", source_contains: ["BigDecimal"], source_not_contains: ["double", "Double"]}
+  hidden:
+    - {method: addPrices, args: ["0.7", "0.1"], expect: "0.8"}
+    - {method: addPrices, args: ["19.99", "0.01"], expect: "20.00"}
+    - {method: addPrices, args: ["100.10", "200.20"], expect: "300.30"}
+    - {method: addPrices, args: ["0.01", "0.02"], expect: "0.03"}
+    - {method: addPrices, args: ["3.30", "3.30"], expect: "6.60"}
+hints:
+  h1: "What does a double store for 0.1? Which type stores decimals exactly?"
+  h2: "new BigDecimal(a).add(new BigDecimal(b)).toPlainString()"
+ai_assisted: true

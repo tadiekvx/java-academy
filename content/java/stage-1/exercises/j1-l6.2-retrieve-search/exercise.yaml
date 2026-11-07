@@ -1,0 +1,32 @@
+id: j1-l6.2-retrieve-search
+type: write
+title: "Find the position"
+lesson: j1-l6.2
+role: retrieval
+assesses: [o1]
+concepts: [J1.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: array-algorithms
+prompt: |
+  Write a method called `positionOf` that is given an `int[]` called `values` and an `int` called `target` (in that order). It returns the index of the **first** element equal to `target`, or -1 if there isn't one.
+entry:
+  methods:
+    - {name: positionOf, params: [{name: values, type: "int[]"}, {name: target, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [[40, 17, 23, 17], 17], expect: 1}
+    - {args: [[40, 17, 23, 17], 99], expect: -1}
+    - {args: [[], 5], expect: -1}
+  hidden:
+    - {name: "single match", args: [[5], 5], expect: 0}
+    - {name: "single miss", args: [[5], 6], expect: -1}
+    - {name: "last element", args: [[1, 2, 3], 3], expect: 2}
+    - {name: "first element", args: [[1, 2, 3], 1], expect: 0}
+    - {name: "all match", args: [[7, 7, 7], 7], expect: 0}
+starter_compiles: false
+hints:
+  h1: "Find-the-first: return as soon as you find a match."
+  h2: "Return i inside the loop; return -1 after it."
+ai_assisted: true

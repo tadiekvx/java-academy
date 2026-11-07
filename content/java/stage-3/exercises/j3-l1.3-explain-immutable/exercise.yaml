@@ -1,0 +1,32 @@
+id: j3-l1.3-explain-immutable
+type: explain
+title: "Why return List.of?"
+lesson: j3-l1.3
+role: ladder
+assesses: [o3]
+concepts: [J3.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A method `List<String> roles()` returns `List.of("admin", "user")`. A caller does `roles().add("guest")`. (a) What happens, and why does `List.of` behave that way? (b) Give one reason an API author might return an unmodifiable list. (c) If the caller wants a list they can change, what should they do?
+rubric:
+  criteria: |
+    A full answer says the call throws UnsupportedOperationException because List.of creates an unmodifiable list; an API returns one so callers can read but not change its internal data (protecting invariants, like a defensive copy); and the caller should copy it into a new ArrayList.
+  levels:
+    - score: 2
+      descriptor: "Says the add throws UnsupportedOperationException because List.of is unmodifiable, gives a reason such as stopping callers changing the owner's data, and says to copy into new ArrayList<>(...)."
+      samples:
+        - "It throws an UnsupportedOperationException, because List.of creates a list that can't be added to, removed from or replaced in. An author returns one so callers can read the data but not change it, which protects the class's own state. The caller can write new ArrayList<>(roles()) to get a list they can change."
+        - "UnsupportedOperationException: List.of makes an unmodifiable list. It protects the owner's data from outside changes. If you need a changeable one, make a copy with new ArrayList<>(...)."
+    - score: 1
+      descriptor: "Gets the exception or the reason or the copy, but not all three."
+      samples:
+        - "It throws an exception."
+        - "Copy it first."
+    - score: 0
+      descriptor: "Incorrect, for example says the guest is added, or that List.of lists are faster for no reason."
+      samples:
+        - "It adds guest."
+        - "It silently ignores it."
+ai_assisted: true

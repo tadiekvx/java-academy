@@ -1,0 +1,35 @@
+id: j1-l1.1-parsons-countdown
+type: parsons
+title: Countdown
+lesson: j1-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Arrange the blocks into a program that prints exactly this:
+
+  ```
+  3 2 1
+  Lift off!
+  ```
+
+  One block isn't needed.
+blocks:
+  - "void main() {"
+  - "    IO.print(\"3 \");"
+  - "    IO.print(\"2 \");"
+  - "    IO.println(\"1\");"
+  - "    IO.println(\"Lift off!\");"
+  - "}"
+distractors:
+  - "    IO.println(\"2 \");"
+tests:
+  visible:
+    - {name: prints the countdown, stdin: "", stdout_equals: "3 2 1\nLift off!"}
+hints:
+  h1: The numbers share one line. Which statement keeps output on the same line?
+  h2: "Use IO.print for 3 and 2, and IO.println for 1 so that Lift off! starts on a new line."
+ai_assisted: true

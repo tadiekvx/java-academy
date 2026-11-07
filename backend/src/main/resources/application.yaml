@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: academy
+  # The project-local PostgreSQL started by scripts/db.sh (trusted local connections, no password).
+  datasource:
+    url: jdbc:postgresql://localhost:5433/academy
+    username: academy
+  # The built frontend (frontend/dist, from `npm run build`) is served directly from disk.
+  web:
+    resources:
+      static-locations: classpath:/static/, file:../frontend/dist/
+
+academy:
+  content:
+    # Relative to the backend directory, which is the working directory for `mvn spring-boot:run`.
+    root: ../content/java
+    sources: ../docs/curriculum/sources.md
+    # Lets reviewers see lessons that are in review. Must be false in production.
+    show-unpublished: true
+  mentor:
+    # Needs ANTHROPIC_API_KEY (or ANTHROPIC_AUTH_TOKEN) in the server's environment; without it the mentor is unavailable.
+    model: claude-opus-5-5
+    # Model calls per learner per day: a cost guard.
+    daily-request-limit: 60

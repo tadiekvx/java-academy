@@ -1,0 +1,32 @@
+id: j8-l1.3-explain-input
+type: explain
+title: "Validate or encode"
+lesson: j8-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J8.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team validates the 'display name' field with a regex that allows only letters, digits and spaces, and argues that this makes it safe to insert the name into HTML anywhere. Explain why that reasoning is fragile, and what each of output encoding and parameterised queries adds. Use the OWASP wording about what output encoding does.
+rubric:
+  criteria: |
+    Validation limits what comes in, but safety depends on where the value goes out: a value is data or code depending on the context (HTML text, an attribute, a URL, SQL). Output encoding converts untrusted input into a safe form so it is displayed as data and not executed as code, and it protects every place the value is used, even if validation changes or is bypassed. Parameterised queries do the same job for SQL by keeping data separate from the statement. Validation is still useful, as a first filter and for business rules, but it is not a substitute.
+  levels:
+    - score: 2
+      descriptor: "The answer separates validation from encoding, ties safety to the output context and names both encoding and parameterised queries."
+      samples:
+        - "Validation only restricts input today; the safety of the value depends on the context where it is used (HTML, attribute, URL, SQL), and the rules may change later. Output encoding turns untrusted input into a form shown as data instead of run as code, wherever it is used. Parameterised queries keep SQL data out of the statement. Validation helps, but encoding and parameters are the controls."
+        - "A regex today does not protect a new page tomorrow that puts the name in a script or attribute. Encode on output for the context, and use bound parameters for SQL, so untrusted data is never interpreted as code. Keep validation as an extra layer."
+    - score: 1
+      descriptor: "The answer names encoding or parameters without explaining the context argument."
+      samples:
+        - "You should encode output as well."
+        - "Use parameterised queries for SQL."
+    - score: 0
+      descriptor: "The answer accepts validation as sufficient."
+      samples:
+        - "The regex is enough because it blocks special characters."
+        - "If the input is validated it is safe everywhere."
+ai_assisted: true

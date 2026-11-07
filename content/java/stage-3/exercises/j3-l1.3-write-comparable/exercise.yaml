@@ -1,0 +1,30 @@
+id: j3-l1.3-write-comparable
+type: write
+title: "Versions in order"
+lesson: j3-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J3.03]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Version` should have a natural order: by major number, then by minor number, **as numbers** (so `1.10` is newer than `1.9`). Write its `compareTo`. `newest` uses `Collections.max`, which relies on it.
+entry:
+  methods:
+    - {name: newest, params: [{name: versions, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {method: newest, args: [["1.4", "1.10", "1.9"]], expect: "1.10"}
+    - {method: newest, args: [["2.0", "1.99"]], expect: "2.0"}
+    - {method: newest, args: [["3.1"]], expect: "3.1"}
+  hidden:
+    - {method: newest, args: [["1.9", "1.10"]], expect: "1.10"}
+    - {method: newest, args: [["0.1", "0.2", "0.11"]], expect: "0.11"}
+    - {method: newest, args: [["10.0", "9.9"]], expect: "10.0"}
+    - {method: newest, args: [["1.0", "1.0"]], expect: "1.0"}
+    - {method: newest, args: [["4.5", "4.5", "4.6", "3.9"]], expect: "4.6"}
+hints:
+  h1: "Compare the major numbers first; only if they're equal compare the minor numbers. Use Integer.compare."
+  h2: "int byMajor = Integer.compare(major, other.major); return byMajor != 0 ? byMajor : Integer.compare(minor, other.minor);"
+ai_assisted: true

@@ -1,0 +1,25 @@
+id: j2-l5.1-predict-finally
+type: predict
+title: "What runs, and in what order?"
+lesson: j2-l5.1
+role: ladder
+assesses: [o2]
+concepts: [J2.12]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out exactly what this program prints. Remember that `finally` runs as the method is left.
+expected_output: |
+  parsing
+  parsed 12
+  done
+  12
+  parsing
+  bad
+  done
+  -1
+hints:
+  h1: "Follow each call separately. Does finally run for both? When is the returned value printed?"
+  h2: "finally runs before the value is passed back, so \"done\" comes before the number is printed."
+ai_assisted: true

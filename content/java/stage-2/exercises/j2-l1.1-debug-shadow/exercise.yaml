@@ -1,0 +1,30 @@
+id: j2-l1.1-debug-shadow
+type: debug
+title: "The constructor that compiles but does nothing"
+lesson: j2-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J2.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `sumOf(3, 4)` should return `7`, but it returns `0`. Find the bug in `Point`, and fix it. Don't change `sumOf`.
+entry:
+  methods:
+    - {name: sumOf, params: [{name: a, type: "int"}, {name: b, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: sumOf, args: [3, 4], expect: 7}
+    - {method: sumOf, args: [0, 0], expect: 0}
+    - {method: sumOf, args: [-2, 5], expect: 3}
+  hidden:
+    - {method: sumOf, args: [10, 20], expect: 30}
+    - {method: sumOf, args: [-7, -3], expect: -10}
+    - {method: sumOf, args: [100, 0], expect: 100}
+    - {method: sumOf, args: [1, 1], expect: 2}
+    - {method: sumOf, args: [0, 9], expect: 9}
+hints:
+  h1: "In a constructor, which x is on each side of x = x? Is the field ever assigned?"
+  h2: "Write this.x = x; and this.y = y;"
+ai_assisted: true

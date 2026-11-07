@@ -1,0 +1,30 @@
+id: j1-l2.4-modify-badge
+type: modify
+title: "New name badges"
+lesson: j1-l2.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.04]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A game prints name badges like `Ada - 3`. The designers want a new style: the name in capitals, then the level in brackets, like `ADA (level 3)`. Change `badge` to produce the new style.
+entry:
+  methods:
+    - {name: badge, params: [{name: name, type: "String"}, {name: level, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["Ada", 3], expect: "ADA (level 3)"}
+    - {args: ["grace", 10], expect: "GRACE (level 10)"}
+    - {args: ["Linus", 1], expect: "LINUS (level 1)"}
+  hidden:
+    - {name: "level zero", args: ["x", 0], expect: "X (level 0)"}
+    - {name: "high level", args: ["Margaret", 99], expect: "MARGARET (level 99)"}
+    - {name: "already capitals", args: ["ZOE", 7], expect: "ZOE (level 7)"}
+    - {name: "lower case", args: ["tim", 42], expect: "TIM (level 42)"}
+    - {name: "short name", args: ["Bo", 5], expect: "BO (level 5)"}
+hints:
+  h1: "Compare the old output and the new output piece by piece. What text goes around the level now?"
+  h2: "Return name.toUpperCase() + \" (level \" + level + \")\". Mind the spaces inside the quotes."
+ai_assisted: true

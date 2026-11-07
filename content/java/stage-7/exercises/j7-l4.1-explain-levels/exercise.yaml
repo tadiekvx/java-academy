@@ -1,0 +1,58 @@
+id: j7-l4.1-explain-levels
+type: explain
+title: "Reading a real test"
+lesson: j7-l4.1
+role: ladder
+assesses: [o2]
+concepts: [J7.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a shortened copy of a real test from this platform.
+
+  ```java
+  @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  class ProjectFlowTest {
+
+      @LocalServerPort
+      int port;
+
+      private ApiClient client;
+
+      @BeforeEach
+      void setUp() {
+          client = new ApiClient(port);
+      }
+
+      @Test
+      void listsAllProjectsWithTheirCategories() throws Exception {
+          String body = client.get("/api/projects").body();
+
+          assertThat(body)
+                  .contains("\"id\":\"j1-p1-finance\"").contains("\"category\":\"A\"");
+      }
+  }
+  ```
+
+  What kind of test is it (unit, slice or integration)? What does `RANDOM_PORT` do? What does this test give you that a test of the controller class on its own would not, and what does it cost?
+rubric:
+  criteria: |
+    It is an integration test: @SpringBootTest builds the application context and, with RANDOM_PORT, starts an embedded server on a random port, so the test makes real HTTP requests through the whole stack (routing, serialisation, security, the real beans). A unit test of the controller class would not exercise the mapping, JSON conversion or filters. The cost is slower tests that need more setup, and failures that point at the whole stack rather than one class.
+  levels:
+    - score: 2
+      descriptor: "The answer classifies it, explains RANDOM_PORT, and names both the gain and the cost."
+      samples:
+        - "An integration test. @SpringBootTest loads the whole context and RANDOM_PORT starts a real embedded server on a free port, so the request goes over HTTP through routing, JSON and security. A plain controller test would miss those. It is slower and a failure could be anywhere in the stack."
+        - "It is an integration test of the running application. RANDOM_PORT means a real server on a random free port, so there are no port clashes between test runs. It proves the pieces work together, but it is slower than a unit test and harder to diagnose."
+    - score: 1
+      descriptor: "The answer classifies it or explains the port but not both the gain and the cost."
+      samples:
+        - "It is an integration test that starts the app."
+        - "RANDOM_PORT starts the server on a random port."
+    - score: 0
+      descriptor: "The answer calls it a unit test or misreads the annotation."
+      samples:
+        - "It is a unit test because it has one test method."
+        - "RANDOM_PORT makes the test data random."
+ai_assisted: true

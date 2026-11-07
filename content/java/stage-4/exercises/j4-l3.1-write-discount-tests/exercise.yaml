@@ -1,0 +1,35 @@
+id: j4-l3.1-write-discount-tests
+type: write
+title: "Kill the mutants"
+lesson: j4-l3.1
+role: ladder
+assesses: [o1, o3]
+concepts: [J4.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  `Discount` has a correct implementation (`Correct`) and six **mutants**: copies with one small deliberate bug each. Write `allPass(Discount d)`: it should return `true` only if **every** check you make passes. Your checks must pass for `Correct` and fail for **every** mutant. Use the `check(d, pence, member, expected)` helper.
+
+  The rule: an order of **10,000 pence or more** gets 10% off; **members** get a further 2% off, on any order. The total discount is the price times those percentages **added together**, divided by 100 and **rounded down**; the result is the price minus the discount.
+
+  Work out each expected value **by hand from the rule**, as a real tester would. (Reading the code of `Correct` and comparing against it would be cheating: it can't find a bug in itself.) Hint: for each mutant, ask which single input makes it behave differently.
+entry:
+  methods:
+    - {name: run, params: [{name: which, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["correct"], expect: "pass"}
+    - {method: run, args: ["mutant1"], expect: "fail"}
+    - {method: run, args: ["mutant6"], expect: "fail"}
+  hidden:
+    - {method: run, args: ["mutant2"], expect: "fail"}
+    - {method: run, args: ["mutant3"], expect: "fail"}
+    - {method: run, args: ["mutant4"], expect: "fail"}
+    - {method: run, args: ["mutant5"], expect: "fail"}
+    - {method: run, args: ["correct"], expect: "pass"}
+    - {method: run, args: ["mutant1"], expect: "fail"}
+hints:
+  h1: "Think about what each mutant changes: the 10000 boundary, members on small orders, the member percentage, the big-order percentage, rounding, and members in general. Write one check per difference."
+  h2: "check(d, 10000, false, 9000) kills the > mutant; check(d, 5000, true, 4900) kills the mutants that ignore members on small orders; check(d, 101, true, 99) kills rounding up."
+ai_assisted: true

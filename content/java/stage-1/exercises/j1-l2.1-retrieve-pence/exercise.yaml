@@ -1,0 +1,32 @@
+id: j1-l2.1-retrieve-pence
+type: write
+title: Pence in pounds
+lesson: j1-l2.1
+role: retrieval
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+variant_group: frame-multiply
+prompt: |
+  Complete `penceIn` so it returns the number of pence in any whole number of pounds. For example,
+  `penceIn(2)` should be `200`.
+entry:
+  methods:
+    - {name: penceIn, params: [{name: pounds, type: int}], returns: int}
+tests:
+  visible:
+    - {args: [1], expect: 100}
+    - {args: [2], expect: 200}
+    - {args: [0], expect: 0}
+  hidden:
+    - {name: ten, args: [10], expect: 1000}
+    - {name: three, args: [3], expect: 300}
+    - {name: a large number, args: [100], expect: 10000}
+    - {name: seven, args: [7], expect: 700}
+    - {name: twelve, args: [12], expect: 1200}
+hints:
+  h1: Work out one case by hand first, say for 2. What did you multiply by?
+  h2: "Use the name pounds in your expression, multiplied by 100, so it works for any value."
+ai_assisted: true

@@ -1,0 +1,36 @@
+id: j1-l2.3-retrieve-egg-boxes
+type: write
+title: Egg boxes
+lesson: j1-l2.3
+role: retrieval
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: split-units
+prompt: |
+  A farm packs eggs into boxes of 6. Complete both methods:
+
+  - `fullBoxes` returns how many boxes can be completely filled. For 14 eggs, that's `2`.
+  - `looseEggs` returns how many eggs are left over. For 14 eggs, that's `2`.
+entry:
+  methods:
+    - {name: fullBoxes, params: [{name: eggs, type: int}], returns: int}
+    - {name: looseEggs, params: [{name: eggs, type: int}], returns: int}
+tests:
+  visible:
+    - {method: fullBoxes, args: [14], expect: 2}
+    - {method: looseEggs, args: [14], expect: 2}
+    - {method: fullBoxes, args: [5], expect: 0}
+  hidden:
+    - {name: not enough for a box, method: looseEggs, args: [5], expect: 5}
+    - {name: exactly two boxes (boxes), method: fullBoxes, args: [12], expect: 2}
+    - {name: exactly two boxes (loose), method: looseEggs, args: [12], expect: 0}
+    - {name: no eggs, method: looseEggs, args: [0], expect: 0}
+    - {name: a big batch (boxes), method: fullBoxes, args: [61], expect: 10}
+    - {name: a big batch (loose), method: looseEggs, args: [61], expect: 1}
+hints:
+  h1: One operator gives the whole number of times 6 fits; the other gives what's left over.
+  h2: "Use eggs / 6 for the boxes and eggs % 6 for the loose eggs."
+ai_assisted: true

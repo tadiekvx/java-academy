@@ -1,0 +1,32 @@
+id: j6-l2.3-explain-migrations
+type: explain
+title: "What a migration is"
+lesson: j6-l2.3
+role: ladder
+assesses: [o3]
+concepts: [J6.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A bank keeps its schema in versioned files. What does a migration do, and who runs it?
+rubric:
+  criteria: |
+    A migration is a versioned SQL file that changes the schema. The platform's own migrations are run by the team; learners read them.
+  levels:
+    - score: 2
+      descriptor: "The answer names the versioned file and what it changes."
+      samples:
+        - "A migration carries an identifier and a sequence of schema changes."
+        - "Migrations are applied in order, once each."
+    - score: 1
+      descriptor: "The answer describes a migration without its version discipline."
+      samples:
+        - "The answer describes a one-off SQL script without a version."
+        - "The answer forgets that migrations are applied once each."
+    - score: 0
+      descriptor: "The answer treats a migration as an undoable manual change."
+      samples:
+        - "The answer proposes dropping and recreating tables by hand."
+        - "The answer says migrations can be freely edited after they have run."
+ai_assisted: true

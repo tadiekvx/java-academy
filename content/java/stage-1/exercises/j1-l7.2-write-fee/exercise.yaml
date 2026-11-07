@@ -1,0 +1,33 @@
+id: j1-l7.2-write-fee
+type: write
+title: "The car park fee"
+lesson: j1-l7.2
+role: ladder
+assesses: [o3]
+concepts: [J1.16, J1.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `parkingFee(int minutes)` for the car park described in the lesson: the first 30 minutes are free; after that 2 pounds for each hour or part of an hour; never more than 15. It returns the fee in whole pounds.
+
+  Use the table from the lesson as your checks: 0 and 30 give 0, 31 and 90 give 2, 91 gives 4, 600 gives 15.
+entry:
+  methods:
+    - {name: parkingFee, params: [{name: minutes, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: parkingFee, args: [30], expect: 0}
+    - {method: parkingFee, args: [31], expect: 2}
+    - {method: parkingFee, args: [91], expect: 4}
+  hidden:
+    - {method: parkingFee, args: [0], expect: 0}
+    - {method: parkingFee, args: [90], expect: 2}
+    - {method: parkingFee, args: [150], expect: 4}
+    - {method: parkingFee, args: [270], expect: 8}
+    - {method: parkingFee, args: [271], expect: 10}
+    - {method: parkingFee, args: [600], expect: 15}
+hints:
+  h1: "Handle the free case first. Then work out the minutes over 30 and round the hours up with (over + 59) / 60."
+  h2: "if minutes <= 30 return 0; hours = (minutes - 30 + 59) / 60; return Math.min(hours * 2, 15);"
+ai_assisted: true

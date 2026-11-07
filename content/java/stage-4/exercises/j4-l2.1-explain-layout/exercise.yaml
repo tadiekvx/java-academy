@@ -1,0 +1,42 @@
+id: j4-l2.1-explain-layout
+type: explain
+title: "Where does it go?"
+lesson: j4-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J4.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A Maven project contains:
+
+  ```
+  shop/
+    pom.xml
+    src/main/java/com/example/shop/Price.java
+    src/test/java/com/example/shop/PriceTest.java
+    target/shop-1.0-SNAPSHOT.jar
+  ```
+
+  (a) Which file is the application's own code, and which is a test? How does Maven tell them apart? (b) Why is the folder path `com/example/shop`? (c) What is in `target`, and should it go into version control?
+rubric:
+  criteria: |
+    A full answer says Price.java under src/main/java is the application code and PriceTest.java under src/test/java is the test, which Maven distinguishes by the directory; the folders mirror the package com.example.shop; and target holds generated output (compiled classes, test reports and the jar) so it shouldn't be committed.
+  levels:
+    - score: 2
+      descriptor: "Identifies Price.java as application code and PriceTest.java as a test by their directories, says the folder path mirrors the package name, and says target is generated build output that shouldn't be in version control."
+      samples:
+        - "Price.java is the application code and PriceTest.java is the test: Maven tells them apart by directory, src/main/java versus src/test/java. The folders com/example/shop mirror the package com.example.shop. target holds generated output such as compiled classes, test reports and the jar, so it shouldn't be committed."
+        - "(a) Price.java in src/main is the app; PriceTest.java in src/test is the test. (b) The path matches the package name. (c) target is build output, so keep it out of version control."
+    - score: 1
+      descriptor: "Answers two parts, or answers all but without reasons."
+      samples:
+        - "Price is the app and PriceTest is the test."
+        - "target is output."
+    - score: 0
+      descriptor: "Incorrect, for example says target is where you write your code or that tests go in src/main."
+      samples:
+        - "Put your code in target."
+        - "Both files are application code."
+ai_assisted: true

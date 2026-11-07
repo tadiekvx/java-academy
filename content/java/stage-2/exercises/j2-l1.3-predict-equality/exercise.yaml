@@ -1,0 +1,21 @@
+id: j2-l1.3-predict-equality
+type: predict
+title: "equals before you've written one"
+lesson: j2-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J2.03]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Point` doesn't define `equals` yet. Work out what this prints.
+expected_output: |
+  false
+  false
+  true
+  true
+hints:
+  h1: "A class that hasn't defined equals only treats the very same object as equal. What does p.x == q.x compare?"
+  h2: "p and q are different objects, so == and the default equals are false. r is p. p.x == q.x compares two ints."
+ai_assisted: true

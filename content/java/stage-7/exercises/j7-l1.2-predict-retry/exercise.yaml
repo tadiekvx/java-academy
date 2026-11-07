@@ -1,0 +1,19 @@
+id: j7-l1.2-predict-retry
+type: predict
+title: "Sending it twice"
+lesson: j7-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J7.02]
+evidence: [MIST]
+misconceptions: [MC167]
+difficulty: 1
+prompt: |
+  A client sends a request, gets no answer, and sends the same request again. The model below treats a PUT as 'set the balance to this value' and a POST as 'add this amount'. Predict the exact output.
+expected_output: |
+  after two PUTs=150
+  after two POSTs=200
+hints:
+  h1: "What is the balance after the first PUT, and after the second?"
+  h2: "Which of the two requests would double-charge a customer if a client retried it?"
+ai_assisted: true

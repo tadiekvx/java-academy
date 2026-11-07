@@ -1,0 +1,31 @@
+id: j3-l2.1-write-biggest
+type: write
+title: "The biggest of anything comparable"
+lesson: j3-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J3.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write the generic method `biggest(List<T> items)`: it returns the largest item, for **any** type that can be compared with its own kind (`T extends Comparable<T>`). The driver uses it on a list of strings and a list of numbers. The lists are never empty.
+entry:
+  methods:
+    - {name: run, params: [{name: words, type: "List<String>"}, {name: numbers, type: "List<Integer>"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [["pear", "apple", "fig"], [3, 9, 4]], expect: "pear,9"}
+    - {method: run, args: [["a"], [1]], expect: "a,1"}
+    - {method: run, args: [["b", "c", "a"], [-5, -2, -9]], expect: "c,-2"}
+    - {name: "the type is bounded", source_contains: ["T extends Comparable<T>"]}
+  hidden:
+    - {method: run, args: [["x", "y"], [10, 20]], expect: "y,20"}
+    - {method: run, args: [["zebra", "zoo"], [0, 0]], expect: "zoo,0"}
+    - {method: run, args: [["m", "n", "o", "p"], [5, 4, 3, 2]], expect: "p,5"}
+    - {method: run, args: [["only"], [100]], expect: "only,100"}
+    - {method: run, args: [["Beta", "alpha"], [7, 7, 8]], expect: "alpha,8"}
+hints:
+  h1: "The method needs to compare items, so say the type can be compared: <T extends Comparable<T>>."
+  h2: "if (item.compareTo(best) > 0) { best = item; }"
+ai_assisted: true

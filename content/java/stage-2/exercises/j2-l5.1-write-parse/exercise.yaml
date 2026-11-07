@@ -1,0 +1,32 @@
+id: j2-l5.1-write-parse
+type: write
+title: "A safe parse"
+lesson: j2-l5.1
+role: ladder
+assesses: [o1]
+concepts: [J2.12]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `parseOr(String text, int fallback)`: return the whole number in `text` (ignoring spaces at either end), or `fallback` if it isn't a valid whole number. Catch the specific exception that `Integer.parseInt` throws.
+entry:
+  methods:
+    - {name: parseOr, params: [{name: text, type: "String"}, {name: fallback, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: parseOr, args: ["42", 0], expect: 42}
+    - {method: parseOr, args: ["abc", -1], expect: -1}
+    - {method: parseOr, args: [" 7 ", 0], expect: 7}
+    - {name: "catches the specific exception", source_contains: ["catch (NumberFormatException"], source_not_contains: ["catch (Exception"]}
+  hidden:
+    - {method: parseOr, args: ["", 5], expect: 5}
+    - {method: parseOr, args: ["-3", 0], expect: -3}
+    - {method: parseOr, args: ["3.5", 9], expect: 9}
+    - {method: parseOr, args: ["12x", 1], expect: 1}
+    - {method: parseOr, args: ["  ", 2], expect: 2}
+    - {method: parseOr, args: ["+8", 0], expect: 8}
+hints:
+  h1: "Put the parse inside try, and return the fallback from the catch for NumberFormatException."
+  h2: "try { return Integer.parseInt(text.trim()); } catch (NumberFormatException e) { return fallback; }"
+ai_assisted: true

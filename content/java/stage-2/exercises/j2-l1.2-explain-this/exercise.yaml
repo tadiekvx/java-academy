@@ -1,0 +1,32 @@
+id: j2-l1.2-explain-this
+type: explain
+title: "How does the method know which object?"
+lesson: j2-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J2.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A learner writes `Counter a = new Counter(); Counter b = new Counter(); a.increment(); b.increment(); b.increment();` and asks: "`increment()` has no parameters. How does it know to change `a`'s count the first time and `b`'s the other times, and what is `this`?" Answer them, and say what `a.count` and `b.count` are afterwards.
+rubric:
+  criteria: |
+    A full answer says a method call acts on the object before the dot, which becomes this inside the method; so count means this.count of that object; after the calls a.count is 1 and b.count is 2.
+  levels:
+    - score: 2
+      descriptor: "Says the object before the dot is the one the method works on, and inside the method this refers to that object so count means this.count; and gives a.count = 1 and b.count = 2."
+      samples:
+        - "The method works on the object you call it on, the one before the dot. Inside the method, this means that object, and plain count is short for this.count. So a.increment() changes a's count and b.increment() changes b's. After the three calls a.count is 1 and b.count is 2."
+        - "When you write a.increment(), Java passes a along invisibly as this. So count++ really means this.count++ on a. For b it's b. That gives a.count = 1 and b.count = 2."
+    - score: 1
+      descriptor: "Gets part of it, for example says the object before the dot is used, but not what this is, or gets one of the final counts wrong."
+      samples:
+        - "It changes the one you call it on."
+        - "a is 1 and b is 1."
+    - score: 0
+      descriptor: "Incorrect, for example says the method has one shared count for all counters or that this is a parameter you pass."
+      samples:
+        - "There's one count shared by everything."
+        - "this is the number you pass in."
+ai_assisted: true

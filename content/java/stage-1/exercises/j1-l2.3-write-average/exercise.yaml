@@ -1,0 +1,35 @@
+id: j1-l2.3-write-average
+type: write
+title: An exact average
+lesson: j1-l2.3
+role: ladder
+assesses: [o3]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: [MC04]
+difficulty: 2
+variant_group: exact-division
+prompt: |
+  Complete `average` so it returns the exact average of `a` and `b`, including any fractional
+  part. For example, `average(3, 4)` should be `3.5`.
+entry:
+  methods:
+    - name: average
+      params: [{name: a, type: int}, {name: b, type: int}]
+      returns: double
+tests:
+  visible:
+    - {args: [3, 4], expect: 3.5}
+    - {args: [10, 10], expect: 10.0}
+    - {args: [0, 5], expect: 2.5}
+  hidden:
+    - {name: both zero, args: [0, 0], expect: 0.0}
+    - {name: small odd total, args: [1, 2], expect: 1.5}
+    - {name: both negative, args: [-3, -4], expect: -3.5}
+    - {name: negative half, args: [1, -2], expect: -0.5}
+    - {name: larger numbers, args: [100, 1], expect: 50.5}
+    - {name: one zero, args: [7, 0], expect: 3.5}
+hints:
+  h1: What type is the result when you divide an int by an int?
+  h2: Make the division happen with a double, for example by dividing by 2.0 instead of 2.
+ai_assisted: true

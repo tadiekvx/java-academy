@@ -1,0 +1,30 @@
+id: j1-l6.1-modify-double
+type: modify
+title: "Double every element"
+lesson: j1-l6.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.10]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `doubleAll` changes an array so that every element is doubled, and returns the same array. It currently only doubles the first element. Change it so that it doubles **every** element.
+entry:
+  methods:
+    - {name: doubleAll, params: [{name: values, type: "int[]"}], returns: "int[]"}
+tests:
+  visible:
+    - {args: [[1, 2, 3]], expect: [2, 4, 6]}
+    - {args: [[]], expect: []}
+    - {args: [[-4, 0, 4]], expect: [-8, 0, 8]}
+  hidden:
+    - {name: "one element", args: [[5]], expect: [10]}
+    - {name: "four", args: [[10, 20, 30, 40]], expect: [20, 40, 60, 80]}
+    - {name: "zeros", args: [[0, 0]], expect: [0, 0]}
+    - {name: "alternating", args: [[7, -7, 7]], expect: [14, -14, 14]}
+    - {name: "six ones", args: [[1, 1, 1, 1, 1, 1]], expect: [2, 2, 2, 2, 2, 2]}
+hints:
+  h1: "To change elements you need to know where they are. Which kind of loop gives you the index?"
+  h2: "Use an index loop: for (int i = 0; i < values.length; i++) values[i] = values[i] * 2;"
+ai_assisted: true

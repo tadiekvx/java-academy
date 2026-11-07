@@ -1,0 +1,32 @@
+id: j2-l1.4-explain-equals-hash
+type: explain
+title: "Why both?"
+lesson: j2-l1.4
+role: ladder
+assesses: [o3]
+concepts: [J2.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate overrides `equals` in `Point` so that two points with the same x and y are equal, but leaves `hashCode` alone. Explain the rule that this breaks, why it matters when points are stored in a `HashSet` or used as `HashMap` keys, and what the fix is.
+rubric:
+  criteria: |
+    A full answer states that equal objects must return the same hashCode; hash-based collections use hashCode to decide where to look, so two equal points with different hash codes can be looked up in the wrong place and not be found; the fix is to override hashCode from the same fields, for example Objects.hash(x, y).
+  levels:
+    - score: 2
+      descriptor: "States the rule that equal objects must have equal hash codes, explains that hash-based collections use hashCode to choose where to look so equal points could be missed, and gives the fix of hashCode from the same fields."
+      samples:
+        - "The rule is that if two objects are equal according to equals, they must return the same hashCode. HashSet and HashMap use the hash code to decide where to look, so a point equal to one already stored might be looked up in the wrong place and not found. The fix is to override hashCode using the same fields, like Objects.hash(x, y)."
+        - "It breaks the equals/hashCode contract: equal points need equal hash codes. Without that, a HashSet might say it doesn't contain a point that is equal to one inside, because it looks in the wrong spot. Add a hashCode that uses x and y."
+    - score: 1
+      descriptor: "States the rule or gives the fix but doesn't explain the effect on collections."
+      samples:
+        - "Equal objects need the same hashCode."
+        - "Add a hashCode method."
+    - score: 0
+      descriptor: "Incorrect, for example says hashCode is only for printing or that it doesn't matter."
+      samples:
+        - "hashCode is just for toString."
+        - "It doesn't matter."
+ai_assisted: true

@@ -1,0 +1,35 @@
+id: j0-l0.2-write-majorversion
+type: write
+title: "Read the version"
+lesson: j0-l0.2
+role: ladder
+assesses: [o2]
+concepts: [J0.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write a method called `majorVersion` that is given the **first line** printed by `java -version` and returns the major version as an `int`.
+
+  The version is the text between the double quotes. For modern versions the major version is the number before the first dot or other non-digit (`"25.0.5"` → 25, `"21"` → 21, `"27-ea"` → 27). For old Java versions that start with `1.` the major version is the number after it (`"1.8.0_292"` → 8).
+entry:
+  methods:
+    - {name: majorVersion, params: [{name: line, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["openjdk version \"25.0.5.0.3\" 2026-10-24"], expect: 25}
+    - {args: ["java version \"1.8.0_292\""], expect: 8}
+    - {args: ["openjdk version \"17.0.9\" 2023-10-17"], expect: 17}
+  hidden:
+    - {name: "no dots", args: ["openjdk version \"21\" 2023-09-19"], expect: 21}
+    - {name: "early access", args: ["openjdk version \"27-ea\" 2026-09-15"], expect: 27}
+    - {name: "Java 7", args: ["java version \"1.7.0_80\""], expect: 7}
+    - {name: "Java 11", args: ["openjdk version \"11.0.21\" 2023-10-17 LTS"], expect: 11}
+    - {name: "old style without update", args: ["java version \"1.8\""], expect: 8}
+    - {name: "Java 9", args: ["openjdk version \"9.0.4\""], expect: 9}
+    - {name: "Java 25 LTS", args: ["openjdk version \"25.0.1\" 2025-10-21 LTS"], expect: 25}
+starter_compiles: false
+hints:
+  h1: "Find the text between the quotes first. Then handle the old '1.' style, and read only the leading digits."
+  h2: "indexOf('\"') and substring to get the version; if it starts with \"1.\" drop those two characters; then take the leading digits and parseInt them."
+ai_assisted: true

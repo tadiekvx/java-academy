@@ -1,0 +1,31 @@
+id: j1-l4.3-write-multiples
+type: write
+title: "Multiples"
+lesson: j1-l4.3
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: for-sums
+prompt: |
+  Complete `sumOfMultiples` so it returns the sum of every multiple of `k` from 1 up to and including `n`. For example, `sumOfMultiples(10, 3)` is 3 + 6 + 9 = 18. `k` is always at least 1.
+entry:
+  methods:
+    - {name: sumOfMultiples, params: [{name: n, type: "int"}, {name: k, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [10, 3], expect: 18}
+    - {args: [10, 5], expect: 15}
+    - {args: [2, 3], expect: 0}
+  hidden:
+    - {name: "n is a multiple", args: [9, 3], expect: 18}
+    - {name: "every number", args: [10, 1], expect: 55}
+    - {name: "sevens", args: [100, 7], expect: 735}
+    - {name: "n is zero", args: [0, 4], expect: 0}
+    - {name: "exactly k", args: [5, 5], expect: 5}
+hints:
+  h1: "You can step straight from one multiple to the next. Where does the loop start, and what's the step?"
+  h2: "for (int m = k; m <= n; m += k) { total += m; }"
+ai_assisted: true

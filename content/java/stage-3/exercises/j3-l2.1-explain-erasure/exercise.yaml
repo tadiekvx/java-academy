@@ -1,0 +1,32 @@
+id: j3-l2.1-explain-erasure
+type: explain
+title: "Why no List<int>?"
+lesson: j3-l2.1
+role: ladder
+assesses: [o3]
+concepts: [J3.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A learner writes `List<int> scores = new ArrayList<>();` and gets a compile error. (a) Explain why Java doesn't allow it and what to write instead. (b) Name one cost of what you wrote instead. (c) In one or two sentences, explain what "type erasure" means, and give one thing it stops you doing.
+rubric:
+  criteria: |
+    A full answer says type arguments must be reference types so primitives aren't allowed and you write List<Integer> using the wrapper type; a cost is boxing (separate Integer objects use more memory, or unboxing null throws NullPointerException); and type erasure means the compiler checks generic types and then removes them so at run time a List<String> is just a List, which stops you testing for List<String> with instanceof or creating a new T.
+  levels:
+    - score: 2
+      descriptor: "Says type arguments must be reference types and the fix is List<Integer>; gives a cost of boxing; and explains that erasure removes generic type information after compilation, with a consequence such as no instanceof List<String> or no new T()."
+      samples:
+        - "Type arguments have to be reference types, not primitives, so I'd write List<Integer>. A cost is boxing: every Integer is an object, so it uses more memory than int values and unboxing a null throws a NullPointerException. Type erasure means the compiler checks the generics and then removes them, so at run time a List<String> is just a List. That's why you can't test x instanceof List<String> or create a new T()."
+        - "List<int> is not allowed because a generic type argument must be a class or interface type; use List<Integer>. Boxing has a cost in memory and a null unboxing risk. Erasure means the generic types disappear at run time, so you can't ask what the element type of a list is."
+    - score: 1
+      descriptor: "Gets two of the three parts right, for example the fix and erasure but not a cost."
+      samples:
+        - "Use List<Integer> instead."
+        - "Erasure removes the generics."
+    - score: 0
+      descriptor: "Incorrect, for example says generics are only a runtime feature, or that primitives are too slow to be used."
+      samples:
+        - "Generics don't exist in Java."
+        - "Primitives can't be used with lists because they are too slow."
+ai_assisted: true

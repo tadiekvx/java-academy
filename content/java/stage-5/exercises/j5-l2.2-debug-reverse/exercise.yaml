@@ -1,0 +1,31 @@
+id: j5-l2.2-debug-reverse
+type: debug
+title: "The reversal that loses the list"
+lesson: j5-l2.2
+role: ladder
+assesses: [o3]
+concepts: [J5.04]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `reverse()` should turn `[1, 2, 3, 4]` into `[4, 3, 2, 1]`, but afterwards the list holds only one item. Find the bug in `reverse` and fix it. (Hint: what is `current.next` by the time the loop moves on?)
+entry:
+  methods:
+    - {name: run, params: [{name: ops, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [["last:1", "last:2", "last:3"]], expect: "[1, 2, 3] size=3"}
+    - {method: run, args: [["first:1", "first:2", "reverse"]], expect: "[1, 2] size=2"}
+    - {method: run, args: [[]], expect: "[] size=0"}
+  hidden:
+    - {method: run, args: [["removeFirst"]], expect: "[] size=0"}
+    - {method: run, args: [["last:5", "removeFirst", "last:6"]], expect: "[6] size=1"}
+    - {method: run, args: [["last:1", "last:2", "last:3", "last:4", "reverse"]], expect: "[4, 3, 2, 1] size=4"}
+    - {method: run, args: [["reverse"]], expect: "[] size=0"}
+    - {method: run, args: [["first:3", "last:4", "first:2", "removeFirst", "reverse", "last:9"]], expect: "[4, 3, 9] size=3"}
+    - {method: run, args: [["last:1", "reverse", "reverse", "first:0"]], expect: "[0, 1] size=2"}
+hints:
+  h1: "Look at the order of the three assignments in the loop. Once current.next has been overwritten, where does the rest of the list go?"
+  h2: "Save the next node first: Node next = current.next; then turn the link, step previous, and move to next."
+ai_assisted: true

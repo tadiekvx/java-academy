@@ -1,0 +1,30 @@
+id: j2-l1.3-debug-copy
+type: debug
+title: "The snapshot that isn't"
+lesson: j2-l1.3
+role: ladder
+assesses: [o3]
+concepts: [J2.03]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `bonusTotals(score)` should return the score **before** and **after** a 10-point bonus, as an array of two numbers. It returns the new score twice. Fix `bonusTotals` (not `Player`) so that `before` really is the old state.
+entry:
+  methods:
+    - {name: bonusTotals, params: [{name: score, type: "int"}], returns: "int[]"}
+tests:
+  visible:
+    - {method: bonusTotals, args: [50], expect: [50, 60]}
+    - {method: bonusTotals, args: [0], expect: [0, 10]}
+    - {method: bonusTotals, args: [-5], expect: [-5, 5]}
+  hidden:
+    - {method: bonusTotals, args: [100], expect: [100, 110]}
+    - {method: bonusTotals, args: [7], expect: [7, 17]}
+    - {method: bonusTotals, args: [1], expect: [1, 11]}
+    - {method: bonusTotals, args: [999], expect: [999, 1009]}
+    - {method: bonusTotals, args: [-10], expect: [-10, 0]}
+hints:
+  h1: "What does Player before = player; give you: a second player, or a second name for the first?"
+  h2: "Create a real copy with new Player(...) before the bonus is added."
+ai_assisted: true

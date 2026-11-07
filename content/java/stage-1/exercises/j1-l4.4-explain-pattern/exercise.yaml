@@ -1,0 +1,32 @@
+id: j1-l4.4-explain-pattern
+type: explain
+title: "Choosing a pattern"
+lesson: j1-l4.4
+role: ladder
+assesses: [o2]
+concepts: [J1.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You're asked: *does a password contain at least one digit?* Which loop pattern would you use, and why? Say what the loop returns, and when.
+rubric:
+  criteria: |
+    A full answer chooses find-the-first: loop over the characters, return true as soon as a digit is found, and return false after the loop if none was found; there's no need to keep looking after the first digit.
+  levels:
+    - score: 2
+      descriptor: "Chooses find-the-first (or 'any'), and says to return true as soon as a digit is found and false only after checking every character."
+      samples:
+        - "Find the first. Loop over each character, and as soon as one is a digit, return true. If the loop gets to the end without finding one, return false."
+        - "It's an 'is there any' question, so stop at the first digit and return true; return false after the loop."
+    - score: 1
+      descriptor: "Picks a workable pattern, such as counting digits and checking the count is above 0, or find-the-first without explaining when each value is returned."
+      samples:
+        - "Count the digits and check if the count is more than 0."
+        - "Find the first digit."
+    - score: 0
+      descriptor: "Incorrect, for example returns false at the first non-digit, or uses track-the-largest."
+      samples:
+        - "Loop through and return false as soon as you see a letter."
+        - "Track the largest digit."
+ai_assisted: true

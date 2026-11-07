@@ -1,0 +1,32 @@
+id: j10-l1.2-explain-ports
+type: explain
+title: "Ports and adapters"
+lesson: j10-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J10.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Brightbank's `TransferService` today calls `JdbcLedger` directly, imports `java.sql` and builds SQL. The team wants to test the transfer rules without a database and to be able to replace PostgreSQL later. Describe how you would restructure it using ports and adapters: what the port is, who owns it, what the adapters are, and which way the dependencies then point. Name one thing it costs.
+rubric:
+  criteria: |
+    Define a Ledger interface (the port) in the domain/service code, in terms of the domain (record a transfer, list entries), with no java.sql types. The service depends only on that interface. JdbcLedger becomes an adapter that implements the port and lives outside the core; an in-memory adapter serves tests. Dependencies point inward: the adapter depends on the port, the core depends on nothing technical. The service can then be tested with the in-memory or a failing adapter, and PostgreSQL can be replaced by writing another adapter. The cost is extra interfaces and mapping code between domain objects and the technology's data, which is only worth it where the isolation pays.
+  levels:
+    - score: 2
+      descriptor: "The answer defines the port in domain terms, places ownership with the core, names the adapters, states the dependency direction and a cost."
+      samples:
+        - "The port is a Ledger interface owned by the service, expressed with domain types and no java.sql. JdbcLedger is an adapter implementing it, and tests use an in-memory adapter. The service depends on the interface, the adapter depends on the port, so dependencies point inward and the database can be swapped. The cost is extra interfaces and translation code."
+        - "Introduce an interface for what the service needs from storage and make the core depend only on it. The JDBC code moves into an adapter outside the core. Tests plug in a fake. Direction: adapters point to the core, never the reverse. Cost: more types and mapping."
+    - score: 1
+      descriptor: "The answer introduces an interface without ownership, direction or cost."
+      samples:
+        - "Put an interface in front of the repository."
+        - "Use dependency injection to pass the ledger."
+    - score: 0
+      descriptor: "The answer keeps the core dependent on the technology."
+      samples:
+        - "Keep calling JdbcLedger directly but add more tests with a real database."
+        - "Move the SQL into the controller."
+ai_assisted: true

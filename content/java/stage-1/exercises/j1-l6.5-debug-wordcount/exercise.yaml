@@ -1,0 +1,30 @@
+id: j1-l6.5-debug-wordcount
+type: debug
+title: "Counting words"
+lesson: j1-l6.5
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.13]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `countWords` should count the words in some text, where words are separated by one or more spaces. `"hello big world"` is 3, `""` is 0 and `"  "` (only spaces) is 0. Texts can start or end with spaces, and have more than one space in a row. This version gets some cases wrong. Reproduce a failing case, form a hypothesis, fix it, then check the other cases again.
+entry:
+  methods:
+    - {name: countWords, params: [{name: text, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["hello big world"], expect: 3}
+    - {args: [""], expect: 0}
+    - {args: ["one"], expect: 1}
+  hidden:
+    - {name: "only spaces", args: ["  "], expect: 0}
+    - {name: "leading space", args: [" leading"], expect: 1}
+    - {name: "trailing space", args: ["trailing "], expect: 1}
+    - {name: "double space", args: ["a  b"], expect: 2}
+    - {name: "messy", args: ["  many   spaces  here "], expect: 3}
+hints:
+  h1: "Which inputs fail, and what do they have in common? Spaces don't always mean 'one more word'."
+  h2: "Count the start of each word instead: a non-space character that follows a space (or the start of the text). A boolean 'inWord' remembers which state you're in."
+ai_assisted: true

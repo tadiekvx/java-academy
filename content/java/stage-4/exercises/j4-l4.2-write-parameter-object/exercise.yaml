@@ -1,0 +1,34 @@
+id: j4-l4.2-write-parameter-object
+type: write
+title: "Introduce a parameter object"
+lesson: j4-l4.2
+role: ladder
+assesses: [o3]
+concepts: [J4.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `quote` takes three values that always travel together. The callers (the driver `run`) have already been changed to use a parameter object: `quote(new Order(grams, express, country))`. Make that compile: create `record Order(int grams, boolean express, String country)` and change `quote` to take an `Order`, **keeping every answer the same**.
+entry:
+  methods:
+    - {name: run, params: [{name: grams, type: "int"}, {name: express, type: "boolean"}, {name: country, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [250, false, "UK"], expect: "cost=300"}
+    - {method: run, args: [1000, true, "FR"], expect: "cost=1150"}
+    - {method: run, args: [500, false, "UK"], expect: "cost=300"}
+    - {name: "Order is a record", source_contains: ["record Order("]}
+    - {name: "quote takes an Order", source_contains: ["String quote(Order "]}
+  hidden:
+    - {method: run, args: [501, false, "UK"], expect: "cost=450"}
+    - {method: run, args: [0, true, "UK"], expect: "cost=500"}
+    - {method: run, args: [2000, true, "US"], expect: "cost=1150"}
+    - {method: run, args: [500, true, "IE"], expect: "cost=1000"}
+    - {method: run, args: [3000, false, "UK"], expect: "cost=450"}
+    - {method: run, args: [10, false, "DE"], expect: "cost=800"}
+starter_compiles: false
+hints:
+  h1: "Add the record Order with the three components in the order the driver uses, and change quote to read order.grams(), order.express() and order.country()."
+  h2: "record Order(int grams, boolean express, String country) {}  String quote(Order order) { ... }"
+ai_assisted: true

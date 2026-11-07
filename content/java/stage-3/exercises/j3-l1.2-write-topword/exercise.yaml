@@ -1,0 +1,31 @@
+id: j3-l1.2-write-topword
+type: write
+title: "The most common word"
+lesson: j3-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J3.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `topWord(String text)`: the word that appears most often (ignoring upper/lower case). If two words tie, return the one that comes **first alphabetically**. An empty text gives an empty string.
+entry:
+  methods:
+    - {name: topWord, params: [{name: text, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: topWord, args: ["to be or not to be"], expect: "be"}
+    - {method: topWord, args: ["b a b a"], expect: "a"}
+    - {method: topWord, args: [""], expect: ""}
+  hidden:
+    - {method: topWord, args: ["one"], expect: "one"}
+    - {method: topWord, args: ["x y z"], expect: "x"}
+    - {method: topWord, args: ["The the THE cat"], expect: "the"}
+    - {method: topWord, args: ["pear fig fig pear apple"], expect: "fig"}
+    - {method: topWord, args: ["  a  "], expect: "a"}
+    - {method: topWord, args: ["z z y y x"], expect: "y"}
+hints:
+  h1: "Count in a TreeMap, then keep the best so far. Replace it only when a count is strictly greater."
+  h2: "if (e.getValue() > bestCount) { best = e.getKey(); bestCount = e.getValue(); }"
+ai_assisted: true

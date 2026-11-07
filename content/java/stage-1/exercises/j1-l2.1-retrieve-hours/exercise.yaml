@@ -1,0 +1,32 @@
+id: j1-l2.1-retrieve-hours
+type: write
+title: Hours in days
+lesson: j1-l2.1
+role: retrieval
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+variant_group: frame-multiply
+prompt: |
+  Complete `hoursIn` so it returns the number of hours in any number of days. For example,
+  `hoursIn(2)` should be `48`.
+entry:
+  methods:
+    - {name: hoursIn, params: [{name: days, type: int}], returns: int}
+tests:
+  visible:
+    - {args: [1], expect: 24}
+    - {args: [2], expect: 48}
+    - {args: [0], expect: 0}
+  hidden:
+    - {name: ten, args: [10], expect: 240}
+    - {name: three, args: [3], expect: 72}
+    - {name: a large number, args: [100], expect: 2400}
+    - {name: seven, args: [7], expect: 168}
+    - {name: twelve, args: [12], expect: 288}
+hints:
+  h1: Work out one case by hand first, say for 2. What did you multiply by?
+  h2: "Use the name days in your expression, multiplied by 24, so it works for any value."
+ai_assisted: true

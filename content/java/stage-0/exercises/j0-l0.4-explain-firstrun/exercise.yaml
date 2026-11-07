@@ -1,0 +1,32 @@
+id: j0-l0.4-explain-firstrun
+type: explain
+title: "Your first run, and a breakpoint"
+lesson: j0-l0.4
+role: ladder
+assesses: [o1, o3]
+concepts: [J0.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Describe the steps to create a project in your IDE and run a program, in your own words. Then explain what a breakpoint lets you do that just pressing Run does not, and give an example of a bug it would help you find.
+rubric:
+  criteria: |
+    A full answer lists create a project with the right JDK, add a Java file in the source folder, press Run and read the output and any red-underline errors; and explains a breakpoint pauses the running program at a line so you can see variable values and step through, e.g. finding an off-by-one in a loop.
+  levels:
+    - score: 2
+      descriptor: "Gives the steps (create a project with Java 25, add a file in the source folder, run it, read errors) and explains that a breakpoint pauses the program so you can inspect variables and step, with a sensible bug example such as an off-by-one in a loop."
+      samples:
+        - "Create a project and choose the Java 25 JDK, add Main.java in src, press Run and look at the output panel and any red underlines. A breakpoint pauses the program at a line so I can see the variables and step one line at a time. I could use it to see why a loop runs one time too many."
+        - "New project with the right JDK, new Main.java, Run. Red underlines are compile errors. With a breakpoint in debug mode the program stops there and I can check what each variable holds, like seeing that total is wrong after the third pass of a loop."
+    - score: 1
+      descriptor: "Gives the steps or explains breakpoints, but not both, or the breakpoint example is missing."
+      samples:
+        - "Make a project, make a file, press run."
+        - "A breakpoint pauses the program."
+    - score: 0
+      descriptor: "Incorrect, for example says a breakpoint fixes bugs automatically, or says to run it from the output folder."
+      samples:
+        - "A breakpoint fixes the bug for you."
+        - "Open the out folder and double-click the class file."
+ai_assisted: true

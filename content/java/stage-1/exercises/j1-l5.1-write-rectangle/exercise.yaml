@@ -1,0 +1,34 @@
+id: j1-l5.1-write-rectangle
+type: write
+title: "Write a method"
+lesson: j1-l5.1
+role: ladder
+assesses: [o1]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: define-method
+prompt: |
+  Write a method called `area` that is given a width and a height (both `int`s, in that order) and returns the area of the rectangle, as an `int`. For example, `area(3, 5)` is 15.
+
+  There's no header this time: you write the whole method.
+entry:
+  methods:
+    - {name: area, params: [{name: width, type: "int"}, {name: height, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [3, 5], expect: 15}
+    - {args: [1, 1], expect: 1}
+    - {args: [0, 9], expect: 0}
+  hidden:
+    - {name: "a square", args: [10, 10], expect: 100}
+    - {name: "tall and thin", args: [2, 50], expect: 100}
+    - {name: "swapped order", args: [7, 3], expect: 21}
+    - {name: "large", args: [100, 100], expect: 10000}
+    - {name: "zero height", args: [1, 0], expect: 0}
+starter_compiles: false
+hints:
+  h1: "What goes in, and what comes out? That gives you the header."
+  h2: "int area(int width, int height) { return width * height; }"
+ai_assisted: true

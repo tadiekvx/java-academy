@@ -1,0 +1,31 @@
+id: j1-l3.2-write-teenager
+type: write
+title: "Is it a teenager?"
+lesson: j1-l3.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: boolean-ranges
+prompt: |
+  Complete `isTeenager` so it returns `true` for ages 13 to 19, including both 13 and 19, and `false` otherwise.
+entry:
+  methods:
+    - {name: isTeenager, params: [{name: age, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: [15], expect: true}
+    - {args: [10], expect: false}
+    - {args: [25], expect: false}
+  hidden:
+    - {name: "exactly 13", args: [13], expect: true}
+    - {name: "exactly 19", args: [19], expect: true}
+    - {name: "just too young", args: [12], expect: false}
+    - {name: "just too old", args: [20], expect: false}
+    - {name: "a baby", args: [0], expect: false}
+hints:
+  h1: "Two conditions must both be true. Which comparison includes the boundary value itself?"
+  h2: "age >= 13 && age <= 19"
+ai_assisted: true

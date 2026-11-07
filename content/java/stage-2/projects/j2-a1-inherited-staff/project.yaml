@@ -1,0 +1,113 @@
+id: j2-a1-inherited-staff
+title: "The staff model nobody trusted"
+category: C
+status: in_review
+summary: "Take over a small class hierarchy with design weaknesses, fix two tickets, and respond to a review that asks for immutability."
+brief: |
+  You've inherited the payroll system's staff classes: an `Employee` and a `Manager` that extends it. People have stopped trusting them. Three problems have been reported:
+
+  1. **Ticket 311:** `equals` between an employee and a manager gives different answers depending on which one you call it on.
+  2. **Ticket 312:** a `HashSet` of staff keeps duplicates.
+  3. **Review:** the `withRaise` method changes the object it's called on, which surprises anyone sharing that object.
+
+  This is a **diagnosis**, not a build: for each problem, reproduce it, find the broken rule, and fix it without breaking the others. Don't change the callers (`m1`, `m2`, `m3`). Your design note should say what rule each fix restores.
+estimated_hours: 3
+prerequisites: [j2-l1.4, j2-l2.2, j2-l3.2]
+concepts: [J2.04, J2.06, J2.08]
+requirements:
+  - "`equals` is symmetric: an `Employee` and a `Manager` are never equal."
+  - "Equal staff have equal hash codes, so a `HashSet` holds each person once."
+  - "Staff are immutable: `withRaise` returns a new object and leaves the original alone."
+constraints:
+  - "Fix one ticket at a time and run all the checks after each."
+  - "Don't change the callers."
+acceptance:
+  - "Given an employee and a manager with the same name and base, then `equals` is false in both directions."
+  - "Given the same manager added to a set three times, then the set holds one."
+  - "Given a raise, then the original's pay is unchanged and the raised copy's pay is higher."
+  - "Given the fixes, then all earlier checks still pass."
+milestones:
+  - id: m1
+    title: "Equality that works both ways"
+    instructions: |
+      **Ticket 311:** *"The staff list shows an employee and a manager as the same person in one direction only."*
+
+      Reproduce it: for the same name and base pay, `employee.equals(manager)` and `manager.equals(employee)` give **different** answers. That breaks the rule that `equals` must be **symmetric**. Decide what the rule should be and fix it: **an `Employee` and a `Manager` are never equal**, even with the same name and base pay. Two managers are equal when name, base and bonus all match.
+
+      The check prints four answers: `employee.equals(manager)`, `manager.equals(employee)`, `manager.equals(an identical manager)`, `manager.equals(a manager with a different bonus)`.
+    entry:
+      methods:
+        - {name: m1, params: [{name: name, type: "String"}, {name: base, type: "int"}, {name: bonus, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: ["Ada", 3000, 500], expect: "false,false,true,false"}
+        - {args: ["Bo", 2000, 0], expect: "false,false,true,false"}
+        - {args: ["", 0, 1], expect: "false,false,true,false"}
+      hidden:
+        - {name: "small manager", args: ["Cy", 100, 1], expect: "false,false,true,false"}
+        - {name: "large bonus", args: ["Di", 5000, 9999], expect: "false,false,true,false"}
+        - {name: "tiny values", args: ["Ed", 1, 1], expect: "false,false,true,false"}
+  - id: m2
+    title: "Sets of staff"
+    instructions: |
+      **Ticket 312:** *"The same person appears several times in the staff set."*
+
+      A `HashSet` finds duplicates with `hashCode` and then `equals`. These classes have `equals` but no `hashCode`, so equal staff land in different places. Add `hashCode` to both classes, **consistent with `equals`** (equal objects must have equal hash codes).
+
+      The check adds employees (a negative bonus means a plain `Employee`) and managers to a set and counts how many distinct people it holds.
+    entry:
+      methods:
+        - {name: m2, params: [{name: names, type: "String[]"}, {name: bases, type: "int[]"}, {name: bonuses, type: "int[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [["Ada", "Ada"], [3000, 3000], [-1, -1]], expect: 1}
+        - {args: [["Ada", "Bo"], [3000, 3000], [-1, -1]], expect: 2}
+        - {args: [[], [], []], expect: 0}
+      hidden:
+        - {name: "three equal managers", args: [["Ada", "Ada", "Ada"], [10, 10, 10], [5, 5, 5]], expect: 1}
+        - {name: "a manager and an employee are different", args: [["Ada", "Ada"], [10, 10], [5, -1]], expect: 2}
+        - {name: "different bonuses", args: [["Ada", "Ada"], [10, 10], [5, 6]], expect: 2}
+        - {name: "two pairs", args: [["X", "Y", "X", "Y"], [1, 2, 1, 2], [-1, -1, -1, -1]], expect: 2}
+        - {name: "bonus zero is still a manager", args: [["Z"], [7], [0]], expect: 1}
+  - id: m3
+    title: "Respond to the review"
+    instructions: |
+      You open a pull request. The reviewer writes:
+
+      > *"`withRaise` changes the employee it's called on and returns it. Two lists that share the same `Employee` will both see the raise. Staff should be **immutable**: make the fields `private final`, and have `withRaise` return a **new** object (a `Manager` for a manager) and leave the original alone."*
+
+      Make the fields `private final` (add accessor methods if you need them) and fix `withRaise`. The check prints the pay of the original and of the raised copy, as `before->after`; the original's pay mustn't change.
+    entry:
+      methods:
+        - {name: m3, params: [{name: name, type: "String"}, {name: base, type: "int"}, {name: bonus, type: "int"}, {name: extra, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: ["Ada", 3000, -1, 200], expect: "3000->3200"}
+        - {args: ["Bo", 2000, 500, 100], expect: "2500->2600"}
+        - {args: ["Cy", 100, 0, 0], expect: "100->100"}
+        - {name: "the fields are private and final", source_contains: ["private final String name", "private final int base"]}
+      hidden:
+        - {name: "plain employee, small raise", args: ["Di", 1000, -1, 1], expect: "1000->1001"}
+        - {name: "manager keeps the bonus", args: ["Ed", 1000, 250, 750], expect: "1250->2000"}
+        - {name: "from zero", args: ["Flo", 0, 0, 5], expect: "0->5"}
+        - {name: "a pay cut", args: ["Gus", 500, 100, -50], expect: "600->550"}
+rubric:
+  - criterion: "Reproduce, then fix"
+    zero: "Changed the code without showing the symptom first"
+    one: "Showed one of the symptoms but fixed without saying why"
+    two: "Reproduced each ticket with a specific case, and explained the broken rule (symmetry, the hashCode contract, aliasing)"
+  - criterion: "Design of equals and hashCode"
+    zero: "equals and hashCode disagree, or equals is still asymmetric"
+    one: "Correct, but hashCode ignores part of what equals compares or uses a poor combination"
+    two: "equals and hashCode use the same fields, are symmetric, and treat different classes as different"
+  - criterion: "Immutability"
+    zero: "Fields are still changeable, or the raise still changes the original"
+    one: "Fields are final but a copy shares something changeable"
+    two: "Private final fields; the raise returns a new object of the right class; the original is untouched"
+  - criterion: "Design note"
+    zero: "Missing, or just describes the code"
+    one: "Describes the fixes but not the rules behind them"
+    two: "Explains why equal objects need equal hash codes and why subclass equality is tricky, and what you'd change if another staff type arrived"
+design_note_prompt: |
+  In 150 words or fewer: For each ticket, say which rule was broken and how your fix restores it. Why is `equals` tricky when a subclass adds a field? What would you do if a third kind of staff, `Contractor`, were added?
+ai_assisted: true

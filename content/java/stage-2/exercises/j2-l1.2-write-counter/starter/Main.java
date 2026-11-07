@@ -1,0 +1,33 @@
+class Counter {
+    int count;
+
+    void increment() {
+    }
+
+    void add(int amount) {
+    }
+
+    void reset() {
+    }
+
+    int value() {
+        return 0;
+    }
+}
+
+int run(String[] ops) {
+    Counter c = new Counter();
+    for (String op : ops) {
+        if (op.equals("inc")) {
+            c.increment();
+        } else if (op.equals("reset")) {
+            c.reset();
+        } else if (op.startsWith("add:")) {
+            c.add(Integer.parseInt(op.substring(4)));
+        }
+    }
+    return c.value();
+}
+
+void main() {
+}

@@ -1,0 +1,32 @@
+id: j1-l2.1-write-minutes
+type: write
+title: Minutes in hours
+lesson: j1-l2.1
+role: ladder
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+variant_group: frame-multiply
+prompt: |
+  Complete `minutesIn` so it returns the number of minutes in any number of hours. For example,
+  `minutesIn(2)` should be `120`.
+entry:
+  methods:
+    - {name: minutesIn, params: [{name: hours, type: int}], returns: int}
+tests:
+  visible:
+    - {args: [1], expect: 60}
+    - {args: [2], expect: 120}
+    - {args: [0], expect: 0}
+  hidden:
+    - {name: ten, args: [10], expect: 600}
+    - {name: three, args: [3], expect: 180}
+    - {name: a large number, args: [100], expect: 6000}
+    - {name: seven, args: [7], expect: 420}
+    - {name: twelve, args: [12], expect: 720}
+hints:
+  h1: Work out one case by hand first, say for 2. What did you multiply by?
+  h2: "Use the name hours in your expression, multiplied by 60, so it works for any value."
+ai_assisted: true

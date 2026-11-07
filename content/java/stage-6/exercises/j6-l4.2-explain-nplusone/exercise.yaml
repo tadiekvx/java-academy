@@ -1,0 +1,32 @@
+id: j6-l4.2-explain-nplusone
+type: explain
+title: "The N+1 problem"
+lesson: j6-l4.2
+role: ladder
+assesses: [o2]
+concepts: [J6.12]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A report loads 500 customers and then prints each customer's accounts, and it is slow in production but fast on a developer's laptop with five customers. What is happening, why does the developer not see it, and what would you change?
+rubric:
+  criteria: |
+    Lazy loading means an association is fetched from the database the first time it is used. A loop over N customers that touches each customer's accounts runs one query for the list and N more, one per customer: N+1 selects. The cost grows with the data, so it is invisible with five rows. Fetch the associations the unit of work needs up front, usually with a join fetch in the query or an entity graph, or use batch or subselect fetching.
+  levels:
+    - score: 2
+      descriptor: "The answer names N+1, explains why it grows with the data, and gives a fetching fix."
+      samples:
+        - "Each customer's accounts are lazy, so the loop runs one query for the customers and one more per customer: 501 queries. With five rows that is six queries and nobody notices. Use a join fetch (or an entity graph) so the accounts come in the first query."
+        - "This is the N+1 select problem: lazy loading turns one report into 1 + 500 round trips. It only hurts at scale. Fix it by fetching the accounts with the customers (join fetch), or batch them, and check the query count in a test."
+    - score: 1
+      descriptor: "The answer says it is slow because of many queries but gives no cause or no fix."
+      samples:
+        - "It runs too many queries when the data grows."
+        - "The ORM is hitting the database a lot, so add a cache."
+    - score: 0
+      descriptor: "The answer blames the wrong thing."
+      samples:
+        - "The server is too small for 500 rows, so it needs more memory."
+        - "Lazy loading is faster, so the fix is to make everything lazy."
+ai_assisted: true

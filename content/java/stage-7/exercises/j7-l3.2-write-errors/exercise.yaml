@@ -1,0 +1,31 @@
+id: j7-l3.2-write-errors
+type: write
+title: "Exceptions to statuses"
+lesson: j7-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J7.09]
+evidence: [IMPL, DEBUG]
+misconceptions: [MC174]
+difficulty: 2
+prompt: |
+  This platform's `ApiErrors` class maps exceptions to responses with `@ExceptionHandler` methods. Write the same table as `toStatus(exception)`, taking a simple class name and returning `status|title`: `IllegalArgumentException` is `400|Bad Request`, `EmailTakenException` is `409|Conflict`, `MentorUnavailableException` is `503|Service Unavailable`, `AuthenticationException` is `401|Unauthorized`, and any other name is `500|Internal Server Error` (never the exception's name).
+entry:
+  methods:
+    - {name: toStatus, params: [{name: exception, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "bad input", method: toStatus, args: ["IllegalArgumentException"], expect: "400|Bad Request"}
+    - {name: "a conflict", method: toStatus, args: ["EmailTakenException"], expect: "409|Conflict"}
+    - {name: "a bug", method: toStatus, args: ["NullPointerException"], expect: "500|Internal Server Error"}
+  hidden:
+    - {name: "a dependency is down", method: toStatus, args: ["MentorUnavailableException"], expect: "503|Service Unavailable"}
+    - {name: "login failed", method: toStatus, args: ["AuthenticationException"], expect: "401|Unauthorized"}
+    - {name: "unexpected: no details", method: toStatus, args: ["SQLException"], expect: "500|Internal Server Error"}
+    - {name: "empty", method: toStatus, args: [""], expect: "500|Internal Server Error"}
+    - {name: "names are exact", method: toStatus, args: ["illegalargumentexception"], expect: "500|Internal Server Error"}
+    - {name: "an error, not an exception", method: toStatus, args: ["OutOfMemoryError"], expect: "500|Internal Server Error"}
+hints:
+  h1: "A conflict is not a malformed request."
+  h2: "What should an unexpected exception tell the client?"
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j1-l6.1-debug-bounds
+type: debug
+title: "One too far"
+lesson: j1-l6.1
+role: ladder
+assesses: [o3]
+concepts: [J1.10]
+evidence: [DEBUG]
+misconceptions: [MC09]
+difficulty: 2
+prompt: |
+  `average` should return the average of an array of ints, as a `double`. It crashes with an `ArrayIndexOutOfBoundsException`. Find and fix the bug.
+entry:
+  methods:
+    - {name: average, params: [{name: values, type: "int[]"}], returns: "double"}
+tests:
+  visible:
+    - {args: [[4, 8, 15, 16]], expect: 10.75}
+    - {args: [[10]], expect: 10.0}
+    - {args: [[1, 2]], expect: 1.5}
+  hidden:
+    - {name: "zeros", args: [[0, 0, 0]], expect: 0.0}
+    - {name: "cancels out", args: [[-4, 4]], expect: 0.0}
+    - {name: "five", args: [[1, 2, 3, 4, 5]], expect: 3.0}
+    - {name: "unbalanced", args: [[100, 1]], expect: 50.5}
+    - {name: "all same", args: [[7, 7, 7]], expect: 7.0}
+hints:
+  h1: "What is the last valid index of an array of length 4? What does the loop's last pass use?"
+  h2: "Change <= to < so i stops at length - 1."
+ai_assisted: true

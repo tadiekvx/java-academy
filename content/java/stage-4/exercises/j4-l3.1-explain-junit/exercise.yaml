@@ -1,0 +1,51 @@
+id: j4-l3.1-explain-junit
+type: explain
+title: "Read the test, read the failure"
+lesson: j4-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J4.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A project has this JUnit test:
+
+  ```java
+  class PriceTest {
+      @Test
+      void addsTwentyPercent() {
+          assertEquals(1200, Price.withTax(1000));
+      }
+  }
+  ```
+
+  After someone edits `Price.java`, the build prints:
+
+  ```
+  Tests run: 4, Failures: 1, Errors: 0, Skipped: 0
+  org.opentest4j.AssertionFailedError: expected: <1200> but was: <1250>
+  	at com.example.shop.PriceTest.addsTwentyPercent(PriceTest.java:12)
+  ```
+
+  (a) What do `@Test` and `assertEquals(1200, ...)` do, and which argument is the expected value? (b) What does the failure message tell you, and what should you check before changing anything? (c) The other three tests pass. Does that prove `Price` is correct? How could you test whether your tests are any good?
+rubric:
+  criteria: |
+    A full answer says @Test marks a method for JUnit to run and assertEquals compares the expected value (the first argument, 1200) with the actual result and fails if they differ; the message says the test wanted 1200 but the code returned 1250 so check the requirement to decide whether the code or the test is wrong; and passing tests only show the checked cases work, so you can test your tests by running them against deliberately broken versions (mutants) and seeing that they fail.
+  levels:
+    - score: 2
+      descriptor: "Explains @Test and the expected-first assertEquals, reads the failure as expected 1200 versus actual 1250 and says to check the requirement to see whether code or test is wrong, and says passing doesn't prove correctness and mutants (deliberate bugs) show whether the tests would notice."
+      samples:
+        - "@Test tells JUnit to run the method, and assertEquals compares the expected value (the first argument, 1200) with what Price.withTax returns, failing if they differ. The message says the test expected 1200 but the code gave 1250. Before changing anything I'd check the requirement to see whether the tax rate really changed, because either the code or the test could be wrong. Three passing tests don't prove the code is correct, only that those cases work. To test the tests I'd make copies of the code with small deliberate bugs, mutants, and check that the tests fail on each one."
+        - "(a) @Test marks a test; assertEquals(expected, actual) with 1200 as expected. (b) Expected 1200, actual 1250; check the requirement to see which is wrong. (c) No, it only shows those cases pass. Mutating the code with deliberate bugs shows whether the tests catch them."
+    - score: 1
+      descriptor: "Answers some parts, for example reads the message but not the order of arguments, or says passing proves correctness."
+      samples:
+        - "It expected 1200 and got 1250."
+        - "The other tests passed so it's fine."
+    - score: 0
+      descriptor: "Incorrect, for example says 1250 is the expected value, or that the test framework is broken."
+      samples:
+        - "It expected 1250 and got 1200."
+        - "JUnit is broken."
+ai_assisted: true

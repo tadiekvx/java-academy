@@ -1,0 +1,32 @@
+id: j12-l2.3-write-estimate
+type: write
+title: "A range, not a promise"
+lesson: j12-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J12.07]
+evidence: [IMPL]
+misconceptions: [MC220]
+difficulty: 2
+prompt: |
+  A three-point estimate gives optimistic, most-likely and pessimistic durations in days. One common way to combine them (the PERT formula) is `(optimistic + 4 * likely + pessimistic) / 6`. Write `pertDays(optimistic, likely, pessimistic)` returning that value **rounded to the nearest whole day, halves up** (use integer arithmetic).
+entry:
+  methods:
+    - {name: pertDays, params: [{name: optimistic, type: "int"}, {name: likely, type: "int"}, {name: pessimistic, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {name: "a feature", method: pertDays, args: [2, 4, 12], expect: 5}
+    - {name: "no uncertainty", method: pertDays, args: [5, 5, 5], expect: 5}
+    - {name: "symmetrical", method: pertDays, args: [1, 2, 3], expect: 2}
+  hidden:
+    - {name: "a long tail", method: pertDays, args: [1, 1, 10], expect: 3}
+    - {name: "rounding half up", method: pertDays, args: [3, 6, 9], expect: 6}
+    - {name: "nothing", method: pertDays, args: [0, 0, 0], expect: 0}
+    - {name: "a very pessimistic case", method: pertDays, args: [1, 3, 20], expect: 6}
+    - {name: "a narrow range", method: pertDays, args: [10, 12, 14], expect: 12}
+    - {name: "exactly three", method: pertDays, args: [2, 3, 4], expect: 3}
+    - {name: "fractional result", method: pertDays, args: [4, 5, 11], expect: 6}
+hints:
+  h1: "Add 3 before dividing by 6 to round half up."
+  h2: "The likely value counts four times."
+ai_assisted: true

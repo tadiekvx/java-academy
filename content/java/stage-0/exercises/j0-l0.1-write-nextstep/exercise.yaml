@@ -1,0 +1,39 @@
+id: j0-l0.1-write-nextstep
+type: write
+title: "Which command next?"
+lesson: j0-l0.1
+role: ladder
+assesses: [o1]
+concepts: [J0.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write a method called `nextStep` that is given a file name and returns the command that moves it forward:
+
+  - a name ending in `.java` returns `javac ` followed by the file name (compile it), e.g. `javac Hello.java`;
+  - a name ending in `.class` returns `java ` followed by the **class name**, which is the file name without `.class`, e.g. `java Hello`;
+  - anything else returns `unknown`.
+
+  File extensions are case-sensitive here: `Hello.JAVA` is unknown.
+entry:
+  methods:
+    - {name: nextStep, params: [{name: fileName, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["Hello.java"], expect: "javac Hello.java"}
+    - {args: ["Hello.class"], expect: "java Hello"}
+    - {args: ["notes.txt"], expect: "unknown"}
+  hidden:
+    - {name: "another source file", args: ["Main.java"], expect: "javac Main.java"}
+    - {name: "another class file", args: ["Main.class"], expect: "java Main"}
+    - {name: "a markdown file", args: ["readme.md"], expect: "unknown"}
+    - {name: "a longer name", args: ["Program.class"], expect: "java Program"}
+    - {name: "a dot in the name", args: ["a.b.java"], expect: "javac a.b.java"}
+    - {name: "just the word java", args: ["java"], expect: "unknown"}
+    - {name: "capitals matter", args: ["Hello.JAVA"], expect: "unknown"}
+starter_compiles: false
+hints:
+  h1: "endsWith tells you how a name ends. For .class, which part of the name do you keep?"
+  h2: "Compile .java files with \"javac \" + name; for .class files, use substring to drop the last 6 characters."
+ai_assisted: true

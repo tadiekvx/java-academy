@@ -1,0 +1,27 @@
+id: j1-l2.2-modify-savings
+type: modify
+title: Another week of saving
+lesson: j1-l2.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.03]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program tracks a piggy bank over two weeks. Extend it: in week 3 you save another 5, and then
+  you spend 12 on a book. It should now print exactly:
+
+  ```
+  After week 1: 25
+  After week 2: 30
+  After week 3: 35
+  After buying a book: 23
+  ```
+tests:
+  visible:
+    - {name: prints all four balances, stdin: "", stdout_equals: "After week 1: 25\nAfter week 2: 30\nAfter week 3: 35\nAfter buying a book: 23"}
+hints:
+  h1: Each change follows the same pattern as the weeks already there. What are the two new changes?
+  h2: "Add savings = savings + 5; with its print lines, then savings = savings - 12; with its print lines."
+ai_assisted: true

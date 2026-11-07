@@ -1,0 +1,30 @@
+id: j6-l1.3-write-summary
+type: write
+title: "Money per customer"
+lesson: j6-l1.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J6.03]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write the query that returns one line per customer: `name|count|total`. Use a left join, group by customer, and treat a customer with no accounts as having zero total.
+entry:
+  methods:
+    - {name: accountSummary, params: [{name: city, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "all customers", method: accountSummary, args: [null], expect: ["Ada Lovelace|2|1250.00", "Grace Hopper|1|300.50", "Alan Turing|1|0.00", "Edsger Dijkstra|1|780.25", "Barbara Liskov|0|0.00"]}
+    - {name: "one city", method: accountSummary, args: ["Cape Town"], expect: ["Ada Lovelace|2|1250.00", "Edsger Dijkstra|1|780.25"]}
+    - {name: "one customer, no accounts", method: accountSummary, args: ["Durban"], expect: ["Barbara Liskov|0|0.00"]}
+  hidden:
+    - {name: "one customer, one account", method: accountSummary, args: ["Johannesburg"], expect: ["Grace Hopper|1|300.50"]}
+    - {name: "no customers", method: accountSummary, args: ["Nowhere"], expect: []}
+    - {name: "no customers", method: accountSummary, args: [""], expect: []}
+    - {name: "one customer, no accounts", method: accountSummary, args: ["Durban"], expect: ["Barbara Liskov|0|0.00"]}
+    - {name: "one customer, one closed account", method: accountSummary, args: ["Alan Turing"], expect: []}
+hints:
+  h1: "Which join keeps the customers that have no accounts?"
+  h2: "How do you make a customer with no accounts contribute zero?"
+ai_assisted: true

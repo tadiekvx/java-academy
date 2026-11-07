@@ -1,0 +1,51 @@
+id: j4-l4.3-explain-smells
+type: explain
+title: "Smell test"
+lesson: j4-l4.3
+role: ladder
+assesses: [o1]
+concepts: [J4.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Find **four** code smells in this method, say why each is a problem, and name the fix for each:
+
+  ```java
+  String proc(int[] d, String t, boolean f, int x, int y) {
+      // loop through the data
+      String r = "";
+      if (t.equals("A")) {
+          if (f) {
+              for (int i = 0; i < d.length; i++) {
+                  r += d[i] * 7 + x;
+              }
+          } else {
+              for (int i = 0; i < d.length; i++) {
+                  r += d[i] * 7 + y;
+              }
+          }
+      }
+      return r;
+  }
+  ```
+rubric:
+  criteria: |
+    A full answer names four smells such as unclear names (proc, d, t, f) fixed by renaming; a magic number 7 fixed by a named constant; duplicated loops fixed by choosing the offset first and looping once; deep nesting fixed by early returns or extraction; a long parameter list fixed by a parameter object or removing the flag; string += in a loop fixed by StringBuilder; or a comment that restates the code fixed by deleting or explaining why; each with a reason.
+  levels:
+    - score: 2
+      descriptor: "Names at least four distinct smells present in the method (unclear names, magic number, duplicated loops, nesting, long parameter list or boolean flag, string += in a loop, useless comment), gives a reason for each and the matching fix."
+      samples:
+        - "Unclear names like proc, d, t and f: the reader can't tell what they mean, so rename them. The magic number 7: unexplained, so give it a named constant. The two loops are duplicated apart from x versus y: pick the offset first, then loop once. Deeply nested ifs make it hard to follow: use early returns. Also r += in a loop gets slower with size, so use a StringBuilder."
+        - "1) Poor names, rename. 2) Magic number 7, named constant. 3) Duplicated loop, choose the value then loop once. 4) String concatenation in a loop, StringBuilder. Also the comment just repeats the code and could go."
+    - score: 1
+      descriptor: "Names two or three smells, or names four without reasons or fixes."
+      samples:
+        - "The names are bad and there's a magic number."
+        - "There's duplication."
+    - score: 0
+      descriptor: "Incorrect, for example says the method has no problems, or lists style choices such as brace placement."
+      samples:
+        - "The method is fine."
+        - "The braces are in the wrong place."
+ai_assisted: true

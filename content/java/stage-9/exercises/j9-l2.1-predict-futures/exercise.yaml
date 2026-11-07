@@ -1,0 +1,20 @@
+id: j9-l2.1-predict-futures
+type: predict
+title: "Composing futures"
+lesson: j9-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J9.06]
+evidence: [MIST]
+misconceptions: [MC192]
+difficulty: 2
+prompt: |
+  Two futures compute 20 and 22 in the background. The first chain adds them and doubles the result. The second future fails with an exception and a recovery step handles it. Predict the exact output. (Think about what type of exception the recovery function actually receives from a failed `supplyAsync`.)
+expected_output: |
+  total=84
+  recovered:CompletionException
+  done=true,true
+hints:
+  h1: "What do `thenCombine` and `thenApply` do with the two results?"
+  h2: "Does `join()` return before or after the computation has finished?"
+ai_assisted: true

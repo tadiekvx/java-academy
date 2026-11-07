@@ -1,0 +1,20 @@
+id: j1-l4.3-predict-for
+type: predict
+title: "Steps and boundaries"
+lesson: j1-l4.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.07]
+evidence: [MIST]
+misconceptions: [MC09]
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints.
+expected_output: |
+  0123
+  531
+  3
+hints:
+  h1: "For each loop, list the values the variable takes before the condition fails."
+  h2: "0, 1, 2, 3 (4 fails). 5, 3, 1 (-1 fails). 1, 5, 9 (13 fails) is three passes."
+ai_assisted: true

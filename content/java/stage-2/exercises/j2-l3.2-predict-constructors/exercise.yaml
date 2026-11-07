@@ -1,0 +1,20 @@
+id: j2-l3.2-predict-constructors
+type: predict
+title: "Who is built first?"
+lesson: j2-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J2.08]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints, line by line.
+expected_output: |
+  Vehicle built
+  Car built
+  a vehicle with 4 wheels
+hints:
+  h1: "Which constructor runs first when you build a Car? Then which describe() runs, and what does super.describe() give?"
+  h2: "The parent is built first. v is really a Car, so Car's describe runs, adding to Vehicle's."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j10-l2.3-explain-outbox
+type: explain
+title: "Saving and announcing"
+lesson: j10-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J10.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The accounts service must update a balance in its database and then publish a `TransferCompleted` event to a message broker. The developer writes: save the balance, commit, then publish. Explain what can go wrong if the process crashes between the commit and the publish, and how the transactional outbox pattern fixes it. Then say what delivery guarantee the outbox gives the consumers, and what they must do about it.
+rubric:
+  criteria: |
+    If the process crashes after the commit and before the publish, the balance has changed but no event is ever sent, so other services never learn of it. Writing the event first and then updating the balance has the opposite problem. The outbox pattern stores the message in an outbox table in the same database transaction that updates the business data, so both happen or neither does; a separate process reads the outbox and publishes the messages to the broker, marking them sent. If that process crashes after publishing but before marking, it will publish again, so delivery is at least once. Consumers must therefore be idempotent, for example by recording the ids of events they have processed, which is the idempotency-key idea again.
+  levels:
+    - score: 2
+      descriptor: "The answer explains the lost event, the single-transaction outbox, the relay, at-least-once delivery and idempotent consumers."
+      samples:
+        - "A crash between commit and publish leaves the data changed and the event never sent. With an outbox the event is inserted into an outbox table in the same transaction as the balance update, so both or neither; a relay process publishes from the table and marks rows sent. If it crashes after publishing but before marking it publishes again, so delivery is at least once and consumers must be idempotent, for instance by storing processed event ids."
+        - "Without it, the update and the message can disagree. The outbox ties the message to the same database transaction and a relay sends it afterwards. That gives at-least-once delivery, so consumers must detect duplicates."
+    - score: 1
+      descriptor: "The answer names the outbox without explaining the delivery guarantee or the consumer duty."
+      samples:
+        - "The outbox saves the message with the data in one transaction."
+        - "Consumers need to handle duplicates."
+    - score: 0
+      descriptor: "The answer treats the broker as part of the database transaction."
+      samples:
+        - "Wrap the database update and the broker publish in one transaction and it is atomic."
+        - "Publish twice to be safe, nothing else is needed."
+ai_assisted: true

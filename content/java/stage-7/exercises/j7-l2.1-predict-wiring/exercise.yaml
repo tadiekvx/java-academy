@@ -1,0 +1,21 @@
+id: j7-l2.1-predict-wiring
+type: predict
+title: "Who chooses the dependency"
+lesson: j7-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J7.05]
+evidence: [MIST]
+misconceptions: [MC170]
+difficulty: 1
+prompt: |
+  The program wires objects by hand. One service receives its notifier through the constructor, one creates its own. Predict the exact output.
+expected_output: |
+  email:moved 500
+  sms:moved 500
+  email:moved 500
+  recorded [moved 75]
+hints:
+  h1: "Which service lets the caller choose what it talks to?"
+  h2: "What does the lambda let a test do that FixedService does not?"
+ai_assisted: true

@@ -1,0 +1,22 @@
+id: j1-l7.3-predict-checks
+type: predict
+title: "Which checks fail?"
+lesson: j1-l7.3
+role: ladder
+assesses: [o3]
+concepts: [J1.14]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out exactly what this program prints. Then decide, for each FAIL, whether the method or the check is at fault. (The rule: under 12 gets 50, 65 and over gets 30, otherwise 0.)
+expected_output: |
+  PASS child
+  FAIL boundary 12: expected 50 but got 0
+  PASS adult
+  PASS senior
+  FAIL boundary 64: expected 30 but got 0
+hints:
+  h1: "Work out each discount by hand: 12 is not under 12, and 64 is not 65 or over."
+  h2: "Both failing checks have wrong expected values: the method follows the rule."
+ai_assisted: true

@@ -1,0 +1,117 @@
+id: j8-a1-security-audit
+title: "Audit the account API"
+category: C
+status: in_review
+summary: "Audit an inherited request handler for security flaws, fix them in two steps, and write the findings up as a short report."
+brief: |
+  You have been asked to review the account API's request handler before it goes near real customers. It works, and it is insecure in several ways that the stage's lessons cover.
+
+  Do what a reviewer would do: read the code, **write down every flaw you can find** with its OWASP Top 10:2025 category before you change anything, then fix them in two steps, running all the checks after each step:
+
+  1. **Access control** for reading an account.
+  2. **Login**: generic answers, lockout and hashed passwords.
+
+  Your design note is the audit report.
+estimated_hours: 4
+prerequisites: [j8-l1.2, j8-l1.4, j8-l2.3, j8-l2.5]
+concepts: [J8.01, J8.02, J8.07, J8.09]
+requirements:
+  - "Only authenticated callers read accounts, and customers read only their own."
+  - "Login failures all look the same, and three failures in a row lock the account."
+  - "Passwords are stored as PBKDF2 hashes."
+constraints:
+  - "Fix one area at a time."
+  - "Run all the checks after every change."
+  - "Do not add libraries: the JDK has what you need."
+acceptance:
+  - "Given another customer's account, then 403."
+  - "Given three failed logins, then even the right password fails with the generic message."
+  - "Given a missing account, then the response reveals nothing about the database."
+milestones:
+  - id: m1
+    title: "Access control"
+    instructions: |
+      Request lines are `actor METHOD path`; the actor `-` means nobody is signed in. Audit `GET /accounts/{id}` and fix it:
+
+      - An actor who is not a known user gets `401|Unauthorized`.
+      - A customer may read only an account they own; anyone else gets `403|Forbidden`. A teller may read any account.
+      - A missing account answers exactly `404|Not Found`, with no detail about tables or queries.
+      - Keep the existing routing: a path that is not `/accounts/{digits}` is a 404, another method on it is a 405.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "signed in as the owner", method: handleAll, args: [["ada GET /accounts/1"]], expect: ["200|1;ada;120000"]}
+        - {name: "another customer's account", method: handleAll, args: [["ada GET /accounts/2"]], expect: ["403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- GET /accounts/1"]], expect: ["401|Unauthorized"]}
+      hidden:
+        - {name: "signed in as the owner", method: handleAll, args: [["ada GET /accounts/1"]], expect: ["200|1;ada;120000"]}
+        - {name: "another customer's account", method: handleAll, args: [["ada GET /accounts/2"]], expect: ["403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- GET /accounts/1"]], expect: ["401|Unauthorized"]}
+        - {name: "a teller reads any", method: handleAll, args: [["tess GET /accounts/1", "tess GET /accounts/2"]], expect: ["200|1;ada;120000", "200|2;grace;30050"]}
+        - {name: "an unknown actor", method: handleAll, args: [["mallory GET /accounts/1"]], expect: ["401|Unauthorized"]}
+        - {name: "a missing account gives no detail", method: handleAll, args: [["ada GET /accounts/9"]], expect: ["404|Not Found"]}
+        - {name: "a malformed path", method: handleAll, args: [["ada GET /accounts/abc", "ada GET /accounts/"]], expect: ["404|Not Found", "404|Not Found"]}
+        - {name: "a wrong method", method: handleAll, args: [["ada DELETE /accounts/1", "ada POST /accounts/1 x"]], expect: ["405|Method Not Allowed", "404|Not Found"]}
+        - {name: "a leading-zero id", method: handleAll, args: [["ada GET /accounts/001"]], expect: ["200|1;ada;120000"]}
+        - {name: "grace and ada", method: handleAll, args: [["grace GET /accounts/2", "grace GET /accounts/1"]], expect: ["200|2;grace;30050", "403|Forbidden"]}
+  - id: m2
+    title: "Login"
+    instructions: |
+      `LOGIN user password` should follow lessons 8.1.2 and 8.2.5:
+
+      - A success is `200|ok`. **Every** failure (unknown user, wrong password, locked account) is exactly `401|Invalid credentials`.
+      - After **three** failed logins in a row for a user, that account is locked: even the right password gets the generic failure. A success before that resets the count. Unknown users are never counted.
+      - Stored passwords are not kept as typed. Keep a PBKDF2 hash (`PBKDF2WithHmacSHA256`, 256 bits, 1000 iterations here, the user's name as the salt) and compare hashes with `MessageDigest.isEqual`.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "a good login", method: handleAll, args: [["LOGIN ada secret1"]], expect: ["200|ok"]}
+        - {name: "a wrong password", method: handleAll, args: [["LOGIN ada nope"]], expect: ["401|Invalid credentials"]}
+        - {name: "an unknown user", method: handleAll, args: [["LOGIN mallory x"]], expect: ["401|Invalid credentials"]}
+        - {name: "passwords are hashed with PBKDF2 and compared with isEqual", source_contains: ["PBKDF2WithHmacSHA256", "MessageDigest.isEqual"]}
+      hidden:
+        - {name: "a good login", method: handleAll, args: [["LOGIN ada secret1"]], expect: ["200|ok"]}
+        - {name: "a wrong password", method: handleAll, args: [["LOGIN ada nope"]], expect: ["401|Invalid credentials"]}
+        - {name: "an unknown user", method: handleAll, args: [["LOGIN mallory x"]], expect: ["401|Invalid credentials"]}
+        - {name: "signed in as the owner", method: handleAll, args: [["ada GET /accounts/1"]], expect: ["200|1;ada;120000"]}
+        - {name: "another customer's account", method: handleAll, args: [["ada GET /accounts/2"]], expect: ["403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- GET /accounts/1"]], expect: ["401|Unauthorized"]}
+        - {name: "a teller reads any", method: handleAll, args: [["tess GET /accounts/1", "tess GET /accounts/2"]], expect: ["200|1;ada;120000", "200|2;grace;30050"]}
+        - {name: "an unknown actor", method: handleAll, args: [["mallory GET /accounts/1"]], expect: ["401|Unauthorized"]}
+        - {name: "a missing account gives no detail", method: handleAll, args: [["ada GET /accounts/9"]], expect: ["404|Not Found"]}
+        - {name: "a malformed path", method: handleAll, args: [["ada GET /accounts/abc", "ada GET /accounts/"]], expect: ["404|Not Found", "404|Not Found"]}
+        - {name: "a wrong method", method: handleAll, args: [["ada DELETE /accounts/1", "ada POST /accounts/1 x"]], expect: ["405|Method Not Allowed", "404|Not Found"]}
+        - {name: "a leading-zero id", method: handleAll, args: [["ada GET /accounts/001"]], expect: ["200|1;ada;120000"]}
+        - {name: "grace and ada", method: handleAll, args: [["grace GET /accounts/2", "grace GET /accounts/1"]], expect: ["200|2;grace;30050", "403|Forbidden"]}
+        - {name: "three failures lock the account", method: handleAll, args: [["LOGIN ada a", "LOGIN ada b", "LOGIN ada c", "LOGIN ada secret1"]], expect: ["401|Invalid credentials", "401|Invalid credentials", "401|Invalid credentials", "401|Invalid credentials"]}
+        - {name: "two failures do not", method: handleAll, args: [["LOGIN ada a", "LOGIN ada b", "LOGIN ada secret1"]], expect: ["401|Invalid credentials", "401|Invalid credentials", "200|ok"]}
+        - {name: "a success resets the count", method: handleAll, args: [["LOGIN ada a", "LOGIN ada b", "LOGIN ada secret1", "LOGIN ada c", "LOGIN ada d", "LOGIN ada secret1"]], expect: ["401|Invalid credentials", "401|Invalid credentials", "200|ok", "401|Invalid credentials", "401|Invalid credentials", "200|ok"]}
+        - {name: "accounts are counted separately", method: handleAll, args: [["LOGIN ada a", "LOGIN ada b", "LOGIN ada c", "LOGIN grace hunter22"]], expect: ["401|Invalid credentials", "401|Invalid credentials", "401|Invalid credentials", "200|ok"]}
+        - {name: "an empty password", method: handleAll, args: [["LOGIN ada ", "LOGIN ada"]], expect: ["401|Invalid credentials", "401|Invalid credentials"]}
+        - {name: "a password with spaces", method: handleAll, args: [["LOGIN ada secret1 extra"]], expect: ["401|Invalid credentials"]}
+        - {name: "a teller logs in", method: handleAll, args: [["LOGIN tess teller99"]], expect: ["200|ok"]}
+        - {name: "unknown users never lock anything", method: handleAll, args: [["LOGIN x a", "LOGIN x b", "LOGIN x c", "LOGIN x d"]], expect: ["401|Invalid credentials", "401|Invalid credentials", "401|Invalid credentials", "401|Invalid credentials"]}
+rubric:
+  - criterion: "Findings"
+    zero: "Fewer than three vulnerabilities named, or none with a category"
+    one: "Names the vulnerabilities but not their OWASP Top 10:2025 categories"
+    two: "Names every seeded vulnerability, with its OWASP category, evidence from a request, and its impact"
+  - criterion: "Remediation"
+    zero: "A fix that only hides the symptom, or breaks an earlier answer"
+    one: "Fixes the problems but changes unrelated behaviour"
+    two: "Each fix is the smallest correct change, in two separate steps, with the earlier checks still passing"
+  - criterion: "Design choices"
+    zero: "No discussion of trade-offs"
+    one: "Notes a trade-off without a reason"
+    two: "Explains the 403/404 choice, why lockout belongs to the account, and what lockout costs"
+  - criterion: "Report"
+    zero: "Missing, or only describes the code"
+    one: "A list of problems without priorities"
+    two: "A short report a team lead could act on: findings ranked by risk, fixes made, and what is still open"
+design_note_prompt: |
+  Write the audit report (200 words or fewer): list each flaw you found, its OWASP Top 10:2025 category, the request that shows it, and its impact; rank them by risk; say what you fixed in each step and what you left open (for example: no transport security, no session handling, lockout that never expires). Explain why you chose 403 for another customer's account rather than 404.
+ai_assisted: true

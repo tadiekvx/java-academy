@@ -1,0 +1,32 @@
+id: j1-l6.1-explain-index
+type: explain
+title: "Length and the last index"
+lesson: j1-l6.1
+role: ladder
+assesses: [o3]
+concepts: [J1.10]
+evidence: [EXPL]
+misconceptions: [MC09]
+difficulty: 2
+prompt: |
+  An array has `length` 5. What are its first and last valid indexes? What happens if your code uses `values[5]`, and why?
+rubric:
+  criteria: |
+    A full answer says the first index is 0 and the last is 4 (length - 1); values[5] is past the end, so the program stops with an ArrayIndexOutOfBoundsException because there's no element 5.
+  levels:
+    - score: 2
+      descriptor: "Gives 0 and 4 (length - 1), and says values[5] doesn't exist so it throws an ArrayIndexOutOfBoundsException (crashes)."
+      samples:
+        - "The first index is 0 and the last is 4, because indexes start at 0 so the last is length - 1. values[5] is past the end, so Java stops with an ArrayIndexOutOfBoundsException."
+        - "0 to 4. There's no element at index 5, so using it crashes the program with ArrayIndexOutOfBounds."
+    - score: 1
+      descriptor: "Gets the indexes right but doesn't say what happens, or says what happens without the correct last index."
+      samples:
+        - "0 and 4."
+        - "It crashes because 5 is too big."
+    - score: 0
+      descriptor: "Incorrect, for example says the indexes are 1 to 5, or that values[5] gives 0."
+      samples:
+        - "1 to 5, and values[5] is the last one."
+        - "values[5] returns 0 as a default."
+ai_assisted: true

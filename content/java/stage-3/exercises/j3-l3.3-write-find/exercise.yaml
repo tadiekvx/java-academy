@@ -1,0 +1,31 @@
+id: j3-l3.3-write-find
+type: write
+title: "Return an Optional"
+lesson: j3-l3.3
+role: ladder
+assesses: [o1]
+concepts: [J3.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `findLong(List<String> names, int min)`, which returns an `Optional<String>`: the **first** name with at least `min` letters, or an empty `Optional` if there isn't one. (The driver `firstLong` turns that into text, using `"none"` for empty.)
+entry:
+  methods:
+    - {name: firstLong, params: [{name: names, type: "List<String>"}, {name: min, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: firstLong, args: [["ada", "grace", "bo"], 5], expect: "grace"}
+    - {method: firstLong, args: [["ada", "bo"], 5], expect: "none"}
+    - {method: firstLong, args: [[], 1], expect: "none"}
+    - {name: "returns an Optional", source_contains: ["Optional<String> findLong"]}
+  hidden:
+    - {method: firstLong, args: [["abcd", "abcde"], 4], expect: "abcd"}
+    - {method: firstLong, args: [["x", "yy", "zzz"], 2], expect: "yy"}
+    - {method: firstLong, args: [["same", "size"], 4], expect: "same"}
+    - {method: firstLong, args: [["a"], 2], expect: "none"}
+    - {method: firstLong, args: [["", "q"], 1], expect: "q"}
+hints:
+  h1: "Stream the names, keep those that are long enough, and ask for the first one with findFirst()."
+  h2: "names.stream().filter(n -> n.length() >= min).findFirst();"
+ai_assisted: true

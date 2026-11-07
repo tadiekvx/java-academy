@@ -1,0 +1,30 @@
+id: j7-l4.1-write-classify
+type: write
+title: "Which kind of test"
+lesson: j7-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J7.11]
+evidence: [IMPL]
+misconceptions: [MC176]
+difficulty: 2
+prompt: |
+  This is a rule of thumb, not a Spring rule. Write `classify(usesHttp, usesDatabase, needsWholeContext)` returning the cheapest kind of test that will do. `integration` if the test needs the whole application context, or both the web layer and the database. `slice` if it needs only the web layer or only the database. Otherwise `unit`.
+entry:
+  methods:
+    - {name: classify, params: [{name: usesHttp, type: "boolean"}, {name: usesDatabase, type: "boolean"}, {name: needsWholeContext, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a pure rule", method: classify, args: [false, false, false], expect: "unit"}
+    - {name: "a controller's mapping", method: classify, args: [true, false, false], expect: "slice"}
+    - {name: "a request that writes a row", method: classify, args: [true, true, false], expect: "integration"}
+  hidden:
+    - {name: "a repository query", method: classify, args: [false, true, false], expect: "slice"}
+    - {name: "security and configuration together", method: classify, args: [false, false, true], expect: "integration"}
+    - {name: "whole context", method: classify, args: [true, false, true], expect: "integration"}
+    - {name: "everything", method: classify, args: [true, true, true], expect: "integration"}
+    - {name: "database plus whole context", method: classify, args: [false, true, true], expect: "integration"}
+hints:
+  h1: "Which conditions force the most expensive kind?"
+  h2: "A web-layer test with no database is which kind?"
+ai_assisted: true

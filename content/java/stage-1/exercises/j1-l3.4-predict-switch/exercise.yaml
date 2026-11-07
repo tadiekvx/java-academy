@@ -1,0 +1,21 @@
+id: j1-l3.4-predict-switch
+type: predict
+title: "Which case?"
+lesson: j1-l3.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Predict exactly what this program prints.
+expected_output: |
+  small
+  large
+  unknown
+  medium!
+hints:
+  h1: "Find the case that lists the value. If none does, it's the default."
+  h2: "2 is in the first case, 5 in the third, and 0 isn't listed anywhere, so it's the default."
+ai_assisted: true

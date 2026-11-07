@@ -1,0 +1,32 @@
+id: j2-l2.1-write-money
+type: write
+title: "Money that can't be negative"
+lesson: j2-l2.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J2.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Make `Money` protect its invariant: an amount of pence is **never negative**. The constructor must refuse a negative amount by throwing an `IllegalArgumentException`, and the `pence` field must be `private`. The driver `run` adds two amounts and returns `"<total> pence"`, or `"rejected"` if either amount is refused.
+entry:
+  methods:
+    - {name: run, params: [{name: a, type: "int"}, {name: b, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [100, 250], expect: "350 pence"}
+    - {method: run, args: [-1, 5], expect: "rejected"}
+    - {method: run, args: [0, 0], expect: "0 pence"}
+    - {name: "the field is private", source_contains: ["private"]}
+    - {name: "the constructor refuses with an exception", source_contains: ["throw new IllegalArgumentException"]}
+  hidden:
+    - {method: run, args: [5, -1], expect: "rejected"}
+    - {method: run, args: [0, 5], expect: "5 pence"}
+    - {method: run, args: [-100, -100], expect: "rejected"}
+    - {method: run, args: [1, 1], expect: "2 pence"}
+    - {method: run, args: [999, 1], expect: "1000 pence"}
+hints:
+  h1: "The check belongs in the constructor, before the field is set. Zero is allowed."
+  h2: "if (pence < 0) throw new IllegalArgumentException(...); and private final int pence;"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j5-l2.1-explain-amortised
+type: explain
+title: "Doubling or adding one?"
+lesson: j5-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J5.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A dynamic array starts at capacity 4. Adding 1,000 values when it **doubles** copies 1,020 elements in total; adding 1,000 values when it grows by **one** each time copies 499,494. (a) Explain why the difference is so large. (b) What does "amortised constant time" mean for `add` with doubling? (c) Does that mean every single `add` is fast?
+rubric:
+  criteria: |
+    A full answer says growing by one copies the whole array on nearly every add so the total is about n squared over two, while doubling grows rarely so the total copies stay below about 2n; amortised constant means the average cost per add stays constant over many adds; and no, an individual add that triggers growth is slow, but those are rare.
+  levels:
+    - score: 2
+      descriptor: "Explains that growing by one copies everything on almost every add (about n squared / 2) while doubling grows rarely and keeps the total below about 2n; says amortised constant is the average cost per add over many adds; and says an individual growth add is still slow."
+      samples:
+        - "Growing by one copies the whole array on almost every add, so the total is about n squared over two, around half a million for 1,000. Doubling only copies at sizes 4, 8, 16 and so on, so the total stays below about 2n. Amortised constant time means the average cost per add stays constant when you spread the expensive growth over all the adds. But the add that triggers a growth is still slow, so not every single add is fast."
+        - "With +1 growth nearly every add copies all the elements, so the cost adds up to roughly n^2/2. With doubling the growths are rare and the copies add up to under 2n. Amortised constant means the average per add is constant. The growth adds are still slow individually."
+    - score: 1
+      descriptor: "Explains why doubling copies less, or what amortised means, but not both, or says every add is fast."
+      samples:
+        - "Doubling copies less because it grows less often."
+        - "Amortised means on average."
+    - score: 0
+      descriptor: "Incorrect, for example says doubling wastes memory so is worse, or that amortised means each add takes exactly the same time."
+      samples:
+        - "Doubling is worse because of memory."
+        - "Every add takes the same time."
+ai_assisted: true

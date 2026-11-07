@@ -1,0 +1,32 @@
+id: j1-l5.2-retrieve-vat
+type: write
+title: "Price with tax"
+lesson: j1-l5.2
+role: retrieval
+assesses: [o1, o3]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: build-method
+prompt: |
+  Write a method called `withTax` that is given a `net` price in pence and a tax `rate` as a percentage (both `int`s, in that order). It returns the net price plus the tax, in pence, working out the tax as `net * rate / 100`. For example, `withTax(1000, 20)` is 1200.
+entry:
+  methods:
+    - {name: withTax, params: [{name: net, type: "int"}, {name: rate, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [1000, 20], expect: 1200}
+    - {args: [999, 5], expect: 1048}
+    - {args: [500, 0], expect: 500}
+  hidden:
+    - {name: "doubles", args: [100, 100], expect: 200}
+    - {name: "tiny", args: [1, 20], expect: 1}
+    - {name: "awkward numbers", args: [12345, 17], expect: 14443}
+    - {name: "free", args: [0, 20], expect: 0}
+    - {name: "ten percent", args: [800, 10], expect: 880}
+starter_compiles: false
+hints:
+  h1: "Work out the tax, then add it to the net price."
+  h2: "int tax = net * rate / 100; return net + tax;"
+ai_assisted: true

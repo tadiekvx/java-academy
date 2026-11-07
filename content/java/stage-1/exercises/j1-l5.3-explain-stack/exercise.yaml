@@ -1,0 +1,32 @@
+id: j1-l5.3-explain-stack
+type: explain
+title: "Who is waiting?"
+lesson: j1-l5.3
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `main` calls `twice(5)`, and `twice` calls `add(5, 5)`. While `add` is running, which methods are in progress, and what is each of the other two waiting for?
+rubric:
+  criteria: |
+    A full answer says three are in progress (main, twice, add), add is running at the top, twice is waiting for add's result, and main is waiting for twice's result; when add returns, twice carries on, and so on down.
+  levels:
+    - score: 2
+      descriptor: "Says add is running, twice is waiting for add to return a value, and main is waiting for twice to return, naming all three in the right order."
+      samples:
+        - "All three are in progress. add is running right now. twice is paused, waiting for add to return its result, and main is paused waiting for twice's result."
+        - "add is on top of the stack and running. twice is waiting for add's answer, and underneath main is waiting for twice to finish."
+    - score: 1
+      descriptor: "Names the methods but is vague or wrong about what one of them is waiting for."
+      samples:
+        - "main, twice and add are all running at the same time."
+        - "add is running and the others are waiting."
+    - score: 0
+      descriptor: "Incorrect, for example says only main is running, or that they run at the same time."
+      samples:
+        - "Only main is in progress, the others haven't started."
+        - "They all run at once."
+ai_assisted: true

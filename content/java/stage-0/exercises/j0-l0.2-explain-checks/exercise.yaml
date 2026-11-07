@@ -1,0 +1,32 @@
+id: j0-l0.2-explain-checks
+type: explain
+title: "How do you know it worked?"
+lesson: j0-l0.2
+role: ladder
+assesses: [o1]
+concepts: [J0.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You've just installed a JDK. Which commands do you run to check it worked, and what should each one show? Give your own results if you've installed it, or say what you expect to see. Say why you need to check more than one command.
+rubric:
+  criteria: |
+    A full answer names java -version and javac -version (in a freshly opened terminal), says each should print a version with major version 25, and explains that checking javac proves the compiler is installed (a JDK), which java -version alone doesn't.
+  levels:
+    - score: 2
+      descriptor: "Names both java -version and javac -version, says they should show major version 25, and explains that javac proves the compiler (JDK) is installed while java alone could be a runtime only."
+      samples:
+        - "I'd open a new terminal and run java -version and javac -version. Both should show 25. Checking javac matters because if it's missing I only have a runtime, not a JDK, so I couldn't compile."
+        - "java -version should say 25 and javac -version should print javac 25.something. I need javac too because a runtime without the compiler isn't enough."
+    - score: 1
+      descriptor: "Names the commands or the expected version, but doesn't explain why javac is checked as well."
+      samples:
+        - "java -version and javac -version."
+        - "Run java -version and it should say 25."
+    - score: 0
+      descriptor: "Incorrect or vague, for example only says to restart the computer, or names commands that don't exist."
+      samples:
+        - "Restart and see if Java is there."
+        - "Run java --check."
+ai_assisted: true

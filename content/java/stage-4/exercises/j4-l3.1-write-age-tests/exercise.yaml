@@ -1,0 +1,30 @@
+id: j4-l3.1-write-age-tests
+type: write
+title: "Both sides of every boundary"
+lesson: j4-l3.1
+role: ladder
+assesses: [o1, o3]
+concepts: [J4.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  A ticket price depends on age: **under 5** is free (0), **5 to 17** costs 500, **18 to 64** costs 1000, and **65 and over** costs 700. `CorrectPricing` follows the rule; five mutants each break it at one boundary or value. Write `allPass(Pricing p)` so that your checks pass for the correct pricing and fail for **every** mutant. Use `check(p, age, expected)`. Work out expected prices from the rule, not from the code.
+entry:
+  methods:
+    - {name: run, params: [{name: which, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["correct"], expect: "pass"}
+    - {method: run, args: ["mutant1"], expect: "fail"}
+    - {method: run, args: ["mutant4"], expect: "fail"}
+  hidden:
+    - {method: run, args: ["mutant2"], expect: "fail"}
+    - {method: run, args: ["mutant3"], expect: "fail"}
+    - {method: run, args: ["mutant5"], expect: "fail"}
+    - {method: run, args: ["correct"], expect: "pass"}
+    - {method: run, args: ["mutant1"], expect: "fail"}
+hints:
+  h1: "The prices change at ages 5, 18 and 65. For each, check the age just below and the age exactly at the boundary, with the price the rule gives."
+  h2: "check(p, 4, 0), check(p, 5, 500), check(p, 17, 500), check(p, 18, 1000), check(p, 64, 1000), check(p, 65, 700)"
+ai_assisted: true

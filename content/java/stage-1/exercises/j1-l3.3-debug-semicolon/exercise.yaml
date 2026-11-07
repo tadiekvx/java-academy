@@ -1,0 +1,30 @@
+id: j1-l3.3-debug-semicolon
+type: debug
+title: "Always hot"
+lesson: j1-l3.3
+role: ladder
+assesses: [o3]
+concepts: [J1.06]
+evidence: [DEBUG]
+misconceptions: [MC08]
+difficulty: 2
+prompt: |
+  `label` should return `"Hot"` when the temperature is above 25, and `"Mild"` otherwise. It says every day is hot. Find and fix the bug.
+entry:
+  methods:
+    - {name: label, params: [{name: temperature, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [30], expect: "Hot"}
+    - {args: [10], expect: "Mild"}
+    - {args: [25], expect: "Mild"}
+  hidden:
+    - {name: "just above 25", args: [26], expect: "Hot"}
+    - {name: "freezing", args: [0], expect: "Mild"}
+    - {name: "below zero", args: [-5], expect: "Mild"}
+    - {name: "very hot", args: [40], expect: "Hot"}
+    - {name: "just below", args: [24], expect: "Mild"}
+hints:
+  h1: "Look closely at the end of the if line. What's between the condition and the brace?"
+  h2: "The semicolon ends the if, so the block always runs. Delete the semicolon."
+ai_assisted: true

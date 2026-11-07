@@ -1,0 +1,34 @@
+id: j1-l2.3-debug-percentage
+type: debug
+title: The quiz score that's always zero
+lesson: j1-l2.3
+role: ladder
+assesses: [o3]
+concepts: [J1.02]
+evidence: [DEBUG]
+misconceptions: [MC04]
+difficulty: 2
+prompt: |
+  `percentage` should return the percentage of quiz answers that were correct. For example,
+  3 correct out of 4 is `75.0`. A user reports that it returns `0.0` unless every answer is
+  correct. Run it, work out why, and fix it.
+entry:
+  methods:
+    - name: percentage
+      params: [{name: correct, type: int}, {name: total, type: int}]
+      returns: double
+tests:
+  visible:
+    - {args: [3, 4], expect: 75.0}
+    - {args: [4, 4], expect: 100.0}
+    - {args: [1, 2], expect: 50.0}
+  hidden:
+    - {name: none correct, args: [0, 5], expect: 0.0}
+    - {name: one third, args: [1, 3], expect: 33.333333333333336}
+    - {name: seven tenths, args: [7, 10], expect: 70.0}
+    - {name: a quarter, args: [2, 8], expect: 25.0}
+    - {name: three quarters of twelve, args: [9, 12], expect: 75.0}
+hints:
+  h1: Work out correct / total by hand for 3 and 4, using the rules for two ints.
+  h2: "correct / total is integer division, so 3 / 4 is 0 before the * 100 happens. Make the division use a double."
+ai_assisted: true

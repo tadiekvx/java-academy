@@ -1,0 +1,33 @@
+id: j2-l3.1-write-shapes
+type: write
+title: "Two shapes, one interface"
+lesson: j2-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J2.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Shape` and the driver `totalArea` are written. Write the two classes the driver uses: `Rect` (constructed with width and height) and `Square` (constructed with a side). Both must **implement `Shape`**. The driver reads specs like `"rect:3x4"` and `"square:5"`, and adds up the areas.
+entry:
+  methods:
+    - {name: totalArea, params: [{name: specs, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: totalArea, args: [["rect:3x4", "square:5"]], expect: 37}
+    - {method: totalArea, args: [["square:2"]], expect: 4}
+    - {method: totalArea, args: [[]], expect: 0}
+    - {name: "Rect implements Shape", source_contains: ["class Rect implements Shape"]}
+    - {name: "Square implements Shape", source_contains: ["class Square implements Shape"]}
+  hidden:
+    - {method: totalArea, args: [["rect:1x1"]], expect: 1}
+    - {method: totalArea, args: [["rect:10x10", "rect:2x3"]], expect: 106}
+    - {method: totalArea, args: [["square:1", "square:2", "square:3"]], expect: 14}
+    - {method: totalArea, args: [["rect:0x5", "square:4"]], expect: 16}
+    - {method: totalArea, args: [["square:9", "rect:5x5", "square:1"]], expect: 107}
+starter_compiles: false
+hints:
+  h1: "Each class says implements Shape and provides public int area(). Square only needs one number."
+  h2: "class Rect implements Shape { ... public int area() { return width * height; } }"
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j1-l3.3-modify-star
+type: modify
+title: "A new top grade"
+lesson: j1-l3.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The exam board has added a new top grade: 90 or more gets `"A*"`. Everything else stays the same. Change `grade` to include it.
+entry:
+  methods:
+    - {name: grade, params: [{name: score, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [95], expect: "A*"}
+    - {args: [75], expect: "A"}
+    - {args: [30], expect: "Fail"}
+  hidden:
+    - {name: "exactly 90", args: [90], expect: "A*"}
+    - {name: "just under 90", args: [89], expect: "A"}
+    - {name: "exactly 70", args: [70], expect: "A"}
+    - {name: "full marks", args: [100], expect: "A*"}
+    - {name: "exactly 50", args: [50], expect: "C"}
+hints:
+  h1: "Where in the chain does the new condition need to go so that 95 reaches it?"
+  h2: "Add if (score >= 90) return \"A*\"; as the very first branch, before the >= 70 check."
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j6-l1.1-write-accounts-of
+type: write
+title: "One customer's accounts"
+lesson: j6-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J6.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write the query that returns every account of one customer, as `id|balance`, ordered by account id. Use the foreign key column.
+entry:
+  methods:
+    - {name: accountsOf, params: [{name: customerId, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "one customer with two accounts", method: accountsOf, args: [1], expect: ["1|1200.00", "5|50.00"]}
+    - {name: "one customer with one account", method: accountsOf, args: [2], expect: ["2|300.50"]}
+    - {name: "no such customer", method: accountsOf, args: [99], expect: []}
+  hidden:
+    - {name: "one closed account", method: accountsOf, args: [3], expect: ["3|0.00"]}
+    - {name: "one open account", method: accountsOf, args: [4], expect: ["4|780.25"]}
+    - {name: "no such customer", method: accountsOf, args: [5], expect: []}
+    - {name: "no such customer", method: accountsOf, args: [0], expect: []}
+    - {name: "one customer with one account", method: accountsOf, args: [2], expect: ["2|300.50"]}
+hints:
+  h1: "Write the filter on the foreign key column customer_id."
+  h2: "Return the columns in the order the reader expects: id and balance."
+ai_assisted: true

@@ -1,0 +1,111 @@
+id: j3-a1-log-analyser
+title: "The log analyser that gets the day wrong"
+category: C
+status: in_review
+summary: "Inherit a log analyser with a time-zone bug and a performance bug, fix both against measured requirements, and respond to a review about bad lines."
+brief: |
+  You've inherited a small log analyser. Operations use it every morning. It has three problems, each reported as a ticket or a review comment:
+
+  1. **The day is wrong** for errors near midnight, because the report groups by the UTC date in the text, but the team works in London time.
+  2. **It's far too slow** on a day's logs.
+  3. **One bad line crashes it.**
+
+  This is a **diagnosis**: reproduce each problem, find the cause, fix it, and keep every other answer the same. Use `java.time` for the time zone (not a fixed number of hours: the offset changes twice a year). Don't change the callers. A design note at the end says what you found.
+estimated_hours: 4
+prerequisites: [j3-l4.2, j3-l5.1, j3-l3.2]
+concepts: [J3.06, J3.09, J3.10]
+requirements:
+  - "`errorsPerDay` groups `ERROR` lines by their **London** date, correctly in both summer and winter."
+  - "`commonestLevel` finishes in under 2 seconds on 300,000 lines, with the same answers."
+  - "A malformed line is skipped and counted (`badLines`), and never crashes a report."
+  - "Well-formed lines behave exactly as before."
+constraints:
+  - "Use `java.time` and the zone `Europe/London`; no fixed hour offsets."
+  - "Don't change the callers."
+acceptance:
+  - "Given `2026-07-01T23:30:00Z ERROR x`, then it counts on 2 July."
+  - "Given `2026-01-15T23:30:00Z ERROR x`, then it counts on 15 January."
+  - "Given 300,000 lines, then the commonest level is found in time."
+  - "Given a truncated line, then the report still runs and `badLines` counts it."
+milestones:
+  - id: m1
+    title: "Errors on the wrong day"
+    instructions: |
+      **Ticket 77:** *"The daily error report is wrong for errors just before midnight UTC. The team works in London time."*
+
+      `errorsPerDay` groups `ERROR` lines by the date in the **timestamp text**, which is UTC. In summer, London is an hour ahead of UTC, so `2026-07-01T23:30:00Z` is already **2 July** in London. In winter London is the same as UTC. Reproduce it with that line, find the cause, and fix it using `java.time` and the zone `Europe/London`. Don't add a fixed hour: the offset changes with the clocks.
+
+      For now, every line in the checks is well formed.
+    entry:
+      methods:
+        - {name: errorsPerDay, params: [{name: lines, type: "List<String>"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [["2026-07-01T23:30:00Z ERROR disk full", "2026-07-01T10:00:00Z ERROR timeout", "2026-07-02T09:00:00Z ERROR timeout", "2026-07-02T10:00:00Z INFO started"]], expect: "2026-07-01=1,2026-07-02=2"}
+        - {args: [[]], expect: ""}
+        - {args: [["2026-01-15T23:30:00Z ERROR winter"]], expect: "2026-01-15=1"}
+      hidden:
+        - {name: "summer, either side of midnight UTC", args: [["2026-06-30T23:30:00Z ERROR a", "2026-07-01T00:00:00Z ERROR b"]], expect: "2026-07-01=2"}
+        - {name: "the day the clocks go forward", args: [["2026-03-29T00:30:00Z ERROR before the clocks change", "2026-03-29T01:30:00Z ERROR after"]], expect: "2026-03-29=2"}
+        - {name: "the day the clocks go back", args: [["2026-10-25T00:30:00Z ERROR a", "2026-10-25T23:30:00Z ERROR b"]], expect: "2026-10-25=2"}
+        - {name: "new year in winter", args: [["2026-12-31T23:59:59Z ERROR new year"]], expect: "2026-12-31=1"}
+        - {name: "no errors", args: [["2026-07-01T10:00:00Z INFO only info"]], expect: ""}
+  - id: m2
+    title: "The analyser that takes minutes"
+    instructions: |
+      **Ticket 78:** *"Finding the most common level takes minutes for a day's logs (300,000 lines). It must finish in under 2 seconds."*
+
+      `commonestLevel` returns the most frequent level (the alphabetically first on a tie). It's correct. Measure it: what does `Collections.frequency` do, and how many times is it called? Fix the cost without changing any answer.
+    entry:
+      methods:
+        - {name: m2, params: [{name: n, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [10], expect: "ERROR"}
+        - {args: [1], expect: "INFO"}
+        - {args: [0], expect: ""}
+      hidden:
+        - {name: "a day of logs", args: [300000], expect: "ERROR"}
+        - {name: "two hundred thousand lines", args: [200000], expect: "ERROR"}
+        - {name: "three lines", args: [3], expect: "INFO"}
+  - id: m3
+    title: "Respond to the review: bad lines"
+    instructions: |
+      In review, the operations lead says: *"Last week a truncated line crashed the whole report. A malformed line must be **skipped and counted**, never crash it."*
+
+      A line is **well formed** if it has at least three parts separated by spaces: a timestamp that `Instant.parse` accepts, a level that is one of `DEBUG`, `INFO`, `WARN`, `ERROR`, and then the message. Make `errorsPerDay` (and `commonestLevel`) ignore malformed lines, and implement `badLines`, which counts them. Well-formed lines must behave exactly as before.
+    entry:
+      methods:
+        - {name: errorsPerDay, params: [{name: lines, type: "List<String>"}], returns: "String"}
+        - {name: badLines, params: [{name: lines, type: "List<String>"}], returns: "int"}
+    tests:
+      visible:
+        - {method: errorsPerDay, args: [["2026-07-01T23:30:00Z ERROR disk full", "2026-07-01T10:00:00Z ERROR timeout", "2026-07-02T09:00:00Z ERROR timeout", "2026-07-02T10:00:00Z INFO started", "garbage"]], expect: "2026-07-01=1,2026-07-02=2"}
+        - {method: badLines, args: [["garbage", "2026-07-01T10:00:00Z INFO ok"]], expect: 1}
+        - {method: badLines, args: [[]], expect: 0}
+      hidden:
+        - {name: "several kinds of bad line", method: errorsPerDay, args: [["", "2026-07-01T10:00:00Z", "not-a-time ERROR x", "2026-07-01T10:00:00Z ERROR ok"]], expect: "2026-07-01=1"}
+        - {name: "unknown level", method: badLines, args: [["2026-07-01T10:00:00Z LOUD message"]], expect: 1}
+        - {name: "none bad", method: badLines, args: [["2026-07-01T10:00:00Z ERROR a", "2026-07-01T10:00:00Z WARN b"]], expect: 0}
+        - {name: "impossible date", method: badLines, args: [["2026-13-01T10:00:00Z ERROR impossible month"]], expect: 1}
+        - {name: "a good line next to a bad one", method: errorsPerDay, args: [["2026-07-01T23:30:00Z ERROR late", "broken line"]], expect: "2026-07-02=1"}
+rubric:
+  - criterion: "Diagnosis"
+    zero: "Changed code without finding the cause"
+    one: "Fixed the bugs but can't explain why they happened"
+    two: "Names the cause of each problem: grouping by UTC text, a hidden quadratic scan, and parsing without validation"
+  - criterion: "Time handling"
+    zero: "Added a fixed offset, or still groups by the text"
+    one: "Uses `java.time` but with the wrong zone or for only part of the year"
+    two: "Converts each instant to `Europe/London` with `java.time`, correct on both sides of both clock changes"
+  - criterion: "Evidence and requirement"
+    zero: "No measurement against the two-second requirement"
+    one: "Measured only the final result"
+    two: "Measured or counted steps before and after, and met the requirement on the large input"
+  - criterion: "Design note"
+    zero: "Missing, or just says what changed"
+    one: "Says what changed but not why"
+    two: "Explains each growth rate, why a fixed hour would be wrong, and how bad lines are reported"
+design_note_prompt: |
+  In 150 words or fewer: What was wrong with grouping by the text, and why would adding one hour be wrong too? What made the analyser slow, and what is its growth rate before and after? How are malformed lines handled, and where would you report them?
+ai_assisted: true

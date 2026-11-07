@@ -1,0 +1,30 @@
+id: j8-l1.1-write-rank
+type: write
+title: "Ranking threats"
+lesson: j8-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J8.01]
+evidence: [IMPL]
+misconceptions: [MC178]
+difficulty: 2
+prompt: |
+  A simple threat model scores each threat as likelihood times impact, each from 1 to 5. Each threat is `name:likelihood:impact`. Write `rank(threats)` returning `name=score` for each, highest score first, and alphabetical by name when scores are equal. (This is a teaching model; real risk rating needs more than one multiplication.)
+entry:
+  methods:
+    - {name: rank, params: [{name: threats, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "three threats", method: rank, args: [["forged-transfer:2:5", "weak-password:4:4", "log-leak:3:2"]], expect: ["weak-password=16", "forged-transfer=10", "log-leak=6"]}
+    - {name: "one threat", method: rank, args: [["a:1:1"]], expect: ["a=1"]}
+    - {name: "no threats", method: rank, args: [[]], expect: []}
+  hidden:
+    - {name: "ties and a high-impact threat", method: rank, args: [["b:3:3", "a:3:3", "c:1:9"]], expect: ["a=9", "b=9", "c=9"]}
+    - {name: "equal scores", method: rank, args: [["x:5:5", "y:5:1", "z:1:5"]], expect: ["x=25", "y=5", "z=5"]}
+    - {name: "four threats", method: rank, args: [["idor:4:5", "xss:3:4", "sqli:2:5", "dos:3:3"]], expect: ["idor=20", "xss=12", "sqli=10", "dos=9"]}
+    - {name: "an exact tie", method: rank, args: [["m:5:5", "n:5:5"]], expect: ["m=25", "n=25"]}
+    - {name: "small scores", method: rank, args: [["p:1:2", "q:2:1", "r:1:1"]], expect: ["p=2", "q=2", "r=1"]}
+hints:
+  h1: "Compute the score as a number, then sort by it."
+  h2: "What decides the order when two scores are equal?"
+ai_assisted: true

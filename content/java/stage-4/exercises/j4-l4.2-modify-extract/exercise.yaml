@@ -1,0 +1,34 @@
+id: j4-l4.2-modify-extract
+type: modify
+title: "Extract the pricing"
+lesson: j4-l4.2
+role: ladder
+assesses: [o2]
+concepts: [J4.08]
+evidence: [MOD]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `shippingCost` works, and its tests pass, but it's one long method with a repeated "round up to whole kilos" calculation. **Refactor** it without changing a single answer: extract `int domesticCost(int grams)` and `int internationalCost(int grams)` (the price before any express charge), and extract the repeated kilos calculation into a method of your choice. `shippingCost` should become a short method that calls them. The checks are the same ones that pass now, plus a check that the two new methods exist.
+entry:
+  methods:
+    - {name: shippingCost, params: [{name: grams, type: "int"}, {name: express, type: "boolean"}, {name: country, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {method: shippingCost, args: [250, false, "UK"], expect: 300}
+    - {method: shippingCost, args: [1500, true, "FR"], expect: 2400}
+    - {method: shippingCost, args: [3500, false, "UK"], expect: 650}
+    - {name: "domesticCost is extracted", source_contains: ["int domesticCost("]}
+    - {name: "internationalCost is extracted", source_contains: ["int internationalCost("]}
+  hidden:
+    - {method: shippingCost, args: [500, false, "UK"], expect: 300}
+    - {method: shippingCost, args: [501, false, "UK"], expect: 450}
+    - {method: shippingCost, args: [2000, false, "FR"], expect: 1200}
+    - {method: shippingCost, args: [2001, false, "FR"], expect: 1450}
+    - {method: shippingCost, args: [2000, true, "UK"], expect: 900}
+    - {method: shippingCost, args: [5000, true, "US"], expect: 3900}
+    - {method: shippingCost, args: [3000, false, "UK"], expect: 550}
+hints:
+  h1: "Move the UK branch into domesticCost and the other branch into internationalCost, keep their numbers exactly, then run the checks."
+  h2: "int cost = country.equals(\"UK\") ? domesticCost(grams) : internationalCost(grams); return express ? cost * 2 : cost;"
+ai_assisted: true

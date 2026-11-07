@@ -1,0 +1,33 @@
+id: j11-l3.1-write-iam
+type: write
+title: "May this identity do that"
+lesson: j11-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J11.07]
+evidence: [IMPL]
+misconceptions: [MC212]
+difficulty: 4
+prompt: |
+  Identity policies list statements `Effect|action-pattern|resource-pattern` (Effect is `Allow` or `Deny`). In a pattern `*` matches any run of characters, including none; everything else must match exactly and in full. A request is allowed only if some `Allow` statement matches both the action and the resource, and **no** matching `Deny` exists: an explicit deny overrides any allow, and with no matching allow the answer is no. Write `iamAllows(statements, action, resource)`.
+entry:
+  methods:
+    - {name: iamAllows, params: [{name: statements, type: "List<String>"}, {name: action, type: "String"}, {name: resource, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {name: "an allowed read", method: iamAllows, args: [["Allow|s3:Get*|reports/*", "Allow|s3:Put*|reports/*", "Deny|s3:*|reports/secret/*"], "s3:GetObject", "reports/2026.csv"], expect: true}
+    - {name: "an explicit deny wins", method: iamAllows, args: [["Allow|s3:Get*|reports/*", "Allow|s3:Put*|reports/*", "Deny|s3:*|reports/secret/*"], "s3:GetObject", "reports/secret/key.txt"], expect: false}
+    - {name: "nothing allows it", method: iamAllows, args: [["Allow|s3:Get*|reports/*", "Allow|s3:Put*|reports/*", "Deny|s3:*|reports/secret/*"], "s3:DeleteObject", "reports/2026.csv"], expect: false}
+  hidden:
+    - {name: "an allowed write", method: iamAllows, args: [["Allow|s3:Get*|reports/*", "Allow|s3:Put*|reports/*", "Deny|s3:*|reports/secret/*"], "s3:PutObject", "reports/new.csv"], expect: true}
+    - {name: "the wrong resource", method: iamAllows, args: [["Allow|s3:Get*|reports/*", "Allow|s3:Put*|reports/*", "Deny|s3:*|reports/secret/*"], "s3:GetObject", "other/x"], expect: false}
+    - {name: "no statements means no", method: iamAllows, args: [[], "s3:GetObject", "reports/x"], expect: false}
+    - {name: "allow everything", method: iamAllows, args: [["Allow|*|*"], "ec2:Start", "anything"], expect: true}
+    - {name: "a deny narrows an allow-all", method: iamAllows, args: [["Allow|*|*", "Deny|ec2:*|*"], "ec2:Start", "i-1"], expect: false}
+    - {name: "order does not matter", method: iamAllows, args: [["Deny|s3:*|reports/secret/*", "Allow|s3:*|reports/*"], "s3:GetObject", "reports/secret/a"], expect: false}
+    - {name: "a pattern must match in full", method: iamAllows, args: [["Allow|s3:Get*|reports"], "s3:GetObject", "reports/x"], expect: false}
+    - {name: "a dot is not a wildcard", method: iamAllows, args: [["Allow|s3:GetObject|a.b"], "s3:GetObject", "axb"], expect: false}
+hints:
+  h1: "Keep going through all the statements: a later deny can still cancel an earlier allow."
+  h2: "Quote the literal parts of a pattern before building a regular expression."
+ai_assisted: true

@@ -1,0 +1,21 @@
+id: j1-l5.4-predict-helpers
+type: predict
+title: "Read the summary"
+lesson: j1-l5.4
+role: ladder
+assesses: [o2]
+concepts: [J1.09]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Work from the small helpers up.
+expected_output: |
+  Fizz
+  Buzz
+  FizzBuzz
+  7
+hints:
+  h1: "Each call goes through the checks from the top; the first that's true wins."
+  h2: "30 is divisible by 15, which is checked first."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j1-l7.4-explain-approach
+type: explain
+title: "Plan a bigger program"
+lesson: j1-l7.4
+role: ladder
+assesses: [o2, o1]
+concepts: [J1.16]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  You are asked for a program that reads a list of exam marks (whole numbers from 0 to 100) typed one per line, stopping when the person types `done`, and then prints the number of marks, the highest, the lowest and the average. Describe your plan: what the methods would be and what each does, what you would keep track of while reading, and at least three cases you would check, including the awkward one where no marks are typed.
+rubric:
+  criteria: |
+    A full answer names separate jobs (reading, calculating, printing), tracks count, total, highest and lowest as it reads, handles the empty case by deciding what to print instead of dividing by zero, and lists cases such as one mark, several marks, marks at 0 and 100, and no marks.
+  levels:
+    - score: 2
+      descriptor: "Splits the job into methods, tracks count, total, highest and lowest while reading, decides what to do with no marks (no division by zero), and lists at least three sensible cases."
+      samples:
+        - "I'd have a method that reads lines until done and collects the marks, one that works out count, highest, lowest and average, and one that prints the report. While reading I keep a count, a total, the highest and the lowest. Cases: one mark (it is both highest and lowest), 0 and 100 together, three ordinary marks, and no marks, where I'd print a message instead of dividing by zero."
+        - "Read in a loop until the line is done; keep count, sum, max and min as I go; print the results with a helper. I'd check one mark, several marks, the extremes 0 and 100, and an empty list, where the average would divide by zero so I'd handle it first."
+    - score: 1
+      descriptor: "Has a reasonable outline but misses the empty case, or doesn't say what is tracked, or gives fewer than three cases."
+      samples:
+        - "Read the marks in a loop, then print the highest, lowest and average."
+        - "Use a loop and variables for highest and lowest."
+    - score: 0
+      descriptor: "Incorrect or unusable, for example puts everything in one place with no plan or ignores the stop word."
+      samples:
+        - "Just write it and see what happens."
+        - "Use an array of 1000 marks and print them."
+ai_assisted: true

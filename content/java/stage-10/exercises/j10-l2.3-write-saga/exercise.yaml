@@ -1,0 +1,31 @@
+id: j10-l2.3-write-saga
+type: write
+title: "Undo what was done"
+lesson: j10-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J10.06]
+evidence: [IMPL]
+misconceptions: [MC203]
+difficulty: 3
+prompt: |
+  A saga runs a list of steps in order; each step is its own local transaction. If step number `failAt` (counting from 0; -1 or a number past the end means nothing fails) fails, the saga stops and **compensates** the steps that had succeeded, in **reverse** order. Write `sagaTrace(steps, failAt)` returning the events: `do:NAME` for a step that worked, `fail:NAME` for the failing step, then `undo:NAME` for each earlier step, last first. The failing step itself is not undone.
+entry:
+  methods:
+    - {name: sagaTrace, params: [{name: steps, type: "List<String>"}, {name: failAt, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "nothing fails", method: sagaTrace, args: [["reserve", "debit", "credit", "notify"], -1], expect: ["do:reserve", "do:debit", "do:credit", "do:notify"]}
+    - {name: "the third step fails", method: sagaTrace, args: [["reserve", "debit", "credit", "notify"], 2], expect: ["do:reserve", "do:debit", "fail:credit", "undo:debit", "undo:reserve"]}
+    - {name: "the first step fails", method: sagaTrace, args: [["reserve", "debit", "credit", "notify"], 0], expect: ["fail:reserve"]}
+  hidden:
+    - {name: "the last step fails", method: sagaTrace, args: [["reserve", "debit", "credit", "notify"], 3], expect: ["do:reserve", "do:debit", "do:credit", "fail:notify", "undo:credit", "undo:debit", "undo:reserve"]}
+    - {name: "a failure index past the end", method: sagaTrace, args: [["reserve", "debit", "credit", "notify"], 9], expect: ["do:reserve", "do:debit", "do:credit", "do:notify"]}
+    - {name: "no steps", method: sagaTrace, args: [[], 0], expect: []}
+    - {name: "a single failing step", method: sagaTrace, args: [["only"], 0], expect: ["fail:only"]}
+    - {name: "two steps", method: sagaTrace, args: [["a", "b"], 1], expect: ["do:a", "fail:b", "undo:a"]}
+    - {name: "a negative index means no failure", method: sagaTrace, args: [["reserve", "debit", "credit", "notify"], -5], expect: ["do:reserve", "do:debit", "do:credit", "do:notify"]}
+hints:
+  h1: "Compensate from the step before the failure down to the first."
+  h2: "What should happen to the steps after the failing one?"
+ai_assisted: true

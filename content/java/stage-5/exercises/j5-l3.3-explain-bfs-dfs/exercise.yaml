@@ -1,0 +1,32 @@
+id: j5-l3.3-explain-bfs-dfs
+type: explain
+title: "Which search?"
+lesson: j5-l3.3
+role: ladder
+assesses: [o3]
+concepts: [J5.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) Why does breadth-first search find the fewest hops, while depth-first search doesn't have to? (b) What is the visited check for, and what goes wrong without it? (c) Which would you use to answer each: "what is the fewest number of train changes from A to B?" and "are all the computers in this office connected to each other?"
+rubric:
+  criteria: |
+    A full answer says BFS explores outward in rings, reaching nodes in order of their distance, so the first time it reaches a node is by a shortest route, whereas DFS follows one long path as deep as it can and may reach a node by a longer route; the visited check stops the search going round cycles forever and revisiting nodes; and BFS is used for the fewest changes while the connected question needs a traversal (DFS or BFS) from one node and a check that everything was reached.
+  levels:
+    - score: 2
+      descriptor: "Explains that BFS reaches nodes in order of distance (in rings, using a queue) so the first arrival is shortest while DFS goes deep and may find a longer route; says the visited check prevents infinite loops on cycles and repeated work; and chooses BFS for fewest changes and a traversal or component count for connectivity."
+      samples:
+        - "BFS goes outward ring by ring using a queue, so it reaches every node by the fewest edges first. DFS goes as deep as it can along one path and might get to a node the long way round. The visited check stops the search circling forever in a cycle and revisiting nodes. For the fewest train changes I'd use BFS; for whether all the computers are connected I'd run a DFS or BFS from one computer and see whether it reaches them all (or count components)."
+        - "(a) BFS visits by distance, so the first time it reaches a node is the shortest; DFS can take a longer route. (b) Without it a cycle makes the search loop forever. (c) BFS for the train changes; a traversal or component count for connectivity."
+    - score: 1
+      descriptor: "Answers one or two parts well, or says BFS is shortest without explaining why."
+      samples:
+        - "BFS finds the shortest path."
+        - "You need visited so it stops."
+    - score: 0
+      descriptor: "Incorrect, for example says DFS always finds the shortest path, or that a visited check makes the search slower and isn't needed."
+      samples:
+        - "DFS is always shortest."
+        - "The visited check isn't needed."
+ai_assisted: true

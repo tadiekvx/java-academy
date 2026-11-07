@@ -1,0 +1,26 @@
+id: j1-l1.2-retrieve-string
+type: debug
+title: The unfinished string
+lesson: j1-l1.2
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.13, J1.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 1
+variant_group: fix-compile-error
+prompt: |
+  This program doesn't compile. Read the error message and fix it so the program prints:
+
+  ```
+  Hello from Java
+  Goodbye for now
+  ```
+tests:
+  visible:
+    - {name: prints the right lines, stdin: "", stdout_equals: "Hello from Java\nGoodbye for now"}
+starter_compiles: false
+hints:
+  h1: Run it and read the first error. Which line, and what does Java say it noticed?
+  h2: "unclosed string literal means a string is missing its closing double quote."
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j1-l4.5-write-age
+type: write
+title: "Ask for an age"
+lesson: j1-l4.5
+role: ladder
+assesses: [o1, o2, o3]
+concepts: [J1.05, J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+variant_group: validation-loop
+prompt: |
+  Write `main` so it keeps asking `Age (0-120): ` until the person types a whole number from 0 to 120. Each time the input is bad, print `Please enter a whole number from 0 to 120.` When it's good, print `Age accepted: N`.
+
+  The `isWholeNumber` method is already there for you. Check the text is a number **before** converting it.
+tests:
+  visible:
+    - {name: "valid first time", stdin: "60\n", stdout_contains: ["Age accepted: 60"]}
+    - {name: "one bad then good", stdin: "abc\n120\n", stdout_contains: ["Age accepted: 120", "Please enter a whole number from 0 to 120."]}
+    - {name: "range edge", stdin: "121\n0\n", stdout_contains: ["Age accepted: 0", "Please enter a whole number from 0 to 120."]}
+  hidden:
+    - {name: "empty line first", stdin: "\n0\n", stdout_contains: ["Age accepted: 0", "Please enter a whole number from 0 to 120."]}
+    - {name: "negative then good", stdin: "-3\n0\n", stdout_contains: ["Age accepted: 0", "Please enter a whole number from 0 to 120."]}
+    - {name: "decimal then good", stdin: "2.5\n120\n", stdout_contains: ["Age accepted: 120", "Please enter a whole number from 0 to 120."]}
+    - {name: "several bad", stdin: "x\n170\n 7 7\n120\n", stdout_contains: ["Age accepted: 120", "Please enter a whole number from 0 to 120."]}
+    - {name: "spaces around", stdin: "  0  \n", stdout_contains: ["Age accepted: 0"]}
+    - {name: "huge number", stdin: "99999999999999999999\n120\n", stdout_contains: ["Age accepted: 120", "Please enter a whole number from 0 to 120."]}
+hints:
+  h1: "Loop while you don't yet have a valid value, and check the text before converting it."
+  h2: "Start with int value = -1; while (value < 0) { read, strip; if isWholeNumber && short && in range → convert, else print the message }."
+ai_assisted: true

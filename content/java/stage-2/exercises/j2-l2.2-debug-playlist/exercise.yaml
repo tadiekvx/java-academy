@@ -1,0 +1,30 @@
+id: j2-l2.2-debug-playlist
+type: debug
+title: "The playlist that changes by itself"
+lesson: j2-l2.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J2.06]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `run` builds a `Playlist` from the names, then tries to sneak extra songs in: once through the caller's own list, and once through the list that `songs()` returns. `size()` should stay equal to the number of names given. It doesn't. Find both leaks in `Playlist` and fix them (don't change `run`).
+entry:
+  methods:
+    - {name: run, params: [{name: names, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: run, args: [["a", "b"]], expect: 2}
+    - {method: run, args: [[]], expect: 0}
+    - {method: run, args: [["x", "y", "z"]], expect: 3}
+  hidden:
+    - {method: run, args: [["solo"]], expect: 1}
+    - {method: run, args: [["a", "a", "a", "a"]], expect: 4}
+    - {method: run, args: [["1", "2", "3", "4", "5"]], expect: 5}
+    - {method: run, args: [["p", "q"]], expect: 2}
+    - {method: run, args: [["m", "n", "o"]], expect: 3}
+hints:
+  h1: "A leak can go in through the constructor, or out through songs(). Check both."
+  h2: "Copy in the constructor: new ArrayList<>(songs), and return a copy (or List.copyOf) from songs()."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j1-l7.3-explain-edges
+type: explain
+title: "Choose the edge cases"
+lesson: j1-l7.3
+role: ladder
+assesses: [o2]
+concepts: [J1.14]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A cinema sells tickets by age: under 5 is free, 5 to 17 is child, 18 to 64 is adult, and 65 and over is senior. List the ages you would test, and say why you picked each one. You should include more than one age in each group.
+rubric:
+  criteria: |
+    A full answer includes the boundaries on both sides: 4 and 5, 17 and 18, 64 and 65, plus a typical age in each group and 0, with a reason that mistakes with < and <= appear exactly at the boundaries.
+  levels:
+    - score: 2
+      descriptor: "Lists both sides of every boundary (4/5, 17/18, 64/65), a typical value in each group and an extreme such as 0, with the reason that boundary mistakes show up there."
+      samples:
+        - "0 (the smallest), 4 and 5 (free ends, child starts), 10 (typical child), 17 and 18 (child ends, adult starts), 40 (typical adult), 64 and 65 (adult ends, senior starts), 90 (typical senior). The boundaries matter most because < versus <= mistakes only show up exactly there."
+        - "I'd test 0, 4, 5, 12, 17, 18, 30, 64, 65 and 80. The pairs around 5, 18 and 65 check each limit from both sides, and the others check the middle of each group."
+    - score: 1
+      descriptor: "Gives sensible ages but misses a boundary pair, or gives no reason."
+      samples:
+        - "5, 18, 65 and 80."
+        - "Test one age in each group."
+    - score: 0
+      descriptor: "Incorrect, for example tests only one value or picks values at random with no reason."
+      samples:
+        - "Just try 30."
+        - "Test lots of random numbers."
+ai_assisted: true

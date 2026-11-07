@@ -1,0 +1,18 @@
+id: j9-l1.2-predict-lost-update
+type: predict
+title: "A race you can count on"
+lesson: j9-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J9.02]
+evidence: [MIST]
+misconceptions: [MC188]
+difficulty: 1
+prompt: |
+  Two threads each add one to a shared counter that starts at 0: each reads it, then writes back what it read plus one. A latch makes sure both threads have read before either writes. Predict the exact output.
+expected_output: |
+  two increments, counter=1
+hints:
+  h1: "What value has each thread read when it reaches the latch?"
+  h2: "What does each thread then write?"
+ai_assisted: true

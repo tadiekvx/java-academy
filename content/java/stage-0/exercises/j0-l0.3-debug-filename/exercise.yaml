@@ -1,0 +1,20 @@
+id: j0-l0.3-debug-filename
+type: debug
+title: "The class in the wrong file"
+lesson: j0-l0.3
+role: ladder
+assesses: [o3]
+concepts: [J0.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program lives in the file `Main.java`, but it won't compile. Read the error, and fix it so that the program prints `Fixed!`.
+tests:
+  visible:
+    - {name: "prints Fixed!", stdin: "", stdout_equals: "Fixed!"}
+starter_compiles: false
+hints:
+  h1: "Read the error: which two names disagree?"
+  h2: "A public class must be named after its file: rename Greeter to Main."
+ai_assisted: true

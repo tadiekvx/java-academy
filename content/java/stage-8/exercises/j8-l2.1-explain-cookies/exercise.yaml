@@ -1,0 +1,40 @@
+id: j8-l2.1-explain-cookies
+type: explain
+title: "Two cookies, two policies"
+lesson: j8-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J8.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  These are the `Set-Cookie` headers of a real response from this platform's backend:
+
+  ```text
+  $ curl -i http://localhost:8092/api/progress
+  Set-Cookie: XSRF-TOKEN=95e1c9e0-8d64-4d63-923d-adab85078aa4; Path=/
+  Set-Cookie: JSESSIONID=2932F55A6F94026BFAEE8E6BD1B2EB63; Path=/; HttpOnly
+  ```
+
+  Why does the session cookie carry `HttpOnly` while the `XSRF-TOKEN` cookie does not? What attack does `HttpOnly` help against, and what would you add to both cookies before running this over the internet?
+rubric:
+  criteria: |
+    HttpOnly tells the browser not to expose the cookie to scripts, so script injected by cross-site scripting cannot read the session identifier. The XSRF-TOKEN cookie is deliberately readable: this platform's single-page front end reads it and sends it back in the X-XSRF-TOKEN header, which is how the CSRF check works, and the token is useless without the matching session. Before internet use, add the Secure attribute so the cookies travel only over TLS (it protects confidentiality only) and serve everything over HTTPS.
+  levels:
+    - score: 2
+      descriptor: "The answer ties HttpOnly to script access and XSS, explains why the XSRF token must be readable, and adds Secure with HTTPS."
+      samples:
+        - "HttpOnly hides the session cookie from JavaScript, so an XSS bug cannot steal it. The XSRF-TOKEN cookie has to be read by the front end, which copies it into the X-XSRF-TOKEN header; that is the CSRF defence, and a token alone is no use without the session. For the internet both cookies need Secure, with HTTPS, so they are only sent over TLS."
+        - "The session id is a credential, so scripts must not see it (HttpOnly protects against XSS theft). The CSRF token is meant for the page's own script to echo back, so it is readable. Add Secure and use TLS."
+    - score: 1
+      descriptor: "The answer explains one cookie but not the other, or omits Secure."
+      samples:
+        - "HttpOnly stops JavaScript reading the session cookie."
+        - "The token has to be read by the front end."
+    - score: 0
+      descriptor: "The answer treats the difference as a mistake or irrelevant."
+      samples:
+        - "It is a bug, both cookies should be the same."
+        - "HttpOnly stops the cookie being sent over HTTP."
+ai_assisted: true

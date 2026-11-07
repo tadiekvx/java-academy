@@ -1,0 +1,30 @@
+id: j1-l3.2-debug-initial
+type: debug
+title: "The empty name crash"
+lesson: j1-l3.2
+role: ladder
+assesses: [o3]
+concepts: [J1.06]
+evidence: [DEBUG]
+misconceptions: [MC14]
+difficulty: 2
+prompt: |
+  `startsWithA` should return `true` if a word begins with a capital A, and `false` otherwise, including for an empty word. It crashes when given `""`. Find and fix the bug.
+entry:
+  methods:
+    - {name: startsWithA, params: [{name: word, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: ["Apple"], expect: true}
+    - {args: ["banana"], expect: false}
+    - {args: [""], expect: false}
+  hidden:
+    - {name: "just A", args: ["A"], expect: true}
+    - {name: "lower-case a", args: ["apple"], expect: false}
+    - {name: "another letter", args: ["Zebra"], expect: false}
+    - {name: "double A", args: ["Aardvark"], expect: true}
+    - {name: "space first", args: [" A"], expect: false}
+hints:
+  h1: "For an empty word, which part of the condition crashes? Should it ever run?"
+  h2: "& always checks both sides. && stops when the left side is false, so charAt(0) never runs on an empty word."
+ai_assisted: true

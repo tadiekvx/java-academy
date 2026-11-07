@@ -1,0 +1,30 @@
+id: j6-l2.2-debug-commit
+type: debug
+title: "A change that can be half saved"
+lesson: j6-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J6.06]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  The starter opens an account and its first deposit, but auto-commit saves the account before the deposit is tried, so a rejected deposit leaves an account without a transaction. Make the two statements one transaction so a failure leaves nothing behind.
+entry:
+  methods:
+    - {name: openAccount, params: [{name: customerId, type: "int"}, {name: balance, type: "double"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a valid account and its opening deposit", method: openAccount, args: [2, 100.0], expect: "accounts=1 transactions=1"}
+    - {name: "an invalid customer", method: openAccount, args: [99, 100.0], expect: "accounts=0 transactions=0"}
+    - {name: "an invalid opening balance", method: openAccount, args: [2, 0.0], expect: "accounts=0 transactions=0"}
+  hidden:
+    - {name: "a valid account and its opening deposit", method: openAccount, args: [5, 20.0], expect: "accounts=1 transactions=1"}
+    - {name: "an invalid customer", method: openAccount, args: [98, 20.0], expect: "accounts=0 transactions=0"}
+    - {name: "a valid account and its opening deposit", method: openAccount, args: [7, 3.0], expect: "accounts=0 transactions=0"}
+    - {name: "an invalid opening balance", method: openAccount, args: [5, 0.0], expect: "accounts=0 transactions=0"}
+    - {name: "an invalid customer", method: openAccount, args: [99, 5.0], expect: "accounts=0 transactions=0"}
+hints:
+  h1: "Where does an automatic commit end in the learner's code?"
+  h2: "What happens to a second statement that fails, when the first is already committed?"
+ai_assisted: true

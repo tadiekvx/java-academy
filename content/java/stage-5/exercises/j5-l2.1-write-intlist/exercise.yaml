@@ -1,0 +1,32 @@
+id: j5-l2.1-write-intlist
+type: write
+title: "Your own growable array"
+lesson: j5-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J5.03]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `IntList`: a growable array of `int`s **built on a plain `int[]`** (no `ArrayList`). Start with capacity 4 and **double** it whenever the array is full. It needs `add(int)`, `get(int)`, `size()` and `capacity()`. `get` must throw an `IndexOutOfBoundsException` for an index that isn't in `0..size-1`, even when the array has room. The driver adds `0..n-1`, reads them back, and tries to read index `n`.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [3], expect: "size=3 capacity=4 sum=3 badIndex=true"}
+    - {method: run, args: [5], expect: "size=5 capacity=8 sum=10 badIndex=true"}
+    - {method: run, args: [0], expect: "size=0 capacity=4 sum=0 badIndex=true"}
+    - {name: "built on an int array", source_contains: ["int[]"], source_not_contains: ["ArrayList"]}
+  hidden:
+    - {method: run, args: [4], expect: "size=4 capacity=4 sum=6 badIndex=true"}
+    - {method: run, args: [8], expect: "size=8 capacity=8 sum=28 badIndex=true"}
+    - {method: run, args: [9], expect: "size=9 capacity=16 sum=36 badIndex=true"}
+    - {method: run, args: [100], expect: "size=100 capacity=128 sum=4950 badIndex=true"}
+    - {method: run, args: [1000], expect: "size=1000 capacity=1024 sum=499500 badIndex=true"}
+    - {method: run, args: [1], expect: "size=1 capacity=4 sum=0 badIndex=true"}
+hints:
+  h1: "Fields: an int[] with length 4, and a size. add: if full, copy into an array twice as long; then store and count. get: check against size."
+  h2: "if (size == data.length) data = Arrays.copyOf(data, data.length * 2);"
+ai_assisted: true

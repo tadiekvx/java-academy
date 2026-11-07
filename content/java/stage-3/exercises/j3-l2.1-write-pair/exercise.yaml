@@ -1,0 +1,30 @@
+id: j3-l2.1-write-pair
+type: write
+title: "A generic pair"
+lesson: j3-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J3.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Finish the generic class `Pair<A, B>`: a constructor taking the two values, accessors `first()` and `second()`, and `swap()`, which returns a **new** `Pair<B, A>` with the two values in the opposite order.
+entry:
+  methods:
+    - {name: run, params: [{name: a, type: "String"}, {name: b, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["x", 1], expect: "1:x"}
+    - {method: run, args: ["", 0], expect: "0:"}
+    - {method: run, args: ["hello", -5], expect: "-5:hello"}
+  hidden:
+    - {method: run, args: ["a", 99], expect: "99:a"}
+    - {method: run, args: ["pair", 7], expect: "7:pair"}
+    - {method: run, args: ["z", 1000], expect: "1000:z"}
+    - {method: run, args: ["q", 2], expect: "2:q"}
+    - {method: run, args: ["long text here", 42], expect: "42:long text here"}
+hints:
+  h1: "Store the two values in fields. swap builds a Pair with the arguments in the other order."
+  h2: "return new Pair<>(second, first);"
+ai_assisted: true

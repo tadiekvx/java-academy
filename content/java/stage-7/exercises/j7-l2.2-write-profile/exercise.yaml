@@ -1,0 +1,34 @@
+id: j7-l2.2-write-profile
+type: write
+title: "Is this bean active"
+lesson: j7-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J7.06]
+evidence: [IMPL]
+misconceptions: [MC171]
+difficulty: 3
+prompt: |
+  A bean is registered only when its profile expression is true. Write `isActive(expression, active)`. A term is a profile name or `!name` (not active). Terms are joined by ` & ` (all must hold) or by ` | ` (any may hold), never both: mixing them without parentheses is `invalid`. With no profile active, the profile `default` counts as the only active profile. Return `true`, `false` or `invalid`.
+entry:
+  methods:
+    - {name: isActive, params: [{name: expression, type: "String"}, {name: active, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a plain name that is active", method: isActive, args: ["production", ["production"]], expect: "true"}
+    - {name: "a name that is not active", method: isActive, args: ["production", ["dev"]], expect: "false"}
+    - {name: "not", method: isActive, args: ["!production", ["dev"]], expect: "true"}
+  hidden:
+    - {name: "the default profile with nothing active", method: isActive, args: ["default", []], expect: "true"}
+    - {name: "and, both active", method: isActive, args: ["production & us-east", ["production", "us-east"]], expect: "true"}
+    - {name: "and, one missing", method: isActive, args: ["production & us-east", ["production"]], expect: "false"}
+    - {name: "or", method: isActive, args: ["dev | test", ["test"]], expect: "true"}
+    - {name: "or, neither", method: isActive, args: ["dev | test", ["prod"]], expect: "false"}
+    - {name: "mixing is invalid", method: isActive, args: ["a & b | c", ["a"]], expect: "invalid"}
+    - {name: "not default", method: isActive, args: ["!default", []], expect: "false"}
+    - {name: "two nots", method: isActive, args: ["!dev & !test", ["prod"]], expect: "true"}
+    - {name: "nothing active", method: isActive, args: ["production", []], expect: "false"}
+hints:
+  h1: "What is the set of active profiles when the list is empty?"
+  h2: "Decide `and` or `or` once, then combine the terms."
+ai_assisted: true

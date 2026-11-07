@@ -1,0 +1,32 @@
+id: j8-l1.4-explain-secrets
+type: explain
+title: "Where a secret lives"
+lesson: j8-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J8.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A developer adds an API key as a string constant in the source file so the code works 'out of the box', and logs the full request, including the `Authorization` header, to help debugging. The repository is private. Explain what is wrong, and where the key and the log line should be handled instead. This platform reads its AI mentor key from an environment variable; say what that achieves.
+rubric:
+  criteria: |
+    A private repository is still copied to laptops, backups, forks and CI logs, and the key stays in the history after it is deleted from the file; anyone who can read the code can use the key. Secrets should be kept out of the source and provided at run time (an environment variable, or a secrets manager), and rotated if exposed. Logs are widely readable and kept for a long time, so credentials must be excluded or redacted before they are written. Reading the key from the environment, as this platform does for the mentor, keeps it out of the repository and lets each environment use its own value.
+  levels:
+    - score: 2
+      descriptor: "The answer explains why source control is the wrong place, proposes run-time configuration and rotation, and says logs must exclude credentials."
+      samples:
+        - "The key would live in version control history, backups and every clone, so private does not mean secret. Keep it out of the code: supply it at run time through an environment variable or a secrets manager, and rotate it if it leaks. Logs are widely readable, so the Authorization header must be redacted before logging. This platform's environment variable means the key is never in the repository and each environment can have its own."
+        - "A constant in source is found by anyone with the code and survives in git history. Use configuration from the environment or a vault, rotate after exposure, and do not log credentials such as the Authorization header. The environment variable approach keeps the secret outside the repository."
+    - score: 1
+      descriptor: "The answer says not to hard-code the key without the reasons or the log point."
+      samples:
+        - "Do not hard-code the key, use an environment variable."
+        - "Do not log the header."
+    - score: 0
+      descriptor: "The answer accepts the practice."
+      samples:
+        - "It is fine because the repository is private."
+        - "Logging everything is the best way to debug."
+ai_assisted: true

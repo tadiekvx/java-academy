@@ -1,0 +1,21 @@
+id: j0-l0.3-modify-compact
+type: modify
+title: "Back to the compact form"
+lesson: j0-l0.3
+role: ladder
+assesses: [o2]
+concepts: [J0.01]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program is written in the traditional form. Convert it to the **compact form**: no class, a plain `void main()`, and `IO.println`. It must print exactly the same two lines.
+tests:
+  visible:
+    - {name: "prints both lines", stdin: "", stdout_equals: "Total: 5\nDone"}
+    - {name: "compact main", source_contains: ["void main()"], source_not_contains: ["public class", "System.out"]}
+    - {name: "uses IO", source_contains: ["IO.println"]}
+hints:
+  h1: "Remove the class wrapper and the old main header, then swap System.out.println for IO.println."
+  h2: "void main() { IO.println(\"Total: \" + (2 + 3)); IO.println(\"Done\"); }"
+ai_assisted: true

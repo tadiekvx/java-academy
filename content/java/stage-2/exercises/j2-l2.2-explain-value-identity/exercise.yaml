@@ -1,0 +1,32 @@
+id: j2-l2.2-explain-value-identity
+type: explain
+title: "Value or identity?"
+lesson: j2-l2.2
+role: ladder
+assesses: [o3]
+concepts: [J2.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate asks: "Why do we make `Money` immutable, but `BankAccount` isn't?" Explain the difference between a **value** and an **identity**, using those two examples, and say what goes wrong if a value class like `Money` is mutable and two accounts share one `Money` object.
+rubric:
+  criteria: |
+    A full answer says a value is defined by its contents (two Money objects with the same pence are interchangeable) while an account has identity (it stays that account as its balance changes); values are made immutable so they can be shared safely; if Money were mutable and shared, changing one account's balance in place would change the other's.
+  levels:
+    - score: 2
+      descriptor: "Distinguishes value (defined by contents, interchangeable) from identity (the same account over time), says values should be immutable so sharing is safe, and gives the shared mutable Money example where one account's change alters the other."
+      samples:
+        - "Money is a value: two Money objects with the same pence are interchangeable, so it's safe to make it immutable and share it. A BankAccount has identity: it's still the same account when its balance changes. If Money were mutable and two accounts shared one object, adding to one account's money would change the other account's balance too."
+        - "A value is defined by what it holds; an account is defined by being that particular account. Immutable values can be shared freely. If two accounts pointed at the same mutable Money, a deposit into one would silently change the other."
+    - score: 1
+      descriptor: "Gets the value/identity distinction or the sharing problem, but not both."
+      samples:
+        - "Money is a value and an account has identity."
+        - "Sharing a mutable object is dangerous."
+    - score: 0
+      descriptor: "Incorrect, for example says immutable means it can't be used, or that accounts are immutable too."
+      samples:
+        - "Immutable means you can never use it."
+        - "Both are immutable."
+ai_assisted: true

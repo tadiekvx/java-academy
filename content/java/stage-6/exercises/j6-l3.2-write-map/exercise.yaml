@@ -1,0 +1,30 @@
+id: j6-l3.2-write-map
+type: write
+title: "Mapping a join onto a row"
+lesson: j6-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J6.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write the mapping that turns one joined row into the string `account|customer|city|balance`. A customer whose city is unknown becomes the word unknown.
+entry:
+  methods:
+    - {name: accountRows, params: [{name: accountId, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "the accounts with their customer", method: accountRows, args: [1], expect: ["1|Ada Lovelace|Cape Town|1200.00"]}
+    - {name: "an account whose customer has no city", method: accountRows, args: [3], expect: ["3|Alan Turing|unknown|0.00"]}
+    - {name: "an account that does not exist", method: accountRows, args: [99], expect: []}
+  hidden:
+    - {name: "an account with a customer from a known city", method: accountRows, args: [2], expect: ["2|Grace Hopper|Johannesburg|300.50"]}
+    - {name: "an account with a customer from a known city", method: accountRows, args: [4], expect: ["4|Edsger Dijkstra|Cape Town|780.25"]}
+    - {name: "an account with a customer from a known city", method: accountRows, args: [5], expect: ["5|Ada Lovelace|Cape Town|50.00"]}
+    - {name: "an account with a customer from a known city", method: accountRows, args: [1], expect: ["1|Ada Lovelace|Cape Town|1200.00"]}
+    - {name: "an account whose customer has no city", method: accountRows, args: [3], expect: ["3|Alan Turing|unknown|0.00"]}
+hints:
+  h1: "Which columns does the row have, and in what order do you build the string?"
+  h2: "How do you spell a null city in the output?"
+ai_assisted: true

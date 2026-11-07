@@ -1,0 +1,30 @@
+id: j3-l3.2-debug-reuse
+type: debug
+title: "The stream that was already used"
+lesson: j3-l3.2
+role: ladder
+assesses: [o3]
+concepts: [J3.06]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `summary` should return the number of short words (fewer than 4 letters), a colon, and the short words joined by `+`, e.g. `2:fig+ax`. It throws an `IllegalStateException`. Read the message, find why, and fix it.
+entry:
+  methods:
+    - {name: summary, params: [{name: words, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {method: summary, args: [["fig", "pear", "ax"]], expect: "2:fig+ax"}
+    - {method: summary, args: [[]], expect: "0:"}
+    - {method: summary, args: [["banana"]], expect: "0:"}
+  hidden:
+    - {method: summary, args: [["a", "b", "c"]], expect: "3:a+b+c"}
+    - {method: summary, args: [["abc", "abcd"]], expect: "1:abc"}
+    - {method: summary, args: [["x", "longword", "yz"]], expect: "2:x+yz"}
+    - {method: summary, args: [["fig"]], expect: "1:fig"}
+    - {method: summary, args: [["", "pear"]], expect: "1:"}
+hints:
+  h1: "What does the message say about the stream? How many times is it used?"
+  h2: "Collect into a list once, then use list.size() and the list itself."
+ai_assisted: true

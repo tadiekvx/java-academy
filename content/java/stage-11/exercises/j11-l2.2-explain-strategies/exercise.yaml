@@ -1,0 +1,32 @@
+id: j11-l2.2-explain-strategies
+type: explain
+title: "Choosing how to release"
+lesson: j11-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J11.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Brightbank's payments service must be released several times a week without downtime, and a bad release must be undone in minutes. Compare a rolling update with a blue/green deployment for it: how each works, what each costs, what happens to database changes, and how the smoke test and rollback fit in. Say which you would choose for a team of four and why.
+rubric:
+  criteria: |
+    A rolling update replaces instances in batches, checking health between batches; it needs no extra environment, but old and new versions run side by side during the rollout, so they must both work with the same database and API. A blue/green deployment runs the new version as a full second environment next to the current one, tests it (a smoke test) and then switches traffic over at once, so rollback is switching back; it costs a second full environment for the duration and still needs database changes that both versions tolerate. In both cases the database change should be backward compatible (expand and contract, Stage 12), a smoke test should check the new version before it takes real traffic or right after the first batch, and rollback should be automatic when the check fails. For a small team a rolling update is usually the simpler and cheaper choice, provided the versions can coexist.
+  levels:
+    - score: 2
+      descriptor: "The answer describes both strategies with cost and database compatibility, places the smoke test and rollback, and makes a reasoned choice."
+      samples:
+        - "Rolling replaces instances in batches with health checks, cheap but old and new versions coexist for a while. Blue/green builds a second full environment, smoke-tests it, then switches traffic; rollback is switching back, but it costs a second environment. Both need backward-compatible database changes. The smoke test gates the switch or the next batch and a failure triggers rollback. For four people I would pick a rolling update, as long as the versions can coexist."
+        - "Rolling: batches, health-checked, no extra environment, mixed versions. Blue/green: full parallel environment, instant switch and switch-back, double cost. Schema changes must work for both versions either way. Smoke test then automatic rollback. I would choose rolling for simplicity."
+    - score: 1
+      descriptor: "The answer describes the strategies without the database point or the choice."
+      samples:
+        - "Rolling updates replace a few at a time; blue/green switches all at once."
+        - "Blue/green is safer."
+    - score: 0
+      descriptor: "The answer ignores rollback or compatibility."
+      samples:
+        - "Stop the service, deploy and start it again at night."
+        - "Release without checking, tests passed already."
+ai_assisted: true

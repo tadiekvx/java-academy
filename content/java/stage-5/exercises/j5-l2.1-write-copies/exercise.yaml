@@ -1,0 +1,31 @@
+id: j5-l2.1-write-copies
+type: write
+title: "How many copies?"
+lesson: j5-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J5.03]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `copiesWhenAdding(n)`: the total number of element copies caused by growth when `n` values are added one at a time to an `IntList` that starts at capacity 4 and **doubles** when full. (Growing from capacity `c` copies `c` elements.) Don't simulate adding `n` values one by one: the checks go up to a billion. Work out the capacities instead.
+entry:
+  methods:
+    - {name: copiesWhenAdding, params: [{name: n, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {method: copiesWhenAdding, args: [9], expect: 12}
+    - {method: copiesWhenAdding, args: [4], expect: 0}
+    - {method: copiesWhenAdding, args: [0], expect: 0}
+  hidden:
+    - {method: copiesWhenAdding, args: [5], expect: 4}
+    - {method: copiesWhenAdding, args: [8], expect: 4}
+    - {method: copiesWhenAdding, args: [1000], expect: 1020}
+    - {method: copiesWhenAdding, args: [1000000], expect: 1048572}
+    - {method: copiesWhenAdding, args: [1000000000], expect: 1073741820}
+    - {method: copiesWhenAdding, args: [1], expect: 0}
+hints:
+  h1: "A growth happens each time the number of values exceeds the capacity. Add the capacity to the total, then double it, until the capacity covers n."
+  h2: "while (n > capacity) { copies += capacity; capacity *= 2; }"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j9-l1.5-write-find-deadlock
+type: write
+title: "Which threads are stuck"
+lesson: j9-l1.5
+role: ladder
+assesses: [o1]
+concepts: [J9.05]
+evidence: [IMPL]
+misconceptions: [MC191]
+difficulty: 4
+prompt: |
+  Each entry `T1>T2` says thread T1 is waiting for a lock that thread T2 holds. A set of threads is deadlocked when each waits, directly or through others, for the next, round to itself. Write `findDeadlock(waits)` returning the names of every thread that lies on such a cycle, sorted alphabetically (an empty list if there is none). A thread that merely waits for a deadlocked thread is **not** itself in the cycle.
+entry:
+  methods:
+    - {name: findDeadlock, params: [{name: waits, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "the classic pair", method: findDeadlock, args: [["A>B", "B>A"]], expect: ["A", "B"]}
+    - {name: "a chain, no cycle", method: findDeadlock, args: [["A>B", "B>C"]], expect: []}
+    - {name: "nobody waits", method: findDeadlock, args: [[]], expect: []}
+  hidden:
+    - {name: "three threads", method: findDeadlock, args: [["A>B", "B>C", "C>A"]], expect: ["A", "B", "C"]}
+    - {name: "D waits for a deadlocked thread but is not in the cycle", method: findDeadlock, args: [["D>A", "A>B", "B>A"]], expect: ["A", "B"]}
+    - {name: "a thread waiting for itself", method: findDeadlock, args: [["A>A"]], expect: ["A"]}
+    - {name: "two separate deadlocks", method: findDeadlock, args: [["A>B", "B>A", "C>D", "D>C"]], expect: ["A", "B", "C", "D"]}
+    - {name: "a cycle with a tail", method: findDeadlock, args: [["A>B", "B>C", "C>B", "A>C"]], expect: ["B", "C"]}
+    - {name: "a cycle with an exit", method: findDeadlock, args: [["X>Y", "Y>Z", "Z>X", "Z>W"]], expect: ["X", "Y", "Z"]}
+    - {name: "two waiters on one holder", method: findDeadlock, args: [["A>B", "C>B"]], expect: []}
+hints:
+  h1: "A thread is on a cycle if you can follow the waits from it and come back to it."
+  h2: "Be careful not to follow a path for ever: remember where you have been."
+ai_assisted: true

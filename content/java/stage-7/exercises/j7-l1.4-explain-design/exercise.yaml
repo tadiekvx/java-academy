@@ -1,0 +1,32 @@
+id: j7-l1.4-explain-design
+type: explain
+title: "Critique an API"
+lesson: j7-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J7.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team proposes these endpoints: `GET /getAccount?id=7`, `POST /createAccount`, `POST /deleteAccount?id=7`, `GET /accounts/7/getTransactions`. Rewrite them as resource-oriented endpoints, and say what each rewrite gains.
+rubric:
+  criteria: |
+    URLs should name resources (nouns) and the method should say the action. The rewrites are GET /accounts/7, POST /accounts, DELETE /accounts/7 and GET /accounts/7/transactions. The method then carries the meaning clients, caches and gateways understand: GET is safe and cacheable, DELETE is idempotent so it can be retried, and POST for creation can answer 201 with a Location.
+  levels:
+    - score: 2
+      descriptor: "The answer gives all four rewrites and explains what the HTTP method now provides."
+      samples:
+        - "GET /accounts/7, POST /accounts, DELETE /accounts/7 and GET /accounts/7/transactions. The verbs move into the method: GET is safe and cacheable, DELETE can be retried because it is idempotent, and the create can return 201 with a Location header."
+        - "Use nouns in the path and let the method be the verb: GET /accounts/7, POST /accounts, DELETE /accounts/7, GET /accounts/7/transactions. Now tools that know HTTP semantics (caches, retries, gateways) can treat each request correctly."
+    - score: 1
+      descriptor: "The answer rewrites some endpoints without saying what is gained."
+      samples:
+        - "GET /accounts/7 and DELETE /accounts/7."
+        - "Remove the verbs from the URLs and use nouns."
+    - score: 0
+      descriptor: "The answer keeps the verbs or defends them."
+      samples:
+        - "The names are clear, so they are fine as they are."
+        - "Add a version number to each URL."
+ai_assisted: true

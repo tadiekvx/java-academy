@@ -1,0 +1,21 @@
+id: j2-l1.3-predict-alias
+type: predict
+title: "Two names, one object"
+lesson: j2-l1.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J2.03]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints. Draw the references if it helps.
+expected_output: |
+  50
+  0
+  true
+  false
+hints:
+  h1: "Which variables refer to the same object? c was built separately."
+  h2: "a and b are one object. c is a new object, with score 0."
+ai_assisted: true

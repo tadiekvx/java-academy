@@ -1,0 +1,32 @@
+id: j9-l1.1-explain-threads
+type: explain
+title: "What threads cost and what sharing costs"
+lesson: j9-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J9.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague says 'more threads always means faster'. Using the parallel-sum idea, explain what has to be true for extra threads to help, what each thread costs, and why giving each thread its own slot (instead of one shared total) matters.
+rubric:
+  criteria: |
+    Threads help when the work can be split into independent parts and there are enough processor cores; each thread has costs (a stack, scheduling, startup and the wait to join), so tiny tasks or too many threads can be slower than one thread. Threads that write the same variable need coordination, which costs time and risks bugs; giving each thread its own slot means no coordination until the final join, which is the cheapest way to share work.
+  levels:
+    - score: 2
+      descriptor: "The answer names independence and core count, the per-thread costs, and the no-sharing advantage."
+      samples:
+        - "Extra threads help only if the work splits into independent pieces and there are cores to run them. Each thread costs memory for a stack, startup time and scheduling, so for small jobs it is slower. Separate slots avoid locking: each thread writes only its own, and the join gives the main thread a safe view at the end."
+        - "No. The pieces must be independent and the machine needs spare cores. Threads are not free (stack, creation, context switches). Own slots mean there is nothing to coordinate until join."
+    - score: 1
+      descriptor: "The answer names a cost or a condition, not both, or does not explain the slots."
+      samples:
+        - "Threads cost memory so too many are bad."
+        - "It only helps with more cores."
+    - score: 0
+      descriptor: "The answer agrees with the colleague."
+      samples:
+        - "Yes, more threads is always faster because more work happens at once."
+        - "Sharing one total is simpler, so it is better."
+ai_assisted: true

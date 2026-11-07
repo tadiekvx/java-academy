@@ -1,0 +1,21 @@
+id: j1-l6.1-predict-arrays
+type: predict
+title: "Index by index"
+lesson: j1-l6.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.10]
+evidence: [MIST]
+misconceptions: [MC09]
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints.
+expected_output: |
+  [4, 8, 12, 16]
+  4
+  16
+  40
+hints:
+  h1: "Element 2 changes before anything is printed. The last index is length - 1."
+  h2: "values[2] becomes 4 + 8 = 12. The sum is 4 + 8 + 12 + 16 = 40."
+ai_assisted: true

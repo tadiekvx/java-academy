@@ -1,0 +1,21 @@
+id: j1-l2.2-debug-swap
+type: debug
+title: The drinks mix-up
+lesson: j1-l2.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.03]
+evidence: [DEBUG]
+misconceptions: [MC02]
+difficulty: 2
+prompt: |
+  A café swapped its morning and evening drinks, and this program should swap the two variables
+  to match. It should print `Tea` (the new morning drink) and then `Coffee` (the new evening drink),
+  but it prints `Tea` twice. Trace it, work out why, and fix it.
+tests:
+  visible:
+    - {name: prints the swapped drinks, stdin: "", stdout_equals: "Tea\nCoffee"}
+hints:
+  h1: Trace morning and evening in a table. After the first assignment, where has "Coffee" gone?
+  h2: "The first line overwrites morning before its value is saved. Keep a copy in a third variable first."
+ai_assisted: true

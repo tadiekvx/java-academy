@@ -1,0 +1,26 @@
+id: j5-l3.1-predict-trace
+type: predict
+title: "Down, then up"
+lesson: j5-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J5.09]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints. Remember that lines after a recursive call run as the calls unwind.
+expected_output: |
+  down 3
+  down 2
+  down 1
+  liftoff
+  up 1
+  up 2
+  up 3
+  29
+  55
+hints:
+  h1: "The \"down\" lines print before the recursive call and the \"up\" lines after it returns. For sumDigits, peel off the last digit each time."
+  h2: "countdown prints down 3, 2, 1, then liftoff, then up 1, 2, 3. sumDigits(9875) is 5+7+8+9 = 29. fib(10) is 55."
+ai_assisted: true

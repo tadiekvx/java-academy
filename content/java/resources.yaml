@@ -1,0 +1,628 @@
+# Curated external resources. Every entry was opened and checked by a person (verified_on is the date).
+# Rules (enforced by the validator): complete metadata, https URL, a verification date, YouTube ids that
+# match the URL, and an honest `why` and `caveat`. Never add a resource that wasn't opened.
+resources:
+  - id: ijn-90-java-on-ramp
+    title: "Finalizing the Java On-ramp (Inside Java Newscast #90)"
+    creator: "Billy Korando, for the Java team (Inside Java)"
+    url: "https://www.youtube.com/watch?v=4WjXTe_FKO4"
+    kind: video
+    level: supplementary
+    topic: "Why Java 25 lets a first program be just void main(), and the learn.java site"
+    why: "An official Java-team video about the beginner-friendly changes this course relies on. Watch it after lesson 1.1 to hear the reasons from the people who built the feature."
+    youtube_id: "4WjXTe_FKO4"
+    published: "2025-04-24"
+    verified_on: "2026-11-05"
+    caveat: "Recorded before Java 25 shipped, when the feature set was proposed for finalisation. The episode page doesn't state its length, and its show notes describe the topic only briefly."
+
+  - id: jep-512
+    title: "JEP 512: Compact Source Files and Instance Main Methods"
+    creator: "OpenJDK"
+    url: "https://openjdk.org/jeps/512"
+    kind: docs
+    level: supplementary
+    topic: "The specification of the beginner-friendly program form this course uses: void main() without a class, and the automatic imports"
+    why: "The primary source for how a compact source file works. It explains the implicitly declared class, the automatic import of java.base, and how the launcher picks main."
+    verified_on: "2026-11-06"
+    caveat: "A design document written for Java developers, so it is dense. Read the Summary and the Motivation first."
+
+  - id: helsinki-mooc
+    title: "Java Programming (University of Helsinki MOOC)"
+    creator: "University of Helsinki"
+    url: "https://java-programming.mooc.fi/"
+    kind: course
+    level: supplementary
+    topic: "A free, exercise-heavy university course in Java and object-oriented programming"
+    why: "A well-regarded free course with many exercises, useful as extra practice alongside this one."
+    verified_on: "2026-11-06"
+    caveat: "The course says it is a legacy course: it is no longer updated or maintained, and credits can't be earned. It predates Java's compact source files, so it always writes the class and main out in full."
+
+  - id: python-tutor-java
+    title: "Java Visualizer (Python Tutor)"
+    creator: "Philip Guo, Python Tutor"
+    url: "https://pythontutor.com/java.html"
+    kind: tool
+    level: supplementary
+    topic: "Step through a Java program and watch variables, objects and references drawn as boxes and arrows"
+    why: "Seeing a program run one step at a time, with objects and references drawn, is the quickest way to understand variables and aliasing. Paste a lesson example in and step through it."
+    verified_on: "2026-11-06"
+    caveat: "It runs a restricted subset of Java and may not accept the newest language features, such as compact source files; put your code in a class with a main method to use it."
+
+  - id: adoptium-install
+    title: "Installing Eclipse Temurin (Adoptium)"
+    creator: "Eclipse Adoptium"
+    url: "https://adoptium.net/installation/"
+    kind: docs
+    level: introductory
+    topic: "Downloading and installing a free, open-source JDK for Windows, macOS or Linux"
+    why: "A trusted, free JDK with installers for each system. It labels the current long-term-support release (Java 25), which is the version this course uses."
+    verified_on: "2026-11-06"
+    caveat: "One of several good JDK builds. The page recommends a package manager on most systems and shows a Windows winget command; macOS and Linux commands are on the pages it links to, so follow the instructions for your system."
+
+  - id: vscode-java-tutorial
+    title: "Getting Started with Java in VS Code"
+    creator: "Microsoft (Visual Studio Code documentation)"
+    url: "https://code.visualstudio.com/docs/java/java-tutorial"
+    kind: docs
+    level: introductory
+    topic: "Setting up VS Code for Java and running a first program"
+    why: "A free editor route into Java. It explains the extension pack that adds Java support, and how to run and debug with F5."
+    verified_on: "2026-11-06"
+    caveat: "The all-in-one Coding Pack it recommends is only for Windows and macOS; on Linux you install the JDK, VS Code and the extensions separately."
+
+  - id: intellij-free-core
+    title: "IntelliJ IDEA as a unified product (what is free)"
+    creator: "JetBrains"
+    url: "https://www.jetbrains.com/help/idea/2025.3/intellij-idea-single-distribution.html"
+    kind: docs
+    level: introductory
+    topic: "The single IntelliJ IDEA download, and which Java features stay free without a subscription"
+    why: "IntelliJ IDEA is the most widely used Java IDE. This page explains the current download: the core Java and Kotlin features are free, and paid features are unlocked by a subscription."
+    verified_on: "2026-11-06"
+    caveat: "Since 2025.3 there is no separate Community download. You get a 30-day trial of the paid features, after which the free core features keep working."
+
+  - id: w3schools-java-variables
+    title: "Java - Variables (W3Schools)"
+    creator: "w3schools.com"
+    url: "https://www.youtube.com/watch?v=YF59k3gZeb4"
+    kind: video
+    level: supplementary
+    topic: "Declaring a variable, changing it, final, and naming rules, in under five minutes"
+    why: "A short, clear walk-through of exactly what lesson 2.2 teaches: declare, change, final, and naming. Good as a second explanation if the lesson didn't click."
+    youtube_id: "YF59k3gZeb4"
+    published: "2024-10-29"
+    verified_on: "2026-11-06"
+    caveat: "Written in the traditional form (public class Main, System.out.println), not the compact void main() form this course uses. The ideas are identical. It is one of a series, and it covers only declaring, changing, final and naming."
+
+  - id: telusko-java-if-else
+    title: "#12 If else in Java (Telusko)"
+    creator: "Telusko"
+    url: "https://www.youtube.com/watch?v=74Q7POjS7mQ"
+    kind: video
+    level: supplementary
+    topic: "The if / else statement, in VS Code, compiled and run from the terminal"
+    why: "A different teacher's explanation of if and else, with the code compiled using javac and run with java in a terminal, as in lesson 0.3."
+    youtube_id: "74Q7POjS7mQ"
+    published: "2023-01-16"
+    verified_on: "2026-11-06"
+    caveat: "Uses the traditional class form. It covers if / else only; else if is a separate video in the same series."
+
+  - id: brocode-java-while-loops
+    title: "Learn Java while loops in 12 minutes (Bro Code)"
+    creator: "Bro Code"
+    url: "https://www.youtube.com/watch?v=ZjHJrmYknrk"
+    kind: video
+    level: supplementary
+    topic: "while loops, including an input example, an infinite loop and do-while"
+    why: "A live-coded tour of while loops: an input example, an infinite loop, and do-while, per its chapter list. Watch it after lesson 4.1."
+    youtube_id: "ZjHJrmYknrk"
+    published: "2024-12-05"
+    verified_on: "2026-11-06"
+    caveat: "Uses the traditional class form and Scanner for input; this course uses IO.readln."
+
+  - id: brocode-java-for-loops
+    title: "Java for loops are easy (Bro Code)"
+    creator: "Bro Code"
+    url: "https://www.youtube.com/watch?v=vOmZ4JFhRds"
+    kind: video
+    level: supplementary
+    topic: "for loops: initialisation, condition, update, and a small project"
+    why: "Shows the three parts of a counting for loop running in an IDE (for (int i = 0; i < 10; i++) printing 0 to 9), which is the form lesson 4.3 teaches."
+    youtube_id: "vOmZ4JFhRds"
+    published: "2024-12-05"
+    verified_on: "2026-11-06"
+    caveat: "Uses the traditional class form and System.out.println. It doesn't dwell on off-by-one boundaries, which lesson 4.3 does."
+
+  - id: brocode-java-methods
+    title: "METHODS in Java are easy (Bro Code)"
+    creator: "Bro Code"
+    url: "https://www.youtube.com/watch?v=JKecvKiNX2I"
+    kind: video
+    level: supplementary
+    topic: "Defining a method, calling it, arguments, parameters and return values"
+    why: "Builds up from a method with no parameters to ones with parameters and return values, in the order lessons 5.1 and 5.2 use."
+    youtube_id: "JKecvKiNX2I"
+    published: "2024-12-05"
+    verified_on: "2026-11-06"
+    caveat: "Writes static void methods inside a class. In the compact form this course uses you can leave out static. Only the first part of the video was checked; its later examples were not reviewed."
+
+  - id: barnum-java-arrays
+    title: "Arrays (Java Tutorial) (Bill Barnum)"
+    creator: "Bill Barnum"
+    url: "https://www.youtube.com/watch?v=B10TjOAyBnw"
+    kind: video
+    level: supplementary
+    topic: "Creating, initialising, accessing and changing an array, with a stack-and-heap diagram"
+    why: "A three-minute visual explanation, including a diagram of the array variable pointing to an array in memory, which supports the idea of references in lesson 6.2."
+    youtube_id: "B10TjOAyBnw"
+    published: "2023-04-29"
+    verified_on: "2026-11-06"
+    caveat: "Aimed at AP Computer Science A, with the traditional class form. It is short and doesn't cover loops over arrays or index-out-of-bounds in depth."
+
+  - id: behler-read-stack-traces
+    title: "How to read Java stack traces efficiently (Marco Behler)"
+    creator: "Marco Behler"
+    url: "https://www.youtube.com/watch?v=PFSJlZgNJXM"
+    kind: video
+    level: supplementary
+    topic: "Reading a long, nested stack trace by finding the 'Caused by' lines"
+    why: "Shows a real, long stack trace from a larger application and how to find the cause in it. Watch it after lesson 6.4 to see what traces look like outside small exercises."
+    youtube_id: "PFSJlZgNJXM"
+    published: "2019-03-18"
+    verified_on: "2026-11-06"
+    caveat: "The example is a Spring and Hibernate application, so much of it is unfamiliar at this stage and goes beyond the lesson's short traces. Recorded in 2019."
+
+  - id: spanningtree-dijkstra
+    title: "How Dijkstra's Algorithm Works (Spanning Tree)"
+    creator: "Spanning Tree"
+    url: "https://www.youtube.com/watch?v=EFg3u_E6eHU"
+    kind: video
+    level: supplementary
+    topic: "The intuition behind Dijkstra's shortest-path algorithm: what to track, the order to explore nodes, and the algorithm's limitations"
+    why: "A clear animated walk-through of the cheapest-first idea behind lesson 5.3.4, including what the algorithm can't do. Watch it before or after the lesson."
+    youtube_id: "EFg3u_E6eHU"
+    published: "2020-08-15"
+    verified_on: "2026-11-06"
+    caveat: "Uses no code and draws the graph as a picture; the lesson's version with a priority queue isn't shown. About 8.5 minutes."
+
+  - id: dreamsofcode-binary-search
+    title: "Binary Search Animated (Dreams of Code)"
+    creator: "Dreams of Code"
+    url: "https://www.youtube.com/watch?v=eVuPCG5eIr4"
+    kind: video
+    level: supplementary
+    topic: "Binary search animated, and why it handles millions of items so fast, ending on the logarithmic step count"
+    why: "An animation of halving the search range, which gives the intuition for the 'about 20 steps for a million items' in lesson 5.3.2."
+    youtube_id: "eVuPCG5eIr4"
+    published: "2024-05-11"
+    verified_on: "2026-11-06"
+    caveat: "It covers plain binary search only, not finding the first of several equal values, and doesn't discuss the off-by-one mistakes the lesson spends time on."
+
+  - id: hackerrank-memoization
+    title: "Algorithms: Memoization and Dynamic Programming (HackerRank)"
+    creator: "HackerRank"
+    url: "https://www.youtube.com/watch?v=P8Xa2BitN3I"
+    kind: video
+    level: supplementary
+    topic: "Why plain recursive Fibonacci repeats work, and how a memo fixes it, with Java code and the call tree"
+    why: "Shows exactly the example lesson 5.3.5 starts from: the recursive Fibonacci call tree, the memoised version in Java, and the memory it uses."
+    youtube_id: "P8Xa2BitN3I"
+    published: "2016-09-27"
+    verified_on: "2026-11-06"
+    caveat: "Recorded in 2016. It covers memoisation with Fibonacci only; the coin-change and longest-common-subsequence tables are not in it."
+
+  - id: java-pattern-matching-17
+    title: "Pattern Matching in Java 17 and Beyond"
+    creator: "Java (official Java YouTube channel)"
+    url: "https://www.youtube.com/watch?v=UlFFKkq6fyU"
+    kind: video
+    level: supplementary
+    topic: "Sealed classes and pattern matching for switch"
+    why: "An official Java-channel talk that walks through type patterns, pattern matching in switch (from 10:22) and sealed classes (from 17:52), the features lesson 2.4.2 teaches."
+    youtube_id: "UlFFKkq6fyU"
+    published: "2021-09-23"
+    verified_on: "2026-11-07"
+    caveat: "Recorded in September 2021 when pattern matching for switch and deconstruction patterns were still preview features, so syntax details differ from the final Java 21 and 25 forms. It is a conference talk of 27 minutes and moves quickly. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 27 minutes."
+
+  - id: barnum-inheritance-polymorphism
+    title: "Inheritance and Polymorphism (Java Tutorial)"
+    creator: "Bill Barnum"
+    url: "https://www.youtube.com/watch?v=gc216ndOrb4"
+    kind: video
+    level: supplementary
+    topic: "Inheriting methods, polymorphism and calling super constructors"
+    why: "A single clear tutorial with chapters for inheriting methods, accessing private fields, polymorphism, constructors in subclasses and passing data to a superclass constructor: the content of lessons 2.3.1 and 2.3.2."
+    youtube_id: "gc216ndOrb4"
+    published: "2024-05-26"
+    verified_on: "2026-11-07"
+    caveat: "I did not check whether it writes a full `public class` and `main` (most tutorials do) rather than this course's `void main()`. It teaches inheritance first; lesson 2.3.3 argues for composition over inheritance, which it does not cover. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 31 minutes."
+
+  - id: coding-with-john-custom-exceptions
+    title: "Java Custom Exceptions Tutorial - It's Way Easier Than You Think"
+    creator: "Coding with John"
+    url: "https://www.youtube.com/watch?v=OIozDnGYqIU"
+    kind: video
+    level: supplementary
+    topic: "Writing your own exception classes"
+    why: "A short, direct walkthrough of creating custom exceptions in Java, the first half of lesson 2.5.2."
+    youtube_id: "OIozDnGYqIU"
+    published: "2022-07-20"
+    verified_on: "2026-11-07"
+    caveat: "No chapter list. It has a sponsor segment, and I did not check whether it covers the checked-versus-unchecked choice that lesson 2.5.2 stresses. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 14 minutes."
+
+  - id: smidstrup-java-collections
+    title: "Java Collections: List, Set, Map, Stack and Queue explained"
+    creator: "Daniel Smidstrup"
+    url: "https://www.youtube.com/watch?v=pDTNUS8mgc0"
+    kind: video
+    level: supplementary
+    topic: "List, Set, Map, Stack and Queue"
+    why: "A 17-minute overview with a chapter for each of List (0:22), Set (5:50), Map (9:05), Stack and Queue, giving the picture before lessons 3.1.1 and 3.1.2."
+    youtube_id: "pDTNUS8mgc0"
+    published: "2021-09-20"
+    verified_on: "2026-11-07"
+    caveat: "From 2021. It lists Stack as a collection; lesson 5.5 and the Java documentation prefer `Deque` for stack-like use, which this overview does not cover. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 17 minutes."
+
+  - id: dev-portal-java-maps
+    title: "Java Maps Explained! HashMap, LinkedHashMap & TreeMap | Java Collections Framework Tutorial"
+    creator: "Dev Portal"
+    url: "https://www.youtube.com/watch?v=3ZhbqpkFjJo"
+    kind: video
+    level: supplementary
+    topic: "HashMap, LinkedHashMap and TreeMap"
+    why: "A 7-minute tour with a chapter for each of HashMap, LinkedHashMap and TreeMap and one on choosing between them: the core of lesson 3.1.2."
+    youtube_id: "3ZhbqpkFjJo"
+    published: "2024-11-07"
+    verified_on: "2026-11-07"
+    caveat: "A short overview with small examples; it does not discuss `equals` and `hashCode` for keys, which lesson 3.1.2 covers. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 7 minutes."
+
+  - id: pmt-java8-streams
+    title: "Java 8 STREAMS Tutorial"
+    creator: "Programming and Math Tutorials"
+    url: "https://www.youtube.com/watch?v=t1-YZ6bF-g0"
+    kind: video
+    level: supplementary
+    topic: "filter, map, sorted, reduce and collect on streams"
+    why: "A chaptered tutorial of worked examples (filter, map, sort, reduce, collect, and streams from a text file) that matches lesson 3.3.2."
+    youtube_id: "t1-YZ6bF-g0"
+    published: "2018-01-14"
+    verified_on: "2026-11-07"
+    caveat: "Recorded in 2018 for Java 8. Later additions such as `Stream.toList()` (Java 16) are not in it, and it predates this course's `void main()` style. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 18 minutes."
+
+  - id: bro-code-java-dates
+    title: "Learn DATES & TIMES with Java in 8 minutes! 📆"
+    creator: "Bro Code"
+    url: "https://www.youtube.com/watch?v=F2bZ1fkAQx0"
+    kind: video
+    level: supplementary
+    topic: "LocalDate, LocalTime, LocalDateTime and Instant"
+    why: "An 8-minute tour of the `java.time` classes lesson 3.5.1 builds on."
+    youtube_id: "F2bZ1fkAQx0"
+    published: "2024-12-17"
+    verified_on: "2026-11-07"
+    caveat: "A quick overview: I did not check how much it says about time zones, which lesson 3.5.1 treats in depth. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 9 minutes."
+
+  - id: net-ninja-git-merge
+    title: "Git & GitHub Tutorial for Beginners #9 - Merging Branches (& conflicts)"
+    creator: "Net Ninja"
+    url: "https://www.youtube.com/watch?v=XX-Kct0PfFc"
+    kind: video
+    level: supplementary
+    topic: "Merging branches and resolving a conflict"
+    why: "A short demonstration of merging a branch and of what to do when Git reports a conflict, the topic of lesson 4.1.2."
+    youtube_id: "XX-Kct0PfFc"
+    published: "2017-06-15"
+    verified_on: "2026-11-07"
+    caveat: "From 2017. Its description speaks of merging into the `master` branch, a name many projects have since replaced with `main`. It is part of a series; the earlier videos cover branching. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 8 minutes."
+
+  - id: panyukov-maven-10-minutes
+    title: "Maven in 10 minutes | pom.xml | dependencies | scopes"
+    creator: "Nikolay Panyukov"
+    url: "https://www.youtube.com/watch?v=bBqxC43ASsM"
+    kind: video
+    level: supplementary
+    topic: "pom.xml, dependencies and scopes"
+    why: "A short introduction to Maven, the pom.xml, dependencies and scopes, which lessons 4.2.1 and 4.2.2 cover."
+    youtube_id: "bBqxC43ASsM"
+    published: "2021-08-06"
+    verified_on: "2026-11-07"
+    caveat: "From 2021, with no chapter list. I did not check the Maven or Java version it uses; the lessons' captured output is from Maven 3.10 and Java 25. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 11 minutes."
+
+  - id: spring-guru-junit5-maven
+    title: "Running JUnit 5 Tests with Maven"
+    creator: "Spring Framework Guru"
+    url: "https://www.youtube.com/watch?v=3IORu_Q0v0E"
+    kind: video
+    level: supplementary
+    topic: "Running JUnit 5 tests with Maven"
+    why: "A five-minute demonstration of running JUnit 5 tests from Maven, the setup behind lesson 4.3.1."
+    youtube_id: "3IORu_Q0v0E"
+    published: "2019-12-10"
+    verified_on: "2026-11-07"
+    caveat: "From 2019 and an excerpt from a paid course that it promotes. It shows running tests, not how to design them; lesson 4.3.2 covers that. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 5 minutes."
+
+  - id: joey-blue-sql-joins
+    title: "SQL Joins Tutorial for Beginners - Inner Join, Left Join, Right Join, Full Outer Join"
+    creator: "Joey Blue"
+    url: "https://www.youtube.com/watch?v=2HVMiPPuPIM"
+    kind: video
+    level: supplementary
+    topic: "INNER, LEFT, RIGHT and FULL OUTER JOIN"
+    why: "An 18-minute tutorial with a chapter per join type, plus chapters on filtering in WHERE versus in the ON clause of an outer join, which lesson 6.1.3 relies on."
+    youtube_id: "2HVMiPPuPIM"
+    published: "2017-09-27"
+    verified_on: "2026-11-07"
+    caveat: "From 2017. I did not check which database it demonstrates; the course uses H2 and PostgreSQL. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 18 minutes."
+
+  - id: baraa-sql-joins
+    title: "SQL Joins Basics (Visually Explained) | INNER, LEFT, RIGHT, FULL | #SQL Course 8"
+    creator: "Data with Baraa"
+    url: "https://www.youtube.com/watch?v=aY7z4HcHm5M"
+    kind: video
+    level: supplementary
+    topic: "Visual explanation of SQL joins"
+    why: "A longer, visual treatment with chapters for when to use joins, INNER JOIN, LEFT JOIN, RIGHT JOIN and FULL JOIN, for a second explanation of lesson 6.1.3."
+    youtube_id: "aY7z4HcHm5M"
+    published: "2025-03-20"
+    verified_on: "2026-11-07"
+    caveat: "40 minutes. The creator promotes a paid course. I did not check which database it uses, and it does not cover the aggregates and subqueries of the second half of lesson 6.1.3. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 40 minutes."
+
+  - id: nasser-acid-transactions
+    title: "Relational Database ACID Transactions (Explained by Example)"
+    creator: "Hussein Nasser"
+    url: "https://www.youtube.com/watch?v=pomxJOFVcQs"
+    kind: video
+    level: supplementary
+    topic: "ACID transactions and isolation levels, by example"
+    why: "A chaptered explanation of what a transaction is, atomicity, isolation and the read phenomena (dirty, non-repeatable and phantom reads) with a demonstration, which supports lessons 6.2.2 and 6.2.3."
+    youtube_id: "pomxJOFVcQs"
+    published: "2019-08-30"
+    verified_on: "2026-11-07"
+    caveat: "From 2019 and 43 minutes. It uses its own database demo, not H2; the exercises in this course use H2. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 43 minutes."
+
+  - id: janssen-join-fetch
+    title: "JOIN FETCH with Hibernate - The end of n+1 select issues"
+    creator: "Thorben Janssen"
+    url: "https://www.youtube.com/watch?v=QAaTLLYdHJ0"
+    kind: video
+    level: supplementary
+    topic: "JOIN FETCH against N+1 selects in Hibernate"
+    why: "A six-minute explanation from a well-known Hibernate trainer of why lazy fetching is not enough and how a join fetch loads the association, the fix named in lesson 6.4.2."
+    youtube_id: "QAaTLLYdHJ0"
+    published: "2024-10-17"
+    verified_on: "2026-11-07"
+    caveat: "About Hibernate specifically; this course's N+1 exercises are plain-Java models. I did not check which Hibernate version it shows. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 6 minutes."
+
+  - id: traversy-http-crash-course
+    title: "HTTP Crash Course & Exploration"
+    creator: "Traversy Media"
+    url: "https://www.youtube.com/watch?v=iYM2zFP3Zn0"
+    kind: video
+    level: supplementary
+    topic: "The request/response cycle, status codes, headers and body"
+    why: "A 38-minute introduction to HTTP that shows real requests; it matches lesson 7.1.1."
+    youtube_id: "iYM2zFP3Zn0"
+    published: "2019-05-03"
+    verified_on: "2026-11-07"
+    caveat: "From 2019 and demonstrated with Postman and a JavaScript server (Express), not Java. No chapter list. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 38 minutes."
+
+  - id: codist-http-status-codes
+    title: "Every HTTP Status Code Explained in 8 Minutes!"
+    creator: "Codist"
+    url: "https://www.youtube.com/watch?v=nb0xQUcxVj4"
+    kind: video
+    level: supplementary
+    topic: "The everyday HTTP status codes"
+    why: "An 8-minute guide with a chapter for each common status code (200, 201, 204, 400, 401, 403, 404 and more), a companion to lesson 7.1.3."
+    youtube_id: "nb0xQUcxVj4"
+    published: "2025-10-12"
+    verified_on: "2026-11-07"
+    caveat: "It is a quick catalogue and does not cover RFC 9457 problem details, which lesson 7.1.3 teaches. Check the 405 and 409 coverage against RFC 9110 before relying on it. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 8 minutes."
+
+  - id: simpson-spring-di
+    title: "Spring Tutorial - 2 - Dependency Injection & Inversion of Control without Spring"
+    creator: "Kody Simpson"
+    url: "https://www.youtube.com/watch?v=kzZnWVm0h98"
+    kind: video
+    level: supplementary
+    topic: "Dependency injection and inversion of control, starting without Spring"
+    why: "A chaptered video that first shows manual dependency injection without Spring, then tight and loose coupling and constructor injection, the same order as lesson 7.2.1."
+    youtube_id: "kzZnWVm0h98"
+    published: "2021-06-23"
+    verified_on: "2026-11-07"
+    caveat: "From 2021, for an older Spring Boot; the Spring part of it uses the framework as it was then. It is part of a series. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 26 minutes."
+
+  - id: mistry-controlleradvice
+    title: "Custom Error Handling with @ControllerAdvice and @ExceptionHandler - Spring Tutorial"
+    creator: "Aneesh Mistry"
+    url: "https://www.youtube.com/watch?v=qEDf-5F56XU"
+    kind: video
+    level: supplementary
+    topic: "@ControllerAdvice and @ExceptionHandler"
+    why: "A 13-minute chaptered walk through customising error responses with `ResponseEntityExceptionHandler`, `@ControllerAdvice` and `@ExceptionHandler`, which lesson 7.3.2 reads in this platform's own `ApiErrors`."
+    youtube_id: "qEDf-5F56XU"
+    published: "2022-03-04"
+    verified_on: "2026-11-07"
+    caveat: "Recorded in March 2022, before Spring Boot 3 and 4. The annotations are used the same way, but package names such as `javax.*` became `jakarta.*` in Spring Boot 3. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 13 minutes."
+
+  - id: aikido-broken-access-control
+    title: "Broken Access Control Explained: OWASP Top 10 A01 Explained with Examples"
+    creator: "Aikido Security"
+    url: "https://www.youtube.com/watch?v=vUFVxoV5y_I"
+    kind: video
+    level: supplementary
+    topic: "OWASP A01: Broken Access Control"
+    why: "A 7-minute explanation of why broken access control tops the OWASP list, with common causes, a real breach, and prevention (chapters), for lessons 8.1.1 and 8.2.3."
+    youtube_id: "vUFVxoV5y_I"
+    published: "2024-09-19"
+    verified_on: "2026-11-07"
+    caveat: "From a security-tool vendor, with a final chapter on its products. Recorded in 2024, so it refers to the 2021 edition of the Top 10; broken access control is still A01 in the 2025 edition the lessons use. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 7 minutes."
+
+  - id: learnthatstack-passwords
+    title: "You're Storing Passwords Wrong. Here's The Fix"
+    creator: "LearnThatStack"
+    url: "https://www.youtube.com/watch?v=mQHiil7R2Wc"
+    kind: video
+    level: supplementary
+    topic: "Hashing against encryption, salting, bcrypt and Argon2"
+    why: "A 9-minute video with chapters on hashing versus encryption, how verification works, why MD5 and SHA-1 are broken, the speed problem, salting and bcrypt/Argon2: lesson 8.1.2 in video form."
+    youtube_id: "mQHiil7R2Wc"
+    published: "2025-12-12"
+    verified_on: "2026-11-07"
+    caveat: "Not Java-specific. It recommends bcrypt and Argon2; the exercises use PBKDF2 because it is in the JDK. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 10 minutes."
+
+  - id: fireship-session-vs-token
+    title: "Session vs Token Authentication in 100 Seconds"
+    creator: "Fireship"
+    url: "https://www.youtube.com/watch?v=UBUNrFtufWo"
+    kind: video
+    level: supplementary
+    topic: "Session against token authentication in 100 seconds"
+    why: "A 2-minute summary of the two approaches, a quick primer before lesson 8.2.2."
+    youtube_id: "UBUNrFtufWo"
+    published: "2020-10-29"
+    verified_on: "2026-11-07"
+    caveat: "Very short and from 2020, so it states trade-offs without evidence. It promotes a paid course. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 2 minutes."
+
+  - id: coderone-jwt-cookies
+    title: "Stop using JSON Web Tokens. Use Cookies & Server Sessions instead"
+    creator: "CoderOne"
+    url: "https://www.youtube.com/watch?v=FVmxtmzyrSw"
+    kind: video
+    level: supplementary
+    topic: "Why not to keep JWTs in local storage"
+    why: "A chaptered argument for HttpOnly cookies and server sessions, including stealing a token from local storage, which supports lesson 8.2.2's recommendation."
+    youtube_id: "FVmxtmzyrSw"
+    published: "2022-05-15"
+    verified_on: "2026-11-07"
+    caveat: "From 2022 and an opinionated take with a JavaScript demo, not Java. Read the lesson's own reasoning alongside it. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 24 minutes."
+
+  - id: jenkov-deadlock
+    title: "Deadlock in Java"
+    creator: "Jakob Jenkov"
+    url: "https://www.youtube.com/watch?v=3cgZbACBpxI"
+    kind: video
+    level: supplementary
+    topic: "Deadlock in Java: examples and the lock-ordering fix"
+    why: "A chaptered video with a deadlock built from two locks, one from two synchronized blocks, the fix by lock ordering (7:57) and the four conditions for deadlock (12:50): lesson 9.1.5."
+    youtube_id: "3cgZbACBpxI"
+    published: "2021-02-10"
+    verified_on: "2026-11-07"
+    caveat: "From 2021, by a respected Java concurrency author. Plain Java; the course's own demonstration and real thread dump are in the lesson. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 18 minutes."
+
+  - id: programming-tutorials-race-conditions
+    title: "Race Conditions in Java: Why Your Code Fails Randomly"
+    creator: "Programming Tutorials"
+    url: "https://www.youtube.com/watch?v=14DJh2Lu_sU"
+    kind: video
+    level: supplementary
+    topic: "Race conditions and how to prevent them"
+    why: "A 12-minute explanation with code of a race condition and how synchronized, ReentrantLock and AtomicInteger prevent it, lessons 9.1.2 and 9.1.3."
+    youtube_id: "14DJh2Lu_sU"
+    published: "2025-04-26"
+    verified_on: "2026-11-07"
+    caveat: "No chapter list, and a hands-on demo you should run yourself. The lessons make the race deterministic with a latch, which this video does not. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 12 minutes."
+
+  - id: intellij-virtual-threads-java21
+    title: "Virtual Threads and Structured Concurrency in Java 21 With Loom"
+    creator: "IntelliJ IDEA, a JetBrains IDE"
+    url: "https://www.youtube.com/watch?v=QxxG66eQoTc"
+    kind: video
+    level: supplementary
+    topic: "Virtual threads and structured concurrency"
+    why: "A long, official-IDE-channel session on virtual threads, for lesson 9.2.3."
+    youtube_id: "QxxG66eQoTc"
+    published: "2023-05-25"
+    verified_on: "2026-11-07"
+    caveat: "75 minutes and without chapters, so treat it as a deep dive. Recorded in 2023 for Java 21: structured concurrency is still a preview in Java 25, and I did not check whether it covers scoped values (final in Java 25). Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 75 minutes."
+
+  - id: java-g1-reintroduction
+    title: "A (Re)Introduction to the G1 Garbage Collector by Paul Su"
+    creator: "Java (official Java YouTube channel)"
+    url: "https://www.youtube.com/watch?v=X8w3uqN-X98"
+    kind: video
+    level: supplementary
+    topic: "A (Re)Introduction to the G1 garbage collector"
+    why: "A 4-minute official Java-channel introduction to G1, the default collector the lesson's GC log shows."
+    youtube_id: "X8w3uqN-X98"
+    published: "2017-09-26"
+    verified_on: "2026-11-07"
+    caveat: "From 2017 and framed around JDK 9; no chapters. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 4 minutes."
+
+  - id: devoxx-gc-since-jdk8
+    title: "Garbage Collection in Java: The progress since JDK 8  by Stefan Johansson"
+    creator: "Devoxx"
+    url: "https://www.youtube.com/watch?v=5wkzEy_BXdA"
+    kind: video
+    level: supplementary
+    topic: "Garbage collection in Java: progress since JDK 8"
+    why: "A 50-minute conference session on how the collectors have developed since JDK 8, for readers who want depth after lesson 9.3.1."
+    youtube_id: "5wkzEy_BXdA"
+    published: "2024-10-10"
+    verified_on: "2026-11-07"
+    caveat: "Advanced and without chapters; I did not check how much of it is about G1 specifically. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 50 minutes."
+
+  - id: system-design-lab-saga
+    title: "Saga Pattern Explained: Distributed Transactions in Microservices"
+    creator: "System Design Lab"
+    url: "https://www.youtube.com/watch?v=--O9JUsvtEg"
+    kind: video
+    level: supplementary
+    topic: "The saga pattern, choreography and orchestration, and the outbox"
+    why: "A chaptered 23-minute guide covering why two-phase commit fails, what a saga is, choreography against orchestration, undoing a failure, and the outbox pattern (5:23): lesson 10.2.3."
+    youtube_id: "--O9JUsvtEg"
+    published: "2026-07-20"
+    verified_on: "2026-11-07"
+    caveat: "From 2026 by a channel focused on system design. Not Java-specific, and its terminology may differ slightly from the cited pattern description. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 23 minutes."
+
+  - id: system-design-lab-circuit-breaker
+    title: "Circuit Breaker Pattern Explained: Timeouts, Retries and Fallbacks"
+    creator: "System Design Lab"
+    url: "https://www.youtube.com/watch?v=rvKKj7JU92g"
+    kind: video
+    level: supplementary
+    topic: "Timeouts, retries with backoff and jitter, and circuit breaker states"
+    why: "A chaptered 36-minute crash course covering thread-pool exhaustion, timeouts, exponential backoff with jitter, the breaker states and fallbacks: lessons 10.2.1 and 10.2.4."
+    youtube_id: "rvKKj7JU92g"
+    published: "2026-09-07"
+    verified_on: "2026-11-07"
+    caveat: "Long. It discusses Resilience4j's default thresholds, which this course does not use. Not checked against Resilience4j's current documentation. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 36 minutes."
+
+  - id: ifte-dockerize-spring-boot
+    title: "Dockerize Spring Boot Application (Multi-Stage Build)"
+    creator: "Learn With Ifte"
+    url: "https://www.youtube.com/watch?v=-UTkMgqCmnQ"
+    kind: video
+    level: supplementary
+    topic: "A multi-stage Dockerfile for a Spring Boot application"
+    why: "A chaptered 22-minute build of a three-stage Dockerfile (dependencies, build, run) with environment variables and a Docker networking pitfall (why `localhost` fails), which supports lessons 11.1.2 and 11.1.3."
+    youtube_id: "-UTkMgqCmnQ"
+    published: "2025-12-31"
+    verified_on: "2026-11-07"
+    caveat: "From December 2025 and uses MySQL, not PostgreSQL. I did not check its base images or Java version. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 22 minutes."
+
+  - id: gule-docker-init-java
+    title: "Docker init support for Java"
+    creator: "Nilesh Gule"
+    url: "https://www.youtube.com/watch?v=7yvdr7XIK5o"
+    kind: video
+    level: supplementary
+    topic: "docker init for Java, and Compose"
+    why: "A chaptered 14-minute demonstration of a hand-written multi-stage Dockerfile, then `docker init` generating a Dockerfile and a Compose file and running them with Docker Compose, for lessons 11.1.2 and 11.1.3."
+    youtube_id: "7yvdr7XIK5o"
+    published: "2024-02-08"
+    verified_on: "2026-11-07"
+    caveat: "From February 2024. I did not check the Spring Boot or Java version it uses. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 14 minutes."
+
+  - id: harness-error-budgets
+    title: "Error Budgets Explained: Balancing Reliability and Feature Velocity"
+    creator: "Harness"
+    url: "https://www.youtube.com/watch?v=LkuunG_GBfs"
+    kind: video
+    level: supplementary
+    topic: "What an error budget is and how teams use it"
+    why: "A 4-minute chaptered explanation of error budgets and how they relate to SLOs, the idea behind lesson 12.1.2."
+    youtube_id: "LkuunG_GBfs"
+    published: "2025-03-10"
+    verified_on: "2026-11-07"
+    caveat: "From a vendor (Harness) that sells delivery tooling; the video is a concept overview. Short, so it does not give the formula the lesson uses. Checked by the AI author from the video's YouTube page (title, channel, length, date, embeddable, chapter list); not watched in full. 4 minutes."

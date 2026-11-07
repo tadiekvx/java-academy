@@ -1,0 +1,32 @@
+id: j1-l6.3-explain-choice
+type: explain
+title: "Array or ArrayList?"
+lesson: j1-l6.3
+role: ladder
+assesses: [o3]
+concepts: [J1.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A program collects the words a player types in a word game, until they type `done`. Would you store them in an array or an ArrayList? Explain why.
+rubric:
+  criteria: |
+    A full answer chooses an ArrayList, because you don't know in advance how many words there'll be and an ArrayList grows as you add, while an array has a fixed size that must be chosen when it's created.
+  levels:
+    - score: 2
+      descriptor: "Chooses an ArrayList and explains that the number of words isn't known in advance, a list can grow while an array's size is fixed when created."
+      samples:
+        - "An ArrayList, because I don't know how many words the player will type. It grows as I add, but an array has a fixed size set when it's created."
+        - "ArrayList. The array would need a size up front, and I can't know how many words there'll be."
+    - score: 1
+      descriptor: "Chooses an ArrayList but the reason is vague or missing."
+      samples:
+        - "ArrayList because it's easier."
+        - "ArrayList is better for words."
+    - score: 0
+      descriptor: "Chooses an array, or gives an incorrect reason."
+      samples:
+        - "An array, because arrays are faster."
+        - "Either works the same way."
+ai_assisted: true

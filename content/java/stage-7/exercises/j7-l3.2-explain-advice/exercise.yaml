@@ -1,0 +1,52 @@
+id: j7-l3.2-explain-advice
+type: explain
+title: "Critique an error handler"
+lesson: j7-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J7.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a shortened copy of the real error handler of this platform.
+
+  ```java
+  @RestControllerAdvice
+  class ApiErrors {
+
+      @ExceptionHandler(IllegalArgumentException.class)
+      @ResponseStatus(HttpStatus.BAD_REQUEST)
+      Map<String, String> badRequest(IllegalArgumentException e) {
+          return Map.of("error", e.getMessage());
+      }
+
+      @ExceptionHandler(AccountService.EmailTakenException.class)
+      @ResponseStatus(HttpStatus.CONFLICT)
+      Map<String, String> emailTaken(AccountService.EmailTakenException e) {
+          return Map.of("error", e.getMessage());
+      }
+  }
+  ```
+
+  Explain what `@RestControllerAdvice` and `@ExceptionHandler` do for the controllers. Then compare the response body with RFC 9457 problem details, and name one risk of putting `e.getMessage()` in the body.
+rubric:
+  criteria: |
+    A @RestControllerAdvice class applies to all controllers, and each @ExceptionHandler method turns one exception type into a response, with @ResponseStatus setting the status, so controllers can just throw. The body here is {"error": message}, which is not the standard application/problem+json shape (type, title, status, detail). A risk of e.getMessage() is that an exception message written for developers can leak internal details, or be unhelpful to the client.
+  levels:
+    - score: 2
+      descriptor: "The answer explains the advice and handlers, compares the body with RFC 9457 and names the message risk."
+      samples:
+        - "The advice class is shared by all controllers: when one throws IllegalArgumentException the handler turns it into a 400 with a body. The body is {\"error\": ...} rather than a problem detail with type, title, status and detail. Putting e.getMessage() in the body can leak internals or confuse the client, because the message was written for developers."
+        - "@RestControllerAdvice makes the handlers apply everywhere and @ExceptionHandler picks the exception; @ResponseStatus sets 400 or 409. It is a custom error shape, not application/problem+json with the standard members. The risk is that messages from deeper code may expose implementation details."
+    - score: 1
+      descriptor: "The answer explains the handlers without the comparison or the risk."
+      samples:
+        - "It maps exceptions to HTTP statuses for all controllers."
+        - "When a controller throws an exception it returns a 400 or a 409."
+    - score: 0
+      descriptor: "The answer misunderstands where the handler applies."
+      samples:
+        - "It only works for one controller method."
+        - "The handler is called by the client to report errors."
+ai_assisted: true

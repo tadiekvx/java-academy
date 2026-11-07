@@ -1,0 +1,47 @@
+id: j10-l1.1-explain-dependencies
+type: explain
+title: "Reading this platform's structure"
+lesson: j10-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J10.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This table was produced by a script that reads every Java file of this platform's backend and lists, for each top-level package, the other packages its imports mention.
+
+  ```text
+  $ (script) for each package under academy/, list the other academy packages its imports mention
+  api        -> assessment, content, learner, mentor, progress
+  assessment -> content, execution
+  content    -> (nothing)
+  execution  -> (nothing)
+  learner    -> (nothing)
+  mentor     -> assessment, content, progress
+  progress   -> assessment, content
+  validation -> assessment, content
+  packages on a dependency cycle: none
+  ```
+
+  Answer: (1) Which package depends on the most others, and what is its job? (2) Which packages depend on nothing else, and why is that a good property? (3) The last line says no package is on a dependency cycle: what would a cycle between `content` and `assessment` cost? (4) Why is it sensible that `api` depends on `assessment` but `assessment` does not depend on `api`?
+rubric:
+  criteria: |
+    (1) api depends on five packages (assessment, content, learner, mentor, progress): it is the outer layer that turns HTTP requests into calls to the others. (2) content, execution and learner depend on nothing else in the application, so they can be understood, tested and changed on their own, and many packages build on them. (3) A cycle would make the two packages impossible to understand or test separately and would make a change in one risk breaking the other; neither could be extracted without the other. (4) Dependencies point inwards, from the HTTP layer to the logic it uses. The logic should not know about HTTP, so it can be reused (by the validator, for example) and tested without a web server.
+  levels:
+    - score: 2
+      descriptor: "The answer reads the table correctly and links each point to coupling, testing and dependency direction."
+      samples:
+        - "(1) api, with five dependencies; it is the entry layer that maps HTTP to the other packages. (2) content, execution and learner depend on no other package, which keeps them independent and easy to test. (3) A content-assessment cycle would couple them so neither could be changed or tested alone. (4) api sits on top and calls down; the logic must not depend on the web layer, so it can be tested and reused without it."
+        - "api is the biggest consumer (assessment, content, learner, mentor, progress). content, execution, learner are leaves, so changes there are safe from upward surprises but affect everyone above. A cycle would tangle two packages into one unit. Dependency direction goes from api to the logic, never back."
+    - score: 1
+      descriptor: "The answer reads parts of the table without the reasons."
+      samples:
+        - "api depends on the most packages and content depends on none."
+        - "There are no cycles, which is good."
+    - score: 0
+      descriptor: "The answer misreads the table or sees no value in direction."
+      samples:
+        - "assessment depends on api because they work together."
+        - "Direction does not matter as long as the code compiles."
+ai_assisted: true

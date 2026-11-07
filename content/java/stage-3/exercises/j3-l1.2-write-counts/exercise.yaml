@@ -1,0 +1,31 @@
+id: j3-l1.2-write-counts
+type: write
+title: "Word counts"
+lesson: j3-l1.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J3.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `counts(String text)`. Split the text into words (separated by spaces, ignoring upper/lower case), count each word, and return the counts as `word=count` pairs **sorted alphabetically** and joined with commas, e.g. `be=2,not=1,or=1,to=2` for `"To be or not to be"`. An empty text gives an empty string.
+entry:
+  methods:
+    - {name: counts, params: [{name: text, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: counts, args: ["To be or not to be"], expect: "be=2,not=1,or=1,to=2"}
+    - {method: counts, args: [""], expect: ""}
+    - {method: counts, args: ["a a a"], expect: "a=3"}
+  hidden:
+    - {method: counts, args: ["pear apple pear fig"], expect: "apple=1,fig=1,pear=2"}
+    - {method: counts, args: ["Hello hello HELLO"], expect: "hello=3"}
+    - {method: counts, args: ["zebra yak"], expect: "yak=1,zebra=1"}
+    - {method: counts, args: ["one"], expect: "one=1"}
+    - {method: counts, args: ["b a c b a b"], expect: "a=2,b=3,c=1"}
+    - {method: counts, args: ["  spaced   out  "], expect: "out=1,spaced=1"}
+hints:
+  h1: "Use a TreeMap so the keys come out sorted, and merge(word, 1, Integer::sum) to count."
+  h2: "counts.merge(w, 1, Integer::sum); then loop over entrySet()."
+ai_assisted: true

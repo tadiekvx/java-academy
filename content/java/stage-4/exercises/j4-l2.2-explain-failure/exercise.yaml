@@ -1,0 +1,41 @@
+id: j4-l2.2-explain-failure
+type: explain
+title: "Read the failure"
+lesson: j4-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J4.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Maven prints:
+
+  ```
+  [ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0 ... <<< FAILURE! -- in com.example.shop.PriceTest
+  [ERROR] com.example.shop.PriceTest.addsTwentyPercent ... <<< FAILURE!
+  org.opentest4j.AssertionFailedError: expected: <1200> but was: <1250>
+  	at com.example.shop.PriceTest.addsTwentyPercent(PriceTest.java:12)
+  ```
+
+  and the test is `assertEquals(1200, Price.withTax(1000));`. (a) How many tests ran and how many failed? Which one failed, and where? (b) What was the expected value, and what did the code return? Which argument of `assertEquals` is which? (c) Give two possible causes and say how you'd decide which is right.
+rubric:
+  criteria: |
+    A full answer says four tests ran and one failed, addsTwentyPercent at PriceTest.java line 12; the expected value was 1200 and the code returned 1250, and in assertEquals the first argument is the expected value and the second the actual; and the cause is either the code (the tax rate changed to 25%) or the test (still expecting 20%), decided by going back to the requirement.
+  levels:
+    - score: 2
+      descriptor: "Says 4 ran and 1 failed (addsTwentyPercent, PriceTest.java:12), expected 1200 and actual 1250 with expected as the first assertEquals argument, and names the code or the test as the possible fault decided by checking the requirement."
+      samples:
+        - "Four tests ran and one failed: addsTwentyPercent, at line 12 of PriceTest.java. It expected 1200 but the code returned 1250; in assertEquals the first argument is the expected value and the second is the actual value. Either the code is wrong (maybe the tax rate was changed to 25%) or the test is out of date; I'd go back to the requirement to decide which is right."
+        - "4 tests, 1 failure: addsTwentyPercent (PriceTest.java:12). Expected 1200, got 1250 (expected comes first). The bug might be in Price (rate now 25%) or the test might be stale; check what the rule should be."
+    - score: 1
+      descriptor: "Answers some parts, for example which test failed and the values but not the causes or argument order."
+      samples:
+        - "addsTwentyPercent failed."
+        - "It expected 1200 and got 1250."
+    - score: 0
+      descriptor: "Incorrect, for example reads the values the wrong way round, or says the build tool is broken."
+      samples:
+        - "Maven is broken."
+        - "It expected 1250 and got 1200."
+ai_assisted: true

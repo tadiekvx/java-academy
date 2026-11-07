@@ -1,0 +1,31 @@
+id: j6-l1.2-write-filter
+type: write
+title: "Finding customers by city"
+lesson: j6-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J6.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write the query that returns the names of the customers in one city, in alphabetical order. If the city is null, return the customers whose city is null.
+entry:
+  methods:
+    - {name: customersIn, params: [{name: city, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "two customers", method: customersIn, args: ["Cape Town"], expect: ["Ada Lovelace", "Edsger Dijkstra"]}
+    - {name: "one customer", method: customersIn, args: ["Durban"], expect: ["Barbara Liskov"]}
+    - {name: "customers without a city", method: customersIn, args: [null], expect: ["Alan Turing"]}
+    - {name: "no customers", method: customersIn, args: [""], expect: []}
+  hidden:
+    - {name: "one customer", method: customersIn, args: ["Johannesburg"], expect: ["Grace Hopper"]}
+    - {name: "no customers", method: customersIn, args: ["Nowhere"], expect: []}
+    - {name: "customers without a city", method: customersIn, args: [null], expect: ["Alan Turing"]}
+    - {name: "the comparison is case sensitive", method: customersIn, args: ["cape town"], expect: []}
+    - {name: "two customers", method: customersIn, args: ["Cape Town"], expect: ["Ada Lovelace", "Edsger Dijkstra"]}
+hints:
+  h1: "Use `IS NULL` when the needle is the null value, and a bound parameter when it is a value."
+  h2: "Remember to order the result."
+ai_assisted: true

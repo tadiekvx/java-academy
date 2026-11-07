@@ -1,0 +1,33 @@
+id: j1-l7.4-debug-words
+type: debug
+title: "Count the words"
+lesson: j1-l7.4
+role: ladder
+assesses: [o3]
+concepts: [J1.07, J1.08]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `countWords` should return the number of words in the text, where words are separated by one or more spaces. It works for `"one two three"` but not for every input. Find a failing case, trace it, and fix the method.
+
+  Hint: try an empty string, extra spaces, and spaces at the start or end.
+entry:
+  methods:
+    - {name: countWords, params: [{name: text, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {method: countWords, args: ["one two three"], expect: 3}
+    - {method: countWords, args: ["hello"], expect: 1}
+    - {method: countWords, args: [""], expect: 0}
+  hidden:
+    - {method: countWords, args: ["  leading"], expect: 1}
+    - {method: countWords, args: ["trailing  "], expect: 1}
+    - {method: countWords, args: ["a  b"], expect: 2}
+    - {method: countWords, args: ["   "], expect: 0}
+    - {method: countWords, args: ["many   spaces   here"], expect: 3}
+    - {method: countWords, args: ["x y"], expect: 2}
+hints:
+  h1: "Find the smallest failing input: what does the method return for an empty string, and for two spaces in a row?"
+  h2: "Count the start of each word instead of the spaces: a word starts at a non-space whose previous character was a space or the start."
+ai_assisted: true

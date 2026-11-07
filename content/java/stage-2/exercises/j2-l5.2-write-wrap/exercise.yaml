@@ -1,0 +1,33 @@
+id: j2-l5.2-write-wrap
+type: write
+title: "Wrap and keep the cause"
+lesson: j2-l5.2
+role: ladder
+assesses: [o2]
+concepts: [J2.13]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `ConfigException` (unchecked: `extends RuntimeException`, with a constructor taking a message **and a cause**) and `readPort`, which parses a port number and, if the text isn't a number, throws a `ConfigException` with the message `bad port: <text>` **and the original exception as its cause**. The driver prints the message and the name of the cause's class.
+entry:
+  methods:
+    - {name: describePort, params: [{name: text, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: describePort, args: ["8080"], expect: "port 8080"}
+    - {method: describePort, args: ["abc"], expect: "bad port: abc <- NumberFormatException"}
+    - {method: describePort, args: ["0"], expect: "port 0"}
+    - {name: "ConfigException is unchecked", source_contains: ["class ConfigException extends RuntimeException"]}
+  hidden:
+    - {method: describePort, args: ["443"], expect: "port 443"}
+    - {method: describePort, args: ["80x"], expect: "bad port: 80x <- NumberFormatException"}
+    - {method: describePort, args: [""], expect: "bad port:  <- NumberFormatException"}
+    - {method: describePort, args: ["12"], expect: "port 12"}
+    - {method: describePort, args: ["port"], expect: "bad port: port <- NumberFormatException"}
+    - {method: describePort, args: ["65535"], expect: "port 65535"}
+starter_compiles: false
+hints:
+  h1: "The constructor should pass both arguments to super(message, cause). In readPort, catch NumberFormatException and pass it to the new exception."
+  h2: "throw new ConfigException(\"bad port: \" + text, e);"
+ai_assisted: true

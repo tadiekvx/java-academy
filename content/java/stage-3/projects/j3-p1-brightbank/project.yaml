@@ -1,0 +1,137 @@
+id: j3-p1-brightbank
+title: "Brightbank statements from a CSV"
+category: B
+status: in_review
+summary: "Read a bank's messy CSV export, total it by month, produce a statement for a date range, and absorb a change request about duplicates."
+brief: |
+  Brightbank v3 reads the file a bank exports: a CSV of `date,description,amount` lines. Real exports are messy: a header, blank lines, impossible dates, odd amounts, and (as you'll find out) repeated lines.
+
+  You'll use what Stage 3 taught: `java.time` for the dates, exact money (never `double`), a sorted map for the monthly totals, a stream or a loop for the statement, and a set to deal with duplicates.
+
+  This is an **independent build** with a twist: partway through, a **change request** arrives (milestone 4). Where you put your parsing decides whether it's a one-line change or a three-place change.
+
+  To keep the project to one file, the lines come in as a `List<String>`. In a real program you'd read them with `Files.readAllLines`, as in lesson 3.4.1.
+estimated_hours: 6
+prerequisites: [j3-l1.2, j3-l3.2, j3-l4.2, j3-l5.1, j3-l5.2]
+concepts: [J3.02, J3.03, J3.06, J3.09, J3.10, J3.11]
+requirements:
+  - "Each good line is `date,description,amount`, with the date in `yyyy-MM-dd` form and the amount in pounds with at most two decimals."
+  - "A bad line is counted and skipped; it never stops the run."
+  - "Money is exact: no `double`."
+  - "Output formats are exactly as the milestones describe."
+constraints:
+  - "Parse each line once, in one place."
+  - "Use `java.time` for dates; no hand-written calendar arithmetic."
+acceptance:
+  - "Given `2026-02-30,X,1.00`, then it counts as a bad line."
+  - "Given a statement for 2026-01-05 to 2026-01-05, then transactions on that day are included."
+  - "Given the same transaction twice in the file, then it counts once in every output."
+  - "Given the change request, then milestones 1 to 3 still pass unchanged."
+milestones:
+  - id: m1
+    title: "Read the file, keep the good lines"
+    instructions: |
+      Each line of the export is `date,description,amount`. Write `summary(lines)`, which returns `ok=<n> bad=<m>`: how many lines are good, and how many are bad.
+
+      - **Skip** blank lines and the header line `date,description,amount` (any case). Skipped lines are neither good nor bad.
+      - A line is **bad** if it doesn't have exactly three fields, the description is empty, the date isn't a real date in `yyyy-MM-dd` form (`2026-02-30` is not real), or the amount isn't a number with at most **two** digits after the point (an optional `+` or `-` sign is allowed). Ignore spaces around each field.
+      - Keep money exact: don't use `double`.
+    entry:
+      methods:
+        - {name: summary, params: [{name: lines, type: "List<String>"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"]], expect: "ok=3 bad=0"}
+        - {args: [[]], expect: "ok=0 bad=0"}
+        - {args: [["2026-01-05,Coffee,-2.50", "oops"]], expect: "ok=1 bad=1"}
+      hidden:
+        - {name: "not a real date", args: [["2026-02-30,Impossible,1.00"]], expect: "ok=0 bad=1"}
+        - {name: "three decimals", args: [["2026-01-05,Coffee,2.505"]], expect: "ok=0 bad=1"}
+        - {name: "empty description", args: [["2026-01-05,,5.00"]], expect: "ok=0 bad=1"}
+        - {name: "sign and spaces", args: [["2026-01-05,Tea,+5.5", " 2026-01-06 , Cake , -0.99 "]], expect: "ok=2 bad=0"}
+        - {name: "only skipped lines", args: [["", "   ", "DATE,DESCRIPTION,AMOUNT"]], expect: "ok=0 bad=0"}
+        - {name: "bad shapes", args: [["2026-1-5,Tea,5.00", "2026-01-05,Tea,5.00,extra"]], expect: "ok=0 bad=2"}
+  - id: m2
+    title: "Totals by month"
+    instructions: |
+      Write `monthlyTotals(lines)`: the **net total in pence** for each month that has good transactions, **sorted by month**, as `2026-01=+1197,2026-02=-50000`, joined with commas. The sign is always shown. If there are no good transactions, return `none`.
+    entry:
+      methods:
+        - {name: monthlyTotals, params: [{name: lines, type: "List<String>"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"]], expect: "2026-01=+119750,2026-02=-50000"}
+        - {args: [[]], expect: "none"}
+        - {args: [["2026-03-01,A,10.00", "2026-03-02,B,-3.50"]], expect: "2026-03=+650"}
+      hidden:
+        - {name: "months out of order", args: [["2026-12-31,Late,1.00", "2026-01-01,Early,2.00"]], expect: "2026-01=+200,2026-12=+100"}
+        - {name: "nets to zero", args: [["2026-05-05,A,5.00", "2026-05-06,B,-5.00"]], expect: "2026-05=+0"}
+        - {name: "bad lines ignored", args: [["bad", "2026-04-04,Ok,0.99"]], expect: "2026-04=+99"}
+        - {name: "year boundary", args: [["2025-12-31,A,100", "2026-01-01,B,100", "2026-01-31,C,-0.01"]], expect: "2025-12=+10000,2026-01=+9999"}
+  - id: m3
+    title: "A statement for a date range"
+    instructions: |
+      Write `statement(lines, from, to)` (both dates `yyyy-MM-dd`). It returns text lines separated by `\n` (none after the last):
+
+      - the good transactions dated from `from` to `to`, **both days included**, **newest first**, each as `2026-01-06 Salary £1200.00` (a negative amount shows as `-£2.50`); transactions on the same day keep the order they had in the file;
+      - then a last line `Total: ` with the net total of the listed transactions.
+
+      If none are in the range, there is only the total line (`Total: £0.00`).
+    entry:
+      methods:
+        - {name: statement, params: [{name: lines, type: "List<String>"}, {name: from, type: "String"}, {name: to, type: "String"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"], "2026-01-01", "2026-01-31"], expect: "2026-01-06 Salary £1200.00\n2026-01-05 Coffee -£2.50\nTotal: £1197.50"}
+        - {args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"], "2027-01-01", "2027-01-31"], expect: "Total: £0.00"}
+        - {args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"], "2026-01-06", "2026-02-01"], expect: "2026-02-01 Rent -£500.00\n2026-01-06 Salary £1200.00\nTotal: £700.00"}
+      hidden:
+        - {name: "a single day", args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"], "2026-01-05", "2026-01-05"], expect: "2026-01-05 Coffee -£2.50\nTotal: -£2.50"}
+        - {name: "ties keep file order", args: [["2026-01-05,A,1.00", "2026-01-05,B,2.00", "2026-01-04,C,3.00"], "2026-01-01", "2026-01-31"], expect: "2026-01-05 A £1.00\n2026-01-05 B £2.00\n2026-01-04 C £3.00\nTotal: £6.00"}
+        - {name: "range backwards", args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00"], "2026-01-06", "2026-01-05"], expect: "Total: £0.00"}
+        - {name: "pence padding", args: [["bad", "2026-01-05,Tea,-0.05"], "2026-01-01", "2026-12-31"], expect: "2026-01-05 Tea -£0.05\nTotal: -£0.05"}
+  - id: m4
+    title: "Change request: duplicate lines"
+    instructions: |
+      **A change request has arrived.** The bank's export sometimes repeats lines. A transaction repeated **exactly** (same date, description and amount) must count **once**, everywhere. Without breaking milestones 1 to 3:
+
+      - add `uniqueSummary(lines)`, which returns `ok=<n> bad=<m> dupes=<k>`: `ok` counts each distinct good transaction once, `bad` is as before, and `dupes` is how many extra repeated copies were ignored;
+      - make `monthlyTotals` and `statement` use each distinct transaction once, keeping the **first** copy's position.
+
+      Two transactions that differ in the date, the description or the amount are **different**, even if the other two parts match. Decide where in your code one change fixes all three methods.
+    entry:
+      methods:
+        - {name: uniqueSummary, params: [{name: lines, type: "List<String>"}], returns: "String"}
+        - {name: monthlyTotals, params: [{name: lines, type: "List<String>"}], returns: "String"}
+        - {name: statement, params: [{name: lines, type: "List<String>"}, {name: from, type: "String"}, {name: to, type: "String"}], returns: "String"}
+    tests:
+      visible:
+        - {method: uniqueSummary, args: [["date,description,amount", "2026-01-05,Coffee,-2.50", "2026-01-06,Salary,1200", "2026-02-01,Rent,-500.00", "2026-01-05,Coffee,-2.50"]], expect: "ok=3 bad=0 dupes=1"}
+        - {method: monthlyTotals, args: [["2026-01-05,A,5.00", "2026-01-05,A,5.00"]], expect: "2026-01=+500"}
+        - {method: statement, args: [["2026-01-05,A,5.00", "2026-01-05,A,5.00"], "2026-01-01", "2026-01-31"], expect: "2026-01-05 A £5.00\nTotal: £5.00"}
+      hidden:
+        - {name: "three copies", method: uniqueSummary, args: [["2026-01-05,A,5.00", "2026-01-05,A,5.00", "2026-01-05,A,5.00"]], expect: "ok=1 bad=0 dupes=2"}
+        - {name: "all different", method: uniqueSummary, args: [["2026-01-05,A,5.00", "2026-01-06,A,5.00", "2026-01-05,B,5.00", "2026-01-05,A,5.01"]], expect: "ok=4 bad=0 dupes=0"}
+        - {name: "bad lines repeat but aren't dupes", method: uniqueSummary, args: [["bad", "bad"]], expect: "ok=0 bad=2 dupes=0"}
+        - {name: "different days stay", method: monthlyTotals, args: [["2026-02-02,A,1.00", "2026-02-03,A,1.00", "2026-02-02,A,1.00"]], expect: "2026-02=+200"}
+        - {name: "duplicate is removed from the statement", method: statement, args: [["2026-01-05,A,1.00", "2026-01-06,B,2.00", "2026-01-05,A,1.00"], "2026-01-01", "2026-01-31"], expect: "2026-01-06 B £2.00\n2026-01-05 A £1.00\nTotal: £3.00"}
+rubric:
+  - criterion: "Correctness at the edges"
+    zero: "Several milestones fail on boundaries (a single day, pence padding, an impossible date, three decimals)"
+    one: "Typical cases pass and most boundaries"
+    two: "Every boundary in the brief behaves as specified, including the change request"
+  - criterion: "Use of the library"
+    zero: "Hand-written date or money arithmetic, or `double` for money"
+    one: "Mostly `java.time` and exact money, with one hand-rolled part"
+    two: "`java.time` for dates, exact money, and the right collection for each job (a sorted map, a set for duplicates)"
+  - criterion: "Handling the change request"
+    zero: "Milestones 1 to 3 broke, or the duplicate check was added in three places"
+    one: "It works, but the fix was copied into more than one method"
+    two: "One shared parsing step removes duplicates, so every method benefits and milestones 1 to 3 still pass"
+  - criterion: "Design note"
+    zero: "Missing, or describes the code line by line"
+    one: "Explains the steps but not the choices"
+    two: "Explains why money isn't a double, how bad lines are handled, and where the duplicate rule lives"
+design_note_prompt: |
+  In 150 words or fewer: How did you keep money exact, and what would have gone wrong with `double`? Where does your code decide that a line is a duplicate, and what would you change if the bank said duplicates should be judged by date and amount only?
+ai_assisted: true

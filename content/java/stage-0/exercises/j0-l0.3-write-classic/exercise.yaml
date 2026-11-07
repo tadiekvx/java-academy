@@ -1,0 +1,22 @@
+id: j0-l0.3-write-classic
+type: write
+title: "Write it with a class"
+lesson: j0-l0.3
+role: ladder
+assesses: [o2]
+concepts: [J0.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This compact program prints a greeting. Rewrite it in the **traditional form**: a `public class Main` containing `public static void main(String[] args)`, printing with `System.out.println`. It must print exactly the same text.
+tests:
+  visible:
+    - {name: "prints the greeting", stdin: "", stdout_equals: "Hello from a class!"}
+    - {name: "uses a public class Main", source_contains: ["public class Main"]}
+    - {name: "uses the traditional main method", source_contains: ["public static void main("]}
+    - {name: "prints with System.out", source_contains: ["System.out.println"], source_not_contains: ["IO.println"]}
+hints:
+  h1: "Wrap the code in a class named Main, and give it the traditional main header. Don't forget System.out.println."
+  h2: "public class Main { public static void main(String[] args) { System.out.println(\"Hello from a class!\"); } }"
+ai_assisted: true

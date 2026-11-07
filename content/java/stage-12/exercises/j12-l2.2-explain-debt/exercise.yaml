@@ -1,0 +1,32 @@
+id: j12-l2.2-explain-debt
+type: explain
+title: "Managing debt on purpose"
+lesson: j12-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J12.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Your team has these items: (a) a 400-line method nobody understands but that rarely changes; (b) a billing module changed every week that has no tests; (c) a library two major versions behind with a known vulnerability; (d) inconsistent naming across the code. Explain what characterization tests are and why they come first when changing legacy code, rank the four items for the next quarter with reasons, and say how you would keep the list from being forgotten.
+rubric:
+  criteria: |
+    A characterization test records what the code actually does (starting from a hypothesis and checking it), so that a change can be made safely even when nobody knows what the code is supposed to do; they come first because refactoring or extending without a safety net can silently change behaviour. Ranking by risk and cost of delay: (c) first, a known vulnerability is a security risk that grows; (b) next, because it changes weekly without tests, so its risk is exercised all the time and tests will pay back fast; (a) can wait since it rarely changes, add characterization tests only when it must change; (d) is the cheapest and lowest value, fix it opportunistically when touching code. Keep a visible, prioritised list (in the issue tracker or in ADRs) with an owner and a review date, reserve a fixed share of each iteration for debt, and record debt knowingly taken on, with the reason, when it is taken.
+  levels:
+    - score: 2
+      descriptor: "The answer defines characterization tests and why first, ranks all four with risk reasoning, and gives a way to keep the debt visible."
+      samples:
+        - "A characterization test records what the code currently does, so I can change it without knowing the intent and see if I altered behaviour; it comes first because a refactor without that net can silently break things. Ranking: the vulnerable library (security risk), then billing (changed weekly, no tests), then the 400-line method (leave it until it must change), then naming (opportunistic). Keep a prioritised list in the tracker with owners, and give each iteration a fixed share for debt."
+        - "Characterization tests pin current behaviour and make later change safe. Order: (c), (b), (a), (d), because of risk and change frequency. Track it visibly and review it regularly."
+    - score: 1
+      descriptor: "The answer ranks without reasons or defines the tests without the ranking."
+      samples:
+        - "Fix the vulnerable library first."
+        - "Characterization tests test what the code does."
+    - score: 0
+      descriptor: "The answer proposes rewriting everything or ignoring debt."
+      samples:
+        - "Rewrite the whole system from scratch."
+        - "Debt does not matter if the code works."
+ai_assisted: true

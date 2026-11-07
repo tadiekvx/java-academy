@@ -1,0 +1,32 @@
+id: j3-l3.2-write-pipeline
+type: write
+title: "Filter, map, sort"
+lesson: j3-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J3.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `longUpper(List<String> words, int minLength)` as a **stream pipeline**: keep the words with at least `minLength` letters, turn them to upper case, sort them, and return the list.
+entry:
+  methods:
+    - {name: longUpper, params: [{name: words, type: "List<String>"}, {name: minLength, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {method: longUpper, args: [["pear", "fig", "apple"], 4], expect: ["APPLE", "PEAR"]}
+    - {method: longUpper, args: [[], 1], expect: []}
+    - {method: longUpper, args: [["a", "bb"], 5], expect: []}
+    - {name: "uses a stream", source_contains: ["stream()"], source_not_contains: ["for ("]}
+  hidden:
+    - {method: longUpper, args: [["a", "B", "cc"], 1], expect: ["A", "B", "CC"]}
+    - {method: longUpper, args: [["a", "B"], 1], expect: ["A", "B"]}
+    - {method: longUpper, args: [["kiwi", "plum", "lime"], 4], expect: ["KIWI", "LIME", "PLUM"]}
+    - {method: longUpper, args: [["zeta", "Alpha", "beta"], 4], expect: ["ALPHA", "BETA", "ZETA"]}
+    - {method: longUpper, args: [["x"], 1], expect: ["X"]}
+    - {method: longUpper, args: [["abc", "abcd"], 4], expect: ["ABCD"]}
+hints:
+  h1: "Chain filter, map, sorted and toList on words.stream(). The order of map and sorted matters for mixed case."
+  h2: "words.stream().filter(w -> w.length() >= minLength).map(String::toUpperCase).sorted().toList();"
+ai_assisted: true

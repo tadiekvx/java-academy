@@ -1,0 +1,32 @@
+id: j11-l3.2-explain-iac
+type: explain
+title: "Why describe it in files"
+lesson: j11-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J11.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate builds the staging environment by clicking in a cloud console and keeps a wiki page of the steps. Explain the problems with that approach and what changes with infrastructure as code (a reviewed file, a plan, repeatable apply), including what a plan lets a reviewer see before anything changes. Then explain three cost habits for a small team: what to do about resources left running, always-on versus on-demand, and who should be able to see the bill.
+rubric:
+  criteria: |
+    Console clicks cannot be reviewed, repeated, compared or rolled back; the wiki goes out of date and environments drift apart. Infrastructure as code describes the environment in files that are version-controlled and reviewed like code; a tool compares the desired state with the real one and prints a plan (what will be created, changed or destroyed), so a reviewer sees the effect, such as an accidental destroy of a database, before anything happens, and the same files recreate the environment on demand. Cost habits: switch off or delete what is not in use (a forgotten environment keeps costing money every hour), prefer on-demand or scaled-down capacity for non-production, tag resources and set budgets and alerts, and make the cost visible to the team that causes it.
+  levels:
+    - score: 2
+      descriptor: "The answer gives the problems of manual set-up, the benefits including the plan, and three cost habits."
+      samples:
+        - "Clicking cannot be reviewed or repeated and the wiki drifts, so staging and production differ. As code, the environment is in version control and reviewed, and a plan shows creates, changes and destroys before applying, for example catching a database being destroyed; the same files rebuild the environment. Cost: delete or stop idle environments, scale non-production down or on demand, and set budgets and alerts that the team can see."
+        - "Manual steps are not reproducible or reviewable. With IaC you review the diff and the plan and can recreate anything. For cost: do not leave test stacks running, size non-prod small, and give the team the billing view with alerts."
+    - score: 1
+      descriptor: "The answer lists benefits without the plan or without the cost habits."
+      samples:
+        - "Infrastructure as code is repeatable."
+        - "Turn things off when not used."
+    - score: 0
+      descriptor: "The answer prefers manual set-up or ignores cost."
+      samples:
+        - "The console is quicker, the wiki is good enough."
+        - "Cloud costs only matter for big companies."
+ai_assisted: true

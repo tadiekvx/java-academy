@@ -1,0 +1,30 @@
+id: j3-l5.1-debug-zone
+type: debug
+title: "The day that was 23 hours long"
+lesson: j3-l5.1
+role: ladder
+assesses: [o3]
+concepts: [J3.10]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `nextDaySameTime("2026-03-28T12:00", "Europe/London")` should return the **same clock time on the next day**: `2026-03-29 12:00`. It returns `13:00`, because the clocks in London go forward on 29 March 2026. Find the cause and fix it. (All the checks use midday times, so you needn't worry about clock times that don't exist.)
+entry:
+  methods:
+    - {name: nextDaySameTime, params: [{name: local, type: "String"}, {name: zone, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: nextDaySameTime, args: ["2026-03-28T12:00", "Europe/London"], expect: "2026-03-29 12:00"}
+    - {method: nextDaySameTime, args: ["2026-06-10T12:00", "Europe/London"], expect: "2026-06-11 12:00"}
+    - {method: nextDaySameTime, args: ["2026-03-07T12:00", "America/New_York"], expect: "2026-03-08 12:00"}
+  hidden:
+    - {method: nextDaySameTime, args: ["2026-10-24T12:00", "Europe/London"], expect: "2026-10-25 12:00"}
+    - {method: nextDaySameTime, args: ["2026-11-01T12:00", "America/New_York"], expect: "2026-11-02 12:00"}
+    - {method: nextDaySameTime, args: ["2026-01-15T12:00", "Asia/Tokyo"], expect: "2026-01-16 12:00"}
+    - {method: nextDaySameTime, args: ["2026-03-28T12:00", "Europe/Paris"], expect: "2026-03-29 12:00"}
+    - {method: nextDaySameTime, args: ["2026-12-31T12:00", "Europe/London"], expect: "2027-01-01 12:00"}
+hints:
+  h1: "What is the difference between adding 24 hours and adding one day, on the day the clocks change?"
+  h2: "Use start.plusDays(1), which keeps the same clock time."
+ai_assisted: true

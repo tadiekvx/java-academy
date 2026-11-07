@@ -1,0 +1,32 @@
+id: j1-l5.4-write-strong
+type: write
+title: "A strong password"
+lesson: j1-l5.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.09]
+evidence: [XFER]
+misconceptions: []
+difficulty: 3
+prompt: |
+  A password is strong if it has at least 8 characters, contains at least one digit, **and** contains at least one capital letter. Write `isStrong(password)`. Use small helper methods of your own for the digit and capital checks (`Character.isDigit` and `Character.isUpperCase` tell you about one character).
+entry:
+  methods:
+    - {name: isStrong, params: [{name: password, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: ["Tr0ub4dor"], expect: true}
+    - {args: ["password"], expect: false}
+    - {args: ["Sh0rt"], expect: false}
+  hidden:
+    - {name: "empty", args: [""], expect: false}
+    - {name: "no lower case needed", args: ["ALLCAPS123"], expect: true}
+    - {name: "no capital", args: ["lowercase123"], expect: false}
+    - {name: "no digit", args: ["NoDigitsHere"], expect: false}
+    - {name: "exactly 8", args: ["Abcdefg1"], expect: true}
+    - {name: "7 characters", args: ["Abcdef1"], expect: false}
+starter_compiles: false
+hints:
+  h1: "Three yes/no questions joined with &&. Which loop pattern answers 'is there any digit?'"
+  h2: "Write hasDigit and hasCapital with find-the-first loops, then return length >= 8 && hasDigit && hasCapital."
+ai_assisted: true

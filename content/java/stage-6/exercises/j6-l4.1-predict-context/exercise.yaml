@@ -1,0 +1,23 @@
+id: j6-l4.1-predict-context
+type: predict
+title: "What a persistence context does"
+lesson: j6-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J6.11]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below is a tiny plain-Java model of a persistence context: an identity map plus a snapshot taken when an entity is loaded. Predict the exact output.
+expected_output: |
+  same instance=true
+  selects=1
+  seen through second=115000
+  updates after first flush=1
+  updates after second flush=1
+  selects now=2
+hints:
+  h1: "How many times is the database read when the same id is found twice?"
+  h2: "Why does the second flush find nothing to write?"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j1-l5.2-write-discount
+type: write
+title: "Sale price"
+lesson: j1-l5.2
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: build-method
+prompt: |
+  Write a method called `discounted` that is given a `price` in pence and a `percentOff` (both `int`s, in that order). It returns the price after the discount, in pence. Work out the saving as `price * percentOff / 100` (whole pence, with integer division). For example, `discounted(2000, 25)` is 1500.
+entry:
+  methods:
+    - {name: discounted, params: [{name: price, type: "int"}, {name: percentOff, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [2000, 25], expect: 1500}
+    - {args: [999, 10], expect: 900}
+    - {args: [500, 0], expect: 500}
+  hidden:
+    - {name: "everything off", args: [100, 100], expect: 0}
+    - {name: "tiny price", args: [1, 50], expect: 1}
+    - {name: "awkward numbers", args: [12345, 33], expect: 8272}
+    - {name: "free", args: [0, 20], expect: 0}
+    - {name: "three quarters", args: [800, 75], expect: 200}
+starter_compiles: false
+hints:
+  h1: "First work out the saving, then take it away from the price."
+  h2: "int saving = price * percentOff / 100; return price - saving;"
+ai_assisted: true

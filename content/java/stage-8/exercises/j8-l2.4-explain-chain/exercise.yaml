@@ -1,0 +1,51 @@
+id: j8-l2.4-explain-chain
+type: explain
+title: "Reading a real security configuration"
+lesson: j8-l2.4
+role: ladder
+assesses: [o2]
+concepts: [J8.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a shortened copy of this platform's real `SecurityConfig`.
+
+  ```java
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+      return http
+              .authorizeHttpRequests(requests -> requests
+                      .requestMatchers(HttpMethod.GET, "/api/curriculum", "/api/lessons/*", "/api/exercises/*", "/api/projects", "/api/projects/*").permitAll()
+                      .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/me", "/api/auth/csrf").permitAll()
+                      .requestMatchers("/api/**").authenticated()
+                      .anyRequest().permitAll())
+              .csrf(csrf -> csrf.spa())
+              .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+              .formLogin(AbstractHttpConfigurer::disable)
+              .httpBasic(AbstractHttpConfigurer::disable)
+              .build();
+  }
+  ```
+
+  Answer: (1) Which requests can an anonymous visitor make? (2) What does `.requestMatchers("/api/**").authenticated()` add, and why does the order of the matchers matter? (3) What does `anyRequest().permitAll()` at the end allow, and is it a good default? (4) What does `csrf.spa()` mean for a front end? (5) Name one change you would make before exposing this to the internet.
+rubric:
+  criteria: |
+    (1) Anonymous visitors can GET the curriculum, lessons, exercises and projects, and call the register, login, me and csrf endpoints. (2) Any other /api path needs an authenticated caller; matchers are tried in order, so the specific permitAll rules must come before the general authenticated rule, or they would never apply. (3) Everything outside /api (the front end files) is open; for the API the default is deny-by-authentication, but anyRequest().permitAll() is allow-by-default for any path added outside /api, which is risky. (4) The front end must read the XSRF-TOKEN cookie and send it in the X-XSRF-TOKEN header on writes. (5) For example serve over HTTPS with Secure cookies, or make the final rule anyRequest().authenticated() or denyAll().
+  levels:
+    - score: 2
+      descriptor: "The answer gets the matchers, the ordering, the permissive default, the SPA token and a sensible hardening step."
+      samples:
+        - "(1) Anonymous users can GET content endpoints and use the auth endpoints. (2) All other /api paths require login; matchers are checked in order so the permitAll rules must come first. (3) permitAll for everything else covers the static front end, but it is allow-by-default, so a new endpoint outside /api would be public; I would prefer authenticated or deny by default. (4) The front end reads the XSRF-TOKEN cookie and echoes it in X-XSRF-TOKEN. (5) Use HTTPS with Secure cookies."
+        - "Anonymous: reading content and logging in/registering. The /api/** rule makes everything else need a session, and it comes after the specific rules because the first match wins. The last rule is permissive, so I would tighten it. csrf.spa means the page must send the XSRF token header on writes. Before the internet: TLS, Secure cookies, rate limiting on login."
+    - score: 1
+      descriptor: "The answer gets some parts but misses the ordering or the permissive default."
+      samples:
+        - "Anonymous users can read content and log in, and the rest needs a login."
+        - "CSRF is on, so the front end sends a token."
+    - score: 0
+      descriptor: "The answer misreads the configuration."
+      samples:
+        - "Everything needs a login, nothing is public."
+        - "CSRF protection is turned off here."
+ai_assisted: true

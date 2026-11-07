@@ -1,0 +1,32 @@
+id: j6-l4.3-explain-choice
+type: explain
+title: "JDBC, JPA or SQL"
+lesson: j6-l4.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J6.13]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team must decide how a new bank service reads and writes data. Their first feature is a month-end report that sums transactions across all accounts. Their second is a screen that edits one customer and their accounts. For each feature, say whether you would use hand-written SQL through JDBC or an ORM such as JPA, and what each choice costs.
+rubric:
+  criteria: |
+    The choice depends on the work. A set-based report that aggregates many rows is clearest and fastest as one SQL statement, whichever API sends it. A screen that loads a small graph of related objects, changes some fields and saves them fits an ORM, because the persistence context tracks the changes. The ORM costs a persistence-context model to learn, risks N+1 selects and generated SQL you must inspect; JDBC costs mapping code and repetition, and gives full control.
+  levels:
+    - score: 2
+      descriptor: "The answer matches each feature to a tool with a reason, and names a cost of each."
+      samples:
+        - "The report should be one SQL aggregate (JDBC, or a native or JPQL query), because it works on many rows at once and an ORM would load them as objects. The edit screen suits JPA: the entity is loaded, fields changed, and dirty checking writes them. JPA costs N+1 risk and generated SQL to inspect; JDBC costs hand-written mapping."
+        - "Use SQL for the month-end report because the database is good at sums over many rows and I control the statement. Use an ORM for editing a customer with its accounts: less mapping code and automatic change tracking, but I must watch the queries it generates and the fetching strategy."
+    - score: 1
+      descriptor: "The answer picks tools but gives no reason or no cost."
+      samples:
+        - "JDBC for the report and JPA for the edit screen."
+        - "Use JPA for both because it is the modern way."
+    - score: 0
+      descriptor: "The answer treats the tools as interchangeable or one as always wrong."
+      samples:
+        - "It makes no difference, they all talk to the same database."
+        - "ORMs are always bad, so write SQL for everything and never use JPA."
+ai_assisted: true

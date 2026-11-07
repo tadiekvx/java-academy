@@ -1,0 +1,69 @@
+id: j11-l1.2-explain-multistage
+type: explain
+title: "What stays behind"
+lesson: j11-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J11.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Below are the multi-stage Dockerfile, the build steps Docker ran for it (`--progress=plain`, with the step lines only) and the sizes of the single-stage and multi-stage images built from the same source on this machine.
+
+  ```dockerfile
+  FROM eclipse-temurin:25-jdk-alpine AS build
+  WORKDIR /src
+  COPY Hello.java .
+  RUN javac -d /out Hello.java
+
+  FROM eclipse-temurin:25-jre-alpine
+  WORKDIR /app
+  COPY --from=build /out /app
+  CMD ["java", "-cp", "/app", "Hello"]
+  ```
+
+  ```text
+  $ docker build -f Dockerfile.multi -t hello:multi --progress=plain --no-cache . 2>&1 | grep -E "^#[0-9]+ \[|DONE|naming"
+  #1 [internal] load build definition from Dockerfile.multi
+  #2 [internal] load metadata for docker.io/library/eclipse-temurin:25-jre-alpine
+  #3 [internal] load metadata for docker.io/library/eclipse-temurin:25-jdk-alpine
+  #4 [internal] load .dockerignore
+  #5 [build 1/4] FROM docker.io/library/eclipse-temurin:25-jdk-alpine@sha256:c7c3d0bdf7f2bbc5a05a6712ed334d198360105634ea9adf76fca94f381b1e3f
+  #6 [stage-1 1/3] FROM docker.io/library/eclipse-temurin:25-jre-alpine@sha256:e1898fd6a11fc965a994d8ace186fd3585aeb636cf8f05f47a723fcfee0b0918
+  #7 [build 2/4] WORKDIR /src
+  #8 [stage-1 2/3] WORKDIR /app
+  #9 [internal] load build context
+  #10 [build 3/4] COPY Hello.java .
+  #11 [build 4/4] RUN javac -d /out Hello.java
+  #12 [stage-1 3/3] COPY --from=build /out /app
+  ```
+
+  ```text
+  $ docker images hello
+  REPOSITORY:TAG   SIZE
+  hello:multi      304MB
+  hello:single     421MB
+  ```
+
+  Explain which stage each build step belongs to, what ended up in the final image and what was left behind, how large the saving was in megabytes and as a percentage of the single-stage image, and what other benefit a smaller image has besides download time.
+rubric:
+  criteria: |
+    Steps 5, 7, 10 and 11 belong to the build stage (JDK image, WORKDIR /src, COPY Hello.java, RUN javac) and steps 6, 8 and 12 to the final stage (JRE image, WORKDIR /app, COPY --from=build /out /app). Only the compiled class files are copied into the final image; the JDK image, the compiler and the source are left behind. The multi-stage image is 304 MB against 421 MB, a saving of 117 MB, about 28 percent (117 divided by 421). A smaller image also has a smaller attack surface, because compilers and build tools that are not there cannot be abused, and less to scan and patch.
+  levels:
+    - score: 2
+      descriptor: "The answer assigns the steps to stages, says what was copied and left behind, computes the saving and names the security or scanning benefit."
+      samples:
+        - "The JDK image, WORKDIR /src, COPY Hello.java and javac are the build stage; the JRE image, WORKDIR /app and COPY --from=build are the final stage. Only the compiled classes go into the final image; the compiler and source stay behind. 421 minus 304 is 117 MB, about 28 percent. A smaller image also has fewer tools an attacker could use and less to scan."
+        - "Build stage: steps 5, 7, 10, 11. Final stage: 6, 8, 12. Only /out is copied across. The saving is 117 MB (28%). Fewer packages means a smaller attack surface."
+    - score: 1
+      descriptor: "The answer gets the saving but not the stage assignment, or the benefit."
+      samples:
+        - "The multi-stage image is 117 MB smaller."
+        - "It copies only the compiled classes."
+    - score: 0
+      descriptor: "The answer misreads the stages."
+      samples:
+        - "Both images contain the compiler, they are just built differently."
+        - "The smaller image is slower to start."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j2-l5.3-explain-where
+type: explain
+title: "Who should catch it?"
+lesson: j2-l5.3
+role: ladder
+assesses: [o2, o3]
+concepts: [J2.14]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  In a banking program, `transfer(from, to, amount)` calls `withdraw`, which throws `InsufficientFundsException` when the account is short. The user pressed a **Transfer** button in the app. (a) Which layer should catch the exception, and what should it do? (b) Why shouldn't `withdraw` catch it, print a message and return? (c) Give one reason not to catch `Exception`, log it and carry on at every layer.
+rubric:
+  criteria: |
+    A full answer says the layer that talks to the user (the code behind the Transfer button, the boundary) should catch it and show a clear message such as that there are insufficient funds; withdraw shouldn't because it can't talk to the user and would hide the failure so transfer would carry on as if it worked; and catching broadly and logging at every layer duplicates the log entries, hides which failure was real, or lets the program continue in a wrong state.
+  levels:
+    - score: 2
+      descriptor: "Says the boundary layer behind the Transfer button should catch it and tell the user; withdraw shouldn't because it can't report to the user and would hide the failure from transfer; and gives a reason such as duplicate logs or carrying on in a wrong state."
+      samples:
+        - "The code behind the Transfer button should catch it and show the user a message like \"not enough money\". withdraw shouldn't catch it and print, because then transfer wouldn't know the withdrawal failed and might still add the money to the other account. Catching and logging at every layer fills the logs with duplicates and can let the program carry on in a wrong state."
+        - "The top layer, where the user clicks Transfer, should catch it and report the shortfall. withdraw can't tell the user anything useful and swallowing it would make transfer behave as if it worked. Logging and continuing at every layer duplicates the log and hides the real failure."
+    - score: 1
+      descriptor: "Gets the right layer or the problem with catching in withdraw, but not both, or gives no reason for part (c)."
+      samples:
+        - "The button code should catch it."
+        - "withdraw shouldn't catch it."
+    - score: 0
+      descriptor: "Incorrect, for example says withdraw should catch and ignore it, or that the whole program should catch Exception once at the very start."
+      samples:
+        - "withdraw should catch it and carry on."
+        - "Catch everything in main."
+ai_assisted: true

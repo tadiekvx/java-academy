@@ -1,0 +1,32 @@
+id: j2-l5.3-write-gate
+type: write
+title: "A resource that closes itself"
+lesson: j2-l5.3
+role: ladder
+assesses: [o1]
+concepts: [J2.14]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `Gate`, a class that implements `AutoCloseable`. Its constructor adds `open <name>` to the log it is given, and its `close()` adds `close <name>`. The driver opens two gates in a try-with-resources, does some work (sometimes throwing), and returns the log. You don't need to write any `close` calls yourself: the `try` does that.
+entry:
+  methods:
+    - {name: run, params: [{name: first, type: "String"}, {name: second, type: "String"}, {name: fail, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["A", "B", false], expect: "open A,open B,work,close B,close A"}
+    - {method: run, args: ["A", "B", true], expect: "open A,open B,work,close B,close A,caught"}
+    - {method: run, args: ["x", "y", false], expect: "open x,open y,work,close y,close x"}
+    - {name: "Gate implements AutoCloseable", source_contains: ["Gate implements AutoCloseable"]}
+  hidden:
+    - {method: run, args: ["door", "lock", true], expect: "open door,open lock,work,close lock,close door,caught"}
+    - {method: run, args: ["1", "2", false], expect: "open 1,open 2,work,close 2,close 1"}
+    - {method: run, args: ["north", "south", true], expect: "open north,open south,work,close south,close north,caught"}
+    - {method: run, args: ["a", "a", false], expect: "open a,open a,work,close a,close a"}
+    - {method: run, args: ["in", "out", true], expect: "open in,open out,work,close out,close in,caught"}
+starter_compiles: false
+hints:
+  h1: "Implement AutoCloseable: log \"open \" + name in the constructor, and log \"close \" + name in a public void close() method."
+  h2: "class Gate implements AutoCloseable { ... @Override public void close() { log.add(\"close \" + name); } }"
+ai_assisted: true

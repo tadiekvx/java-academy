@@ -1,0 +1,32 @@
+id: j1-l6.5-explain-method
+type: explain
+title: "Why one change at a time?"
+lesson: j1-l6.5
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.13]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A friend's program gives wrong answers. They change five lines at once, and now it works for one test but fails on another. Describe the steps you'd suggest instead, and explain why changing one thing at a time is better.
+rubric:
+  criteria: |
+    A full answer lists the cycle (reproduce with a small failing case, form a hypothesis, test it, make one small fix, verify old and new cases) and explains that changing several things at once hides which change helped or broke something.
+  levels:
+    - score: 2
+      descriptor: "Describes reproducing a small failing case, a hypothesis, a single small fix, and re-checking, and says that changing many things at once makes it impossible to know which change fixed or broke what."
+      samples:
+        - "First find the smallest input that fails, then guess what the cause is and check that guess, then change just one thing and test again, including the cases that used to work. If you change five lines at once you can't tell which one fixed it or which one broke the other test."
+        - "Reproduce the bug with a small example, make a hypothesis, fix one thing, then verify. Changing lots at once means you don't know what helped, and you might have added new bugs."
+    - score: 1
+      descriptor: "Gives some sensible steps or a reason, but not both, or the reasoning is vague."
+      samples:
+        - "Change one line, then test it."
+        - "You should look for the bug before changing things."
+    - score: 0
+      descriptor: "Gives no useful steps, or says changing many things at once is better."
+      samples:
+        - "Change everything you can think of until it works."
+        - "Just rewrite the whole program."
+ai_assisted: true

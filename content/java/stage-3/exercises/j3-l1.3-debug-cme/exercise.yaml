@@ -1,0 +1,31 @@
+id: j3-l1.3-debug-cme
+type: debug
+title: "Removing while looping"
+lesson: j3-l1.3
+role: ladder
+assesses: [o2]
+concepts: [J3.03]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `removeNegatives` should return the list without its negative numbers (zero stays). It throws a `ConcurrentModificationException` for some inputs, and appears to work for others. Find a failing input, explain to yourself why, and fix it **without** removing inside the for-each loop.
+entry:
+  methods:
+    - {name: removeNegatives, params: [{name: values, type: "List<Integer>"}], returns: "List<Integer>"}
+tests:
+  visible:
+    - {method: removeNegatives, args: [[1, -2, 3]], expect: [1, 3]}
+    - {method: removeNegatives, args: [[-1, 2, 3]], expect: [2, 3]}
+    - {method: removeNegatives, args: [[]], expect: []}
+    - {name: "no remove inside the for-each", source_not_contains: ["copy.remove(v)"]}
+  hidden:
+    - {method: removeNegatives, args: [[-1, -2, 3]], expect: [3]}
+    - {method: removeNegatives, args: [[0, -5, 0]], expect: [0, 0]}
+    - {method: removeNegatives, args: [[-1, -2, -3]], expect: []}
+    - {method: removeNegatives, args: [[4, 5]], expect: [4, 5]}
+    - {method: removeNegatives, args: [[-9, 1, -8, 2, -7]], expect: [1, 2]}
+hints:
+  h1: "The enhanced for loop notices when the list changes under it. What can you use instead?"
+  h2: "copy.removeIf(v -> v < 0); or build a new list of the values to keep."
+ai_assisted: true

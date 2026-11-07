@@ -1,0 +1,22 @@
+id: j1-l2.2-debug-final
+type: debug
+title: More lives
+lesson: j1-l2.2
+role: ladder
+assesses: [o4]
+concepts: [J1.03]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 1
+prompt: |
+  A game now gives players **5** lives at the start instead of 3. Someone tried to make the change by
+  adding a line, but now the program won't compile. Read the error and fix the program properly:
+  `startingLives` should stay `final`, and the program should print `Lives: 5`.
+tests:
+  visible:
+    - {name: prints the new number of lives, stdin: "", stdout_equals: "Lives: 5"}
+starter_compiles: false
+hints:
+  h1: "Read the error: what does Java say you can't do to a final variable?"
+  h2: "A final variable can't be given a new value later. Change the value where it's declared, and delete the line that reassigns it."
+ai_assisted: true

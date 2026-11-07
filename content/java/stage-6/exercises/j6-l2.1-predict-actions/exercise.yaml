@@ -1,0 +1,20 @@
+id: j6-l2.1-predict-actions
+type: predict
+title: "Reading what a constraint blocks"
+lesson: j6-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J6.05]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below deletes the transactions of one account and then deletes two accounts, one of which still has transactions. Predict the exact output, including the SQLState that a rejected statement reports.
+expected_output: |
+  delete transactions=ok
+  delete unreferenced=ok
+  delete referenced=23503
+hints:
+  h1: "What does SQLState 23506 mean?"
+  h2: "Why is the second delete rejected?"
+ai_assisted: true

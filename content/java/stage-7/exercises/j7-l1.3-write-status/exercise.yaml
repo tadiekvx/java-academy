@@ -1,0 +1,34 @@
+id: j7-l1.3-write-status
+type: write
+title: "Choosing the status code"
+lesson: j7-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J7.03]
+evidence: [IMPL]
+misconceptions: [MC168]
+difficulty: 3
+prompt: |
+  Write `status(op, authenticated, exists, valid)`, the status code an API returns. An op other than GET, POST, PUT or DELETE is `405`. Otherwise, a caller who is not authenticated gets `401`. Then: GET is `200` if the resource exists, else `404`. DELETE is `204` if it exists, else `404`. POST (create): an invalid body is `400`, a resource that already exists is `409`, otherwise `201`. PUT (replace or create): an invalid body is `400`, an existing resource is `200`, a new one is `201`.
+entry:
+  methods:
+    - {name: status, params: [{name: op, type: "String"}, {name: authenticated, type: "boolean"}, {name: exists, type: "boolean"}, {name: valid, type: "boolean"}], returns: "int"}
+tests:
+  visible:
+    - {name: "reading something that exists", method: status, args: ["GET", true, true, true], expect: 200}
+    - {name: "creating something new", method: status, args: ["POST", true, false, true], expect: 201}
+    - {name: "deleting something that is not there", method: status, args: ["DELETE", true, false, true], expect: 404}
+  hidden:
+    - {name: "PUT creates", method: status, args: ["PUT", true, false, true], expect: 201}
+    - {name: "PUT replaces", method: status, args: ["PUT", true, true, true], expect: 200}
+    - {name: "PUT with a bad body", method: status, args: ["PUT", true, true, false], expect: 400}
+    - {name: "a duplicate", method: status, args: ["POST", true, true, true], expect: 409}
+    - {name: "a bad body", method: status, args: ["POST", true, false, false], expect: 400}
+    - {name: "delete works", method: status, args: ["DELETE", true, true, true], expect: 204}
+    - {name: "not signed in", method: status, args: ["GET", false, true, true], expect: 401}
+    - {name: "an unsupported method", method: status, args: ["PATCH", true, true, true], expect: 405}
+    - {name: "not signed in beats a bad body", method: status, args: ["POST", false, false, false], expect: 401}
+hints:
+  h1: "Which check comes first: the method, then who is asking?"
+  h2: "What does RFC 9110 say a successful DELETE or a created resource returns?"
+ai_assisted: true

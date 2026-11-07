@@ -1,0 +1,40 @@
+id: j1-l4.1-explain-check
+type: explain
+title: "When is the condition checked?"
+lesson: j1-l4.1
+role: ladder
+assesses: [o2]
+concepts: [J1.07]
+evidence: [EXPL]
+misconceptions: [MC10]
+difficulty: 2
+prompt: |
+  In this loop, `n` becomes 6 on the first pass, which makes `n < 3` false. Explain why `n is 6` is still printed.
+
+  ```java
+  int n = 1;
+  while (n < 3) {
+      n = n + 5;
+      IO.println("n is " + n);
+  }
+  ```
+rubric:
+  criteria: |
+    A full answer says the condition is only checked at the start of each pass, not continuously, so once the body starts it runs to the end; the loop only stops at the next check.
+  levels:
+    - score: 2
+      descriptor: "Explains that the condition is checked only at the top of each pass, so the whole body runs even after n becomes 6, and the loop stops at the next check."
+      samples:
+        - "The while condition is only checked before each pass. When n is 1 the check passes, so the whole body runs, including the println, even though n is now 6. It stops when it checks again."
+        - "Java doesn't watch the condition all the time. It checks n < 3 at the start, then runs the full body. The next check sees 6 and ends the loop."
+    - score: 1
+      descriptor: "Says something partly right, such as the body finishes first, without clearly saying the check only happens at the start of each pass."
+      samples:
+        - "Because the println is still in the loop."
+        - "It has to finish the loop first."
+    - score: 0
+      descriptor: "Incorrect, for example says the loop runs twice, or that it stops immediately when n changes."
+      samples:
+        - "It prints because n < 3 is still true."
+        - "The loop stops straight away when n becomes 6, so it shouldn't print."
+ai_assisted: true

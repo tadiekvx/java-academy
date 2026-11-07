@@ -1,0 +1,30 @@
+id: j6-l3.3-write-transfer-jdbc
+type: write
+title: "A transfer through a connection"
+lesson: j6-l3.3
+role: ladder
+assesses: [o1]
+concepts: [J6.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write the transfer as a JDBC transaction: auto-commit off, two statements, commit; on failure roll back.
+entry:
+  methods:
+    - {name: transferJdbc, params: [{name: from, type: "int"}, {name: to, type: "int"}, {name: amount, type: "double"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a transfer between two open accounts", method: transferJdbc, args: [1, 2, 100.0], expect: "1100.00|400.50"}
+    - {name: "an overdraft is rejected", method: transferJdbc, args: [3, 1, 10.0], expect: "23513"}
+    - {name: "a transfer between two open accounts", method: transferJdbc, args: [2, 1, 50.0], expect: "250.50|1250.00"}
+  hidden:
+    - {name: "a small transfer", method: transferJdbc, args: [5, 4, 25.0], expect: "25.00|805.25"}
+    - {name: "a transfer that drains an account", method: transferJdbc, args: [2, 5, 300.5], expect: "0.00|350.50"}
+    - {name: "a transfer that drains the source", method: transferJdbc, args: [1, 2, 1200.0], expect: "0.00|1500.50"}
+    - {name: "a transfer between two open accounts", method: transferJdbc, args: [4, 3, 5.0], expect: "775.25|5.00"}
+    - {name: "a small transfer", method: transferJdbc, args: [5, 4, 50.0], expect: "0.00|830.25"}
+hints:
+  h1: "Turn auto-commit off before the first statement, and commit or roll back around them."
+  h2: "Which side can break the balance?"
+ai_assisted: true

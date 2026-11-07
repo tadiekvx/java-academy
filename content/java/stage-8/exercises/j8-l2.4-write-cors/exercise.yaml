@@ -1,0 +1,32 @@
+id: j8-l2.4-write-cors
+type: write
+title: "Which origins may read the response"
+lesson: j8-l2.4
+role: ladder
+assesses: [o1]
+concepts: [J8.08]
+evidence: [IMPL]
+misconceptions: [MC185]
+difficulty: 2
+prompt: |
+  CORS tells a browser which other origins may read a response; it does not authenticate anyone. Write `corsAllowed(origin, allowedOrigins)` returning true only when the request's origin is **exactly** one of the allowed origins. An empty origin is refused. There is no wildcard: `*` in the list allows nothing special here.
+entry:
+  methods:
+    - {name: corsAllowed, params: [{name: origin, type: "String"}, {name: allowedOrigins, type: "List<String>"}], returns: "boolean"}
+tests:
+  visible:
+    - {name: "an allowed origin", method: corsAllowed, args: ["https://bank.example", ["https://bank.example"]], expect: true}
+    - {name: "another origin", method: corsAllowed, args: ["https://evil.example", ["https://bank.example"]], expect: false}
+    - {name: "no origin", method: corsAllowed, args: ["", ["https://bank.example"]], expect: false}
+  hidden:
+    - {name: "a longer host that starts the same", method: corsAllowed, args: ["https://bank.example.evil.com", ["https://bank.example"]], expect: false}
+    - {name: "a trailing slash is a different string", method: corsAllowed, args: ["https://bank.example/", ["https://bank.example"]], expect: false}
+    - {name: "exact comparison", method: corsAllowed, args: ["HTTPS://BANK.EXAMPLE", ["https://bank.example"]], expect: false}
+    - {name: "a wildcard entry", method: corsAllowed, args: ["https://any.example", ["*"]], expect: false}
+    - {name: "a different scheme", method: corsAllowed, args: ["http://bank.example", ["https://bank.example"]], expect: false}
+    - {name: "second in the list", method: corsAllowed, args: ["https://a.example", ["https://b.example", "https://a.example"]], expect: true}
+    - {name: "empty origin and empty entry", method: corsAllowed, args: ["", [""]], expect: false}
+hints:
+  h1: "Compare whole strings, not prefixes."
+  h2: "What should an empty origin get?"
+ai_assisted: true

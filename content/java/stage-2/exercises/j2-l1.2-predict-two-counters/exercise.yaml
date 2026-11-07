@@ -1,0 +1,18 @@
+id: j2-l1.2-predict-two-counters
+type: predict
+title: "Which counter changes?"
+lesson: j2-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J2.02]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints. Be careful about which object each call is made on, and what the chained calls return.
+expected_output: |
+  4 2
+hints:
+  h1: "Count the inc() calls made on a, and on b, separately."
+  h2: "a gets three increments in the chain and one more later, so 4. b gets two, so 2."
+ai_assisted: true

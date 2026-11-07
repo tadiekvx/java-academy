@@ -1,0 +1,56 @@
+id: j12-l1.4-explain-incident
+type: explain
+title: "Diagnose and respond"
+lesson: j12-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J12.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Read the fixture below (it is a constructed teaching example) and write a short incident note.
+
+  ```text
+  CONSTRUCTED TEACHING FIXTURE (not captured from a real system)
+
+  Timeline: v2 of the accounts service was deployed at minute 3.
+  minute  connections_in_use(max 10)  p95_ms  error_rate_%
+  0       3                           120     0
+  1       3                           118     0
+  2       4                           125     0
+  3       6                           300     1
+  4       9                           900     3
+  5       10                          4800    22
+  6       10                          6200    41
+  7       10                          7000    47
+
+  Log excerpts (wording invented for practice):
+  12:03 INFO  deploy complete version=v2
+  12:04 WARN  slow query ms=2100 sql="SELECT * FROM transactions WHERE account_id = ?" rows=48211
+  12:05 ERROR connection not available pool=main timeout_ms=30000
+  12:06 ERROR connection not available pool=main timeout_ms=30000
+  12:07 ERROR connection not available pool=main timeout_ms=30000
+  ```
+
+  Include: (1) the minute the problem started and how you know; (2) the most likely chain of causes, from the change to the user-visible errors; (3) what you would do **first** to stop the harm, and why that comes before fixing the code; (4) the follow-up fix; (5) one thing to add so that you find out sooner next time.
+rubric:
+  criteria: |
+    (1) The deploy at minute 3 coincides with the first change: connections in use start rising at minute 3 (6) and p95 begins to climb (300 ms), reaching the maximum of 10 connections at minute 5, when errors jump to 22 percent. (2) v2 runs a slow query (2100 ms, scanning 48,211 rows, probably without a useful index on account_id); each slow query holds a database connection for seconds, so the pool of 10 is used up; new requests cannot get a connection, wait until the timeout and fail, so latency and errors rise together. (3) First roll back to v1, because users are being harmed now and a rollback is quick and known; finding the cause with the system down is slower and riskier. (4) Then fix the query (an index on account_id or a better query), test it with realistic data volume, and release it with a smoke test. (5) Add an alert on connection-pool usage (for example above 80 percent for 3 minutes) or on p95 latency, and a slow-query log or test, so the problem is seen at minute 3 or 4, not after users complain.
+  levels:
+    - score: 2
+      descriptor: "The answer dates the start, gives a coherent cause chain, mitigates first by rollback, names the real fix and an earlier alert."
+      samples:
+        - "Started at minute 3 with the v2 deploy: connections and p95 begin to rise. v2's slow query (2.1 s over 48k rows) holds connections; the pool of 10 fills by minute 5, new requests time out and error. First action: roll back to v1 to stop users being hurt, since that is quick and certain. Then fix the query (index on account_id), test at realistic volume and redeploy. Add an alert on pool usage or p95 so it is caught at minute 3-4."
+        - "The change was the v2 deploy at minute 3. Slow SQL ties up connections until the pool hits 10/10, then requests fail waiting for a connection. Mitigate with a rollback first, then fix the query/index and test with realistic data. Alert on pool saturation and latency."
+    - score: 1
+      descriptor: "The answer finds the cause but starts by fixing code, or has no alert."
+      samples:
+        - "The slow query in v2 used up the connection pool. Fix the query."
+        - "Roll back."
+    - score: 0
+      descriptor: "The answer blames the wrong thing."
+      samples:
+        - "The database is too small, so add more connections and restart."
+        - "Users are making too many requests."
+ai_assisted: true

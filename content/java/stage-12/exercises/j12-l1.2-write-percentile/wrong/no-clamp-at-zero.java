@@ -1,0 +1,12 @@
+int percentile(List<Integer> values, int p) {
+    if (values.isEmpty()) {
+        return -1;
+    }
+    List<Integer> sorted = new ArrayList<>(values);
+    Collections.sort(sorted);
+    int rank = (int) Math.ceil(p * sorted.size() / 100.0);
+    return sorted.get(rank - 1);
+}
+
+void main() {
+}

@@ -1,0 +1,31 @@
+id: j10-l2.1-write-backoff
+type: write
+title: "Waiting longer each time"
+lesson: j10-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J10.04]
+evidence: [IMPL]
+misconceptions: [MC201]
+difficulty: 3
+prompt: |
+  A client that retries a failed call should wait longer between attempts, so a struggling server is not hammered. Exponential backoff doubles the wait each time, up to a cap. Write `backoffDelays(attempts, baseMs, capMs)`: the wait before each retry, in milliseconds. The first wait is `baseMs` (but never more than `capMs`), each next one is twice the previous, never more than `capMs`. `attempts` can be large, so take care that nothing overflows.
+entry:
+  methods:
+    - {name: backoffDelays, params: [{name: attempts, type: "int"}, {name: baseMs, type: "long"}, {name: capMs, type: "long"}], returns: "List<Long>"}
+tests:
+  visible:
+    - {name: "five doublings", method: backoffDelays, args: [5, 100, 10000], expect: [100, 200, 400, 800, 1600]}
+    - {name: "the cap is reached", method: backoffDelays, args: [4, 500, 1000], expect: [500, 1000, 1000, 1000]}
+    - {name: "no attempts", method: backoffDelays, args: [0, 100, 1000], expect: []}
+  hidden:
+    - {name: "the base is above the cap", method: backoffDelays, args: [3, 2000, 1000], expect: [1000, 1000, 1000]}
+    - {name: "many attempts do not overflow", method: backoffDelays, args: [70, 100, 5000], expect: [100, 200, 400, 800, 1600, 3200, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000]}
+    - {name: "one attempt", method: backoffDelays, args: [1, 250, 10000], expect: [250]}
+    - {name: "small base", method: backoffDelays, args: [6, 1, 1000000], expect: [1, 2, 4, 8, 16, 32]}
+    - {name: "base equals cap", method: backoffDelays, args: [8, 100, 100], expect: [100, 100, 100, 100, 100, 100, 100, 100]}
+    - {name: "a large cap", method: backoffDelays, args: [40, 1000, 3000000000], expect: [1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000, 256000, 512000, 1024000, 2048000, 4096000, 8192000, 16384000, 32768000, 65536000, 131072000, 262144000, 524288000, 1048576000, 2097152000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000, 3000000000]}
+hints:
+  h1: "Double the previous wait, then apply the cap."
+  h2: "`1 << i` overflows for large i."
+ai_assisted: true

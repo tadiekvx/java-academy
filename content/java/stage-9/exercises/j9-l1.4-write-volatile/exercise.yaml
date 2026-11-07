@@ -1,0 +1,30 @@
+id: j9-l1.4-write-volatile
+type: write
+title: "Is volatile enough"
+lesson: j9-l1.4
+role: ladder
+assesses: [o1]
+concepts: [J9.04]
+evidence: [IMPL]
+misconceptions: [MC190]
+difficulty: 2
+prompt: |
+  A `volatile` variable gives **visibility** (a write is seen by later reads in other threads) but not **atomicity** of compound actions. Write `volatileEnough(operation)` returning `yes` when declaring the shared variable `volatile` is enough and `no` when it is not, for: `stop-flag` (one thread sets a boolean, another loops until it sees it), `publish-immutable-object` (one thread assigns a reference to an object that is never changed, others read it), `counter-increment` (`count++`), `check-then-act` (`if (x == null) x = create();`), `update-two-fields-together`. Anything else is `unknown`.
+entry:
+  methods:
+    - {name: volatileEnough, params: [{name: operation, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "the classic use", method: volatileEnough, args: ["stop-flag"], expect: "yes"}
+    - {name: "volatile does not make ++ atomic", method: volatileEnough, args: ["counter-increment"], expect: "no"}
+    - {name: "not listed", method: volatileEnough, args: ["something-else"], expect: "unknown"}
+  hidden:
+    - {name: "an immutable object", method: volatileEnough, args: ["publish-immutable-object"], expect: "yes"}
+    - {name: "two steps", method: volatileEnough, args: ["check-then-act"], expect: "no"}
+    - {name: "an invariant over two fields", method: volatileEnough, args: ["update-two-fields-together"], expect: "no"}
+    - {name: "empty", method: volatileEnough, args: [""], expect: "unknown"}
+    - {name: "exact names", method: volatileEnough, args: ["STOP-FLAG"], expect: "unknown"}
+hints:
+  h1: "Visibility is about seeing a write; atomicity is about doing several steps as one."
+  h2: "Which operations are a single read or a single write?"
+ai_assisted: true

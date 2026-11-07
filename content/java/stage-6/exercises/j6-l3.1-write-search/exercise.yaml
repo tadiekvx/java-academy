@@ -1,0 +1,30 @@
+id: j6-l3.1-write-search
+type: write
+title: "Searching by name"
+lesson: j6-l3.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J6.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write the query that returns the customer names starting with the given prefix, in alphabetical order.
+entry:
+  methods:
+    - {name: findCustomers, params: [{name: prefix, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "one customer", method: findCustomers, args: ["Ada"], expect: ["Ada Lovelace"]}
+    - {name: "one customer", method: findCustomers, args: ["Grace"], expect: ["Grace Hopper"]}
+    - {name: "all customers", method: findCustomers, args: [""], expect: ["Ada Lovelace", "Alan Turing", "Barbara Liskov", "Edsger Dijkstra", "Grace Hopper"]}
+  hidden:
+    - {name: "two customers", method: findCustomers, args: ["Al"], expect: ["Alan Turing"]}
+    - {name: "one customer", method: findCustomers, args: ["E"], expect: ["Edsger Dijkstra"]}
+    - {name: "one customer", method: findCustomers, args: ["B"], expect: ["Barbara Liskov"]}
+    - {name: "no customers", method: findCustomers, args: ["Z"], expect: []}
+    - {name: "one customer", method: findCustomers, args: ["A"], expect: ["Ada Lovelace", "Alan Turing"]}
+hints:
+  h1: "Bind the prefix as a parameter instead of putting it in the SQL string."
+  h2: "How would the query read with a pattern?"
+ai_assisted: true

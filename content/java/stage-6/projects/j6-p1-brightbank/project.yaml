@@ -1,0 +1,111 @@
+id: j6-p1-brightbank
+title: "Brightbank on a database"
+category: B
+status: in_review
+summary: "Add a database layer to Brightbank: open an account atomically, transfer money safely, and search without injection."
+brief: |
+  Brightbank now keeps its data in a database. The helper at the top of the file creates an in-memory H2 database with five customers, five accounts and six transactions, and gives you `Db.query`, `Db.one` and `Db.update`.
+
+  You will write three operations the way a small banking service would:
+
+  1. **Open an account** and its opening deposit as one transaction.
+  2. **Transfer money** between two open accounts, with every rule checked and a failure leaving nothing behind.
+  3. **Search customers** with a bound parameter, so a search term can never become SQL.
+
+  Each call starts from a fresh copy of the same data, so the answers are repeatable.
+estimated_hours: 3
+prerequisites: [j6-l2.2, j6-l3.1, j6-l3.3]
+concepts: [J6.05, J6.06, J6.08, J6.10]
+requirements:
+  - "Opening an account writes the account and its deposit together or not at all."
+  - "A transfer needs two different open accounts, a positive amount and enough money."
+  - "Searches use bound parameters."
+constraints:
+  - "Use try-with-resources for the connection."
+  - "No string concatenation inside SQL."
+acceptance:
+  - "Given an unknown customer or a zero opening deposit, then nothing is kept."
+  - "Given a failed transfer, then no balance or transaction changed."
+  - "Given an injection attempt, then no customer matches."
+milestones:
+  - id: m1
+    title: "Open an account"
+    instructions: |
+      Write `openAccount(customerId, opening)`. It inserts a new account (id one higher than the largest existing id, status `open`, balance `opening`) **and** its opening deposit in the `transactions` table, in **one transaction**. If either insert fails (an unknown customer, or an opening amount that is zero or negative), nothing is kept.
+
+      Return `id|balance|accounts=N` when it worked, or `rejected|accounts=N` when it did not, where N is the number of accounts afterwards.
+    entry:
+      methods:
+        - {name: openAccount, params: [{name: customerId, type: "int"}, {name: opening, type: "double"}], returns: "String"}
+    tests:
+      visible:
+        - {name: "a valid account", method: openAccount, args: [2, 100.0], expect: "6|100.00|accounts=6"}
+        - {name: "an unknown customer", method: openAccount, args: [99, 100.0], expect: "rejected|accounts=5"}
+        - {name: "a zero opening deposit", method: openAccount, args: [1, 0.0], expect: "rejected|accounts=5"}
+      hidden:
+        - {name: "a valid account, cents", method: openAccount, args: [5, 20.5], expect: "6|20.50|accounts=6"}
+        - {name: "a negative opening amount", method: openAccount, args: [1, -5.0], expect: "rejected|accounts=5"}
+        - {name: "a valid account for another customer", method: openAccount, args: [3, 1200.0], expect: "6|1200.00|accounts=6"}
+        - {name: "customer zero", method: openAccount, args: [0, 10.0], expect: "rejected|accounts=5"}
+        - {name: "zero for a valid customer", method: openAccount, args: [4, 0.0], expect: "rejected|accounts=5"}
+  - id: m2
+    title: "Transfer money"
+    instructions: |
+      Write `transfer(from, to, amount)`. Both accounts must exist and be `open`, they must be different, the amount must be positive and the source balance must cover it. Then, in **one transaction**, take the money from one, give it to the other and record a withdrawal and a deposit.
+
+      Return `ok|fromBalance|toBalance|tx=N|total=T` when it worked, or `rejected|tx=N|total=T` when it did not, where N is the number of transactions afterwards and T the sum of all balances. (`total` shows whether a failed transfer left half a change behind.) The `rejected` helper is given.
+    entry:
+      methods:
+        - {name: transfer, params: [{name: from, type: "int"}, {name: to, type: "int"}, {name: amount, type: "double"}], returns: "String"}
+    tests:
+      visible:
+        - {name: "a valid transfer", method: transfer, args: [1, 2, 100.0], expect: "ok|1100.00|400.50|tx=8|total=2330.75"}
+        - {name: "not enough money", method: transfer, args: [2, 1, 1000.0], expect: "rejected|tx=6|total=2330.75"}
+        - {name: "a closed target", method: transfer, args: [1, 3, 10.0], expect: "rejected|tx=6|total=2330.75"}
+      hidden:
+        - {name: "draining an account", method: transfer, args: [4, 5, 780.25], expect: "ok|0.00|830.25|tx=8|total=2330.75"}
+        - {name: "the same account twice", method: transfer, args: [1, 1, 10.0], expect: "rejected|tx=6|total=2330.75"}
+        - {name: "an unknown target", method: transfer, args: [1, 99, 10.0], expect: "rejected|tx=6|total=2330.75"}
+        - {name: "an unknown source", method: transfer, args: [99, 1, 10.0], expect: "rejected|tx=6|total=2330.75"}
+        - {name: "a closed source", method: transfer, args: [3, 1, 0.0], expect: "rejected|tx=6|total=2330.75"}
+        - {name: "a zero amount", method: transfer, args: [2, 4, 0.0], expect: "rejected|tx=6|total=2330.75"}
+        - {name: "one cent too much", method: transfer, args: [5, 1, 50.01], expect: "rejected|tx=6|total=2330.75"}
+  - id: m3
+    title: "Search safely"
+    instructions: |
+      Write `findCustomers(namePart)`: the names of the customers whose name contains `namePart`, ignoring case, in alphabetical order, joined with commas. Use a **bound parameter**, not string concatenation.
+    entry:
+      methods:
+        - {name: findCustomers, params: [{name: namePart, type: "String"}], returns: "String"}
+    tests:
+      visible:
+        - {name: "lower case", method: findCustomers, args: ["ada"], expect: "Ada Lovelace"}
+        - {name: "inside a name", method: findCustomers, args: ["ur"], expect: "Alan Turing"}
+        - {name: "no match", method: findCustomers, args: ["zzz"], expect: ""}
+      hidden:
+        - {name: "an injection attempt matches nothing", method: findCustomers, args: ["' OR '1'='1"], expect: ""}
+        - {name: "an apostrophe", method: findCustomers, args: ["o'hara"], expect: ""}
+        - {name: "upper case", method: findCustomers, args: ["ADA"], expect: "Ada Lovelace"}
+        - {name: "matches everyone", method: findCustomers, args: ["a"], expect: "Ada Lovelace,Alan Turing,Barbara Liskov,Edsger Dijkstra,Grace Hopper"}
+        - {name: "two names", method: findCustomers, args: ["is"], expect: "Barbara Liskov"}
+        - {name: "more than one match", method: findCustomers, args: ["er"], expect: "Edsger Dijkstra,Grace Hopper"}
+rubric:
+  - criterion: "Transactions"
+    zero: "Statements are saved one by one, so a failure leaves half a change"
+    one: "Uses a transaction but forgets one failure path"
+    two: "Every multi-statement change commits together or rolls back, and the checks prove it"
+  - criterion: "Validation before writing"
+    zero: "Relies on the database to throw for rules the code could check"
+    one: "Checks some rules before writing"
+    two: "Checks the rules first, and the constraints are the safety net"
+  - criterion: "Safe queries"
+    zero: "Builds SQL by joining strings"
+    one: "Uses bound parameters in some places"
+    two: "Every value is a bound parameter and the injection check passes"
+  - criterion: "Design note"
+    zero: "Missing or only describes the code"
+    one: "Explains the code but not the choices"
+    two: "Explains what must be atomic and why, and what the database enforces versus the code"
+design_note_prompt: |
+  In 150 words or fewer: Which statements had to be atomic and why? Which rules did your code check, and which did you leave to the database constraints? Where in a real service would the transaction boundary sit?
+ai_assisted: true

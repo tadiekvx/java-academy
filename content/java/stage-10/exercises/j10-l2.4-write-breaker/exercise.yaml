@@ -1,0 +1,31 @@
+id: j10-l2.4-write-breaker
+type: write
+title: "A circuit breaker's decisions"
+lesson: j10-l2.4
+role: ladder
+assesses: [o1]
+concepts: [J10.07]
+evidence: [IMPL]
+misconceptions: [MC204]
+difficulty: 4
+prompt: |
+  `results` is what each call to a dependency **would** return, `ok` or `fail`. The breaker starts closed and lets calls through. After `threshold` consecutive failures it opens: the next `cooldown` calls are answered `rejected` without calling the dependency (their result is not used). It then becomes half-open: the next call is let through, and if it is `ok` the breaker closes (and the failure count starts again), if it fails the breaker opens again for another `cooldown` calls. A success while closed resets the failure count. Write `breakerOutcomes(results, threshold, cooldown)` returning `ok`, `fail` or `rejected` for each call.
+entry:
+  methods:
+    - {name: breakerOutcomes, params: [{name: results, type: "List<String>"}, {name: threshold, type: "int"}, {name: cooldown, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "trips, rejects, recovers", method: breakerOutcomes, args: [["fail", "fail", "fail", "ok", "ok", "ok", "ok", "fail"], 3, 2], expect: ["fail", "fail", "fail", "rejected", "rejected", "ok", "ok", "fail"]}
+    - {name: "never trips", method: breakerOutcomes, args: [["ok", "ok"], 3, 2], expect: ["ok", "ok"]}
+    - {name: "failures not in a row", method: breakerOutcomes, args: [["fail", "ok", "fail", "ok", "fail"], 2, 1], expect: ["fail", "ok", "fail", "ok", "fail"]}
+  hidden:
+    - {name: "the half-open call fails and re-opens", method: breakerOutcomes, args: [["fail", "fail", "fail", "fail", "fail", "fail", "ok"], 2, 2], expect: ["fail", "fail", "rejected", "rejected", "fail", "rejected", "rejected"]}
+    - {name: "a dependency that stays down", method: breakerOutcomes, args: [["fail", "fail", "fail", "fail", "fail", "fail", "fail", "fail", "fail", "fail"], 3, 3], expect: ["fail", "fail", "fail", "rejected", "rejected", "rejected", "fail", "rejected", "rejected", "rejected"]}
+    - {name: "no calls", method: breakerOutcomes, args: [[], 3, 2], expect: []}
+    - {name: "trips twice", method: breakerOutcomes, args: [["fail", "fail", "ok", "ok", "ok", "fail", "fail", "ok"], 2, 1], expect: ["fail", "fail", "rejected", "ok", "ok", "fail", "fail", "rejected"]}
+    - {name: "threshold of one", method: breakerOutcomes, args: [["fail", "ok", "fail", "ok"], 1, 2], expect: ["fail", "rejected", "rejected", "ok"]}
+    - {name: "a probe that is not ok counts as a failure", method: breakerOutcomes, args: [["fail", "fail", "x", "ok", "ok", "ok"], 2, 1], expect: ["fail", "fail", "rejected", "ok", "ok", "ok"]}
+hints:
+  h1: "Keep three pieces of state: the mode, the failure count and the calls left to reject."
+  h2: "What does the half-open call decide?"
+ai_assisted: true

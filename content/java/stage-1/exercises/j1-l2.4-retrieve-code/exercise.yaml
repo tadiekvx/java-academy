@@ -1,0 +1,31 @@
+id: j1-l2.4-retrieve-code
+type: write
+title: "Airport-style codes"
+lesson: j1-l2.4
+role: retrieval
+assesses: [o2, o4]
+concepts: [J1.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: string-building
+prompt: |
+  Complete `shortCode` so it returns the first three letters of a city's name, in capitals. For example, `shortCode("London")` should be `"LON"`. Every city name has at least three letters.
+entry:
+  methods:
+    - {name: shortCode, params: [{name: city, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["London"], expect: "LON"}
+    - {args: ["paris"], expect: "PAR"}
+    - {args: ["Rome"], expect: "ROM"}
+  hidden:
+    - {name: "four letters", args: ["Oslo"], expect: "OSL"}
+    - {name: "two words", args: ["new york"], expect: "NEW"}
+    - {name: "exactly three", args: ["Ely"], expect: "ELY"}
+    - {name: "already capitals", args: ["MADRID"], expect: "MAD"}
+    - {name: "lower case", args: ["cardiff"], expect: "CAR"}
+hints:
+  h1: "substring takes a start index and an end index that isn't included. Which indexes are the first three letters?"
+  h2: "city.substring(0, 3) gives the first three letters; call toUpperCase() on that and return it."
+ai_assisted: true

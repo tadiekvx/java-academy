@@ -1,0 +1,32 @@
+id: j1-l6.2-retrieve-minmax
+type: write
+title: "Smallest and largest apart"
+lesson: j1-l6.2
+role: retrieval
+assesses: [o1]
+concepts: [J1.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: array-algorithms
+prompt: |
+  Write a method called `spread` that is given a non-empty `int[]` called `values` and returns the difference between its largest and smallest elements. For example, `spread` of 4, 8, 15, 16 is 12.
+entry:
+  methods:
+    - {name: spread, params: [{name: values, type: "int[]"}], returns: "int"}
+tests:
+  visible:
+    - {args: [[4, 8, 15, 16]], expect: 12}
+    - {args: [[7]], expect: 0}
+    - {args: [[-5, 5]], expect: 10}
+  hidden:
+    - {name: "all same", args: [[3, 3, 3]], expect: 0}
+    - {name: "descending", args: [[16, 15, 8, 4]], expect: 12}
+    - {name: "all negative", args: [[-9, -2, -5]], expect: 7}
+    - {name: "zero to hundred", args: [[0, 100]], expect: 100}
+    - {name: "repeated", args: [[2, 9, 1, 9, 2]], expect: 8}
+starter_compiles: false
+hints:
+  h1: "Track the smallest and the largest in the same loop."
+  h2: "Start both at values[0]; update each when a value beats it; return largest - smallest."
+ai_assisted: true

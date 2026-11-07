@@ -1,0 +1,21 @@
+id: j1-l4.1-predict-while
+type: predict
+title: "Pass by pass"
+lesson: j1-l4.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.07]
+evidence: [MIST]
+misconceptions: [MC10]
+difficulty: 2
+prompt: |
+  Trace this loop pass by pass, then predict exactly what it prints.
+expected_output: |
+  3
+  9
+  27
+  end 27
+hints:
+  h1: "The condition is only checked at the top. What is n just before each check?"
+  h2: "n goes 1, 3, 9, 27. When n becomes 27 the println still runs, and only then is 27 < 20 checked."
+ai_assisted: true

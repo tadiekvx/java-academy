@@ -1,0 +1,32 @@
+id: j0-l0.1-explain-pipeline
+type: explain
+title: "From source to running"
+lesson: j0-l0.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J0.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Explain, in your own words, what happens between writing `Hello.java` and seeing its output on screen. Name the two tools, the file each one produces or reads, and say what a JDK contains.
+rubric:
+  criteria: |
+    A full answer names the compiler (javac) turning Hello.java into a Hello.class file of bytecode, and the java command / JVM running that class; and says a JDK contains the compiler and the runtime/library (javac, java and the standard library).
+  levels:
+    - score: 2
+      descriptor: "Names javac compiling the .java source into a .class bytecode file, the java command (JVM) then running it, and says the JDK includes javac, java and the standard library."
+      samples:
+        - "javac compiles Hello.java into Hello.class, which is bytecode. Then the java command starts the JVM, which runs that bytecode. The JDK is the kit that has both javac and java plus the standard library."
+        - "First you compile with javac, producing a .class file. Then java Hello runs it on the JVM. A JDK contains the compiler, the runtime and the library, so you can do both."
+    - score: 1
+      descriptor: "Gets the compile-then-run order, or names one tool, but misses what is produced or what the JDK contains."
+      samples:
+        - "You compile it and then run it."
+        - "javac makes a class file and java runs it."
+    - score: 0
+      descriptor: "Incorrect or confused, for example says java compiles and javac runs, or that the class file is the source."
+      samples:
+        - "java compiles it and javac runs it."
+        - "The .class file is what you write."
+ai_assisted: true

@@ -1,0 +1,19 @@
+id: j1-l2.2-predict-copy
+type: predict
+title: Copied, not linked
+lesson: j1-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J1.03]
+evidence: [MIST]
+misconceptions: [MC02, MC03]
+difficulty: 2
+prompt: |
+  Trace this program in a table, then predict exactly what it prints. Run it to check.
+expected_output: |
+  14
+  8
+hints:
+  h1: Make a table with columns for first and second, and fill in a row for each line.
+  h2: "int second = first copies 7 into second at that moment. Doubling first afterwards doesn't change second."
+ai_assisted: true

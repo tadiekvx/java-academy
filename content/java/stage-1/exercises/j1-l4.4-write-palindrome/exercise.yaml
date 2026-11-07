@@ -1,0 +1,30 @@
+id: j1-l4.4-write-palindrome
+type: write
+title: "Palindromes"
+lesson: j1-l4.4
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.07, J1.09]
+evidence: [XFER]
+misconceptions: []
+difficulty: 3
+prompt: |
+  A palindrome reads the same forwards and backwards, like `level` or `Noon` (ignore capitals). Complete `isPalindrome`. Think about which pattern fits before you write any code.
+entry:
+  methods:
+    - {name: isPalindrome, params: [{name: word, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: ["level"], expect: true}
+    - {args: ["Noon"], expect: true}
+    - {args: ["java"], expect: false}
+  hidden:
+    - {name: "empty", args: [""], expect: true}
+    - {name: "one letter", args: ["a"], expect: true}
+    - {name: "two different", args: ["ab"], expect: false}
+    - {name: "racecar", args: ["Racecar"], expect: true}
+    - {name: "almost", args: ["abca"], expect: false}
+hints:
+  h1: "It's an 'are they all …?' question: every pair of characters from opposite ends must match. Return false as soon as one pair doesn't."
+  h2: "Compare charAt(i) with charAt(length - 1 - i) for i from 0 to half the length; return false on a mismatch, true after the loop."
+ai_assisted: true

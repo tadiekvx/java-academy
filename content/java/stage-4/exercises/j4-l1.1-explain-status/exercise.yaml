@@ -1,0 +1,46 @@
+id: j4-l1.1-explain-status
+type: explain
+title: "What did git add do?"
+lesson: j4-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J4.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A learner creates `Price.java` in a new repository and runs `git status`, which shows:
+
+  ```
+  Untracked files:
+  	Price.java
+  ```
+
+  They run `git add Price.java` and `git status` again:
+
+  ```
+  Changes to be committed:
+  	new file:   Price.java
+  ```
+
+  (a) Which of the three places (working tree, staging area, repository) holds the file before and after `git add`? (b) Is the file in the project's history now? (c) What single command would put it there, and what should the learner give it?
+rubric:
+  criteria: |
+    A full answer says the file is only in the working tree (untracked) before git add, and in the staging area as well after it; it isn't in the history until git commit; and the command is git commit with a short, imperative message describing the change.
+  levels:
+    - score: 2
+      descriptor: "Says untracked means working tree only, after git add it is staged (in the staging area), it is not yet in the repository history, and git commit -m with a clear imperative message puts it there."
+      samples:
+        - "Before git add the file is only in the working tree: Git sees it but isn't tracking it. After git add it's in the staging area, ready for the next commit. It isn't in the history yet, because that only happens at commit. git commit -m \"Add the price calculator\" would record it, with a short message saying what the change does."
+        - "(a) Working tree only, then working tree plus staging area. (b) No, staged isn't committed. (c) git commit with a message such as \"Add price calculator\"."
+    - score: 1
+      descriptor: "Gets some parts right, for example the staging area but not that it isn't committed, or no mention of the message."
+      samples:
+        - "It's staged now."
+        - "Run git commit."
+    - score: 0
+      descriptor: "Incorrect, for example says git add commits the file, or that the file is in the repository after git add."
+      samples:
+        - "git add saved it permanently into the history."
+        - "It was committed by git add."
+ai_assisted: true

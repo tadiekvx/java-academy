@@ -1,0 +1,32 @@
+id: j3-l3.1-explain-functional
+type: explain
+title: "What can a lambda become?"
+lesson: j3-l3.1
+role: ladder
+assesses: [o3]
+concepts: [J3.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) What is a **functional interface**, and why can `(a, b) -> a.length() - b.length()` be passed to `list.sort(...)`? (b) Why does this not compile, and how would you fix it? `int count = 0; list.forEach(x -> count++);`
+rubric:
+  criteria: |
+    A full answer says a functional interface has exactly one abstract method, and Comparator is one, so the lambda provides the body of that method (compare) for the compiler to treat as a Comparator; and the second does not compile because a lambda can only use local variables that are effectively final and count changes, so use a mutable holder such as an AtomicInteger or an array, or use a stream's count().
+  levels:
+    - score: 2
+      descriptor: "Says a functional interface has exactly one abstract method, that Comparator is one so the lambda supplies compare, and that the lambda cannot change the captured local count (must be effectively final) with a fix such as an AtomicInteger, a one-element array, or counting another way."
+      samples:
+        - "A functional interface has exactly one abstract method. Comparator is one, with compare(a, b), so the lambda provides that method's body and sort accepts it. The second example doesn't compile because count is a local variable that's changed, and lambdas can only capture variables that are effectively final. I'd use an AtomicInteger, or just use list.size() or a stream's count()."
+        - "(a) An interface with exactly one abstract method; Comparator has compare, and the lambda is its implementation, so it can be passed to sort. (b) count++ changes a captured local variable, which isn't allowed. Use a mutable object like an AtomicInteger instead."
+    - score: 1
+      descriptor: "Answers one part well, or both parts only partly."
+      samples:
+        - "A functional interface has one abstract method."
+        - "count can't be changed in a lambda."
+    - score: 0
+      descriptor: "Incorrect, for example says any interface works, or that lambdas can change locals freely."
+      samples:
+        - "Any interface can take a lambda."
+        - "Lambdas can change locals."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j2-l3.3-write-order
+type: write
+title: "An order with a swappable discount"
+lesson: j2-l3.3
+role: ladder
+assesses: [o1]
+concepts: [J2.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Discount`, `NoDiscount` and `PercentOff` are written. Write `Order` so that it **has a** `Discount` (passed to its constructor) and its `total()` returns the order's price after that discount. Don't use inheritance.
+entry:
+  methods:
+    - {name: total, params: [{name: pence, type: "int"}, {name: kind, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {method: total, args: [2000, "ten"], expect: 1800}
+    - {method: total, args: [2000, "none"], expect: 2000}
+    - {method: total, args: [999, "half"], expect: 500}
+    - {name: "Order does not extend anything", source_not_contains: ["extends"]}
+    - {name: "Order keeps a Discount", source_contains: ["Discount discount"]}
+  hidden:
+    - {method: total, args: [0, "ten"], expect: 0}
+    - {method: total, args: [1, "half"], expect: 1}
+    - {method: total, args: [12345, "ten"], expect: 11111}
+    - {method: total, args: [100, "none"], expect: 100}
+    - {method: total, args: [5, "half"], expect: 3}
+hints:
+  h1: "Keep the Discount in a field. total() should delegate: ask the discount to apply itself to the price."
+  h2: "private final Discount discount; ... return discount.apply(pence);"
+ai_assisted: true

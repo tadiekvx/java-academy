@@ -1,0 +1,32 @@
+id: j2-l3.3-explain-inherit-compose
+type: explain
+title: "Should it inherit?"
+lesson: j2-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J2.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team proposes `class Penguin extends Bird`, where `Bird` has `void fly()`, and a loop `for (Bird b : birds) b.fly();`. Another team proposes `class Stack extends ArrayList<Integer>`. For **one** of these two (your choice), say whether you would use inheritance, using the **substitution test**, and describe what you would do instead.
+rubric:
+  criteria: |
+    A full answer picks one case, applies the substitution test (code written for the parent would not still work: a penguin cannot fly, or a stack would expose list methods such as add(0, x) that break stack behaviour), and proposes an alternative (an interface such as FlyingBird that only some birds implement, or a Stack that holds a list and delegates).
+  levels:
+    - score: 2
+      descriptor: "Chooses one case, applies the substitution test with a concrete failure of code written for the parent, and gives a workable alternative (a FlyingBird interface, or composition with delegation)."
+      samples:
+        - "I'd not use inheritance for Penguin. Code written for Bird calls fly() on every bird, and a penguin can't fly, so it would fail or lie, which breaks the substitution test. Instead I'd make fly() part of a FlyingBird interface that only the birds that fly implement."
+        - "For Stack I wouldn't inherit from ArrayList. Code written for a list expects things like add(0, x), and a stack that allowed that would stop behaving like a stack, so a Stack can't safely stand in for a list. I'd hold a private list inside Stack and delegate push, pop and peek to it."
+    - score: 1
+      descriptor: "Gives a sensible conclusion without applying the substitution test, or applies it but offers no alternative."
+      samples:
+        - "Penguins can't fly so it's wrong."
+        - "Don't extend ArrayList."
+    - score: 0
+      descriptor: "Incorrect, for example says inheritance is always correct because a penguin is a bird in real life."
+      samples:
+        - "Penguin is a bird so inherit."
+        - "Inheritance is always best."
+ai_assisted: true

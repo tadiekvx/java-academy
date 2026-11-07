@@ -1,0 +1,32 @@
+id: j1-l5.1-retrieve-perimeter
+type: write
+title: "Perimeter"
+lesson: j1-l5.1
+role: retrieval
+assesses: [o1]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: define-method
+prompt: |
+  Write a method called `perimeter` that is given a width and a height (both `int`s, in that order) and returns the distance around the rectangle, as an `int`. For example, `perimeter(3, 5)` is 16.
+entry:
+  methods:
+    - {name: perimeter, params: [{name: width, type: "int"}, {name: height, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [3, 5], expect: 16}
+    - {args: [1, 1], expect: 4}
+    - {args: [0, 9], expect: 18}
+  hidden:
+    - {name: "a square", args: [10, 10], expect: 40}
+    - {name: "tall and thin", args: [2, 50], expect: 104}
+    - {name: "swapped order", args: [7, 3], expect: 20}
+    - {name: "wide", args: [100, 1], expect: 202}
+    - {name: "nothing", args: [0, 0], expect: 0}
+starter_compiles: false
+hints:
+  h1: "Two widths and two heights. How do you add them up and double?"
+  h2: "return 2 * (width + height);"
+ai_assisted: true

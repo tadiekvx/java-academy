@@ -1,0 +1,22 @@
+id: j1-l4.5-predict-check
+type: predict
+title: "Is it a number?"
+lesson: j1-l4.5
+role: ladder
+assesses: [o2]
+concepts: [J1.05]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Think about which texts pass the digit check.
+expected_output: |
+  true
+  false
+  false
+  false
+  true
+hints:
+  h1: "A text passes only if it's not empty and every character is a digit."
+  h2: "A space and a minus sign aren't digits. \"007\" is all digits, so it passes."
+ai_assisted: true

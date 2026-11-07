@@ -1,0 +1,32 @@
+id: j10-l2.1-explain-retries
+type: explain
+title: "What a timeout does not tell you"
+lesson: j10-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J10.04]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A payments client sends `POST /payments` and its 2-second timeout expires. Explain what the client does and does not know, why 'just retry' can be harmful, why retries without a limit or backoff can turn a small outage into a big one, and what you would set as the retry policy.
+rubric:
+  criteria: |
+    A timeout means no answer arrived in time; the request may have been lost before arriving, may be still running, or may have completed with only the answer lost, so the client cannot tell whether the payment happened. A blind retry of a non-idempotent call can charge twice (Stage 7). If many clients retry at once without limit or delay, they multiply the load on a server that is already struggling and keep it down. A sound policy bounds the number of attempts, waits with exponential backoff (usually with some randomness so clients do not retry in step), retries only calls that are safe to repeat or carry an idempotency key, and has a deadline overall.
+  levels:
+    - score: 2
+      descriptor: "The answer separates 'no answer' from 'did not happen', warns about duplicate effects and retry storms, and gives a bounded policy with idempotency."
+      samples:
+        - "A timeout only says no reply came in time; the payment may have happened and the reply been lost, so the client does not know. Retrying a non-idempotent POST could charge twice. Unbounded immediate retries from many clients multiply the load and keep the server down. I would limit attempts, back off exponentially with jitter, set an overall deadline and send an idempotency key so repeating is safe."
+        - "The client knows nothing about whether it was applied. Blind retry risks a double payment, and a crowd of retrying clients is a retry storm. Policy: a few attempts, exponential backoff, a deadline, and an idempotency key on the payment."
+    - score: 1
+      descriptor: "The answer gives some of the risks or a policy without the reasons."
+      samples:
+        - "The payment might have gone through, so retrying could double charge."
+        - "Retry three times with a delay."
+    - score: 0
+      descriptor: "The answer treats a timeout as a failure to apply."
+      samples:
+        - "The payment did not happen because it timed out, so retry as fast as possible until it works."
+        - "Increase the timeout to ten minutes."
+ai_assisted: true

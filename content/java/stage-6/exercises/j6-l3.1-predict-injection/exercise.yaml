@@ -1,0 +1,19 @@
+id: j6-l3.1-predict-injection
+type: predict
+title: "What an interpolated query does"
+lesson: j6-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J6.08]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below builds one query by string concatenation and one through a bound parameter, over the same value. Predict what each returns.
+expected_output: |
+  interpolated=5
+  bound=0
+hints:
+  h1: "What does the interpolated query do that the bound parameter does not?"
+  h2: "Why is the result of the safe query zero rows?"
+ai_assisted: true

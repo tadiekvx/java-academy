@@ -1,0 +1,21 @@
+id: j1-l5.3-predict-stack
+type: predict
+title: "Which method is running?"
+lesson: j1-l5.3
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.08]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Trace the call stack, and remember that `n` in each method is a different variable.
+expected_output: |
+  outer 1
+  inner 12
+  back 1
+  24
+hints:
+  h1: "outer's n is 1 throughout. inner gets its own n, a copy of 11."
+  h2: "inner adds 1 to its own n (12) and returns 24. outer's n never changes."
+ai_assisted: true

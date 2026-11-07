@@ -1,0 +1,32 @@
+id: j5-l2.4-write-map
+type: write
+title: "A hash table from scratch"
+lesson: j5-l2.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J5.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 5
+prompt: |
+  Write `StringIntMap`, a hash table from `String` to `int` using **chaining** (an array of buckets, each a chain of entries) and **no library map**. Start with 8 buckets; choose a bucket with `Math.floorMod(key.hashCode(), buckets.length)`; compare keys with `equals`; **double** the buckets and re-insert everything when `size` goes above three quarters of the bucket count. It needs `put` (replacing an existing key), `getOrDefault(key, fallback)`, `remove(key)` (returns whether it was there) and `size()`. Keys such as `"Aa"` and `"BB"` share a hash code, so your chaining has to work.
+entry:
+  methods:
+    - {name: run, params: [{name: ops, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [["put:a=1", "put:b=2", "get:a", "get:z"]], expect: "1 -1 size=2"}
+    - {method: run, args: [["put:Aa=1", "put:BB=2", "get:Aa", "get:BB", "put:AaAa=3", "put:BBBB=4", "get:AaAa", "get:BBBB", "get:AaBB"]], expect: "1 2 3 4 -1 size=4"}
+    - {method: run, args: [[]], expect: "size=0"}
+    - {name: "no library map", source_not_contains: ["new HashMap", "new TreeMap", "new LinkedHashMap", "Hashtable"]}
+  hidden:
+    - {method: run, args: [["put:a=1", "put:a=9", "get:a"]], expect: "9 size=1"}
+    - {method: run, args: [["put:k0=0", "put:k1=1", "put:k2=2", "put:k3=3", "put:k4=4", "put:k5=5", "put:k6=6", "put:k7=7", "put:k8=8", "put:k9=9", "put:k10=10", "put:k11=11", "put:k12=12", "put:k13=13", "put:k14=14", "put:k15=15", "put:k16=16", "put:k17=17", "put:k18=18", "put:k19=19", "put:k20=20", "put:k21=21", "put:k22=22", "put:k23=23", "put:k24=24", "put:k25=25", "put:k26=26", "put:k27=27", "put:k28=28", "put:k29=29", "put:k30=30", "put:k31=31", "put:k32=32", "put:k33=33", "put:k34=34", "put:k35=35", "put:k36=36", "put:k37=37", "put:k38=38", "put:k39=39", "put:k40=40", "put:k41=41", "put:k42=42", "put:k43=43", "put:k44=44", "put:k45=45", "put:k46=46", "put:k47=47", "put:k48=48", "put:k49=49", "put:k50=50", "put:k51=51", "put:k52=52", "put:k53=53", "put:k54=54", "put:k55=55", "put:k56=56", "put:k57=57", "put:k58=58", "put:k59=59", "get:k0", "get:k17", "get:k59", "get:k60"]], expect: "0 17 59 -1 size=60"}
+    - {method: run, args: [["put:k0=0", "put:k1=1", "put:k2=2", "put:k3=3", "put:k4=4", "put:k5=5", "put:k6=6", "put:k7=7", "put:k8=8", "put:k9=9", "put:k10=10", "put:k11=11", "put:k12=12", "put:k13=13", "put:k14=14", "put:k15=15", "put:k16=16", "put:k17=17", "put:k18=18", "put:k19=19", "put:k20=20", "put:k21=21", "put:k22=22", "put:k23=23", "put:k24=24", "put:k25=25", "put:k26=26", "put:k27=27", "put:k28=28", "put:k29=29", "put:k30=30", "put:k31=31", "put:k32=32", "put:k33=33", "put:k34=34", "put:k35=35", "put:k36=36", "put:k37=37", "put:k38=38", "put:k39=39", "remove:k0", "remove:k3", "remove:k6", "remove:k9", "remove:k12", "remove:k15", "remove:k18", "remove:k21", "remove:k24", "remove:k27", "remove:k30", "remove:k33", "remove:k36", "remove:k39", "get:k3", "get:k4"]], expect: "T T T T T T T T T T T T T T -1 4 size=26"}
+    - {method: run, args: [["put:Aa=1", "put:BB=2", "remove:Aa", "get:BB", "get:Aa", "remove:Aa"]], expect: "T 2 -1 F size=1"}
+    - {method: run, args: [["remove:x", "get:x"]], expect: "F -1 size=0"}
+    - {method: run, args: [["put:AaBB=5", "put:BBAa=6", "put:AaAa=7", "remove:BBAa", "get:AaBB", "get:AaAa", "get:BBAa"]], expect: "T 5 7 -1 size=2"}
+hints:
+  h1: "Buckets are an Entry[] of chains. put: find the key in its chain with equals, else add a new entry and maybe resize. resize: a bigger array, and re-insert every entry using its new index."
+  h2: "int i = Math.floorMod(key.hashCode(), buckets.length); for (Entry e = buckets[i]; e != null; e = e.next) if (e.key.equals(key)) ..."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j12-l2.3-explain-review
+type: explain
+title: "Review a design"
+lesson: j12-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J12.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague's design document proposes: 'Split accounts and payments into two microservices now, each with its own database. The payments service will call accounts synchronously for every payment. We estimate it takes three weeks.' Write the review you would give. Include: two questions about the design, with the failure scenario each is probing (use Stage 10); one thing you would ask to be decided in an ADR; what is missing from the estimate; and how you would phrase the review so that it is useful and kind.
+rubric:
+  criteria: |
+    Questions: (1) A payment needs the accounts service. When accounts is slow or down, what happens to payments (timeouts, retries, cascading failure, breaker or fallback), and how is a payment made exactly once if the call is retried (idempotency key)? (2) With two databases there is no single transaction for debit and credit: how is a failure between the two steps handled (saga with compensation, outbox) and what does the customer see? ADR: whether to split at all for a small team with one product (a modular monolith is the alternative), with the context and consequences recorded. Estimate: a single number with no range or assumptions; it omits the operating costs (deployment pipelines for two services, monitoring, data migration, testing failure paths) and uncertainty; ask for optimistic, likely and pessimistic values and the assumptions. Tone: review the design, not the person; say what is good, ask questions rather than issue verdicts, give reasons, and separate must-fix from suggestions.
+  levels:
+    - score: 2
+      descriptor: "The answer asks two substantive distributed-systems questions, calls for an ADR on the split, criticises the estimate and gives a constructive tone."
+      samples:
+        - "Questions: what happens to payments when accounts is slow or down (timeouts, breaker, fallback), and how is a retried payment kept exactly-once with an idempotency key? How do you handle a failure between debit and credit across two databases (saga, outbox)? Please record in an ADR why we split rather than keep a modular monolith. The estimate is one number with no range or assumptions, and leaves out pipelines, monitoring, data migration and failure testing; give three points. I would start with what is good in the plan, ask questions rather than demand changes, and mark which points must be settled before starting."
+        - "Probe failure: synchronous coupling and cascades; no shared transaction. Ask for an ADR on splitting versus a monolith. The estimate needs a range and its assumptions and the cost of running two services. Be specific and respectful, review the design not the author."
+    - score: 1
+      descriptor: "The answer has some questions or the estimate point but not both."
+      samples:
+        - "Microservices are too complicated for the team."
+        - "Three weeks is too short."
+    - score: 0
+      descriptor: "The answer accepts the proposal or attacks the author."
+      samples:
+        - "Looks good to me, ship it."
+        - "This design is amateur and the author should know better."
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j3-l3.3-write-initial
+type: write
+title: "An Optional chain"
+lesson: j3-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J3.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `initialOf(List<String> names, String prefix)`: find the **first** name that starts with `prefix`, and return its first letter in **upper case**; if no name starts with the prefix, return `"?"`. Do it as one chain using `findFirst`, `map` and `orElse`. (All the names are non-empty.)
+entry:
+  methods:
+    - {name: initialOf, params: [{name: names, type: "List<String>"}, {name: prefix, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: initialOf, args: [["ada", "bo", "bea"], "b"], expect: "B"}
+    - {method: initialOf, args: [["ada", "bo"], "z"], expect: "?"}
+    - {method: initialOf, args: [[], "a"], expect: "?"}
+    - {name: "uses an Optional chain", source_contains: ["findFirst()", "orElse"]}
+  hidden:
+    - {method: initialOf, args: [["grace", "ada"], "gr"], expect: "G"}
+    - {method: initialOf, args: [["Ada", "ada"], "a"], expect: "A"}
+    - {method: initialOf, args: [["x"], ""], expect: "X"}
+    - {method: initialOf, args: [["bob", "bill"], "bi"], expect: "B"}
+    - {method: initialOf, args: [["zed"], "zed"], expect: "Z"}
+hints:
+  h1: "filter by startsWith, findFirst gives an Optional, map takes its first letter in capitals, orElse supplies the question mark."
+  h2: "...findFirst().map(n -> n.substring(0, 1).toUpperCase()).orElse(\"?\");"
+ai_assisted: true

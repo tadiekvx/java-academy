@@ -1,0 +1,27 @@
+id: j1-l1.1-retrieve-receipt
+type: write
+title: A shop receipt
+lesson: j1-l1.1
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+variant_group: exact-output
+prompt: |
+  Write a program that prints exactly this, including capital letters, spaces and punctuation:
+
+  ```
+  Corner Shop
+  Milk 1.20
+  Total: 1.20
+  Thank you!
+  ```
+tests:
+  visible:
+    - {name: prints exactly the right lines, stdin: "", stdout_equals: "Corner Shop\nMilk 1.20\nTotal: 1.20\nThank you!"}
+hints:
+  h1: Write the output down line by line first. How many statements do you need?
+  h2: Use one IO.println per line, in order, with each line's text copied exactly inside double quotes.
+ai_assisted: true

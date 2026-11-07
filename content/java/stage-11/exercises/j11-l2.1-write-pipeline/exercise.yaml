@@ -1,0 +1,33 @@
+id: j11-l2.1-write-pipeline
+type: write
+title: "Which jobs run"
+lesson: j11-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J11.05]
+evidence: [IMPL]
+misconceptions: [MC209]
+difficulty: 4
+prompt: |
+  A pipeline is a set of jobs; `A>B` means job A `needs` job B (it runs only after B, and only if B succeeded). Jobs run one at a time here. At each step run the alphabetically first job whose needs have all been decided. A job whose needs did not all succeed is `skipped`; otherwise it runs and is `failed` if it is the job named `failing` (use an empty string for none), or `ok`. Write `runPipeline(jobs, needs, failing)` returning one `status:job` entry per job in the order they were decided. If no job can be decided because of a cycle, return `["cycle"]`.
+entry:
+  methods:
+    - {name: runPipeline, params: [{name: jobs, type: "List<String>"}, {name: needs, type: "List<String>"}, {name: failing, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "everything passes", method: runPipeline, args: [["build", "test", "scan", "package", "deploy"], ["test>build", "scan>build", "package>test", "package>scan", "deploy>package"], ""], expect: ["ok:build", "ok:scan", "ok:test", "ok:package", "ok:deploy"]}
+    - {name: "the tests fail", method: runPipeline, args: [["build", "test", "scan", "package", "deploy"], ["test>build", "scan>build", "package>test", "package>scan", "deploy>package"], "test"], expect: ["ok:build", "ok:scan", "failed:test", "skipped:package", "skipped:deploy"]}
+    - {name: "a cycle", method: runPipeline, args: [["a", "b"], ["a>b", "b>a"], ""], expect: ["cycle"]}
+  hidden:
+    - {name: "the first job fails", method: runPipeline, args: [["build", "test", "scan", "package", "deploy"], ["test>build", "scan>build", "package>test", "package>scan", "deploy>package"], "build"], expect: ["failed:build", "skipped:scan", "skipped:test", "skipped:package", "skipped:deploy"]}
+    - {name: "the scan fails, the tests still run", method: runPipeline, args: [["build", "test", "scan", "package", "deploy"], ["test>build", "scan>build", "package>test", "package>scan", "deploy>package"], "scan"], expect: ["ok:build", "failed:scan", "ok:test", "skipped:package", "skipped:deploy"]}
+    - {name: "the last job fails", method: runPipeline, args: [["build", "test", "scan", "package", "deploy"], ["test>build", "scan>build", "package>test", "package>scan", "deploy>package"], "deploy"], expect: ["ok:build", "ok:scan", "ok:test", "ok:package", "failed:deploy"]}
+    - {name: "no jobs", method: runPipeline, args: [[], [], ""], expect: []}
+    - {name: "a single failing job", method: runPipeline, args: [["only"], [], "only"], expect: ["failed:only"]}
+    - {name: "independent jobs run in name order", method: runPipeline, args: [["b", "a"], [], ""], expect: ["ok:a", "ok:b"]}
+    - {name: "packaging fails", method: runPipeline, args: [["build", "test", "scan", "package", "deploy"], ["test>build", "scan>build", "package>test", "package>scan", "deploy>package"], "package"], expect: ["ok:build", "ok:scan", "ok:test", "failed:package", "skipped:deploy"]}
+    - {name: "a chain with its root failing", method: runPipeline, args: [["x", "y", "z"], ["z>y", "y>x"], "x"], expect: ["failed:x", "skipped:y", "skipped:z"]}
+hints:
+  h1: "A job is ready when every job it needs has a status."
+  h2: "A skipped job also blocks the jobs that need it."
+ai_assisted: true

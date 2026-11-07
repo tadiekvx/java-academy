@@ -1,0 +1,32 @@
+id: j7-l4.2-explain-mocks
+type: explain
+title: "When a mock misleads"
+lesson: j7-l4.2
+role: ladder
+assesses: [o2]
+concepts: [J7.12]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A test replaces the account repository with a mock (for example with `@MockitoBean`) that returns a canned account, and checks that `GET /accounts/7` returns 200 with that account. The feature later breaks in production because the real query has a typo, and the test stays green. Explain why, and say what you would add. Also say why testing against a real database is valuable and what, on this machine, stops you from using Testcontainers.
+rubric:
+  criteria: |
+    A mock replaces the real collaborator, so the test proves only that the controller and service work with the canned answer; the real query is never run. To catch a broken query you need a test against a real database, such as an integration test or a repository slice test. Testcontainers would give a real PostgreSQL in a container, but this machine has no Docker installed, so it cannot be used here; the platform's own tests use the project's database or an in-memory one instead.
+  levels:
+    - score: 2
+      descriptor: "The answer explains what the mock hides, adds a real-database test, and states the Docker limit."
+      samples:
+        - "The mock returns what the test told it to, so the query is never executed and its typo is invisible. I would add a test that runs the real repository against a real database. Testcontainers would give a real PostgreSQL, but Docker is not installed on this machine, so I would use the project's own database or an in-memory one here."
+        - "Mocks isolate the layer, but they also hide the layer they replace. A repository test or integration test against an actual database would have caught the typo. Testcontainers needs Docker, which this machine does not have, so it is not an option here."
+    - score: 1
+      descriptor: "The answer explains the mock but gives no remedy or ignores the environment."
+      samples:
+        - "The mock hides the real query, so the test passed anyway."
+        - "Add an integration test with a real database."
+    - score: 0
+      descriptor: "The answer trusts the mock or blames the framework."
+      samples:
+        - "The test passed, so the feature must work."
+        - "Spring is not reliable with mocks."
+ai_assisted: true

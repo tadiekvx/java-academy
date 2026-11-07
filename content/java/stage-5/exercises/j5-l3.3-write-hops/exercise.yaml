@@ -1,0 +1,31 @@
+id: j5-l3.3-write-hops
+type: write
+title: "Fewest hops"
+lesson: j5-l3.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J5.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `hops(n, edges, from, to)`: the **fewest edges** on a path between two nodes in an undirected graph with nodes `0..n-1`; each edge is a string like `"1-2"`. It is 0 when `from == to`, and `-1` if `to` can't be reached. `buildGraph` is written for you. Use breadth-first search with a queue and a visited record.
+entry:
+  methods:
+    - {name: hops, params: [{name: n, type: "int"}, {name: edges, type: "String[]"}, {name: from, type: "int"}, {name: to, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: hops, args: [5, ["0-1", "0-2", "1-3", "2-3", "3-4"], 0, 4], expect: 3}
+    - {method: hops, args: [3, ["0-1"], 0, 2], expect: -1}
+    - {method: hops, args: [2, [], 1, 1], expect: 0}
+  hidden:
+    - {method: hops, args: [5, ["0-1", "0-2", "1-3", "2-3", "3-4"], 4, 0], expect: 3}
+    - {method: hops, args: [6, ["0-1", "1-2", "2-3", "3-4", "4-5", "0-5"], 0, 3], expect: 3}
+    - {method: hops, args: [4, ["0-1", "2-3"], 0, 3], expect: -1}
+    - {method: hops, args: [7, ["0-1", "1-2", "2-0", "2-3", "3-4", "5-6"], 0, 4], expect: 3}
+    - {method: hops, args: [4, ["0-1", "1-2", "2-3", "0-3"], 0, 2], expect: 2}
+    - {method: hops, args: [1, [], 0, 0], expect: 0}
+hints:
+  h1: "Keep a distance array filled with -1 meaning unvisited, and a queue. When you first reach a neighbour, give it distance + 1 and queue it."
+  h2: "if (distance[next] == -1) { distance[next] = distance[node] + 1; queue.offer(next); }"
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j5-l2.3-explain-uses
+type: explain
+title: "Stack or queue?"
+lesson: j5-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J5.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  For each, say whether you'd use a **stack** or a **queue**, and why: (a) the undo history in a text editor; (b) customers waiting to be served in the order they arrived; (c) checking that the brackets in a formula match. Then (d) say what you would declare and create in Java for either one, and why not the old `Stack` class.
+rubric:
+  criteria: |
+    A full answer chooses a stack for (a) (the most recent change is undone first, last in first out), a queue for (b) (first come first served, first in first out), and a stack for (c) (a closer must match the most recent opener); and for (d) a Deque created as an ArrayDeque, because the documentation recommends Deque over the legacy Stack class and ArrayDeque is likely to be faster.
+  levels:
+    - score: 2
+      descriptor: "Chooses stack for (a), queue for (b), stack for (c) with the LIFO or FIFO reason, and says Deque implemented by ArrayDeque, preferred over the legacy Stack class."
+      samples:
+        - "(a) A stack, because the most recent change is undone first (last in, first out). (b) A queue: first come, first served. (c) A stack, since each closing bracket has to match the most recent opening one. In Java I'd use a Deque created as new ArrayDeque<>(), because the documentation recommends it instead of the legacy Stack class."
+        - "Stack for undo (LIFO), queue for the customers (FIFO), stack for brackets (match the latest opener). I'd declare Deque<T> and create an ArrayDeque, which is recommended over Stack and is likely faster."
+    - score: 1
+      descriptor: "Chooses the structures correctly without reasons, or gets the Java part but not the choices."
+      samples:
+        - "(a) stack (b) queue (c) stack."
+        - "Use ArrayDeque."
+    - score: 0
+      descriptor: "Incorrect, for example reverses stack and queue, or says to use the Stack class."
+      samples:
+        - "(a) queue (b) stack."
+        - "Use the Stack class."
+ai_assisted: true

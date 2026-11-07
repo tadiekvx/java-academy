@@ -1,0 +1,30 @@
+id: j6-l1.2-debug-not-in
+type: debug
+title: "A NOT IN that breaks on NULL"
+lesson: j6-l1.2
+role: ladder
+assesses: [o3]
+concepts: [J6.02]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  A report lists the branch cities in which the bank has no customer. It uses `NOT IN` over `customers.city`, and it returns nothing even for a city that has no customers. One customer's city is NULL. Diagnose and fix it.
+entry:
+  methods:
+    - {name: citiesWithoutCustomers, params: [{name: branches, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "two cities without customers", method: citiesWithoutCustomers, args: [["Cape Town", "Kimberley", "Pretoria"]], expect: ["Kimberley", "Pretoria"]}
+    - {name: "no branches", method: citiesWithoutCustomers, args: [[]], expect: []}
+    - {name: "a city that has a customer", method: citiesWithoutCustomers, args: [["Durban"]], expect: []}
+  hidden:
+    - {name: "one unknown city", method: citiesWithoutCustomers, args: [["Nowhere", "Durban"]], expect: ["Nowhere"]}
+    - {name: "every city has customers", method: citiesWithoutCustomers, args: [["Johannesburg", "Cape Town"]], expect: []}
+    - {name: "one city without customers", method: citiesWithoutCustomers, args: [["Pretoria"]], expect: ["Pretoria"]}
+    - {name: "two cities without customers, in order", method: citiesWithoutCustomers, args: [["Kimberley", "Bloemfontein", "Durban"]], expect: ["Bloemfontein", "Kimberley"]}
+    - {name: "the comparison is case sensitive", method: citiesWithoutCustomers, args: [["cape town"]], expect: ["cape town"]}
+hints:
+  h1: "What does `x NOT IN (a, b, NULL)` evaluate to when x is not a or b?"
+  h2: "Remove the NULLs from the subquery, or use NOT EXISTS."
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j1-l7.2-write-program
+type: write
+title: "The whole car park program"
+lesson: j1-l7.2
+role: ladder
+assesses: [o3]
+concepts: [J1.16, J1.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write a **whole program**. It asks `Minutes parked: ` (using `IO.readln`), reads the number, works out the fee by the same rules as before (free for 30 minutes, 2 pounds per hour or part of an hour, capped at 15), and prints `Fee: ` followed by the number.
+
+  For example, if the person types `91`, the program prints `Fee: 4`.
+
+  Build the calculation as its own method first.
+tests:
+  visible:
+    - {name: "91 minutes", stdin: "91\n", stdout_contains: ["Fee: 4\n"]}
+    - {name: "free", stdin: "20\n", stdout_contains: ["Fee: 0\n"]}
+    - {name: "capped", stdin: "600\n", stdout_contains: ["Fee: 15\n"]}
+  hidden:
+    - {name: "30 minutes", stdin: "30\n", stdout_contains: ["Fee: 0\n"]}
+    - {name: "31 minutes", stdin: "31\n", stdout_contains: ["Fee: 2\n"]}
+    - {name: "90", stdin: "90\n", stdout_contains: ["Fee: 2\n"]}
+    - {name: "271", stdin: "271\n", stdout_contains: ["Fee: 10\n"]}
+    - {name: "0", stdin: "0\n", stdout_contains: ["Fee: 0\n"]}
+hints:
+  h1: "Reuse your parkingFee idea as a method, then main only reads, calls, and prints."
+  h2: "int minutes = Integer.parseInt(IO.readln(\"Minutes parked: \").trim());"
+ai_assisted: true

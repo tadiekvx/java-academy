@@ -1,0 +1,33 @@
+id: j1-l7.4-write-second
+type: write
+title: "Second largest"
+lesson: j1-l7.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.16, J1.07, J1.08]
+evidence: [XFER]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `secondLargest(int[] values)`: the second-largest **different** value. In `{5, 9, 9, 3}` the largest is 9, so the answer is 5 (the two 9s count once). If there are fewer than two different values, return -1.
+
+  The array may contain negative numbers.
+entry:
+  methods:
+    - {name: secondLargest, params: [{name: values, type: "int[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: secondLargest, args: [[5, 9, 9, 3]], expect: 5}
+    - {method: secondLargest, args: [[4, 4]], expect: -1}
+    - {method: secondLargest, args: [[]], expect: -1}
+  hidden:
+    - {method: secondLargest, args: [[1, 2]], expect: 1}
+    - {method: secondLargest, args: [[-5, -2, -9]], expect: -5}
+    - {method: secondLargest, args: [[7]], expect: -1}
+    - {method: secondLargest, args: [[3, 3, 2, 2]], expect: 2}
+    - {method: secondLargest, args: [[10, 1, 5, 8, 10]], expect: 8}
+    - {method: secondLargest, args: [[-1, -1, -3]], expect: -3}
+hints:
+  h1: "Track two 'best so far' values in one pass. Be careful what each starts as: 0 is wrong for negative numbers."
+  h2: "Use flags (or the first element) to record that a largest and a second have been seen."
+ai_assisted: true

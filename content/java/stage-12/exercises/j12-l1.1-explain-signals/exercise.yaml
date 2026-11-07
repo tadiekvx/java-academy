@@ -1,0 +1,44 @@
+id: j12-l1.1-explain-signals
+type: explain
+title: "Three signals, one incident"
+lesson: j12-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J12.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  These are real startup lines from this platform's backend:
+
+  ```text
+  2026-11-07T13:16:13.868+02:00  INFO 78249 --- [academy] [           main] academy.AcademyApplication               : No active profile set, falling back to 1 default profile: "default"
+  2026-11-07T13:16:14.243+02:00  INFO 78249 --- [academy] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8092 (http)
+  2026-11-07T13:16:14.248+02:00  INFO 78249 --- [academy] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.27]
+  2026-11-07T13:16:14.421+02:00  INFO 78249 --- [academy] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+  2026-11-07T13:16:14.438+02:00  INFO 78249 --- [academy] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5433/academy (PostgreSQL 18.6)
+  2026-11-07T13:16:15.161+02:00  INFO 78249 --- [academy] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8092 (http) with context path '/'
+  2026-11-07T13:16:15.163+02:00  INFO 78249 --- [academy] [           main] academy.AcademyApplication               : Started AcademyApplication in 1.431 seconds (process running for 1.555)
+  ```
+
+  Answer: (1) The OpenTelemetry documentation names three signals: traces, metrics and logs. Give each in one sentence, and say which of the three these lines are. (2) What is hard about finding, say, every start that took more than two seconds from lines like these, and how would a structured log line change that? (3) A customer reports that their transfer 'took ages at 14:02'. Say what you would look at in each of the three signals and in what order.
+rubric:
+  criteria: |
+    (1) A trace is the path of a request through your application; a metric is a measurement captured at runtime; a log is a recording of an event. These lines are logs. (2) Each line is free text: the start duration is buried in a sentence ('Started AcademyApplication in 1.431 seconds'), so a search must parse text and breaks if the wording changes. A structured line has a named field (for example duration_ms=1431) that a tool can filter and compare directly. (3) Start with metrics to see whether latency or errors rose around 14:02 and for how many users; then use a trace of one slow request to see which step was slow; then read the logs of that component at that time for the cause.
+  levels:
+    - score: 2
+      descriptor: "The answer defines all three signals, identifies the lines as logs, explains the parsing problem and the structured fix, and orders the three signals for the investigation."
+      samples:
+        - "A trace follows one request through the system, a metric is a measurement over time, a log records an event; these are logs. Searching for slow starts means parsing prose, which breaks when the wording changes; a field like duration_ms can be filtered. For the 14:02 complaint: metrics first (did latency rise, how widely), then a trace of a slow request to find the slow step, then the logs for that component for the reason."
+        - "Traces: request path. Metrics: runtime measurements. Logs: event records, which is what we have here. Free text must be parsed; structured fields are queryable. Order: metrics, trace, logs."
+    - score: 1
+      descriptor: "The answer defines the signals but not the investigation, or the reverse."
+      samples:
+        - "Logs, metrics and traces are the three signals and these are logs."
+        - "Look at the logs at 14:02."
+    - score: 0
+      descriptor: "The answer treats the signals as the same."
+      samples:
+        - "They are all just logs."
+        - "Metrics are enough for everything."
+ai_assisted: true

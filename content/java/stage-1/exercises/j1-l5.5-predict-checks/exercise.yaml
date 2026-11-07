@@ -1,0 +1,20 @@
+id: j1-l5.5-predict-checks
+type: predict
+title: "What do the checks report?"
+lesson: j1-l5.5
+role: ladder
+assesses: [o1]
+concepts: [J1.14]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Work out each call's result, then whether the check passes.
+expected_output: |
+  PASS ascending
+  FAIL descending: expected 5 but got 9
+  PASS middle first
+hints:
+  h1: "Work out middle(1, 5, 9) etc. by hand: which branch runs?"
+  h2: "middle(9, 5, 1) has a > b, so it returns 9, which isn't 5. middle(5, 1, 9) also has a > b and returns 5, which matches."
+ai_assisted: true

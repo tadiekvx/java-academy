@@ -1,0 +1,33 @@
+id: j1-l5.3-write-trace
+type: write
+title: "Chain of calls"
+lesson: j1-l5.3
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write three methods, each calling the next: `step1(n)` returns `step2(n + 1)`; `step2(n)` returns `step3(n * 2)`; and `step3(n)` returns `n + 3`. All take and return an `int`. For example, `step1(4)` is `step2(5)`, which is `step3(10)`, which is 13.
+entry:
+  methods:
+    - {name: step1, params: [{name: n, type: "int"}], returns: "int"}
+    - {name: step2, params: [{name: n, type: "int"}], returns: "int"}
+    - {name: step3, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [4], expect: 13}
+    - {method: step2, args: [5], expect: 13}
+    - {method: step3, args: [10], expect: 13}
+  hidden:
+    - {name: "zero", args: [0], expect: 5}
+    - {name: "minus one", args: [-1], expect: 3}
+    - {name: "step2 of zero", method: step2, args: [0], expect: 3}
+    - {name: "step3 negative", method: step3, args: [-3], expect: 0}
+    - {name: "large", args: [100], expect: 205}
+starter_compiles: false
+hints:
+  h1: "Each method does one small thing, then hands the result to the next."
+  h2: "step1 returns step2(n + 1); step2 returns step3(n * 2); step3 returns n + 3."
+ai_assisted: true

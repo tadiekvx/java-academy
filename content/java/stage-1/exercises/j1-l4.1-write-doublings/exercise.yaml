@@ -1,0 +1,31 @@
+id: j1-l4.1-write-doublings
+type: write
+title: "Doubling savings"
+lesson: j1-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: while-counting
+prompt: |
+  A savings scheme doubles your money every year. Complete `yearsToReach` so it returns how many years it takes for `start` pounds to reach at least `target` pounds. If `start` is already at least `target`, the answer is 0. `start` is always at least 1.
+entry:
+  methods:
+    - {name: yearsToReach, params: [{name: start, type: "int"}, {name: target, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [100, 400], expect: 2}
+    - {args: [3, 20], expect: 3}
+    - {args: [50, 50], expect: 0}
+  hidden:
+    - {name: "from 1", args: [1, 1000], expect: 10}
+    - {name: "just over", args: [100, 101], expect: 1}
+    - {name: "already there", args: [500, 100], expect: 0}
+    - {name: "exactly equal", args: [7, 7], expect: 0}
+    - {name: "a million", args: [10, 1000000], expect: 17}
+hints:
+  h1: "Keep doubling while the money is below the target, counting each pass."
+  h2: "int money = start; int years = 0; while (money < target) { money *= 2; years++; } return years;"
+ai_assisted: true

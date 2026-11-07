@@ -1,0 +1,31 @@
+id: j9-l2.3-write-virtual
+type: write
+title: "Ten thousand sleepers"
+lesson: j9-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J9.08]
+evidence: [IMPL]
+misconceptions: [MC194]
+difficulty: 3
+prompt: |
+  Each of `count` tasks sleeps for 20 milliseconds and then increments a shared `LongAdder`. Write `sleepersFinished(count)` so that all the tasks run at the same time: create one **virtual thread per task** with `Executors.newVirtualThreadPerTaskExecutor()` (do not pool them), let the try-with-resources close wait for the tasks, and return the adder's sum. For `count` = 10,000 this takes a small fraction of a second; a pool of 10 platform threads would need over 20 seconds.
+entry:
+  methods:
+    - {name: sleepersFinished, params: [{name: count, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {name: "a hundred", method: sleepersFinished, args: [100], expect: 100}
+    - {name: "a thousand", method: sleepersFinished, args: [1000], expect: 1000}
+    - {name: "none", method: sleepersFinished, args: [0], expect: 0}
+    - {name: "one virtual thread per task", source_contains: ["newVirtualThreadPerTaskExecutor"]}
+  hidden:
+    - {name: "ten thousand", method: sleepersFinished, args: [10000], expect: 10000}
+    - {name: "five thousand", method: sleepersFinished, args: [5000], expect: 5000}
+    - {name: "one", method: sleepersFinished, args: [1], expect: 1}
+    - {name: "two hundred and fifty", method: sleepersFinished, args: [250], expect: 250}
+    - {name: "twenty thousand", method: sleepersFinished, args: [20000], expect: 20000}
+hints:
+  h1: "Closing the executor waits for the submitted tasks."
+  h2: "Virtual threads should not be pooled: one per task."
+ai_assisted: true

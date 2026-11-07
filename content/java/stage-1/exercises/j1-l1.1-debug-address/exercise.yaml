@@ -1,0 +1,27 @@
+id: j1-l1.1-debug-address
+type: debug
+title: The squashed address
+lesson: j1-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J1.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 1
+prompt: |
+  This program should print an address on three lines:
+
+  ```
+  221B Baker Street
+  London
+  NW1 6XE
+  ```
+
+  Instead, it prints everything squashed onto one line. Run it, work out why, and fix it.
+tests:
+  visible:
+    - {name: prints the address on three lines, stdin: "", stdout_equals: "221B Baker Street\nLondon\nNW1 6XE"}
+hints:
+  h1: Which statement keeps printing on the same line, and which moves to a new line?
+  h2: The program uses IO.print where it needs IO.println.
+ai_assisted: true

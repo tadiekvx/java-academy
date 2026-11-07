@@ -1,0 +1,32 @@
+id: j12-l2.1-write-phases
+type: write
+title: "Is the migration order safe"
+lesson: j12-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J12.05]
+evidence: [IMPL]
+misconceptions: [MC218]
+difficulty: 3
+prompt: |
+  Renaming a column without downtime uses the expand-migrate-contract (parallel change) pattern in several releases. The phases and what each needs before it: `dual-write` and `backfill` need `add-new-column`; `switch-reads` needs `backfill` and `dual-write`; `stop-writing-old` needs `switch-reads`; `drop-old-column` needs `switch-reads` and `stop-writing-old`; `add-new-column` needs nothing. Write `checkPhases(phases)` returning `safe`, or for the **first** phase whose needs are not all done earlier in the list, `unsafe:PHASE needs NEED` naming the first missing need in the order listed above. Unknown phases need nothing.
+entry:
+  methods:
+    - {name: checkPhases, params: [{name: phases, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {name: "the full safe order", method: checkPhases, args: [["add-new-column", "dual-write", "backfill", "switch-reads", "stop-writing-old", "drop-old-column"]], expect: "safe"}
+    - {name: "dropping too early", method: checkPhases, args: [["add-new-column", "drop-old-column"]], expect: "unsafe:drop-old-column needs switch-reads"}
+    - {name: "switching before anything is ready", method: checkPhases, args: [["switch-reads"]], expect: "unsafe:switch-reads needs backfill"}
+  hidden:
+    - {name: "switching reads before dual write", method: checkPhases, args: [["add-new-column", "backfill", "switch-reads"]], expect: "unsafe:switch-reads needs dual-write"}
+    - {name: "dropping before the old writes stop", method: checkPhases, args: [["add-new-column", "dual-write", "backfill", "switch-reads", "drop-old-column"]], expect: "unsafe:drop-old-column needs stop-writing-old"}
+    - {name: "backfill and dual write in either order", method: checkPhases, args: [["add-new-column", "backfill", "dual-write", "switch-reads", "stop-writing-old", "drop-old-column"]], expect: "safe"}
+    - {name: "nothing at all", method: checkPhases, args: [[]], expect: "safe"}
+    - {name: "writing to a column that does not exist", method: checkPhases, args: [["dual-write"]], expect: "unsafe:dual-write needs add-new-column"}
+    - {name: "an unknown phase", method: checkPhases, args: [["add-new-column", "mystery", "dual-write"]], expect: "safe"}
+    - {name: "stopping writes before the switch", method: checkPhases, args: [["add-new-column", "dual-write", "backfill", "stop-writing-old"]], expect: "unsafe:stop-writing-old needs switch-reads"}
+hints:
+  h1: "Remember which phases you have already seen."
+  h2: "Report the first problem you meet, reading left to right."
+ai_assisted: true

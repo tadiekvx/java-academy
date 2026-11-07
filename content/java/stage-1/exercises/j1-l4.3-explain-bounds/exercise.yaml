@@ -1,0 +1,32 @@
+id: j1-l4.3-explain-bounds
+type: explain
+title: "Why less than?"
+lesson: j1-l4.3
+role: ladder
+assesses: [o2]
+concepts: [J1.07]
+evidence: [EXPL]
+misconceptions: [MC09]
+difficulty: 2
+prompt: |
+  To visit every character of `word`, a learner wrote `for (int i = 0; i <= word.length(); i++)`. It crashes. Explain why, and why `i < word.length()` is right.
+rubric:
+  criteria: |
+    A full answer says indexes run from 0 to length() - 1, so with <= the loop reaches i == length(), an index that doesn't exist, and charAt crashes; with < the last value of i is length() - 1, the last character.
+  levels:
+    - score: 2
+      descriptor: "Explains that the last index is length() - 1, so <= makes i reach length(), which is past the end and crashes charAt, while < stops at the last real index."
+      samples:
+        - "Indexes go from 0 to length - 1. With <= the loop also runs with i equal to length, and there's no character there, so charAt fails. With < the last i is length - 1."
+        - "For \"cat\", length is 3 but the indexes are 0, 1, 2. i <= 3 would try charAt(3), which doesn't exist. i < 3 stops at 2."
+    - score: 1
+      descriptor: "Says it goes one too far, without explaining that indexes end at length() - 1."
+      samples:
+        - "<= goes one too far."
+        - "Because it should be < not <=."
+    - score: 0
+      descriptor: "Incorrect, for example blames starting at 0."
+      samples:
+        - "It should start at 1 instead of 0."
+        - "length() is wrong, you should use size()."
+ai_assisted: true

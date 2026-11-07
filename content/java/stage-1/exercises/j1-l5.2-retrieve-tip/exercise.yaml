@@ -1,0 +1,32 @@
+id: j1-l5.2-retrieve-tip
+type: write
+title: "Bill with tip"
+lesson: j1-l5.2
+role: retrieval
+assesses: [o1, o3]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: build-method
+prompt: |
+  Write a method called `totalWithTip` that is given a `bill` in pence and a `tipPercent` (both `int`s, in that order). It returns the bill plus the tip, in pence, working out the tip as `bill * tipPercent / 100`. For example, `totalWithTip(2000, 10)` is 2200.
+entry:
+  methods:
+    - {name: totalWithTip, params: [{name: bill, type: "int"}, {name: tipPercent, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [2000, 10], expect: 2200}
+    - {args: [999, 15], expect: 1148}
+    - {args: [500, 0], expect: 500}
+  hidden:
+    - {name: "tip equals bill", args: [100, 100], expect: 200}
+    - {name: "tiny bill", args: [1, 50], expect: 1}
+    - {name: "awkward numbers", args: [12345, 12], expect: 13826}
+    - {name: "no bill", args: [0, 20], expect: 0}
+    - {name: "quarter", args: [800, 25], expect: 1000}
+starter_compiles: false
+hints:
+  h1: "The same shape as a discount, but adding instead of taking away."
+  h2: "int tip = bill * tipPercent / 100; return bill + tip;"
+ai_assisted: true

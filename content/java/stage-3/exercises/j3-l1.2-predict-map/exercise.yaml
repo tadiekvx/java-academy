@@ -1,0 +1,22 @@
+id: j3-l1.2-predict-map
+type: predict
+title: "put, merge and get"
+lesson: j3-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J3.02]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints. The map is a `TreeMap`, so its order is sorted by key.
+expected_output: |
+  {apple=5, fig=9, pear=3}
+  null
+  0
+  true
+  3
+hints:
+  h1: "put replaces an existing value. merge adds when the key exists. putIfAbsent only puts when the key is missing."
+  h2: "apple becomes 5; pear is 1 + 2 = 3; fig is added once with 9. kiwi isn't there."
+ai_assisted: true

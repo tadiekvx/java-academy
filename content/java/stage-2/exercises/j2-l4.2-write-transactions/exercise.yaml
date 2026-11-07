@@ -1,0 +1,32 @@
+id: j2-l4.2-write-transactions
+type: write
+title: "Apply a transaction"
+lesson: j2-l4.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J2.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Txn` is a sealed interface with three record kinds: `Deposit(amount)`, `Withdrawal(amount)` and `Fee(percent)`. Write `apply(Txn t, int balance)` as a **pattern-matching `switch` expression** that returns the new balance: a deposit adds, a withdrawal subtracts, and a fee takes that percentage **of the current balance** (rounded down). Don't use `default`: the compiler should check you covered every kind.
+entry:
+  methods:
+    - {name: run, params: [{name: specs, type: "String[]"}], returns: "int"}
+tests:
+  visible:
+    - {method: run, args: [["d:100", "w:30"]], expect: 70}
+    - {method: run, args: [["d:200", "f:10"]], expect: 180}
+    - {method: run, args: [[]], expect: 0}
+    - {name: "uses a switch on the transaction", source_contains: ["switch (t)"]}
+    - {name: "no default branch", source_not_contains: ["default"]}
+  hidden:
+    - {method: run, args: [["d:1000", "f:5", "f:5"]], expect: 903}
+    - {method: run, args: [["w:50"]], expect: -50}
+    - {method: run, args: [["d:99", "f:50"]], expect: 50}
+    - {method: run, args: [["d:10", "w:3", "d:4", "f:25"]], expect: 9}
+    - {method: run, args: [["d:7", "f:100"]], expect: 0}
+hints:
+  h1: "Use return switch (t) { case Deposit d -> ...; case Withdrawal w -> ...; case Fee f -> ...; };"
+  h2: "case Fee f -> balance - balance * f.percent() / 100;"
+ai_assisted: true

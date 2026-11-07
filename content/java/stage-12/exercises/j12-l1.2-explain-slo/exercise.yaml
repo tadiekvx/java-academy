@@ -1,0 +1,32 @@
+id: j12-l1.2-explain-slo
+type: explain
+title: "Choosing the measure"
+lesson: j12-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J12.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Over a minute, 10 requests took 120, 118, 125, 130, 122, 119, 121, 124, 123 and 4800 milliseconds. Compute the average and the 95th percentile (nearest rank), and say what each tells a team. Then explain what an SLI, an SLO and an error budget are, using the definitions in the SRE book, write one SLO for Brightbank's transfer endpoint, and say what a team should do when the budget is nearly spent.
+rubric:
+  criteria: |
+    The average is (120+118+125+130+122+119+121+124+123+4800)/10 = 590.2 ms, a number that no request actually experienced, because one slow outlier drags it up. The 95th percentile by nearest rank is the 10th value of the sorted list, 4800 ms, which shows the slow tail a real user hit; percentiles describe what users experience at the slow end. An SLI is a carefully defined quantitative measure of the level of service (latency, error rate, throughput); an SLO is a target for that measure (SLI <= target); the error budget is the amount of failure the SLO allows. An example SLO: 99.9 percent of POST /transfers requests succeed, and 99 percent complete within 500 ms, measured over 30 days. When the budget is nearly spent the team slows risky releases and spends effort on reliability until it recovers.
+  levels:
+    - score: 2
+      descriptor: "The answer computes both numbers, interprets them, defines SLI/SLO/budget, gives a concrete SLO and says what to do as the budget runs out."
+      samples:
+        - "The average is 590.2 ms but nobody saw that; the p95 (10th of 10 values) is 4800 ms, which exposes the slow tail. An SLI is a measure such as latency or error rate, an SLO is a target for it, and the error budget is how much failure the SLO permits. For transfers: 99.9 percent succeed and 99 percent finish within 500 ms over 30 days. When the budget is nearly gone we slow releases and fix reliability first."
+        - "Average 590.2 ms hides the problem; p95 is 4800 ms. SLI: what you measure. SLO: the target. Error budget: allowed failures. Example: 99.9% of transfers succeed over 30 days. If the budget is nearly spent, pause risky changes and work on stability."
+    - score: 1
+      descriptor: "The answer computes the numbers or defines the terms but not both."
+      samples:
+        - "The p95 is 4800 and the average is 590."
+        - "An SLO is a target for an SLI."
+    - score: 0
+      descriptor: "The answer prefers the average or confuses the terms."
+      samples:
+        - "The average is the fairest number for users."
+        - "An SLA, SLO and SLI are the same."
+ai_assisted: true

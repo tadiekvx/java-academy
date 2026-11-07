@@ -1,0 +1,24 @@
+id: j1-l2.4-predict-strings
+type: predict
+title: "Joining and slicing"
+lesson: j1-l2.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.04]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints, one line per statement. Remember: `+` works left to right, and indexes start at 0.
+expected_output: |
+  Total: 34
+  7 apples
+  Total: 7
+  4
+  a
+  ana
+  -1
+hints:
+  h1: "Once the left side of + is a string, every + after it joins text. charAt and substring count from 0."
+  h2: "\"Total: \" + 3 gives \"Total: 3\", then + 4 gives \"Total: 34\". substring(1, 4) takes indexes 1, 2 and 3."
+ai_assisted: true

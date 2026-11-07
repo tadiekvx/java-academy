@@ -1,0 +1,32 @@
+id: j1-l3.3-explain-order
+type: explain
+title: "Why order matters"
+lesson: j1-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J1.06]
+evidence: [EXPL]
+misconceptions: [MC11]
+difficulty: 2
+prompt: |
+  In the original `grade` method, why must `score >= 70` be checked before `score >= 50`? Use a specific score to show what goes wrong in the other order.
+rubric:
+  criteria: |
+    A full answer says an else-if chain runs only the first true branch; a high score like 85 also satisfies >= 50, so if that's checked first it returns C and the A branch is never reached.
+  levels:
+    - score: 2
+      descriptor: "Says only the first true branch runs, and uses an example score (70 or above) to show it would wrongly get a C if >= 50 came first."
+      samples:
+        - "Java stops at the first true condition. If >= 50 came first, a score of 85 would match it and get a C, and the >= 70 check would never run."
+        - "Only one branch runs, the first that's true. 92 is >= 50, so checking that first gives C even though it should be A."
+    - score: 1
+      descriptor: "Gets the idea that order matters but with no example, or a vague explanation of why."
+      samples:
+        - "Because the higher grades need to be checked first."
+        - "Otherwise everyone gets the wrong grade."
+    - score: 0
+      descriptor: "Incorrect, for example says all matching branches run, or that the order doesn't matter."
+      samples:
+        - "It doesn't matter, Java checks all of them."
+        - "Because 50 is smaller than 70 so it would be skipped."
+ai_assisted: true

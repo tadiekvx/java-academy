@@ -1,0 +1,33 @@
+id: j9-l3.3-write-growing
+type: write
+title: "Spot the leak"
+lesson: j9-l3.3
+role: ladder
+assesses: [o1]
+concepts: [J9.11]
+evidence: [IMPL, DEBUG]
+misconceptions: [MC197]
+difficulty: 3
+prompt: |
+  A heap histogram counts live instances per class. Each snapshot is `Class=count,Class=count,...`, taken at a later time than the one before. A **suspect leak** is a class whose count is present in every snapshot and **strictly increases** from each snapshot to the next. Write `growingClasses(snapshots)` returning the suspects sorted alphabetically (an empty list if there are fewer than two snapshots).
+entry:
+  methods:
+    - {name: growingClasses, params: [{name: snapshots, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "Session grows", method: growingClasses, args: [["Order=10,Session=5,Cache=100", "Order=10,Session=9,Cache=100", "Order=10,Session=14,Cache=100"]], expect: ["Session"]}
+    - {name: "one snapshot", method: growingClasses, args: [["A=1"]], expect: []}
+    - {name: "B is flat", method: growingClasses, args: [["A=1,B=2", "A=2,B=2"]], expect: ["A"]}
+  hidden:
+    - {name: "B goes down once", method: growingClasses, args: [["A=1,B=5", "A=2,B=4", "A=3,B=6"]], expect: ["A"]}
+    - {name: "stops growing", method: growingClasses, args: [["A=1", "A=2", "A=2"]], expect: []}
+    - {name: "B is missing from one snapshot", method: growingClasses, args: [["A=1,B=1", "A=2", "A=3,B=3"]], expect: ["A"]}
+    - {name: "two suspects, sorted", method: growingClasses, args: [["X=1,Y=1,Z=1", "X=2,Y=2,Z=1", "X=3,Y=3,Z=1"]], expect: ["X", "Y"]}
+    - {name: "no snapshots", method: growingClasses, args: [[]], expect: []}
+    - {name: "sorted output", method: growingClasses, args: [["Z=1,A=1", "Z=2,A=2"]], expect: ["A", "Z"]}
+    - {name: "A dips then jumps", method: growingClasses, args: [["A=5,B=1", "A=1,B=2", "A=9,B=3"]], expect: ["B"]}
+    - {name: "two suspects whose hash codes collide, still sorted", method: growingClasses, args: [["BB=1,Aa=1", "BB=2,Aa=2"]], expect: ["Aa", "BB"]}
+hints:
+  h1: "Compare each snapshot with the next one, not just the first with the last."
+  h2: "A class that disappears from a snapshot is not growing."
+ai_assisted: true

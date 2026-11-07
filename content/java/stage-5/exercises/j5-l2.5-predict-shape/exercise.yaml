@@ -1,0 +1,22 @@
+id: j5-l2.5-predict-shape
+type: predict
+title: "Shape and order"
+lesson: j5-l2.5
+role: ladder
+assesses: [o2]
+concepts: [J5.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Work out what this program prints. The `IntBst` class is complete. Trace the insertions on paper: where does each value go, and what is the longest path?
+expected_output: |
+  [1, 2, 3, 4, 5, 7, 8, 9]
+  4
+  true
+  false
+  6
+hints:
+  h1: "Draw the tree as you insert. The in-order list is always sorted. Height is the longest root-to-leaf path in nodes. What does inserting 1, 2, 3, 4, 5, 6 in order build?"
+  h2: "Eight values, longest path 5-3-1-2 is 4 nodes. 4 is in the tree and 6 isn't. Sorted insertion makes a chain, so six values give height 6."
+ai_assisted: true

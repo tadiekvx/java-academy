@@ -1,0 +1,32 @@
+id: j11-l3.1-explain-least-privilege
+type: explain
+title: "Open ports and broad roles"
+lesson: j11-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J11.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A new Brightbank environment is built with: a database security group that allows `tcp:5432` from `0.0.0.0/0` 'so we can connect from home'; the application running with an identity that is allowed `*` on `*`; and one shared set of credentials for the whole team. Say what is wrong with each, name the OWASP Top 10:2025 category that fits the broad role, and describe how you would fix each. Use the guidance 'least privilege' and 'deny by default' from Stage 8.
+rubric:
+  criteria: |
+    Allowing 5432 from 0.0.0.0/0 lets anyone on the internet try to reach the database; the guidance is to restrict access to the sources that need it and not to open ranges wider than needed, so allow it only from the application's security group or a known address or VPN. An identity allowed everything on everything gives any bug or stolen credential full control (A01 Broken Access Control); apply least privilege, granting only the specific actions on the specific resources the application needs, and rely on an explicit deny for the dangerous ones. Shared credentials cannot be traced to a person or revoked for one; give each person and each service its own identity, with short-lived credentials where possible, and keep secrets in a secret store (Stage 8).
+  levels:
+    - score: 2
+      descriptor: "The answer identifies all three problems, names A01, and gives specific fixes in line with least privilege and deny by default."
+      samples:
+        - "5432 open to the whole internet should be restricted to the application's security group or a VPN address. An identity with * on * breaks least privilege; a bug or stolen key owns everything, which is A01 Broken Access Control. Grant only the needed actions on the needed resources, deny the rest by default. Shared credentials cannot be traced or revoked individually, so give each person and service their own identity and keep secrets in a secret store."
+        - "Open database port: allow only the app and a known address. Allow-all role: least privilege, A01. Shared credentials: separate identities, revocable, short-lived. All of it follows deny by default."
+    - score: 1
+      descriptor: "The answer spots some problems without the fixes or the category."
+      samples:
+        - "The database should not be open to everyone."
+        - "The role has too many permissions."
+    - score: 0
+      descriptor: "The answer accepts the set-up as convenient."
+      samples:
+        - "It is only a test environment so it does not matter."
+        - "Nobody knows the address so the open port is safe."
+ai_assisted: true

@@ -1,0 +1,98 @@
+id: j5-a1-slow-report
+title: "The report that takes a minute"
+category: C
+status: in_review
+summary: "Inherit a correct but far too slow report, find the hidden quadratic costs, and meet a measured time requirement."
+brief: |
+  You've inherited a reporting module. It gives the right answers. It's also so slow on a month of real data that the ticket says nobody can use it. Three methods are the culprits.
+
+  This is not a build; it is a **diagnosis**. For each method, find out what makes it slow (the cost hides inside a library call, not in a visible second loop), fix it, and make sure **no answer changes**: the same tie rules, the same ordering, the same format. The checks run each report on large data under a 2-second limit.
+
+  Don't change the callers (`m1`, `m2`, `m3`). A design note at the end says what you found.
+estimated_hours: 3
+prerequisites: [j5-l1.2, j5-l2.4]
+concepts: [J5.01, J5.02, J5.06]
+requirements:
+  - "Every output is identical to the inherited code's output."
+  - "Each report finishes in under 2 seconds on the large input."
+  - "Tie rules and ordering are exactly as the original's."
+constraints:
+  - "Don't change the callers."
+  - "Fix the cause, not the symptom: no special-casing of the large inputs."
+acceptance:
+  - "Given 200,000 categories, then `topCategory` returns in under 2 seconds with the same answer."
+  - "Given 100,000 numbers, then `sortedUnique` returns in time with duplicates removed and values in order."
+  - "Given 200,000 ids, then `joinIds` returns the same text in time."
+  - "Given equal category counts, then the alphabetically first category is returned."
+milestones:
+  - id: m1
+    title: "topCategory is quadratic"
+    instructions: |
+      **Ticket:** *"The category report takes over a minute for a month's data (200,000 rows). It must finish in under 2 seconds."*
+
+      `topCategory` returns the most common category (the alphabetically first on a tie). It's correct. Measure it: how many times does `Collections.frequency` scan the list? Fix the cost **without changing any answer**.
+    entry:
+      methods:
+        - {name: m1, params: [{name: n, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [10], expect: "cat00"}
+        - {args: [1], expect: "cat00"}
+        - {args: [0], expect: ""}
+      hidden:
+        - {name: "a month of rows", args: [200000], expect: "cat00"}
+        - {name: "half a month", args: [100000], expect: "cat00"}
+        - {name: "fewer rows than categories", args: [49], expect: "cat00"}
+        - {name: "each category once", args: [50], expect: "cat00"}
+  - id: m2
+    title: "sortedUnique is quadratic"
+    instructions: |
+      **Ticket:** *"The distinct-values step takes minutes for 100,000 numbers."* `sortedUnique` returns the distinct values, smallest first. Find the two avoidable scans inside the loop, and replace the approach, keeping the answer.
+    entry:
+      methods:
+        - {name: m2, params: [{name: n, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [10], expect: "size=10 first=0 last=92915"}
+        - {args: [1], expect: "size=1 first=0 last=0"}
+        - {args: [0], expect: "size=0 first=0 last=0"}
+      hidden:
+        - {name: "a hundred thousand numbers", args: [100000], expect: "size=100000 first=0 last=100002"}
+        - {name: "two hundred thousand", args: [200000], expect: "size=100003 first=0 last=100002"}
+        - {name: "five numbers", args: [5], expect: "size=5 first=0 last=68393"}
+  - id: m3
+    title: "joinIds is quadratic"
+    instructions: |
+      **Ticket:** *"Exporting the id list for 200,000 customers never finishes."* `joinIds` returns the ids joined with commas. It is correct. Find out what each `+=` costs, and fix it without changing the output.
+    entry:
+      methods:
+        - {name: m3, params: [{name: n, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [10], expect: "length=19 start=0,1,2,3,4, end=,5,6,7,8,9"}
+        - {args: [1], expect: "length=1 start=0 end=0"}
+        - {args: [0], expect: "length=0 start= end="}
+      hidden:
+        - {name: "two hundred thousand ids", args: [200000], expect: "length=1288889 start=0,1,2,3,4, end=998,199999"}
+        - {name: "a hundred thousand ids", args: [100000], expect: "length=588889 start=0,1,2,3,4, end=9998,99999"}
+        - {name: "two-digit ids", args: [12], expect: "length=25 start=0,1,2,3,4, end=,8,9,10,11"}
+rubric:
+  - criterion: "Diagnosis"
+    zero: "Changed code without finding what was slow"
+    one: "Fixed the slow parts but can't say why they were slow"
+    two: "Names the cost of each hidden scan (frequency, contains and the insertion loop, string +=) and why it grows with n"
+  - criterion: "Evidence"
+    zero: "No measurement before or after"
+    one: "Measured the final result only"
+    two: "Measured before and after, or counted steps, and compared with the 2-second requirement"
+  - criterion: "Correctness kept"
+    zero: "An answer changed (a tie rule, order or format)"
+    one: "Answers match except an edge case"
+    two: "Every answer is identical to the original, including ties, empty input and format"
+  - criterion: "Design note"
+    zero: "Missing, or just says it is faster"
+    one: "Says what was changed"
+    two: "Explains each growth rate before and after, and what you would measure next"
+design_note_prompt: |
+  In 150 words or fewer: For each of the three methods, say what hidden cost made it slow and what its growth rate was before and after. How would you convince a colleague the fix is real?
+ai_assisted: true

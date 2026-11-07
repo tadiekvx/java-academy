@@ -1,0 +1,22 @@
+id: j5-l2.2-predict-links
+type: predict
+title: "Follow the arrows"
+lesson: j5-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J5.04]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints. Draw the nodes and arrows as you go: re-pointing a link changes what is reachable, not what exists.
+expected_output: |
+  1 2 3
+  3
+  true
+  2
+  3
+hints:
+  h1: "Draw a -> b -> c. z points at b. After b.next = null, who still points at what?"
+  h2: "z -> b -> c at first, so z.next.next is 3. Then b no longer points at c, so z.next.next is null. a still points at b, and c still exists."
+ai_assisted: true

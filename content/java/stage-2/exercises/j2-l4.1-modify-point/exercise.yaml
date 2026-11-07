@@ -1,0 +1,31 @@
+id: j2-l4.1-modify-point
+type: modify
+title: "Shrink it to a record"
+lesson: j2-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J2.10]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Point` is a hand-written value class, 30 lines long. Replace it with a **record** that behaves identically: same accessors `x()` and `y()`, same `equals`, and the same `toString`. The driver shouldn't need changing, and the output must stay the same.
+entry:
+  methods:
+    - {name: run, params: [{name: x1, type: "int"}, {name: y1, type: "int"}, {name: x2, type: "int"}, {name: y2, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [1, 2, 1, 2], expect: "true Point[x=1, y=2] 1"}
+    - {method: run, args: [1, 2, 3, 4], expect: "false Point[x=1, y=2] 1"}
+    - {method: run, args: [0, 0, 0, 0], expect: "true Point[x=0, y=0] 0"}
+    - {name: "it is a record", source_contains: ["record Point"], source_not_contains: ["class Point"]}
+  hidden:
+    - {method: run, args: [5, 6, 6, 5], expect: "false Point[x=5, y=6] 5"}
+    - {method: run, args: [-1, -2, -1, -2], expect: "true Point[x=-1, y=-2] -1"}
+    - {method: run, args: [7, 8, 7, 9], expect: "false Point[x=7, y=8] 7"}
+    - {method: run, args: [100, 0, 100, 0], expect: "true Point[x=100, y=0] 100"}
+    - {method: run, args: [3, 3, 4, 3], expect: "false Point[x=3, y=3] 3"}
+hints:
+  h1: "A record header lists the components in the order that the toString shows them."
+  h2: "record Point(int x, int y) {}"
+ai_assisted: true

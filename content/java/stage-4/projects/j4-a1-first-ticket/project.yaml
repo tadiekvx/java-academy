@@ -1,0 +1,125 @@
+id: j4-a1-first-ticket
+title: "First week on the job"
+category: C
+status: in_review
+summary: "Take over an inherited calculator: reproduce a bug ticket, refactor safely under the checks, and respond to a code review."
+brief: |
+  It's your first week. You've been handed the shop's **shipping calculator**, written by someone who has left. There's a ticket, there's messy code, and a reviewer is waiting.
+
+  This is what the stage prepared you for, in one task:
+
+  1. **Fix a ticket** by reproducing the bug first, finding the cause, and making the smallest fix.
+  2. **Refactor safely**: the code is hard to read and will have to change again. With the checks as a safety net, extract methods without changing a single answer.
+  3. **Respond to review**: the reviewer asks for two more rejections. Add them without disturbing what already works.
+
+  A real task like this would use a repository, a branch, commits and a pull request. This platform can't run Git, so work in one file here and think about what each milestone would be as a **commit with a clear message**, and which would be separate PRs. Your design note should say so.
+estimated_hours: 3
+prerequisites: [j4-l3.2, j4-l4.2, j4-l4.3]
+concepts: [J4.05, J4.06, J4.08, J4.09]
+requirements:
+  - "Only the UK pays domestic prices; every other country pays international prices."
+  - "Refactoring must not change any answer."
+  - "A weight of zero or less, and an empty country, must be rejected with an `IllegalArgumentException`."
+  - "Valid orders price exactly as before."
+constraints:
+  - "Fix the bug and refactor in separate steps."
+  - "Run all the checks after every change."
+acceptance:
+  - "Given a US customer, then the international price applies."
+  - "Given the refactor, then every earlier check still passes and `domesticCost` and `internationalCost` exist."
+  - "Given a zero weight or an empty country, then the order is rejected."
+  - "Given a valid order, then the price is unchanged by the review changes."
+milestones:
+  - id: m1
+    title: "Fix ticket 482"
+    instructions: |
+      **Ticket 482:** *"Customers in the US are being charged the UK (domestic) price."*
+
+      Start by **reproducing** it: call `quote(250, false, "US")` and compare with `quote(250, false, "UK")`. Then find the cause in `shippingCost`. Only customers in the **UK** pay domestic prices; every other country pays international prices. Make the smallest change that fixes it, and run all the checks.
+    entry:
+      methods:
+        - {name: quote, params: [{name: grams, type: "int"}, {name: express, type: "boolean"}, {name: country, type: "String"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [250, false, "UK"], expect: "cost=300"}
+        - {args: [1500, true, "US"], expect: "cost=2400"}
+        - {args: [3500, false, "UK"], expect: "cost=650"}
+      hidden:
+        - {name: "the ticket: US is international", args: [250, false, "US"], expect: "cost=800"}
+        - {name: "another country starting with U", args: [250, false, "UA"], expect: "cost=800"}
+        - {name: "UK express over 2kg", args: [2500, true, "UK"], expect: "cost=1100"}
+        - {name: "Ireland", args: [500, false, "IE"], expect: "cost=800"}
+        - {name: "just over 2kg", args: [2001, false, "UK"], expect: "cost=550"}
+        - {name: "express abroad", args: [100, true, "DE"], expect: "cost=1600"}
+        - {name: "exactly 500 grams", args: [500, false, "UK"], expect: "cost=300"}
+        - {name: "exactly 500 grams abroad", args: [500, false, "FR"], expect: "cost=800"}
+        - {name: "exactly 2 kg", args: [2000, false, "UK"], expect: "cost=450"}
+  - id: m2
+    title: "Refactor under the tests"
+    instructions: |
+      The calculator works, but it's one long method with the same "round up to whole kilos" calculation written twice. Your teammates will have to change it soon, so **refactor it first**, now that the checks pin its behaviour down.
+
+      Extract `int domesticCost(int grams)` and `int internationalCost(int grams)` (the price **before** any express charge), and put the repeated kilos calculation in one place. Don't change any answer: the same checks must still pass. The check also looks for the two new methods.
+    entry:
+      methods:
+        - {name: quote, params: [{name: grams, type: "int"}, {name: express, type: "boolean"}, {name: country, type: "String"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [250, false, "UK"], expect: "cost=300"}
+        - {args: [1500, true, "US"], expect: "cost=2400"}
+        - {args: [3500, false, "UK"], expect: "cost=650"}
+        - {name: "domesticCost is extracted", source_contains: ["int domesticCost("]}
+        - {name: "internationalCost is extracted", source_contains: ["int internationalCost("]}
+      hidden:
+        - {name: "the ticket: US is international", args: [250, false, "US"], expect: "cost=800"}
+        - {name: "another country starting with U", args: [250, false, "UA"], expect: "cost=800"}
+        - {name: "UK express over 2kg", args: [2500, true, "UK"], expect: "cost=1100"}
+        - {name: "Ireland", args: [500, false, "IE"], expect: "cost=800"}
+        - {name: "just over 2kg", args: [2001, false, "UK"], expect: "cost=550"}
+        - {name: "express abroad", args: [100, true, "DE"], expect: "cost=1600"}
+        - {name: "exactly 500 grams", args: [500, false, "UK"], expect: "cost=300"}
+        - {name: "exactly 500 grams abroad", args: [500, false, "FR"], expect: "cost=800"}
+        - {name: "exactly 2 kg", args: [2000, false, "UK"], expect: "cost=450"}
+  - id: m3
+    title: "Respond to the review"
+    instructions: |
+      You open a pull request with your changes. The reviewer replies:
+
+      > *"Thanks, much clearer. Two requests before we merge: a weight of zero or less makes no sense, and an empty country would silently be charged the international price. Both should be rejected, not priced."*
+
+      Make `shippingCost` throw an `IllegalArgumentException` for a weight of **zero or less**, and for an **empty country**. (The caller `quote` turns the exception into `rejected`.) Valid orders must price exactly as before.
+    entry:
+      methods:
+        - {name: quote, params: [{name: grams, type: "int"}, {name: express, type: "boolean"}, {name: country, type: "String"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [250, false, "UK"], expect: "cost=300"}
+        - {args: [0, false, "UK"], expect: "rejected"}
+        - {args: [250, false, ""], expect: "rejected"}
+      hidden:
+        - {name: "negative weight", args: [-5, false, "UK"], expect: "rejected"}
+        - {name: "one gram is valid", args: [1, false, "UK"], expect: "cost=300"}
+        - {name: "valid order unchanged", args: [500, true, "FR"], expect: "cost=1600"}
+        - {name: "empty country", args: [100, false, ""], expect: "rejected"}
+        - {name: "both invalid", args: [0, true, ""], expect: "rejected"}
+        - {name: "valid, international", args: [2000, false, "US"], expect: "cost=1200"}
+rubric:
+  - criterion: "Reproduce, then fix"
+    zero: "Changed code without reproducing the ticket, or the fix is broader than the bug"
+    one: "Fixed the bug but didn't confirm it with a failing case first"
+    two: "Reproduced the ticket with a specific call, found the cause, and made the smallest fix"
+  - criterion: "Safe refactoring"
+    zero: "The refactor changed an answer, or was done without running the checks"
+    one: "Behaviour unchanged but steps were large"
+    two: "Small steps with the checks run after each; the structure is clearer and no answer changed"
+  - criterion: "Handling review"
+    zero: "The review comments were ignored, or fixed with a new bug"
+    one: "Both requests done, but valid orders changed behaviour"
+    two: "Both rejections added, valid orders unchanged, and the change kept separate from the refactor"
+  - criterion: "Design note"
+    zero: "Missing, or only says what the code does"
+    one: "Describes the changes but not the reasoning"
+    two: "Explains the cause of the bug, why the refactor was safe, and what you would test next"
+design_note_prompt: |
+  In 150 words or fewer: What caused the bug, and how did you reproduce it? How did you know the refactor changed no behaviour? If this were a real repository, what would your commits and pull requests have been, and what would their messages say?
+ai_assisted: true

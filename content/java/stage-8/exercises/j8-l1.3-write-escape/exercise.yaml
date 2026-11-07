@@ -1,0 +1,31 @@
+id: j8-l1.3-write-escape
+type: write
+title: "Output encoding"
+lesson: j8-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J8.03]
+evidence: [IMPL]
+misconceptions: [MC180]
+difficulty: 2
+prompt: |
+  Cross-site scripting happens when untrusted text reaches a page as code. Write `htmlEscape(text)` converting `&` to `&amp;`, `<` to `&lt;`, `>` to `&gt;`, `"` to `&quot;` and `'` to `&#x27;`, as in the OWASP table. Everything else is unchanged. (Each character must be converted once: `&` is handled first or in the same pass, never after the others.)
+entry:
+  methods:
+    - {name: htmlEscape, params: [{name: text, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a script tag", method: htmlEscape, args: ["<script>alert(1)</script>"], expect: "&lt;script&gt;alert(1)&lt;/script&gt;"}
+    - {name: "an ampersand", method: htmlEscape, args: ["Tom & Jerry"], expect: "Tom &amp; Jerry"}
+    - {name: "nothing to change", method: htmlEscape, args: ["plain text"], expect: "plain text"}
+  hidden:
+    - {name: "double quotes", method: htmlEscape, args: ["say \"hi\""], expect: "say &quot;hi&quot;"}
+    - {name: "an apostrophe", method: htmlEscape, args: ["it's"], expect: "it&#x27;s"}
+    - {name: "an already escaped entity is escaped again", method: htmlEscape, args: ["&lt;"], expect: "&amp;lt;"}
+    - {name: "empty", method: htmlEscape, args: [""], expect: ""}
+    - {name: "attribute injection", method: htmlEscape, args: ["<a href=\"x\" onclick='y'>"], expect: "&lt;a href=&quot;x&quot; onclick=&#x27;y&#x27;&gt;"}
+    - {name: "operators", method: htmlEscape, args: ["a < b && c > d"], expect: "a &lt; b &amp;&amp; c &gt; d"}
+hints:
+  h1: "Walk the characters once and convert each by the table."
+  h2: "Why is removing `<script>` not enough?"
+ai_assisted: true

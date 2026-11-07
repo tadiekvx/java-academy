@@ -1,0 +1,32 @@
+id: j1-l4.5-explain-order
+type: explain
+title: "Digits before parseInt"
+lesson: j1-l4.5
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.05, J1.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  In a validation check like `isWholeNumber(typed) && Integer.parseInt(typed) <= 120`, why must the digit check come first? What would happen the other way round if someone typed `abc`?
+rubric:
+  criteria: |
+    A full answer says Integer.parseInt crashes (NumberFormatException) on text that isn't a number, and && stops at the first false, so putting the digit check first means parseInt only runs on safe text; the other way round, abc would reach parseInt and crash.
+  levels:
+    - score: 2
+      descriptor: "Explains that parseInt crashes on non-numeric text and that && short-circuits, so the digit check first stops parseInt from running on abc; the other way round it would crash with NumberFormatException."
+      samples:
+        - "parseInt throws NumberFormatException on abc. && stops at the first false, so with the digit check first, abc fails there and parseInt never runs. Reversed, parseInt would run on abc and crash."
+        - "The digit check protects parseInt. If abc is checked by parseInt first, the program crashes before it can say the input is bad."
+    - score: 1
+      descriptor: "Says the check should come first to avoid a crash, but doesn't explain short-circuiting or what crashes."
+      samples:
+        - "To stop it crashing."
+        - "Because you need to check it's a number first."
+    - score: 0
+      descriptor: "Incorrect, for example says order doesn't matter, or that parseInt can handle letters."
+      samples:
+        - "The order doesn't matter, && checks both."
+        - "parseInt would just return 0 for abc."
+ai_assisted: true

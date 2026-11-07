@@ -1,0 +1,31 @@
+id: j1-l5.3-debug-scope
+type: debug
+title: "The vanished variable"
+lesson: j1-l5.3
+role: ladder
+assesses: [o1]
+concepts: [J1.08]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `largest` should return the larger of two numbers, but it doesn't compile. Read the error and fix it.
+entry:
+  methods:
+    - {name: largest, params: [{name: a, type: "int"}, {name: b, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [3, 9], expect: 9}
+    - {args: [9, 3], expect: 9}
+    - {args: [5, 5], expect: 5}
+  hidden:
+    - {name: "negatives", args: [-1, -9], expect: -1}
+    - {name: "zeros", args: [0, 0], expect: 0}
+    - {name: "close", args: [100, 99], expect: 100}
+    - {name: "mixed", args: [-5, 5], expect: 5}
+    - {name: "ascending", args: [7, 8], expect: 8}
+starter_compiles: false
+hints:
+  h1: "Where is best declared, and where is it used? Are they in the same set of braces?"
+  h2: "Declare int best before the if, then assign to it inside."
+ai_assisted: true

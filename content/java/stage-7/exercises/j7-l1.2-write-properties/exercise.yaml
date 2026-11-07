@@ -1,0 +1,33 @@
+id: j7-l1.2-write-properties
+type: write
+title: "Safe, idempotent, or neither"
+lesson: j7-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J7.02]
+evidence: [IMPL]
+misconceptions: [MC167]
+difficulty: 2
+prompt: |
+  Write `properties(method)` for a method name in capitals, following RFC 9110. Return `safe+idempotent` for a safe method, `idempotent` for an idempotent method that is not safe, `neither` for POST and CONNECT, and `unknown` for any other text (including lower case).
+entry:
+  methods:
+    - {name: properties, params: [{name: method, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a read", method: properties, args: ["GET"], expect: "safe+idempotent"}
+    - {name: "replace", method: properties, args: ["PUT"], expect: "idempotent"}
+    - {name: "create or process", method: properties, args: ["POST"], expect: "neither"}
+  hidden:
+    - {name: "delete is idempotent", method: properties, args: ["DELETE"], expect: "idempotent"}
+    - {name: "safe", method: properties, args: ["HEAD"], expect: "safe+idempotent"}
+    - {name: "safe", method: properties, args: ["OPTIONS"], expect: "safe+idempotent"}
+    - {name: "safe", method: properties, args: ["TRACE"], expect: "safe+idempotent"}
+    - {name: "neither", method: properties, args: ["CONNECT"], expect: "neither"}
+    - {name: "lower case is unknown", method: properties, args: ["get"], expect: "unknown"}
+    - {name: "not a method", method: properties, args: ["FETCH"], expect: "unknown"}
+    - {name: "empty", method: properties, args: [""], expect: "unknown"}
+hints:
+  h1: "Which methods does RFC 9110 call safe?"
+  h2: "Which methods are idempotent but not safe?"
+ai_assisted: true

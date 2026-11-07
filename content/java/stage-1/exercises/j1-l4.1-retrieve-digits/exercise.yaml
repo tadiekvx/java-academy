@@ -1,0 +1,31 @@
+id: j1-l4.1-retrieve-digits
+type: write
+title: "Counting digits"
+lesson: j1-l4.1
+role: retrieval
+assesses: [o1]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: while-counting
+prompt: |
+  Complete `digitCount` so it returns how many digits a whole number has. For example, 4071 has 4 digits, and 0 has 1. `n` is never negative. Hint: dividing by 10 removes the last digit.
+entry:
+  methods:
+    - {name: digitCount, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [4071], expect: 4}
+    - {args: [7], expect: 1}
+    - {args: [0], expect: 1}
+  hidden:
+    - {name: "ten", args: [10], expect: 2}
+    - {name: "ninety-nine", args: [99], expect: 2}
+    - {name: "a hundred", args: [100], expect: 3}
+    - {name: "nine digits", args: [123456789], expect: 9}
+    - {name: "nine", args: [9], expect: 1}
+hints:
+  h1: "Every number has at least one digit. How many times can you remove a digit while the number is 10 or more?"
+  h2: "Start count at 1; while (n >= 10) { n = n / 10; count++; }"
+ai_assisted: true

@@ -1,0 +1,46 @@
+id: j1-l2.1-explain-char-string
+type: explain
+title: "'A' or \"A\"?"
+lesson: j1-l2.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 1
+prompt: |
+  `'A'` and `"A"` both print as `A`. Explain the difference between them in Java, how you can tell
+  which one is which, and when you'd use each.
+rubric:
+  criteria: |
+    A full answer says that 'A' is a char (exactly one character, single quotes) and "A" is a String
+    (text of any length, double quotes), that Java treats them as different types, and gives a
+    sensible use for each.
+  levels:
+    - score: 2
+      descriptor: >
+        Identifies 'A' as a char (single quotes, exactly one character) and "A" as a String (double
+        quotes, any amount of text), notes they are different types, and gives a sensible use of each.
+      samples:
+        - >
+          'A' is a char because it uses single quotes, and a char is always exactly one character.
+          "A" is a String, which is text of any length, it just happens to have one letter. Java
+          treats them as different types. I'd use a char for a grade like 'B' and a String for a name.
+        - >
+          Single quotes make a char, one character only. Double quotes make a String, which can be
+          long or even empty. They're different types even though they print the same, so a method
+          that returns a char can't return "A".
+    - score: 1
+      descriptor: >
+        Gets part of it: names char and String or describes the quotes, but misses that they are
+        different types, or gives no sensible use.
+      samples:
+        - One uses single quotes and the other uses double quotes.
+        - "'A' is a char and \"A\" is a String."
+    - score: 0
+      descriptor: >
+        Incorrect, for example says they are the same, or that single quotes are for numbers.
+      samples:
+        - There's no difference, both are just the letter A.
+        - Single quotes are for numbers and double quotes are for words.
+ai_assisted: true

@@ -1,0 +1,686 @@
+# Curriculum outline. The design lives in docs/curriculum/; this file is its machine-readable form.
+# Lessons listed here without a file in stage-N/lessons/ are planned, not yet written.
+track: java
+java_version: 25
+
+concepts:
+  - {id: J1.01, name: Program execution and output, prerequisites: [], required_evidence: [IMPL, MIST]}
+  - {id: J1.02, name: "Values, types and expressions", prerequisites: [J1.01], required_evidence: [IMPL, MIST, EXPL]}
+  - {id: J1.03, name: Variables and assignment, prerequisites: [J1.02], required_evidence: [IMPL, MIST, DEBUG, EXPL]}
+  - {id: J1.04, name: Strings, prerequisites: [J1.03], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J1.05, name: Input and type conversion, prerequisites: [J1.04], required_evidence: [IMPL, DEBUG]}
+  - {id: J1.06, name: Boolean logic and conditionals, prerequisites: [J1.03], required_evidence: [IMPL, MIST, DEBUG, MOD, EXPL]}
+  - {id: J1.07, name: Loops, prerequisites: [J1.06], required_evidence: [IMPL, DEBUG, MOD, XFER, EXPL]}
+  - {id: J1.08, name: "Methods: parameters and return values", prerequisites: [J1.07], required_evidence: [IMPL, MIST, DEBUG, MOD, EXPL]}
+  - {id: J1.09, name: Problem decomposition, prerequisites: [J1.08], required_evidence: [IMPL, XFER, EXPL]}
+  - {id: J1.10, name: Arrays, prerequisites: [J1.07, J1.08], required_evidence: [IMPL, MIST, DEBUG, MOD]}
+  - {id: J1.11, name: ArrayList, prerequisites: [J1.10], required_evidence: [IMPL, MOD]}
+  - {id: J1.12, name: Runtime exceptions and stack traces, prerequisites: [J1.05, J1.10], required_evidence: [DEBUG, EXPL]}
+  - {id: J1.13, name: Systematic debugging, prerequisites: [J1.01], required_evidence: [DEBUG, EXPL]}
+  - {id: J1.14, name: Reading tests and specifications, prerequisites: [J1.08], required_evidence: [IMPL, EXPL]}
+
+  - {id: J0.01, name: Running Java on your own machine, prerequisites: [], required_evidence: [IMPL, EXPL]}
+  - {id: J1.15, name: Reading unfamiliar code, prerequisites: [J1.08], required_evidence: [MIST, EXPL, MOD]}
+  - {id: J1.16, name: Planning a program from requirements, prerequisites: [J1.09], required_evidence: [IMPL, EXPL, XFER]}
+  - {id: J2.01, name: "Classes, fields and constructors", prerequisites: [J1.10, J1.08], required_evidence: [IMPL, EXPL, DEBUG]}
+  - {id: J2.02, name: "Instance methods and this", prerequisites: [J2.01], required_evidence: [IMPL, MIST, MOD]}
+  - {id: J2.03, name: "Object references and equality", prerequisites: [J2.02], required_evidence: [MIST, DEBUG, EXPL]}
+  - {id: J2.04, name: "static members, toString and equals", prerequisites: [J2.03], required_evidence: [IMPL, MOD, EXPL]}
+  - {id: J2.05, name: "Encapsulation and invariants", prerequisites: [J2.04], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J2.06, name: "Immutability and defensive copies", prerequisites: [J2.05], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J2.07, name: "Interfaces and polymorphism", prerequisites: [J2.05], required_evidence: [IMPL, MIST, EXPL]}
+  - {id: J2.08, name: "Inheritance and abstract classes", prerequisites: [J2.07], required_evidence: [IMPL, MIST, MOD]}
+  - {id: J2.09, name: "Composition over inheritance", prerequisites: [J2.08], required_evidence: [IMPL, EXPL]}
+  - {id: J2.10, name: "Records and enums", prerequisites: [J2.06], required_evidence: [IMPL, MOD, EXPL]}
+  - {id: J2.11, name: "Sealed types and pattern-matching switch", prerequisites: [J2.10, J2.07], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J2.12, name: "Catching exceptions", prerequisites: [J2.05, J1.12], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J2.13, name: "Custom and checked exceptions", prerequisites: [J2.12], required_evidence: [IMPL, EXPL]}
+  - {id: J2.14, name: "Cleanup and where to catch", prerequisites: [J2.13], required_evidence: [IMPL, EXPL]}
+  - {id: J3.01, name: "Lists and sets", prerequisites: [J2.14, J1.11], required_evidence: [IMPL, MIST, EXPL]}
+  - {id: J3.02, name: "Maps", prerequisites: [J3.01], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J3.03, name: "Ordering and safe iteration", prerequisites: [J3.02], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J3.04, name: "Generics", prerequisites: [J3.01, J2.07], required_evidence: [IMPL, EXPL]}
+  - {id: J3.05, name: "Lambdas and functional interfaces", prerequisites: [J3.04], required_evidence: [IMPL, MIST, EXPL]}
+  - {id: J3.06, name: "Stream pipelines", prerequisites: [J3.05], required_evidence: [IMPL, MOD, DEBUG]}
+  - {id: J3.07, name: "Optional, and choosing loops or streams", prerequisites: [J3.06], required_evidence: [IMPL, EXPL]}
+  - {id: J3.08, name: "Reading and writing files", prerequisites: [J2.14], required_evidence: [IMPL, DEBUG]}
+  - {id: J3.09, name: "Parsing text data and handling failures", prerequisites: [J3.08], required_evidence: [IMPL, EXPL]}
+  - {id: J3.10, name: "Dates and time zones", prerequisites: [J2.10], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J3.11, name: "Money and BigDecimal", prerequisites: [J3.10], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J3.12, name: "Strings in depth", prerequisites: [J1.04], required_evidence: [IMPL, MOD]}
+  - {id: J4.01, name: "Git: commits, branches and merging", prerequisites: [J3.12], required_evidence: [EXPL]}
+  - {id: J4.02, name: "Git: conflicts, remotes and undoing", prerequisites: [J4.01], required_evidence: [EXPL]}
+  - {id: J4.03, name: "Maven: project layout and the POM", prerequisites: [J3.12], required_evidence: [EXPL]}
+  - {id: J4.04, name: "Maven: lifecycle, dependencies and conflicts", prerequisites: [J4.03], required_evidence: [EXPL]}
+  - {id: J4.05, name: "Writing unit tests", prerequisites: [J4.04, J3.12], required_evidence: [IMPL, EXPL]}
+  - {id: J4.06, name: "Test quality: edges, exceptions and doubles", prerequisites: [J4.05], required_evidence: [IMPL, EXPL]}
+  - {id: J4.07, name: "Logging and debugging", prerequisites: [J2.14], required_evidence: [DEBUG, EXPL]}
+  - {id: J4.08, name: "Refactoring under tests", prerequisites: [J4.06], required_evidence: [IMPL, MOD]}
+  - {id: J4.09, name: "Code smells and code review", prerequisites: [J4.08], required_evidence: [EXPL]}
+  - {id: J5.01, name: "Counting steps and growth rates", prerequisites: [J3.12], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J5.02, name: "Measuring honestly and spotting accidental quadratics", prerequisites: [J5.01], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J5.03, name: "Dynamic arrays", prerequisites: [J5.02], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J5.04, name: "Linked lists", prerequisites: [J5.03], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J5.05, name: "Stacks and queues", prerequisites: [J5.04], required_evidence: [IMPL, EXPL]}
+  - {id: J5.06, name: "Hash tables", prerequisites: [J5.05], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J5.07, name: "Binary search trees", prerequisites: [J5.04], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J5.08, name: "Heaps and priority queues", prerequisites: [J5.07], required_evidence: [IMPL, EXPL]}
+  - {id: J5.09, name: "Recursion", prerequisites: [J5.01], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J5.10, name: "Binary search and sorting", prerequisites: [J5.09], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J5.11, name: "Graphs: representation and traversal", prerequisites: [J5.05, J5.09], required_evidence: [IMPL, EXPL]}
+  - {id: J5.12, name: "Shortest paths", prerequisites: [J5.11, J5.08], required_evidence: [IMPL, EXPL]}
+  - {id: J5.13, name: "Dynamic programming", prerequisites: [J5.09], required_evidence: [IMPL, EXPL]}
+  - {id: J6.01, name: "Tables, keys and relationships", prerequisites: [J3.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J6.02, name: "Selecting and filtering with NULL", prerequisites: [J6.01], required_evidence: [IMPL, DEBUG, MIST]}
+  - {id: J6.03, name: "Joins, aggregates and subqueries", prerequisites: [J6.02], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J6.04, name: "Writing data, indexes and query plans", prerequisites: [J6.03], required_evidence: [IMPL, EXPL, DEBUG]}
+  - {id: J6.05, name: "Constraints and referential integrity", prerequisites: [J6.01], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J6.06, name: "Transactions and ACID", prerequisites: [J6.05], required_evidence: [IMPL, EXPL, DEBUG]}
+  - {id: J6.07, name: "Isolation, lost updates and migrations", prerequisites: [J6.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J6.08, name: "JDBC connections and PreparedStatement", prerequisites: [J2.14, J3.09], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J6.09, name: "Mapping rows and repositories", prerequisites: [J6.08, J2.10], required_evidence: [IMPL, MOD, EXPL]}
+  - {id: J6.10, name: "JDBC transactions and resource management", prerequisites: [J6.08, J6.06], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J6.11, name: "ORM entities and the persistence context", prerequisites: [J6.09], required_evidence: [EXPL, MIST]}
+  - {id: J6.12, name: "Lazy loading and the N+1 problem", prerequisites: [J6.11], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J6.13, name: "Choosing JDBC, JPA or SQL", prerequisites: [J6.10, J6.12], required_evidence: [EXPL, MIST]}
+  - {id: J7.01, name: "HTTP requests and responses", prerequisites: [J6.01], required_evidence: [EXPL, MIST, IMPL]}
+  - {id: J7.02, name: "Methods, safety and idempotence", prerequisites: [J7.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J7.03, name: "Status codes and problem details", prerequisites: [J7.02], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J7.04, name: "Resource design and routing", prerequisites: [J7.03], required_evidence: [IMPL, EXPL, MOD]}
+  - {id: J7.05, name: "Inversion of control and dependency injection", prerequisites: [J6.09], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J7.06, name: "Beans, scopes and profiles", prerequisites: [J7.05], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J7.07, name: "Auto-configuration and back-off", prerequisites: [J7.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J7.08, name: "Controllers and request mapping", prerequisites: [J7.04, J7.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J7.09, name: "Validation and error mapping", prerequisites: [J7.08, J7.03], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J7.10, name: "Layers, persistence and pagination", prerequisites: [J7.08, J6.09], required_evidence: [IMPL, EXPL, MOD]}
+  - {id: J7.11, name: "Unit, slice and integration tests", prerequisites: [J7.10], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J7.12, name: "Testing HTTP behaviour", prerequisites: [J7.11], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J8.01, name: "Threat modelling and the OWASP Top 10", prerequisites: [J7.09], required_evidence: [EXPL, MIST, IMPL]}
+  - {id: J8.02, name: "Passwords and hashing", prerequisites: [J8.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J8.03, name: "Untrusted input: encoding and paths", prerequisites: [J8.01, J6.08], required_evidence: [IMPL, MIST, DEBUG]}
+  - {id: J8.04, name: "Secrets and logging", prerequisites: [J8.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J8.05, name: "Authentication, sessions and cookies", prerequisites: [J8.02, J7.03], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J8.06, name: "Tokens and JWT", prerequisites: [J8.05], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J8.07, name: "Access control and ownership", prerequisites: [J8.05], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J8.08, name: "Spring Security: CSRF and CORS", prerequisites: [J8.05, J7.08], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J8.09, name: "Lockout and generic responses", prerequisites: [J8.05], required_evidence: [IMPL, EXPL, DEBUG]}
+  - {id: J9.01, name: "Threads and the cost of sharing", prerequisites: [J5.04], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.02, name: "Races", prerequisites: [J9.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.03, name: "synchronized, locks and atomics", prerequisites: [J9.02], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.04, name: "Visibility and the Java Memory Model", prerequisites: [J9.03], required_evidence: [EXPL, MIST, IMPL]}
+  - {id: J9.05, name: "Deadlock", prerequisites: [J9.03], required_evidence: [IMPL, DEBUG, EXPL]}
+  - {id: J9.06, name: "Executors and futures", prerequisites: [J9.03], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.07, name: "Concurrent collections", prerequisites: [J9.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.08, name: "Virtual threads and scoped values", prerequisites: [J9.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.09, name: "Memory and garbage collection", prerequisites: [J5.04], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.10, name: "JIT compilation and measuring honestly", prerequisites: [J9.09], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J9.11, name: "Profiling and memory leaks", prerequisites: [J9.10], required_evidence: [IMPL, EXPL, DEBUG]}
+  - {id: J10.01, name: "Layers, dependency direction and coupling", prerequisites: [J7.10], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J10.02, name: "Ports and adapters", prerequisites: [J10.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J10.03, name: "Monolith or services, and decision records", prerequisites: [J10.02], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J10.04, name: "Timeouts, retries and backoff", prerequisites: [J7.03], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J10.05, name: "Idempotency keys", prerequisites: [J10.04, J7.02], required_evidence: [IMPL, EXPL, DEBUG]}
+  - {id: J10.06, name: "Sagas, outbox and delivery guarantees", prerequisites: [J10.05, J6.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J10.07, name: "Circuit breakers and resilience", prerequisites: [J10.04], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J11.01, name: "Containers and images", prerequisites: [J4.05], required_evidence: [EXPL, MIST, IMPL]}
+  - {id: J11.02, name: "Multi-stage builds and image size", prerequisites: [J11.01], required_evidence: [EXPL, MIST, IMPL]}
+  - {id: J11.03, name: "Compose, configuration and secrets", prerequisites: [J11.02, J8.04], required_evidence: [EXPL, MIST, IMPL]}
+  - {id: J11.04, name: "The JVM in containers", prerequisites: [J11.01, J9.09], required_evidence: [EXPL, MIST, DEBUG]}
+  - {id: J11.05, name: "Pipelines as code", prerequisites: [J4.05, J11.02], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J11.06, name: "Deployment strategies and rollback", prerequisites: [J11.05], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J11.07, name: "Cloud networking and identity", prerequisites: [J8.07, J11.03], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J11.08, name: "Infrastructure as code and cost", prerequisites: [J11.07], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J12.01, name: "Structured logs and the three signals", prerequisites: [J8.04, J10.04], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J12.02, name: "SLIs, SLOs and percentiles", prerequisites: [J12.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J12.03, name: "Tracing", prerequisites: [J12.01], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J12.04, name: "Reading an incident", prerequisites: [J12.02, J9.11], required_evidence: [DEBUG, EXPL, IMPL]}
+  - {id: J12.05, name: "Safe change: expand and contract, flags", prerequisites: [J6.07, J11.06], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J12.06, name: "Legacy code and technical debt", prerequisites: [J4.07], required_evidence: [IMPL, EXPL, MIST]}
+  - {id: J12.07, name: "Design reviews and estimates", prerequisites: [J10.03], required_evidence: [EXPL, MIST, IMPL]}
+
+misconceptions:
+  - {id: MC01, concepts: [J1.03], source: R8, summary: "= is read as mathematical equality, or as symmetric (a = b same as b = a)"}
+  - {id: MC02, concepts: [J1.03], source: R8, summary: A variable can hold several values at once or remembers earlier values}
+  - {id: MC03, concepts: [J1.03], source: R8, summary: "After b = a;, changing a also changes b (for primitives)"}
+  - {id: MC04, concepts: [J1.02], source: Platform, summary: "Integer division keeps the fraction (7 / 2 is 3.5); 1 / 2 * x is x / 2"}
+  - {id: MC05, concepts: [J1.04], source: R9, summary: Strings are compared with ==}
+  - {id: MC06, concepts: [J1.04, J1.08], source: R9, summary: Calling a non-void method changes something even when its result is ignored}
+  - {id: MC07, concepts: [J1.08], source: R8, summary: Printing a value is the same as returning it}
+  - {id: MC08, concepts: [J1.06, J1.07], source: R9, summary: A semicolon after an if/while header is harmless}
+  - {id: MC09, concepts: [J1.07, J1.10], source: R8, summary: "Loop bounds and indices are off by one (i <= arr.length)"}
+  - {id: MC10, concepts: [J1.07], source: R8, summary: A while loop exits the moment its condition becomes false mid-body}
+  - {id: MC11, concepts: [J1.06], source: R8, summary: In an if / else if chain every matching branch runs}
+  - {id: MC12, concepts: [J1.10], source: R8, summary: Assigning an array to another variable copies it}
+  - {id: MC13, concepts: [J1.08], source: R8, summary: "Changing a primitive parameter inside a method changes the caller's variable"}
+  - {id: MC14, concepts: [J1.06], source: R9, summary: "& / | and && / || are interchangeable"}
+  - {id: MC15, concepts: [J1.12], source: Platform, summary: "The first line of a stack trace always points at the learner's own code"}
+  - {id: MC16, concepts: [J1.15], source: R8, summary: "A method does what its name says, so the body need not be read"}
+  - {id: MC17, concepts: [J1.15], source: Platform, summary: "Unfamiliar code is best fixed by rewriting it rather than by understanding it first"}
+  - {id: MC18, concepts: [J1.16], source: R8, summary: "Typing code first is faster than restating the requirement and planning cases"}
+  - {id: MC19, concepts: [J1.16], source: Platform, summary: "A method that works for a typical input works for the edge inputs too"}
+  - {id: MC20, concepts: [J1.16], source: Platform, summary: "Building input, calculation and output all at once is easier to debug than building the calculation first"}
+  - {id: MC21, concepts: [J1.14], source: Platform, summary: "The expected value in a check can be copied from what the code returns"}
+  - {id: MC22, concepts: [J1.14], source: Platform, summary: "Testing the middle of a range is enough to show a boundary rule is right"}
+  - {id: MC23, concepts: [J1.14], source: Platform, summary: "A failing check always means the method is wrong"}
+  - {id: MC24, concepts: [J1.16], source: Platform, summary: "A loop that groups consecutive items needs no step after the loop for the final group"}
+  - {id: MC25, concepts: [J1.16], source: Platform, summary: "A running maximum can safely start at 0"}
+  - {id: MC26, concepts: [J1.16], source: Platform, summary: "The smallest input (empty, zero) rarely needs checking"}
+  - {id: MC27, concepts: [J2.01], source: R8, summary: "A class and an object are the same thing (Student.name instead of s.name)"}
+  - {id: MC28, concepts: [J2.01], source: Platform, summary: "name = name; in a constructor sets the field"}
+  - {id: MC29, concepts: [J2.01], source: R8, summary: "An object field of type String starts as an empty string"}
+  - {id: MC30, concepts: [J2.02], source: R8, summary: "Each method call gets its own copy of the object's fields"}
+  - {id: MC31, concepts: [J2.02], source: R8, summary: "A method called on one object can change a different object of the same class"}
+  - {id: MC32, concepts: [J2.03], source: R8, summary: "Player b = a; makes a separate copy of the object"}
+  - {id: MC33, concepts: [J2.03], source: R8, summary: "== on objects compares their contents"}
+  - {id: MC34, concepts: [J2.03], source: Platform, summary: "Object-typed fields start with a usable value, not null"}
+  - {id: MC35, concepts: [J2.04], source: I38, summary: "Overriding equals without hashCode is fine"}
+  - {id: MC36, concepts: [J2.04], source: Platform, summary: "A static field is a good place for each object's own data"}
+  - {id: MC37, concepts: [J2.04], source: Platform, summary: "equals(Point other) overrides equals"}
+  - {id: MC38, concepts: [J2.05], source: Platform, summary: "A private field is enough to protect an invariant, with no check in the constructor"}
+  - {id: MC39, concepts: [J2.05], source: Platform, summary: "Validating in the setter protects the class even while the field is public"}
+  - {id: MC40, concepts: [J2.05], source: Platform, summary: "A getter and setter for every field is the same as encapsulation"}
+  - {id: MC41, concepts: [J2.06], source: R8, summary: "A final field or variable makes the whole object it refers to unchangeable"}
+  - {id: MC42, concepts: [J2.06], source: Platform, summary: "Copying a list in the constructor is enough, even if a getter returns the internal list"}
+  - {id: MC43, concepts: [J2.07], source: Platform, summary: "An implementing method can be package-private (no public)"}
+  - {id: MC44, concepts: [J2.07], source: R8, summary: "The declared type of a variable decides which version of a method runs"}
+  - {id: MC45, concepts: [J2.08], source: R8, summary: "A child constructor runs before its parent's"}
+  - {id: MC46, concepts: [J2.08], source: Platform, summary: "A method with the same name but different parameters overrides the parent's"}
+  - {id: MC47, concepts: [J2.09], source: Platform, summary: "Inheritance is the right way to reuse another class's code"}
+  - {id: MC48, concepts: [J2.09], source: Platform, summary: "If something is-a thing in the real world, the classes should inherit"}
+  - {id: MC49, concepts: [J2.10], source: Platform, summary: "Record accessors are named getX()"}
+  - {id: MC50, concepts: [J2.10], source: Platform, summary: "Strings are as good as an enum for a fixed set of options"}
+  - {id: MC51, concepts: [J2.10], source: R8, summary: "An array or list inside a record cannot change because the record is immutable"}
+  - {id: MC52, concepts: [J2.11], source: Platform, summary: "Adding default to a switch over a sealed type is the safe thing to do"}
+  - {id: MC53, concepts: [J2.11], source: Platform, summary: "The order of cases in a pattern switch does not matter"}
+  - {id: MC54, concepts: [J2.12], source: Platform, summary: "Wrapping a whole method in catch (Exception e) is a safe way to make it robust"}
+  - {id: MC55, concepts: [J2.12], source: Platform, summary: "An empty catch block is harmless"}
+  - {id: MC56, concepts: [J2.12], source: R8, summary: "Lines after the throwing statement in a try block still run"}
+  - {id: MC57, concepts: [J2.13], source: Platform, summary: "When wrapping an exception, the original can be dropped"}
+  - {id: MC58, concepts: [J2.13], source: Platform, summary: "Every custom exception should be a checked exception"}
+  - {id: MC59, concepts: [J2.14], source: Platform, summary: "A resource only needs closing on the success path"}
+  - {id: MC60, concepts: [J2.14], source: Platform, summary: "Catching low down, printing and returning a default is good error handling"}
+  - {id: MC61, concepts: [J2.14], source: Platform, summary: "try-with-resources closes resources in the order they are written"}
+  - {id: MC62, concepts: [J3.01], source: I41, summary: "A HashSet keeps items in the order they were added"}
+  - {id: MC63, concepts: [J3.01], source: R8, summary: "list.remove(1) on a List of Integer removes the value 1"}
+  - {id: MC64, concepts: [J3.02], source: Platform, summary: "map.get(key) returns 0 for a missing key"}
+  - {id: MC65, concepts: [J3.02], source: I30, summary: "A HashMap iterates in the order keys were put"}
+  - {id: MC66, concepts: [J3.02], source: I38, summary: "A key object can be changed after it has been put in a HashMap"}
+  - {id: MC67, concepts: [J3.03], source: I31, summary: "Removing from a list inside a for-each over it is fine"}
+  - {id: MC68, concepts: [J3.03], source: I29, summary: "A list made with List.of can be added to"}
+  - {id: MC69, concepts: [J3.03], source: Platform, summary: "Version numbers can be compared as text"}
+  - {id: MC70, concepts: [J3.04], source: I52, summary: "A primitive such as int can be used as a type argument"}
+  - {id: MC71, concepts: [J3.04], source: I52, summary: "Generic type arguments are still known at run time"}
+  - {id: MC72, concepts: [J3.05], source: Platform, summary: "A lambda can change a local variable of the method around it"}
+  - {id: MC73, concepts: [J3.05], source: I53, summary: "A lambda can be assigned to any type, such as Object"}
+  - {id: MC74, concepts: [J3.06], source: I50, summary: "A stream can be used again after a terminal operation"}
+  - {id: MC75, concepts: [J3.06], source: I50, summary: "filter and map run as soon as they are written, without a terminal operation"}
+  - {id: MC76, concepts: [J3.07], source: I35, summary: "Calling get() on an Optional is always safe"}
+  - {id: MC77, concepts: [J3.07], source: Platform, summary: "A stream is always clearer than a loop"}
+  - {id: MC78, concepts: [J3.08], source: I54, summary: "Writing to a file with Files.writeString adds to what is there"}
+  - {id: MC79, concepts: [J3.08], source: Platform, summary: "Reading an empty file gives one empty line, or null"}
+  - {id: MC80, concepts: [J3.09], source: I49, summary: "split(\",\") keeps empty fields at the end of a line"}
+  - {id: MC81, concepts: [J3.09], source: Platform, summary: "Input files are always tidy and well-formed"}
+  - {id: MC82, concepts: [J3.10], source: I44, summary: "plusHours(24) and plusDays(1) always give the same clock time"}
+  - {id: MC83, concepts: [J3.10], source: I33, summary: "A LocalDateTime identifies a single moment in time"}
+  - {id: MC84, concepts: [J3.10], source: Platform, summary: "mm in a date pattern means the month"}
+  - {id: MC85, concepts: [J3.11], source: Platform, summary: "double is fine for money if you print two decimal places"}
+  - {id: MC86, concepts: [J3.11], source: I48, summary: "BigDecimal.equals ignores the scale, so 2.0 equals 2.00"}
+  - {id: MC87, concepts: [J3.11], source: Platform, summary: "BigDecimal.divide always works without a scale or rounding mode"}
+  - {id: MC88, concepts: [J3.12], source: Platform, summary: "Building a large string with += in a loop is efficient"}
+  - {id: MC89, concepts: [J3.12], source: I28, summary: "A text block keeps all the indentation of the source code"}
+  - {id: MC90, concepts: [J5.01], source: Platform, summary: "One visible loop means linear time, whatever its body calls"}
+  - {id: MC91, concepts: [J5.01], source: Platform, summary: "Big-O is the exact running time of the code"}
+  - {id: MC92, concepts: [J5.01], source: Platform, summary: "A lower growth rate is always the better choice, even for tiny n"}
+  - {id: MC93, concepts: [J5.02], source: I60, summary: "One timing of one run shows which version is faster"}
+  - {id: MC94, concepts: [J5.02], source: I58, summary: "A List is a good choice for repeated membership tests"}
+  - {id: MC95, concepts: [J5.02], source: R16, summary: "Optimise first, then measure"}
+  - {id: MC96, concepts: [J5.03], source: I58, summary: "Growing an array by a fixed amount each time is just as efficient as doubling"}
+  - {id: MC97, concepts: [J5.03], source: Platform, summary: "An index inside the array's length is a valid index for the list"}
+  - {id: MC98, concepts: [J5.03], source: Platform, summary: "An array is full when size is greater than its length"}
+  - {id: MC99, concepts: [J5.04], source: R8, summary: "Overwriting a node's next link and then following it still reaches the rest of the list"}
+  - {id: MC100, concepts: [J5.04], source: Platform, summary: "A linked list's head is never null, so head.next is always safe"}
+  - {id: MC101, concepts: [J5.04], source: I58, summary: "get(i) on a linked list is as fast as on an array list"}
+  - {id: MC102, concepts: [J5.05], source: I55, summary: "Stack and LinkedList are the right classes for a stack and a queue"}
+  - {id: MC103, concepts: [J5.05], source: Platform, summary: "A bracket check is finished when the last character has been read, even if openers remain"}
+  - {id: MC104, concepts: [J5.05], source: Platform, summary: "In postfix, the first value popped is the left operand of - and /"}
+  - {id: MC105, concepts: [J5.06], source: I38, summary: "Two keys with equal hash codes are equal keys"}
+  - {id: MC106, concepts: [J5.06], source: Platform, summary: "When a hash table resizes, entries can stay in the same bucket indexes"}
+  - {id: MC107, concepts: [J5.06], source: Platform, summary: "hashCode % length is always a valid bucket index"}
+  - {id: MC108, concepts: [J5.07], source: Platform, summary: "Setting node.left = new Node(v) inserts the value into the tree"}
+  - {id: MC109, concepts: [J5.07], source: I42, summary: "A binary search tree always gives O(log n) lookups"}
+  - {id: MC110, concepts: [J5.07], source: Platform, summary: "A tree always has a root node, so root.value is safe"}
+  - {id: MC111, concepts: [J5.08], source: I56, summary: "A for-each loop over a PriorityQueue visits items in sorted order"}
+  - {id: MC112, concepts: [J5.08], source: Platform, summary: "The array behind a heap is sorted"}
+  - {id: MC113, concepts: [J5.08], source: Platform, summary: "When sifting down, a value swaps with either child"}
+  - {id: MC114, concepts: [J5.09], source: I60, summary: "A recursive method works without a base case"}
+  - {id: MC115, concepts: [J5.09], source: Platform, summary: "A recursive call on the same argument eventually stops"}
+  - {id: MC116, concepts: [J5.09], source: R8, summary: "Statements after a recursive call run before the call returns"}
+  - {id: MC117, concepts: [J5.10], source: Platform, summary: "A binary search loop can use low < high without missing the last candidate"}
+  - {id: MC118, concepts: [J5.10], source: Platform, summary: "Setting low = mid is a safe way to move on after checking the middle"}
+  - {id: MC119, concepts: [J5.10], source: I57, summary: "Binary search gives a sensible answer on unsorted data"}
+  - {id: MC120, concepts: [J5.10], source: I57, summary: "The first match found by binary search is the first occurrence"}
+  - {id: MC121, concepts: [J5.11], source: Platform, summary: "A graph search needs no visited record"}
+  - {id: MC122, concepts: [J5.11], source: Platform, summary: "Depth-first search finds the fewest hops"}
+  - {id: MC123, concepts: [J5.11], source: Platform, summary: "An undirected edge only needs adding to one of its two nodes"}
+  - {id: MC124, concepts: [J5.12], source: Platform, summary: "BFS finds the cheapest path in a weighted graph"}
+  - {id: MC125, concepts: [J5.12], source: Platform, summary: "Dijkstra's algorithm works when some edge weights are negative"}
+  - {id: MC126, concepts: [J5.12], source: I56, summary: "A node is only ever queued once in Dijkstra's algorithm"}
+  - {id: MC127, concepts: [J5.13], source: Platform, summary: "Taking the largest coin that fits always gives the fewest coins"}
+  - {id: MC128, concepts: [J5.13], source: Platform, summary: "Filling a memo array speeds up recursion even if it is never read"}
+  - {id: MC129, concepts: [J5.13], source: Platform, summary: "In a minimum-coins table an impossible amount can be recorded as 0"}
+  - {id: MC130, concepts: [J4.01], source: I61, summary: "git add saves a change permanently into the history"}
+  - {id: MC131, concepts: [J4.01], source: I62, summary: "A branch is a full copy of the project's files"}
+  - {id: MC132, concepts: [J4.01], source: Platform, summary: "A commit message such as 'fix' or 'update' is good enough"}
+  - {id: MC133, concepts: [J4.02], source: I62, summary: "A file with conflict markers can be committed as it is"}
+  - {id: MC134, concepts: [J4.02], source: Platform, summary: "Resetting or amending commits that others have pulled is safe"}
+  - {id: MC135, concepts: [J4.02], source: I64, summary: "git fetch updates the branch you are on"}
+  - {id: MC136, concepts: [J4.03], source: I67, summary: "Tests can live in src/main/java and still be run by Maven"}
+  - {id: MC137, concepts: [J4.03], source: Platform, summary: "The target directory should be committed to version control"}
+  - {id: MC138, concepts: [J4.03], source: I66, summary: "A testing library doesn't need a test scope"}
+  - {id: MC139, concepts: [J4.04], source: R16, summary: "The generic advice at the end of Maven's output is the part to read first"}
+  - {id: MC140, concepts: [J4.04], source: I65, summary: "A jar is still built when a test fails"}
+  - {id: MC141, concepts: [J4.04], source: I66, summary: "Declaring a library at a different version than another library needs is harmless"}
+  - {id: MC142, concepts: [J4.05], source: Platform, summary: "The expected value of a test can be taken from running the code"}
+  - {id: MC143, concepts: [J4.05], source: R16, summary: "Testing typical values is enough to find boundary bugs"}
+  - {id: MC144, concepts: [J4.05], source: Platform, summary: "If all tests pass, the code is correct"}
+  - {id: MC145, concepts: [J4.06], source: I68, summary: "A test suite only needs to cover valid input"}
+  - {id: MC146, concepts: [J4.06], source: Platform, summary: "A test that depends on the real clock or random numbers is fine if it usually passes"}
+  - {id: MC147, concepts: [J4.06], source: Platform, summary: "A test that runs the code and prints the result is a good test"}
+  - {id: MC148, concepts: [J4.07], source: Platform, summary: "Logging everything at one level is fine"}
+  - {id: MC149, concepts: [J4.07], source: Platform, summary: "It is fine to log passwords or personal data while investigating"}
+  - {id: MC150, concepts: [J4.07], source: R16, summary: "Once the first fault is fixed, the method is correct"}
+  - {id: MC151, concepts: [J4.08], source: Platform, summary: "A method can be refactored safely without any tests"}
+  - {id: MC152, concepts: [J4.08], source: Platform, summary: "Fixing a bug and refactoring in the same step is efficient and safe"}
+  - {id: MC153, concepts: [J4.08], source: R16, summary: "One large rewrite tested at the end is the quickest safe way to improve code"}
+  - {id: MC154, concepts: [J4.09], source: Platform, summary: "A review comment such as 'messy' is useful feedback"}
+  - {id: MC155, concepts: [J4.09], source: Platform, summary: "Every code smell must be fixed immediately"}
+  - {id: MC156, concepts: [J4.09], source: Platform, summary: "Review comments should be accepted or rejected without discussion"}
+  - {id: MC157, concepts: [J6.02], source: I69, summary: "SQL uses three-valued logic, so `city = NULL` compares against the unknown value and never becomes true"}
+  - {id: MC158, concepts: [J6.03], source: I72, summary: "A many-to-many relationship is modelled by repeating one entity's column instead of joining through a junction table"}
+  - {id: MC159, concepts: [J6.06], source: I70, summary: "A transaction commits after every statement, so a multi-step change can be saved partially"}
+  - {id: MC160, concepts: [J6.05], source: I69, summary: "A foreign key is placed on the parent table of a one-to-many relationship"}
+  - {id: MC161, concepts: [J6.08], source: I82, summary: "SQL injection is stopped by escaping quotes inside the query string"}
+  - {id: MC162, concepts: [J6.10], source: I76, summary: "A JDBC connection is closed by the database server only when the application closes it"}
+  - {id: MC163, concepts: [J6.11], source: I80, summary: "An ORM entity must be saved with an explicit update call after every change"}
+  - {id: MC164, concepts: [J6.12], source: I80, summary: "Lazy loading is free because the data is only read when it is used"}
+  - {id: MC165, concepts: [J6.13], source: I80, summary: "An ORM should be used for every query, including reports that total many rows"}
+  - {id: MC166, concepts: [J7.01], source: I84, summary: "A response status code is part of the body, so a client has to read the body to know whether a request worked"}
+  - {id: MC167, concepts: [J7.02], source: I84, summary: "POST and PUT are interchangeable ways to save data, so a client may retry either one freely"}
+  - {id: MC168, concepts: [J7.03], source: I84, summary: "Any failure can be reported as 200 with an error message in the body, or as a generic 500"}
+  - {id: MC169, concepts: [J7.04], source: I84, summary: "A URL names an action, so an API should have addresses like /getAccount and /deleteAccount"}
+  - {id: MC170, concepts: [J7.05], source: I86, summary: "A class should create its own collaborators with new, because that keeps the code simple and easy to test"}
+  - {id: MC171, concepts: [J7.06], source: I87, summary: "A Spring singleton bean is the same as the singleton design pattern, so it is safe to keep per-user state in its fields"}
+  - {id: MC172, concepts: [J7.07], source: I89, summary: "Auto-configuration is magic that cannot be changed; to customise anything you must edit the framework's configuration"}
+  - {id: MC173, concepts: [J7.08], source: I91, summary: "A controller method must build the whole HTTP response itself, including converting objects to JSON"}
+  - {id: MC174, concepts: [J7.09], source: I92, summary: "Validating in the controller with if statements is the same as declaring constraints, so there is nothing to gain from a framework"}
+  - {id: MC175, concepts: [J7.10], source: I91, summary: "Pages are numbered from 1 everywhere, and a page request beyond the data is an error"}
+  - {id: MC176, concepts: [J7.11], source: I93, summary: "Every Spring test should start the whole application context, because that is the only realistic test"}
+  - {id: MC177, concepts: [J7.12], source: I93, summary: "A test with mocked collaborators proves the whole feature works"}
+  - {id: MC178, concepts: [J8.01], source: I95, summary: "Security is a checklist applied at the end; a feature that passes its tests is secure"}
+  - {id: MC179, concepts: [J8.02], source: I96, summary: "Hashing a password with SHA-256 is enough, because a hash cannot be reversed"}
+  - {id: MC180, concepts: [J8.03], source: I97, summary: "Validating input on the way in makes it safe to put into any output"}
+  - {id: MC181, concepts: [J8.04], source: I98, summary: "A secret in a private repository or in a log line is safe because only the team can see it"}
+  - {id: MC182, concepts: [J8.05], source: I101, summary: "Every cookie should be hidden from scripts with HttpOnly, so a single-page app can never read any cookie"}
+  - {id: MC183, concepts: [J8.06], source: I100, summary: "A signed JWT cannot be abused: the signature makes its contents secret and it can be revoked at any time"}
+  - {id: MC184, concepts: [J8.07], source: I104, summary: "If a user is logged in, an endpoint may return any record whose id they ask for"}
+  - {id: MC185, concepts: [J8.08], source: I102, summary: "CSRF protection and CORS are the same control, so enabling one makes the other unnecessary"}
+  - {id: MC186, concepts: [J8.09], source: I105, summary: "A login error should say exactly what was wrong, so honest users are helped"}
+  - {id: MC187, concepts: [J9.01], source: I116, summary: "Starting a thread and then reading its result right away is fine, because the thread will have finished by then"}
+  - {id: MC188, concepts: [J9.02], source: I111, summary: "If a concurrent program passed its tests, it has no race; a race always shows up as a crash"}
+  - {id: MC189, concepts: [J9.03], source: I116, summary: "synchronized on any object protects the data, so a new lock object per call is fine"}
+  - {id: MC190, concepts: [J9.04], source: I111, summary: "volatile makes compound operations such as count++ atomic"}
+  - {id: MC191, concepts: [J9.05], source: I111, summary: "A deadlock is a slow program; it will finish if you wait long enough"}
+  - {id: MC192, concepts: [J9.06], source: I112, summary: "Creating a new Thread for every task is the normal way to run many tasks; an executor adds nothing"}
+  - {id: MC193, concepts: [J9.07], source: I114, summary: "A concurrent map makes any sequence of its operations atomic, including contains-then-put"}
+  - {id: MC194, concepts: [J9.08], source: I108, summary: "Virtual threads make CPU-bound code faster, and should be pooled like platform threads"}
+  - {id: MC195, concepts: [J9.09], source: I115, summary: "Setting a variable to null frees the object immediately, and a memory leak is impossible in a garbage-collected language"}
+  - {id: MC196, concepts: [J9.10], source: I116, summary: "The first timing of a Java method is its true speed, so one measurement is enough"}
+  - {id: MC197, concepts: [J9.11], source: I116, summary: "The slow-looking code is the slow code; profiling is only needed when the fix did not work"}
+  - {id: MC198, concepts: [J10.01], source: I117, summary: "Layers are only folders; a lower layer may freely call back up to a higher one when that is convenient"}
+  - {id: MC199, concepts: [J10.02], source: I117, summary: "A port is a framework feature; the domain code needs to know which database or web framework is outside it"}
+  - {id: MC200, concepts: [J10.03], source: I118, summary: "Microservices are the modern default, so a new system should start as many small services"}
+  - {id: MC201, concepts: [J10.04], source: I120, summary: "If a remote call times out, it did not happen, so retrying immediately and without limit is safe"}
+  - {id: MC202, concepts: [J10.05], source: I120, summary: "A retried request is harmless as long as the server returns an error to the second copy"}
+  - {id: MC203, concepts: [J10.06], source: I121, summary: "A transaction across two services can simply be wrapped in one database transaction"}
+  - {id: MC204, concepts: [J10.07], source: I123, summary: "A circuit breaker makes a failing dependency work again; it only hides failures"}
+  - {id: MC205, concepts: [J11.01], source: I126, summary: "A container is a small virtual machine with its own operating system kernel"}
+  - {id: MC206, concepts: [J11.02], source: I126, summary: "A smaller image only matters for download speed; what the build leaves in the final image is not a concern"}
+  - {id: MC207, concepts: [J11.03], source: I137, summary: "Putting the database password into the image or the Compose file in the repository is fine because it is only for development"}
+  - {id: MC208, concepts: [J11.04], source: I129, summary: "Setting a container memory limit makes the JVM size its heap to that limit; an out-of-memory exit always means the heap is too small"}
+  - {id: MC209, concepts: [J11.05], source: I130, summary: "A pipeline is a list of scripts that all run whether or not an earlier one failed"}
+  - {id: MC210, concepts: [J11.06], source: I130, summary: "A deployment that passed its tests cannot fail in production, so rollback is only for emergencies"}
+  - {id: MC211, concepts: [J11.07], source: I132, summary: "Opening a port to 0.0.0.0/0 is fine while testing because nobody knows the address"}
+  - {id: MC212, concepts: [J11.07], source: I131, summary: "A service account with broad permissions is simpler and just as safe, because only our code uses it"}
+  - {id: MC213, concepts: [J11.08], source: I131, summary: "Cloud resources cost nothing until traffic arrives, so leaving them running is free"}
+  - {id: MC214, concepts: [J12.01], source: I125, summary: "Logs, metrics and traces are three names for the same thing, so one of them is enough"}
+  - {id: MC215, concepts: [J12.02], source: I124, summary: "The average latency tells you how users experience the service, so it is the right number for an objective"}
+  - {id: MC216, concepts: [J12.03], source: I125, summary: "A slow request is slow in its root span, so the root span's duration shows where to look"}
+  - {id: MC217, concepts: [J12.04], source: I124, summary: "During an incident the first job is to find the root cause and fix the code"}
+  - {id: MC218, concepts: [J12.05], source: I133, summary: "Renaming a database column is one safe step: change the column and deploy the code together"}
+  - {id: MC219, concepts: [J12.06], source: I135, summary: "To work safely on legacy code, first clean it up; tests can come later"}
+  - {id: MC220, concepts: [J12.07], source: I136, summary: "An estimate is a promise of one number, and a design review is a check that the author is right"}
+
+stages:
+  - number: 0
+    title: Your own machine
+    optional: true
+    modules:
+      - number: 0
+        title: Running Java outside the browser
+        lessons:
+          - {id: j0-l0.1, title: What Java is made of, concepts: [J0.01]}
+          - {id: j0-l0.2, title: Installing a JDK and checking it, concepts: [J0.01]}
+          - {id: j0-l0.3, title: Running Java from the terminal, concepts: [J0.01]}
+          - {id: j0-l0.4, title: Your first IDE project, concepts: [J0.01]}
+  - number: 1
+    title: Programming foundations in Java
+    modules:
+      - number: 1
+        title: First programs
+        lessons:
+          - {id: j1-l1.1, title: Your first program, concepts: [J1.01]}
+          - {id: j1-l1.2, title: Errors are feedback, concepts: [J1.01, J1.13]}
+      - number: 2
+        title: Values and variables
+        lessons:
+          - {id: j1-l2.1, title: Values and types, concepts: [J1.02]}
+          - {id: j1-l2.2, title: Variables and state, concepts: [J1.03]}
+          - {id: j1-l2.3, title: "Arithmetic: division, remainders and exact results", concepts: [J1.02]}
+          - {id: j1-l2.4, title: Working with strings, concepts: [J1.04]}
+      - number: 3
+        title: Input and decisions
+        lessons:
+          - {id: j1-l3.1, title: Reading input, concepts: [J1.05]}
+          - {id: j1-l3.2, title: Boolean expressions, concepts: [J1.06]}
+          - {id: j1-l3.3, title: Making decisions, concepts: [J1.06]}
+          - {id: j1-l3.4, title: switch expressions, concepts: [J1.06]}
+      - number: 4
+        title: Repetition
+        lessons:
+          - {id: j1-l4.1, title: while loops, concepts: [J1.07]}
+          - {id: j1-l4.2, title: Tracing loops, concepts: [J1.07]}
+          - {id: j1-l4.3, title: for loops and boundaries, concepts: [J1.07]}
+          - {id: j1-l4.4, title: Loop patterns, concepts: [J1.07, J1.09]}
+          - {id: j1-l4.5, title: Input validation loops, concepts: [J1.05, J1.07]}
+      - number: 5
+        title: Methods
+        lessons:
+          - {id: j1-l5.1, title: Defining and calling methods, concepts: [J1.08]}
+          - {id: j1-l5.2, title: Parameters and return values, concepts: [J1.08]}
+          - {id: j1-l5.3, title: Scope and the call stack, concepts: [J1.08]}
+          - {id: j1-l5.4, title: Decomposing problems, concepts: [J1.09]}
+          - {id: j1-l5.5, title: Reading tests, concepts: [J1.14]}
+      - number: 6
+        title: Working with data
+        lessons:
+          - {id: j1-l6.1, title: Arrays, concepts: [J1.10]}
+          - {id: j1-l6.2, title: Array algorithms and references, concepts: [J1.10]}
+          - {id: j1-l6.3, title: ArrayList, concepts: [J1.11]}
+          - {id: j1-l6.4, title: Exceptions and stack traces, concepts: [J1.12]}
+          - {id: j1-l6.5, title: Debugging systematically, concepts: [J1.13]}
+      - number: 7
+        title: Whole programs
+        lessons:
+          - {id: j1-l7.1, title: Reading a program you didn't write, concepts: [J1.15]}
+          - {id: j1-l7.2, title: From requirements to a plan, concepts: [J1.16, J1.09]}
+          - {id: j1-l7.3, title: Writing your own checks, concepts: [J1.14]}
+          - {id: j1-l7.4, title: Mixed-skills challenges, concepts: [J1.16, J1.07, J1.08]}
+  - number: 2
+    title: "Object-oriented programming"
+    modules:
+      - number: 1
+        title: "Classes and objects"
+        lessons:
+          - {id: j2-l1.1, title: "From main to a class", concepts: [J2.01]}
+          - {id: j2-l1.2, title: "Methods and this", concepts: [J2.02]}
+          - {id: j2-l1.3, title: "Objects and references", concepts: [J2.03]}
+          - {id: j2-l1.4, title: "static, toString and equals", concepts: [J2.04]}
+      - number: 2
+        title: "Encapsulation and invariants"
+        lessons:
+          - {id: j2-l2.1, title: "Private fields and invariants", concepts: [J2.05]}
+          - {id: j2-l2.2, title: "Immutability and defensive copies", concepts: [J2.06]}
+      - number: 3
+        title: "Interfaces, inheritance and polymorphism"
+        lessons:
+          - {id: j2-l3.1, title: "Interfaces and polymorphism", concepts: [J2.07]}
+          - {id: j2-l3.2, title: "Inheritance, super and abstract classes", concepts: [J2.08]}
+          - {id: j2-l3.3, title: "Composition over inheritance", concepts: [J2.09]}
+      - number: 4
+        title: "Modern type features"
+        lessons:
+          - {id: j2-l4.1, title: "Records and enums", concepts: [J2.10]}
+          - {id: j2-l4.2, title: "Sealed types and pattern-matching switch", concepts: [J2.11]}
+      - number: 5
+        title: "Errors and exceptions"
+        lessons:
+          - {id: j2-l5.1, title: "Catching exceptions", concepts: [J2.12]}
+          - {id: j2-l5.2, title: "Custom and checked exceptions", concepts: [J2.13]}
+          - {id: j2-l5.3, title: "Cleanup and where to catch", concepts: [J2.14]}
+  - number: 3
+    title: "Core library and modern Java"
+    modules:
+      - number: 1
+        title: "Collections"
+        lessons:
+          - {id: j3-l1.1, title: "Lists and sets", concepts: [J3.01]}
+          - {id: j3-l1.2, title: "Maps", concepts: [J3.02]}
+          - {id: j3-l1.3, title: "Ordering and safe iteration", concepts: [J3.03]}
+      - number: 2
+        title: "Generics"
+        lessons:
+          - {id: j3-l2.1, title: "Generics", concepts: [J3.04]}
+      - number: 3
+        title: "Lambdas and streams"
+        lessons:
+          - {id: j3-l3.1, title: "Lambdas and functional interfaces", concepts: [J3.05]}
+          - {id: j3-l3.2, title: "Stream pipelines", concepts: [J3.06]}
+          - {id: j3-l3.3, title: "Optional, and choosing loops or streams", concepts: [J3.07]}
+      - number: 4
+        title: "Files, text and persistence"
+        lessons:
+          - {id: j3-l4.1, title: "Reading and writing files", concepts: [J3.08]}
+          - {id: j3-l4.2, title: "Parsing text data and handling failures", concepts: [J3.09]}
+      - number: 5
+        title: "Dates, numbers and text"
+        lessons:
+          - {id: j3-l5.1, title: "Dates and time zones", concepts: [J3.10]}
+          - {id: j3-l5.2, title: "Money and BigDecimal", concepts: [J3.11]}
+          - {id: j3-l5.3, title: "Strings in depth", concepts: [J3.12]}
+  - number: 4
+    title: "Professional engineering toolchain"
+    modules:
+      - number: 1
+        title: "Git and collaboration"
+        lessons:
+          - {id: j4-l1.1, title: "Snapshots, branches and merging", concepts: [J4.01]}
+          - {id: j4-l1.2, title: "Conflicts, remotes and undoing safely", concepts: [J4.02]}
+      - number: 2
+        title: "Build tools: Maven"
+        lessons:
+          - {id: j4-l2.1, title: "Maven: project layout and the POM", concepts: [J4.03]}
+          - {id: j4-l2.2, title: "Maven: lifecycle, dependencies and conflicts", concepts: [J4.04]}
+      - number: 3
+        title: "Automated testing"
+        lessons:
+          - {id: j4-l3.1, title: "Your first unit tests", concepts: [J4.05]}
+          - {id: j4-l3.2, title: "Good tests: edges, exceptions and test doubles", concepts: [J4.06]}
+      - number: 4
+        title: "Debugging, logging and refactoring"
+        lessons:
+          - {id: j4-l4.1, title: "Logging and debugging", concepts: [J4.07]}
+          - {id: j4-l4.2, title: "Refactoring under tests", concepts: [J4.08]}
+          - {id: j4-l4.3, title: "Code smells and code review", concepts: [J4.09]}
+  - number: 5
+    title: "Data structures and algorithms"
+    modules:
+      - number: 1
+        title: "Complexity and measurement"
+        lessons:
+          - {id: j5-l1.1, title: "Counting steps and growth rates", concepts: [J5.01]}
+          - {id: j5-l1.2, title: "Measuring honestly and spotting accidental quadratics", concepts: [J5.02]}
+      - number: 2
+        title: "Core structures"
+        lessons:
+          - {id: j5-l2.1, title: "Dynamic arrays", concepts: [J5.03]}
+          - {id: j5-l2.2, title: "Linked lists", concepts: [J5.04]}
+          - {id: j5-l2.3, title: "Stacks and queues", concepts: [J5.05]}
+          - {id: j5-l2.4, title: "Hash tables", concepts: [J5.06]}
+          - {id: j5-l2.5, title: "Binary search trees", concepts: [J5.07]}
+          - {id: j5-l2.6, title: "Heaps and priority queues", concepts: [J5.08]}
+      - number: 3
+        title: "Algorithms"
+        lessons:
+          - {id: j5-l3.1, title: "Recursion", concepts: [J5.09]}
+          - {id: j5-l3.2, title: "Binary search and sorting", concepts: [J5.10]}
+          - {id: j5-l3.3, title: "Graphs: representation and traversal", concepts: [J5.11]}
+          - {id: j5-l3.4, title: "Shortest paths", concepts: [J5.12]}
+          - {id: j5-l3.5, title: "Dynamic programming", concepts: [J5.13]}
+  - number: 6
+    title: "Databases and persistence"
+    modules:
+      - number: 1
+        title: "Relational thinking and SQL"
+        lessons:
+          - {id: j6-l1.1, title: "Tables, keys and relationships", concepts: [J6.01]}
+          - {id: j6-l1.2, title: "Selecting and filtering with NULL", concepts: [J6.02]}
+          - {id: j6-l1.3, title: "Joins, aggregates and subqueries", concepts: [J6.03]}
+          - {id: j6-l1.4, title: "Writing data, indexes and query plans", concepts: [J6.04]}
+      - number: 2
+        title: "Transactions and integrity"
+        lessons:
+          - {id: j6-l2.1, title: "Constraints that keep data honest", concepts: [J6.05]}
+          - {id: j6-l2.2, title: "Transactions: all or nothing", concepts: [J6.06]}
+          - {id: j6-l2.3, title: "Isolation, lost updates and migrations", concepts: [J6.07]}
+      - number: 3
+        title: "JDBC"
+        lessons:
+          - {id: j6-l3.1, title: "Connections and PreparedStatement", concepts: [J6.08]}
+          - {id: j6-l3.2, title: "Mapping rows and repositories", concepts: [J6.09]}
+          - {id: j6-l3.3, title: "Transactions and resource management in JDBC", concepts: [J6.10]}
+      - number: 4
+        title: "JPA and Hibernate"
+        lessons:
+          - {id: j6-l4.1, title: "Entities and the persistence context", concepts: [J6.11]}
+          - {id: j6-l4.2, title: "Lazy loading and the N+1 problem", concepts: [J6.12]}
+          - {id: j6-l4.3, title: "Choosing JDBC, JPA or SQL", concepts: [J6.13]}
+  - number: 7
+    title: "Spring and backend development"
+    modules:
+      - number: 1
+        title: "HTTP and REST fundamentals"
+        lessons:
+          - {id: j7-l1.1, title: "Requests, responses and headers", concepts: [J7.01]}
+          - {id: j7-l1.2, title: "Methods, safety and idempotence", concepts: [J7.02]}
+          - {id: j7-l1.3, title: "Status codes and problem details", concepts: [J7.03]}
+          - {id: j7-l1.4, title: "Resource design and routing", concepts: [J7.04]}
+      - number: 2
+        title: "Spring core"
+        lessons:
+          - {id: j7-l2.1, title: "The problem dependency injection solves", concepts: [J7.05]}
+          - {id: j7-l2.2, title: "Beans, scopes and profiles", concepts: [J7.06]}
+          - {id: j7-l2.3, title: "What auto-configuration does", concepts: [J7.07]}
+      - number: 3
+        title: "Spring Boot REST APIs"
+        lessons:
+          - {id: j7-l3.1, title: "Controllers and request mapping", concepts: [J7.08]}
+          - {id: j7-l3.2, title: "Validation and error mapping", concepts: [J7.09]}
+          - {id: j7-l3.3, title: "Layers, persistence and pagination", concepts: [J7.10]}
+      - number: 4
+        title: "Testing a Spring application"
+        lessons:
+          - {id: j7-l4.1, title: "Unit, slice and integration tests", concepts: [J7.11]}
+          - {id: j7-l4.2, title: "Testing HTTP behaviour", concepts: [J7.12]}
+  - number: 8
+    title: "Authentication and application security"
+    modules:
+      - number: 1
+        title: "Security fundamentals"
+        lessons:
+          - {id: j8-l1.1, title: "Threat modelling and the OWASP Top 10", concepts: [J8.01]}
+          - {id: j8-l1.2, title: "Passwords and hashing", concepts: [J8.02]}
+          - {id: j8-l1.3, title: "Untrusted input: encoding and paths", concepts: [J8.03]}
+          - {id: j8-l1.4, title: "Secrets and logging", concepts: [J8.04]}
+      - number: 2
+        title: "Authentication and authorisation"
+        lessons:
+          - {id: j8-l2.1, title: "Authentication, sessions and cookies", concepts: [J8.05]}
+          - {id: j8-l2.2, title: "Tokens and JWT", concepts: [J8.06]}
+          - {id: j8-l2.3, title: "Access control and ownership", concepts: [J8.07]}
+          - {id: j8-l2.4, title: "Spring Security: CSRF and CORS", concepts: [J8.08]}
+          - {id: j8-l2.5, title: "Lockout and generic responses", concepts: [J8.09]}
+  - number: 9
+    title: "Concurrency, the JVM and performance"
+    modules:
+      - number: 1
+        title: "Concurrency fundamentals"
+        lessons:
+          - {id: j9-l1.1, title: "Threads and the cost of sharing", concepts: [J9.01]}
+          - {id: j9-l1.2, title: "Races: make one happen", concepts: [J9.02]}
+          - {id: j9-l1.3, title: "synchronized, locks and atomics", concepts: [J9.03]}
+          - {id: j9-l1.4, title: "Visibility and the Java Memory Model", concepts: [J9.04]}
+          - {id: j9-l1.5, title: "Deadlock: reproduce and diagnose", concepts: [J9.05]}
+      - number: 2
+        title: "Modern concurrency"
+        lessons:
+          - {id: j9-l2.1, title: "Executors and futures", concepts: [J9.06]}
+          - {id: j9-l2.2, title: "Concurrent collections", concepts: [J9.07]}
+          - {id: j9-l2.3, title: "Virtual threads, scoped values and structured concurrency", concepts: [J9.08]}
+      - number: 3
+        title: "JVM internals and performance"
+        lessons:
+          - {id: j9-l3.1, title: "Memory and garbage collection", concepts: [J9.09]}
+          - {id: j9-l3.2, title: "JIT compilation and measuring honestly", concepts: [J9.10]}
+          - {id: j9-l3.3, title: "Profiling and memory leaks", concepts: [J9.11]}
+  - number: 10
+    title: "Distributed systems and architecture"
+    modules:
+      - number: 1
+        title: "Architecture principles"
+        lessons:
+          - {id: j10-l1.1, title: "Layers, dependency direction and coupling", concepts: [J10.01]}
+          - {id: j10-l1.2, title: "Ports and adapters", concepts: [J10.02]}
+          - {id: j10-l1.3, title: "Monolith or services, and decision records", concepts: [J10.03]}
+      - number: 2
+        title: "Distributed systems fundamentals"
+        lessons:
+          - {id: j10-l2.1, title: "Timeouts, retries and backoff", concepts: [J10.04]}
+          - {id: j10-l2.2, title: "Idempotency keys", concepts: [J10.05]}
+          - {id: j10-l2.3, title: "Sagas, outbox and delivery guarantees", concepts: [J10.06]}
+          - {id: j10-l2.4, title: "Circuit breakers and resilience", concepts: [J10.07]}
+  - number: 11
+    title: "Containers, deployment and cloud"
+    modules:
+      - number: 1
+        title: "Docker"
+        lessons:
+          - {id: j11-l1.1, title: "Containers, images and layer caching", concepts: [J11.01]}
+          - {id: j11-l1.2, title: "Multi-stage builds", concepts: [J11.02]}
+          - {id: j11-l1.3, title: "Compose, configuration and secrets", concepts: [J11.03]}
+          - {id: j11-l1.4, title: "The JVM in containers", concepts: [J11.04]}
+      - number: 2
+        title: "CI/CD"
+        lessons:
+          - {id: j11-l2.1, title: "Pipelines as code", concepts: [J11.05]}
+          - {id: j11-l2.2, title: "Deployment strategies and rollback", concepts: [J11.06]}
+      - number: 3
+        title: "Cloud engineering"
+        lessons:
+          - {id: j11-l3.1, title: "Cloud networking and identity", concepts: [J11.07]}
+          - {id: j11-l3.2, title: "Infrastructure as code and cost", concepts: [J11.08]}
+  - number: 12
+    title: "Production engineering and capstone"
+    modules:
+      - number: 1
+        title: "Observability and troubleshooting"
+        lessons:
+          - {id: j12-l1.1, title: "Structured logs and the three signals", concepts: [J12.01]}
+          - {id: j12-l1.2, title: "SLIs, SLOs and percentiles", concepts: [J12.02]}
+          - {id: j12-l1.3, title: "Tracing", concepts: [J12.03]}
+          - {id: j12-l1.4, title: "Reading an incident", concepts: [J12.04]}
+      - number: 2
+        title: "Advanced engineering practices"
+        lessons:
+          - {id: j12-l2.1, title: "Safe change: expand and contract, and flags", concepts: [J12.05]}
+          - {id: j12-l2.2, title: "Legacy code and technical debt", concepts: [J12.06]}
+          - {id: j12-l2.3, title: "Design reviews and estimates", concepts: [J12.07]}

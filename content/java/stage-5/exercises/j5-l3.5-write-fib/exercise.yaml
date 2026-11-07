@@ -1,0 +1,31 @@
+id: j5-l3.5-write-fib
+type: write
+title: "Fibonacci that finishes"
+lesson: j5-l3.5
+role: ladder
+assesses: [o1]
+concepts: [J5.13]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `fibonacci(int n)`, returning the n-th Fibonacci number (0, 1, 1, 2, 3, 5, ...; `fibonacci(0)` is 0 and `fibonacci(1)` is 1). The plain recursion makes hundreds of millions of calls by n = 40, and the checks go up to n = 90 (within `long`). Remember sub-answers, with a memo or a loop.
+entry:
+  methods:
+    - {name: fibonacci, params: [{name: n, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {method: fibonacci, args: [10], expect: 55}
+    - {method: fibonacci, args: [0], expect: 0}
+    - {method: fibonacci, args: [1], expect: 1}
+  hidden:
+    - {method: fibonacci, args: [2], expect: 1}
+    - {method: fibonacci, args: [30], expect: 832040}
+    - {method: fibonacci, args: [50], expect: 12586269025}
+    - {method: fibonacci, args: [90], expect: 2880067194370816120}
+    - {method: fibonacci, args: [45], expect: 1134903170}
+    - {method: fibonacci, args: [89], expect: 1779979416004714189}
+hints:
+  h1: "Each value is the sum of the two before it. Build up from 0 and 1, keeping only the last two."
+  h2: "long next = previous + current; previous = current; current = next;"
+ai_assisted: true

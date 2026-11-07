@@ -1,0 +1,30 @@
+id: j1-l4.4-debug-first
+type: debug
+title: "First or last?"
+lesson: j1-l4.4
+role: ladder
+assesses: [o1]
+concepts: [J1.07]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `firstVowel` should return the index of the **first** vowel in a word, or -1 if it has none. For `"Banana"` it returns 5 instead of 1. Find and fix the bug.
+entry:
+  methods:
+    - {name: firstVowel, params: [{name: word, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["Banana"], expect: 1}
+    - {args: ["sky"], expect: -1}
+    - {args: ["Apple"], expect: 0}
+  hidden:
+    - {name: "empty", args: [""], expect: -1}
+    - {name: "one vowel late", args: ["strength"], expect: 3}
+    - {name: "vowels together", args: ["queue"], expect: 1}
+    - {name: "no vowels", args: ["Rhythm"], expect: -1}
+    - {name: "capital vowel last", args: ["xyzE"], expect: 3}
+hints:
+  h1: "Trace Banana. What happens to found each time another vowel turns up?"
+  h2: "found is overwritten by every later vowel. Return i as soon as you find the first one, and return -1 after the loop."
+ai_assisted: true

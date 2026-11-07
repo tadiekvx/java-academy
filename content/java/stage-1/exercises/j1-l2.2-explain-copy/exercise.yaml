@@ -1,0 +1,50 @@
+id: j1-l2.2-explain-copy
+type: explain
+title: Why didn't b change?
+lesson: j1-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J1.03]
+evidence: [EXPL]
+misconceptions: [MC03]
+difficulty: 2
+prompt: |
+  Look at this code:
+
+  ```java
+  int a = 5;
+  int b = a;
+  a = 10;
+  ```
+
+  A learner expected `b` to be 10 at the end, but it's 5. Explain why, in two or three sentences.
+rubric:
+  criteria: |
+    A full answer says that int b = a copies a's current value (5) into b at that moment; the
+    variables aren't linked, so changing a afterwards only changes a.
+  levels:
+    - score: 2
+      descriptor: >
+        Says the value of a (5) is copied into b when that line runs, and that b and a aren't linked
+        afterwards, so the later change to a doesn't affect b.
+      samples:
+        - >
+          int b = a copies the value 5 into b right then. After that b has its own copy and isn't
+          connected to a, so setting a to 10 only changes a.
+        - >
+          Assignment copies the value, not a link to the variable. When b = a ran, a was 5, so b got
+          5. Changing a later doesn't go back and change b.
+    - score: 1
+      descriptor: >
+        Says something partly right, such as b got the value 5, but doesn't explain that the
+        variables are independent afterwards, or the explanation is vague.
+      samples:
+        - Because b was set to 5 before a was changed.
+        - b = a happened first so b is 5.
+    - score: 0
+      descriptor: >
+        Incorrect, for example claims b should be 10, or that b updates later.
+      samples:
+        - b should be 10 because b equals a.
+        - b will change to 10 the next time you print it.
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j9-l2.3-explain-which-thread
+type: explain
+title: "Platform, virtual, or neither"
+lesson: j9-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J9.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  For each workload, say whether you would use platform threads in a fixed pool, virtual threads, or something else, and why: (a) a server making 5,000 concurrent HTTP calls to a slow partner service; (b) rendering 8 large images, each taking seconds of pure computation; (c) passing the signed-in user from a web filter down to a service method and into the child tasks it starts. Also say what state structured concurrency is in with Java 25.
+rubric:
+  criteria: |
+    (a) Virtual threads: the tasks spend nearly all their time blocked waiting, virtual threads are cheap and plentiful so one per task, unpooled, is the intended style. (b) A fixed pool of platform threads sized to the number of cores: the work is CPU-bound, virtual threads are not intended for long-running CPU-intensive operations and add nothing. (c) A scoped value: it shares immutable data with callees and child threads for a bounded scope (final in Java 25). Structured concurrency is a preview API in Java 25, needing preview features to be enabled and liable to change, so it should not go into production code on the strength of this course.
+  levels:
+    - score: 2
+      descriptor: "The answer chooses all three correctly with reasons and states that structured concurrency is a preview in Java 25."
+      samples:
+        - "(a) Virtual threads, one per task: they mostly wait on I/O and are cheap. (b) A fixed pool of platform threads about the number of cores, because virtual threads are not meant for long CPU-bound work. (c) A ScopedValue, bound for the request and visible to callees and child threads. Structured concurrency is still a preview feature in 25, so it needs --enable-preview and may change."
+        - "HTTP calls: virtual threads. Image rendering: platform pool sized to the cores. Passing the user: scoped value, which is final in 25. Structured concurrency is preview in 25."
+    - score: 1
+      descriptor: "The answer gets two of three or omits the preview status."
+      samples:
+        - "Virtual threads for the HTTP calls and a pool for the images."
+        - "Use virtual threads for everything."
+    - score: 0
+      descriptor: "The answer misjudges the cases."
+      samples:
+        - "Virtual threads make CPU-bound work faster, so use them for the images."
+        - "A static field is the best way to pass the user."
+ai_assisted: true

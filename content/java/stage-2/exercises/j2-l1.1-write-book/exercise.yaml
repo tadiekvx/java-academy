@@ -1,0 +1,31 @@
+id: j2-l1.1-write-book
+type: write
+title: "Model a book"
+lesson: j2-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J2.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The driver `describeBook` at the bottom is finished. It uses a class called `Book` that you must write. A `Book` has a `String title` and an `int pages`, and a constructor that takes both, in that order, and stores them. Make `describeBook("Dune", 612)` return `Dune (612 pages)`.
+entry:
+  methods:
+    - {name: describeBook, params: [{name: title, type: "String"}, {name: pages, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: describeBook, args: ["Dune", 612], expect: "Dune (612 pages)"}
+    - {method: describeBook, args: ["Emma", 474], expect: "Emma (474 pages)"}
+    - {method: describeBook, args: ["Tiny", 1], expect: "Tiny (1 pages)"}
+  hidden:
+    - {method: describeBook, args: ["", 0], expect: " (0 pages)"}
+    - {method: describeBook, args: ["A longer title here", 1000], expect: "A longer title here (1000 pages)"}
+    - {method: describeBook, args: ["x", 99], expect: "x (99 pages)"}
+    - {method: describeBook, args: ["Ulysses", 730], expect: "Ulysses (730 pages)"}
+    - {method: describeBook, args: ["Zero", 0], expect: "Zero (0 pages)"}
+starter_compiles: false
+hints:
+  h1: "The class needs two fields and a constructor with two parameters. The driver below already calls new Book(title, pages)."
+  h2: "class Book { String title; int pages; Book(String title, int pages) { this.title = title; this.pages = pages; } }"
+ai_assisted: true

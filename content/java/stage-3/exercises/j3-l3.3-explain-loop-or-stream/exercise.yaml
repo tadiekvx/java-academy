@@ -1,0 +1,45 @@
+id: j3-l3.3-explain-loop-or-stream
+type: explain
+title: "Which is clearer?"
+lesson: j3-l3.3
+role: ladder
+assesses: [o3]
+concepts: [J3.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague rewrites this loop as a stream and says "streams are always better":
+
+  ```java
+  int best = 0;
+  String bestName = "";
+  int over10 = 0;
+  for (String name : names) {
+      int score = score(name);
+      if (score > 10) over10++;
+      if (score > best) { best = score; bestName = name; }
+  }
+  ```
+
+  Say (a) whether you'd accept the rewrite and why, and (b) give one situation in the same codebase where a stream *would* be the clearer choice, with a one-line example.
+rubric:
+  criteria: |
+    A full answer says the loop updates three variables together (best, bestName, over10) so a stream would need several passes or an awkward collector and would be harder to read; and gives a case where a stream is clearer, such as filtering and transforming a list into another list (names.stream().filter(...).map(...).toList()).
+  levels:
+    - score: 2
+      descriptor: "Says the loop keeps several pieces of state together so the stream would need multiple passes or a custom collector and be less readable, and gives a good stream case such as a simple filter-map-collect with an example."
+      samples:
+        - "I wouldn't accept it. The loop updates three things in one pass (best score, best name and the over-ten count), and a stream would need several passes or an awkward collector, which is harder to read. A stream is clearer for something like names.stream().filter(n -> !n.isEmpty()).map(String::toUpperCase).toList(), which just filters and transforms."
+        - "I'd keep the loop because it's one clear pass with three accumulators. Streams are better when it's a simple pipeline, like turning a list of names into a list of their lengths with map and toList."
+    - score: 1
+      descriptor: "Gives a sensible view without a reason, or reasons without a stream example."
+      samples:
+        - "Keep the loop."
+        - "Streams are good for filtering."
+    - score: 0
+      descriptor: "Incorrect or one-sided, for example says streams are always better or loops are always better."
+      samples:
+        - "Streams are always better."
+        - "Never use streams."
+ai_assisted: true

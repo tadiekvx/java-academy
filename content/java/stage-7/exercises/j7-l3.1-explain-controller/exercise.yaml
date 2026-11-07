@@ -1,0 +1,53 @@
+id: j7-l3.1-explain-controller
+type: explain
+title: "Reading a real controller"
+lesson: j7-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J7.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a shortened copy of a real controller from this platform's backend.
+
+  ```java
+  @RestController
+  @RequestMapping("/api")
+  class CurriculumController {
+
+      private final ContentAccess access;
+
+      CurriculumController(ContentAccess access) {
+          this.access = access;
+      }
+
+      @GetMapping("/lessons/{id}")
+      LessonView lesson(@PathVariable String id) {
+          Lesson lesson = access.lesson(id);
+          // ... builds and returns a LessonView record
+      }
+  }
+  ```
+
+  Say which request it handles, where `id` comes from, what happens to the `LessonView` the method returns, and where the `ContentAccess` argument comes from.
+rubric:
+  criteria: |
+    It handles GET /api/lessons/{id}: the class-level @RequestMapping adds the /api prefix and @GetMapping the rest. @PathVariable binds the {id} segment of the URL to the parameter. @RestController includes @ResponseBody, so the returned LessonView is written to the response body (as JSON) rather than resolved as a view name. The ContentAccess is passed to the constructor by the container, which is dependency injection.
+  levels:
+    - score: 2
+      descriptor: "The answer covers the route, the path variable, @ResponseBody behaviour and the injected constructor argument."
+      samples:
+        - "GET /api/lessons/{id}: /api from the class, /lessons/{id} from the method. @PathVariable gives id the value from the URL. Because it is a @RestController, the returned LessonView is serialised straight into the response body, not looked up as a template. Spring supplies the ContentAccess through the constructor."
+        - "It answers GET requests for /api/lessons/something. The something is passed in as id by @PathVariable. @RestController means the return value is the response body (JSON). The container builds the controller and injects ContentAccess, since the constructor needs it."
+    - score: 1
+      descriptor: "The answer gets the route right but not the return value or the constructor."
+      samples:
+        - "It handles GET /api/lessons/ with an id."
+        - "It looks up a lesson by id and returns it."
+    - score: 0
+      descriptor: "The answer misreads the code."
+      samples:
+        - "It handles every request to the server."
+        - "The controller creates the ContentAccess itself."
+ai_assisted: true

@@ -1,0 +1,19 @@
+id: j1-l4.3-modify-table
+type: modify
+title: "The full times table"
+lesson: j1-l4.3
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.07]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program prints the 7 times table from 1 to 10, one number per line. Change it to print the table from 1 to **12**, in the form `7 x 3 = 21`.
+tests:
+  visible:
+    - {name: "prints the full table", stdin: "", stdout_equals: "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70\n7 x 11 = 77\n7 x 12 = 84"}
+hints:
+  h1: "Two changes: how far the loop goes, and what each line prints."
+  h2: "Use i <= 12, and print \"7 x \" + i + \" = \" + (7 * i)."
+ai_assisted: true

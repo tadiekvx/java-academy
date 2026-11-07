@@ -1,0 +1,27 @@
+id: j1-l1.2-debug-several
+type: debug
+title: Three problems, one at a time
+lesson: j1-l1.2
+role: ladder
+assesses: [o1, o2, o4]
+concepts: [J1.13, J1.01]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program has three separate mistakes. Fix them one at a time: run it, fix the **first**
+  error, run it again, and repeat. When it works, it prints:
+  
+  ```
+  One
+  Two
+  Three
+  ```
+tests:
+  visible:
+    - {name: prints the right lines, stdin: "", stdout_equals: "One\nTwo\nThree"}
+starter_compiles: false
+hints:
+  h1: Only look at the first error each time. Fix it, run again, and see what the first error is now.
+  h2: "The three problems are an unclosed string, a missing semicolon and a missing closing brace."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j2-l5.2-explain-checked
+type: explain
+title: "Checked or unchecked?"
+lesson: j2-l5.2
+role: ladder
+assesses: [o3]
+concepts: [J2.13]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Explain the difference between a **checked** and an **unchecked** exception: what the compiler forces you to do in each case, and one example of each. Then say which you would choose for (a) a payment that was declined by the bank, and (b) a method called with a negative number where only positive numbers make sense, and why.
+rubric:
+  criteria: |
+    A full answer says checked exceptions (Exception but not RuntimeException) must be caught or declared with throws, while unchecked (RuntimeException subclasses) need not; gives an example of each; chooses checked for the declined payment (the caller can recover) and unchecked for the negative argument (a programming mistake the caller cannot sensibly recover from).
+  levels:
+    - score: 2
+      descriptor: "Says checked exceptions must be caught or declared and unchecked need not, gives an example of each, and chooses checked for the declined payment and unchecked for the bad argument, with reasons about recovery."
+      samples:
+        - "Checked exceptions, like IOException or my own that extend Exception, must be caught or declared with throws. Unchecked ones, like IllegalArgumentException, extend RuntimeException and the compiler doesn't force anything. A declined payment I'd make checked, because the caller can recover by trying another card. A negative argument I'd make unchecked, because it's a programming mistake the caller can't do anything about."
+        - "Checked: the compiler forces you to catch or declare (e.g. a custom exception extending Exception). Unchecked: it doesn't (e.g. NullPointerException). (a) checked, since the caller can handle it. (b) unchecked, since it signals a bug."
+    - score: 1
+      descriptor: "Explains the compiler difference but doesn't choose correctly or doesn't give reasons."
+      samples:
+        - "Checked ones must be caught and unchecked ones don't need to be."
+        - "Both should be unchecked."
+    - score: 0
+      descriptor: "Incorrect, for example reverses the two, or says unchecked exceptions can't be thrown."
+      samples:
+        - "Unchecked ones must be caught."
+        - "Checked means it was checked by a person."
+ai_assisted: true

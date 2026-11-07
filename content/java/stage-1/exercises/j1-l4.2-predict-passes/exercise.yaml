@@ -1,0 +1,19 @@
+id: j1-l4.2-predict-passes
+type: predict
+title: "How many times?"
+lesson: j1-l4.2
+role: ladder
+assesses: [o3]
+concepts: [J1.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this prints. How many passes does each loop make?
+expected_output: |
+  3
+  6
+hints:
+  h1: "Trace just the variable in each condition: a goes 0, 4, 8, … and n goes 64, 32, …"
+  h2: "a: 4, 8, 12 is three passes. n: 32, 16, 8, 4, 2, 1 is six passes."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j5-l1.2-explain-measure
+type: explain
+title: "Is it really faster?"
+lesson: j5-l1.2
+role: ladder
+assesses: [o1, o3]
+concepts: [J5.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate says: "I ran my new version once and it took 40 ms; the old one took 55 ms, so it's faster." (a) Give two reasons this evidence is weak. (b) Describe a better way to compare them. (c) The report is "slow": what should the requirement look like, and what do you do **before** changing any code?
+rubric:
+  criteria: |
+    A full answer says one run is affected by noise and by the first run being untypical, and the sizes may not be realistic; a better comparison repeats the measurements after a few warm-up runs, with realistic input sizes, and compares ratios or growth as n doubles; and the requirement should be a number (e.g. under two seconds for 200,000 records), measuring first to find where the time goes before changing anything.
+  levels:
+    - score: 2
+      descriptor: "Gives two reasons one run is weak (noise and variation, first run not typical, unrealistic input), a better method (repeat after warm-up, realistic sizes, compare ratios or growth), and a numeric requirement with measuring first."
+      samples:
+        - "One run is noisy, and the first run is often slower than later ones, so 40 versus 55 could be chance. Better: warm up, run each several times on realistic sizes, and compare the ratio, or see how the time grows when n doubles. The requirement should be a number, like under two seconds for 200,000 records, and I'd measure first to find the slow part before changing code."
+        - "It's a single measurement, which varies, and the input may not be realistic. I'd repeat both versions several times after a warm-up, with big inputs, and compare how they scale. The requirement needs a number and I'd profile or measure before editing anything."
+    - score: 1
+      descriptor: "Gives a valid reason or a better method, but not both, or doesn't give a numeric requirement or the measure-first step."
+      samples:
+        - "One run isn't enough."
+        - "Measure it several times."
+    - score: 0
+      descriptor: "Incorrect, for example says the 15 ms difference proves it is faster, or that you should optimise first and measure later."
+      samples:
+        - "It's faster, 40 is less than 55."
+        - "Just rewrite the code and see."
+ai_assisted: true

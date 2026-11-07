@@ -1,0 +1,26 @@
+id: j1-l2.1-predict-printing
+type: predict
+title: How values print
+lesson: j1-l2.1
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.02]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints, one line per value. Pay attention to which values are
+  `double`s. Then run it and compare.
+expected_output: |
+  42
+  42.0
+  1.5
+  A
+  A
+  true
+  7
+  7.0
+hints:
+  h1: A double always prints with a decimal point; an int never does. What type is each value?
+  h2: "1.50 prints as 1.5 (trailing zeros go). 3 + 4 is an int; 3 + 4.0 is a double, so it prints 7.0."
+ai_assisted: true

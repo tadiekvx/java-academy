@@ -1,0 +1,49 @@
+id: j4-l2.1-explain-pom
+type: explain
+title: "Read the POM"
+lesson: j4-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J4.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A POM contains:
+
+  ```xml
+  <groupId>com.example</groupId>
+  <artifactId>shop</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <maven.compiler.release>25</maven.compiler.release>
+  </properties>
+  <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>6.1.3</version>
+    <scope>test</scope>
+  </dependency>
+  ```
+
+  (a) What do `groupId`, `artifactId` and `version` together identify, and what does `SNAPSHOT` signal? (b) What does `maven.compiler.release` control? (c) What does `<scope>test</scope>` mean, and why is it right for JUnit?
+rubric:
+  criteria: |
+    A full answer says the three coordinates form a unique address for the project (or library); SNAPSHOT means a version still under development; maven.compiler.release sets the Java version the code is compiled for; and test scope means the library is only available when compiling and running tests, which is right because testing code doesn't belong in the shipped application.
+  levels:
+    - score: 2
+      descriptor: "Says the coordinates identify the project uniquely, SNAPSHOT means in development, maven.compiler.release is the Java version to compile for, and test scope limits JUnit to the tests so it isn't shipped with the application."
+      samples:
+        - "Together they're a unique address for the project: the group, the name and the version. SNAPSHOT means it's still being developed, not a fixed release. maven.compiler.release is the Java version to compile for, here 25. test scope means JUnit is only used when compiling and running tests, which is right because test code shouldn't be shipped in the application."
+        - "(a) The project's coordinates; SNAPSHOT is a development version. (b) The Java release the code compiles for. (c) Only for tests, so JUnit isn't part of the real app."
+    - score: 1
+      descriptor: "Answers two parts correctly, or gives correct points without the reasons."
+      samples:
+        - "It's the project's name and version."
+        - "Test scope is for tests."
+    - score: 0
+      descriptor: "Incorrect, for example says test scope makes the dependency run slower, or that SNAPSHOT means a backup."
+      samples:
+        - "SNAPSHOT is a backup copy."
+        - "Test scope means the library is tested."
+ai_assisted: true

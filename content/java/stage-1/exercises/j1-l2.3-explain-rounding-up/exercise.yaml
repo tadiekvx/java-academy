@@ -1,0 +1,51 @@
+id: j1-l2.3-explain-rounding-up
+type: explain
+title: Why add 7?
+lesson: j1-l2.3
+role: ladder
+assesses: [o4]
+concepts: [J1.02]
+evidence: [EXPL]
+misconceptions: [MC04]
+difficulty: 2
+refers_to: j1-l2.3-modify-pizza
+prompt: |
+  Look at the original `pizzasNeeded` method, for 8-slice pizzas. In two or three sentences,
+  explain why it adds 7 before dividing by 8. What would go wrong if it simply returned
+  `slices / 8`? Use a specific number of slices in your answer.
+rubric:
+  criteria: |
+    A full answer says that integer division throws away the remainder, so slices / 8 alone
+    would order too few pizzas whenever there are leftover slices. It says that adding 7 (one
+    less than 8) pushes any partial pizza up to the next whole number without changing an exact
+    multiple of 8. It backs this up with a correct example.
+  levels:
+    - score: 2
+      descriptor: >
+        Explains that slices / 8 rounds down and so under-orders when there's a remainder, AND
+        why adding 7 rounds up partial pizzas but not exact multiples, with a correct example.
+      samples:
+        - >
+          slices / 8 throws away the remainder, so 10 slices would give 1 pizza and two people
+          would miss out. Adding 7 first makes it (10 + 7) / 8 = 2. If there are exactly 16
+          slices, (16 + 7) / 8 is still 2, so you don't order an extra pizza.
+        - >
+          Integer division always rounds down. Adding one less than 8 means anything above a
+          multiple of 8 tips over into the next whole number, but 8 itself becomes 15 / 8 = 1,
+          so it only rounds up when there are leftover slices. For example, 9 slices gives
+          16 / 8 = 2 pizzas.
+    - score: 1
+      descriptor: >
+        Says the 7 is there to round up or to make sure there's enough pizza, but doesn't
+        explain why 7 in particular works, or gives no example or an incorrect one.
+      samples:
+        - It adds 7 so that the answer rounds up and you always have enough pizza.
+        - Without the 7, 10 slices gives 1 pizza, which isn't enough. The 7 fixes that.
+    - score: 0
+      descriptor: >
+        Incorrect or missing explanation, for example treating 7 as a number of people or
+        slices to eat, or claiming Java rounds to the nearest whole number.
+      samples:
+        - The 7 is there because there are 7 slices left after you take one for yourself.
+        - Java rounds 10 / 8 = 1.25 to the nearest number, so the 7 adds spare slices in case people are hungry.
+ai_assisted: true

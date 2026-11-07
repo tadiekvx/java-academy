@@ -1,0 +1,34 @@
+id: j10-l2.2-write-idempotent
+type: write
+title: "Apply each request once"
+lesson: j10-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J10.05]
+evidence: [IMPL, DEBUG]
+misconceptions: [MC202]
+difficulty: 4
+prompt: |
+  Accounts a, b and c start with 1000 each. A request is `key:from:to:cents`. Process them in order. A key seen before with the **same** from, to and cents is a duplicate: answer `dup:` followed by the result of the first time, and change nothing. A key seen before with a different body is `conflict`. A new request for an unknown or identical account, or with `cents` zero or less, is `invalid` (and its key is not remembered). If `from` lacks the money the result is `rejected` (the key *is* remembered). Otherwise move the money: `applied`. Return one result per request, then a final element with the balances as `a=..;b=..;c=..`.
+entry:
+  methods:
+    - {name: processTransfers, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "a retried request", method: processTransfers, args: [["k1:a:b:100", "k1:a:b:100"]], expect: ["applied", "dup:applied", "a=900;b=1100;c=1000"]}
+    - {name: "the key reused for another body", method: processTransfers, args: [["k1:a:b:100", "k1:a:c:100"]], expect: ["applied", "conflict", "a=900;b=1100;c=1000"]}
+    - {name: "not enough money", method: processTransfers, args: [["k1:a:b:5000"]], expect: ["rejected", "a=1000;b=1000;c=1000"]}
+  hidden:
+    - {name: "two keys, both retried", method: processTransfers, args: [["k1:a:b:100", "k2:a:b:100", "k1:a:b:100", "k2:a:b:100"]], expect: ["applied", "applied", "dup:applied", "dup:applied", "a=800;b=1200;c=1000"]}
+    - {name: "a rejected request retried", method: processTransfers, args: [["k1:a:b:5000", "k1:a:b:5000"]], expect: ["rejected", "dup:rejected", "a=1000;b=1000;c=1000"]}
+    - {name: "an invalid request does not use up the key", method: processTransfers, args: [["k1:a:a:10", "k1:a:b:10"]], expect: ["invalid", "applied", "a=990;b=1010;c=1000"]}
+    - {name: "an unknown account", method: processTransfers, args: [["k1:a:z:10"]], expect: ["invalid", "a=1000;b=1000;c=1000"]}
+    - {name: "amounts must be positive", method: processTransfers, args: [["k1:a:b:0", "k2:b:c:-5"]], expect: ["invalid", "invalid", "a=1000;b=1000;c=1000"]}
+    - {name: "duplicate, then conflict", method: processTransfers, args: [["x:a:b:100", "y:b:c:100", "x:a:b:100", "x:a:b:101"]], expect: ["applied", "applied", "dup:applied", "conflict", "a=900;b=1000;c=1100"]}
+    - {name: "funds run out, the duplicate still answers", method: processTransfers, args: [["k1:a:b:1000", "k2:a:b:1", "k1:a:b:1000"]], expect: ["applied", "rejected", "dup:applied", "a=0;b=2000;c=1000"]}
+    - {name: "no requests", method: processTransfers, args: [[]], expect: ["a=1000;b=1000;c=1000"]}
+    - {name: "the same key from another account", method: processTransfers, args: [["k1:a:b:100", "k1:b:c:100"]], expect: ["applied", "conflict", "a=900;b=1100;c=1000"]}
+hints:
+  h1: "Remember the body and the result for every key you accepted."
+  h2: "Check the key before you look at the balances."
+ai_assisted: true

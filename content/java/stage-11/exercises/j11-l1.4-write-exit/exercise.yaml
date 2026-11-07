@@ -1,0 +1,31 @@
+id: j11-l1.4-write-exit
+type: write
+title: "Why did the container stop"
+lesson: j11-l1.4
+role: ladder
+assesses: [o1]
+concepts: [J11.04]
+evidence: [IMPL, DEBUG]
+misconceptions: [MC208]
+difficulty: 2
+prompt: |
+  `docker inspect` reports a container's exit code and whether the kernel's out-of-memory killer stopped it (`OOMKilled`). Write `classifyExit(exitCode, oomKilled)`: `ok` for exit code 0; for 137 (the process was killed with signal 9) `kernel-oom-kill` if `oomKilled` is true, otherwise `killed-by-signal`; any other code is `application-error`.
+entry:
+  methods:
+    - {name: classifyExit, params: [{name: exitCode, type: "int"}, {name: oomKilled, type: "boolean"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a normal exit", method: classifyExit, args: [0, false], expect: "ok"}
+    - {name: "the kernel killed it for memory", method: classifyExit, args: [137, true], expect: "kernel-oom-kill"}
+    - {name: "the application failed", method: classifyExit, args: [1, false], expect: "application-error"}
+  hidden:
+    - {name: "killed by something else, for example docker kill", method: classifyExit, args: [137, false], expect: "killed-by-signal"}
+    - {name: "terminated, signal 15", method: classifyExit, args: [143, false], expect: "application-error"}
+    - {name: "the flag with another code", method: classifyExit, args: [1, true], expect: "application-error"}
+    - {name: "exit code zero", method: classifyExit, args: [0, true], expect: "ok"}
+    - {name: "another application error", method: classifyExit, args: [2, false], expect: "application-error"}
+    - {name: "the highest code", method: classifyExit, args: [255, false], expect: "application-error"}
+hints:
+  h1: "Exit code 137 alone does not say why the process got the signal."
+  h2: "Check for success first."
+ai_assisted: true

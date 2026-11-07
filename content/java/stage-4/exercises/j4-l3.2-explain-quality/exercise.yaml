@@ -1,0 +1,49 @@
+id: j4-l3.2-explain-quality
+type: explain
+title: "What is wrong with these tests?"
+lesson: j4-l3.2
+role: ladder
+assesses: [o3]
+concepts: [J4.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Here are two tests for a method `Greeter.greet()` that uses the current time, and for `Basket.total()`:
+
+  ```java
+  @Test
+  void greetsInTheMorning() {
+      assertEquals("Good morning", new Greeter().greet());
+  }
+
+  @Test
+  void totalWorks() {
+      Basket basket = new Basket();
+      basket.add(new Random().nextInt(100));
+      basket.total();
+      System.out.println(basket.total());
+  }
+  ```
+
+  (a) Why will the first test sometimes pass and sometimes fail? How would you make it reliable? (b) List **two** problems with the second test. (c) Give a better name for each, and say what you'd assert in the second.
+rubric:
+  criteria: |
+    A full answer says the first depends on the real current time so it passes in the morning and fails otherwise, fixed by injecting a Clock and using a fake with a fixed hour; the second uses a random value so it isn't repeatable and has no assertion (it only prints), so it can't fail; and better names say the behaviour (such as greetsGoodMorningBeforeNoon, totalOfOneItemIsItsPrice) with an assertion that the total equals the price of the single item added, using a fixed value.
+  levels:
+    - score: 2
+      descriptor: "Says the first depends on the real clock so it is flaky, fixed by injecting a Clock with a fake; says the second is non-repeatable because of the random number and asserts nothing; and gives behaviour-based names and a fixed-value assertion on the total."
+      samples:
+        - "The first test depends on the real time, so it passes in the morning and fails in the afternoon. I'd inject a Clock and pass a FakeClock(9). The second test uses a random number, so it isn't repeatable, and it never asserts anything, it only prints, so it can't fail. Better names: greetsGoodMorningBeforeNoon and totalOfOneItemIsItsPrice. I'd add one item with a fixed price like 40 and assertEquals(40, basket.total())."
+        - "(a) It uses the real clock so it's flaky; use a Clock interface and a fake. (b) Random input and no assertion. (c) greetsGoodMorningAt9 and totalOfSingleItemEqualsItsPrice, asserting the total equals the fixed price."
+    - score: 1
+      descriptor: "Finds some of the problems, or fixes them without explaining them."
+      samples:
+        - "It uses the current time."
+        - "It doesn't have an assertion."
+    - score: 0
+      descriptor: "Incorrect, for example says the tests are fine, or that adding more printing would fix them."
+      samples:
+        - "They're fine as they are."
+        - "Add more println calls."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j3-l1.2-explain-keys
+type: explain
+title: "A key that gets lost"
+lesson: j3-l1.2
+role: ladder
+assesses: [o3]
+concepts: [J3.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A developer uses their own mutable class `Point` (with `equals` but **no** `hashCode`) as a key in a `HashMap<Point, String>`, puts a value under `new Point(1, 2)`, and then `map.get(new Point(1, 2))` returns `null`. Explain (a) why the lookup fails, (b) what the fix is, and (c) what could go wrong if a key's fields are changed after it has been put in the map.
+rubric:
+  criteria: |
+    A full answer says HashMap uses hashCode to find where to look, and without a matching hashCode the equal point hashes elsewhere so it isn't found; the fix is to override hashCode consistently with equals (or use a record); and if a key is mutated after insertion its hash code changes, so the map looks in the wrong place and can no longer find it.
+  levels:
+    - score: 2
+      descriptor: "Explains that the map uses hashCode to find the entry and equal points without equal hash codes are looked up in the wrong place; fixes it with hashCode consistent with equals or a record; and says mutating a key changes its hash code so it can't be found."
+      samples:
+        - "HashMap uses the key's hashCode to decide where to look. Point has equals but no hashCode, so the new Point(1, 2) has a different hash code and the map looks in the wrong place. Fix: override hashCode from the same fields, or make Point a record. If you change a key's fields after putting it in, its hash code changes and the map can't find it any more."
+        - "The lookup goes by hash code first, and the two equal points have different ones. Add a hashCode that matches equals. Mutating a key afterwards is also bad because the hash code changes and the entry gets lost."
+    - score: 1
+      descriptor: "Explains one or two of the parts, for example the hashCode fix without saying why the lookup failed, or without the mutation point."
+      samples:
+        - "You need hashCode too."
+        - "Make it a record."
+    - score: 0
+      descriptor: "Incorrect, for example blames the map being empty or says equals should fix it."
+      samples:
+        - "equals is enough."
+        - "HashMap can't hold objects."
+ai_assisted: true

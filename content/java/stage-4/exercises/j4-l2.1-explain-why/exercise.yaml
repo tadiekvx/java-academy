@@ -1,0 +1,32 @@
+id: j4-l2.1-explain-why
+type: explain
+title: "Why not just javac?"
+lesson: j4-l2.1
+role: ladder
+assesses: [o3]
+concepts: [J4.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A new teammate asks: "Why do we need Maven? I can just run `javac` on all the files." Give **three** concrete things a build tool does for a real project that running `javac` by hand does not, and say why the file that describes the build (`pom.xml`) is useful to the whole team.
+rubric:
+  criteria: |
+    A full answer gives three things such as downloading and managing library dependencies (and their dependencies), running the tests as part of the build, packaging a jar, and building the same way on every machine through a standard layout and lifecycle; and says the POM is a single shared description so everyone and the build server build identically.
+  levels:
+    - score: 2
+      descriptor: "Gives three concrete benefits (managing library dependencies including transitive ones, running tests automatically, packaging a jar, a standard layout and repeatable builds) and says the POM is a shared description so every machine builds the same way."
+      samples:
+        - "Maven downloads the libraries and the libraries they depend on, so I don't copy jars around. It runs the tests as a step of the build. It packages the compiled code into a jar. The pom.xml describes all of that in one shared file, so every developer's machine and the build server build the project the same way."
+        - "It manages dependencies, runs the tests, and produces the jar, all from a standard layout. The POM is the one description everyone shares, so builds are repeatable."
+    - score: 1
+      descriptor: "Gives one or two benefits, or says it's easier without saying how."
+      samples:
+        - "It downloads libraries."
+        - "It's easier."
+    - score: 0
+      descriptor: "Incorrect, for example says Maven makes the Java code run faster, or that javac can't compile packages."
+      samples:
+        - "Maven makes the code run faster."
+        - "javac can't compile more than one file."
+ai_assisted: true

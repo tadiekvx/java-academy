@@ -1,0 +1,33 @@
+id: j5-l2.3-write-balanced
+type: write
+title: "Matching brackets"
+lesson: j5-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J5.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `balanced(String text)`: `true` if every `(`, `[` and `{` is closed by the right kind of bracket in the right order, ignoring all other characters. `"([]{})"` and `"a(b)c"` are balanced; `"(]"`, `"(("` and `"]["` are not. Use a `Deque` as a stack.
+entry:
+  methods:
+    - {name: balanced, params: [{name: text, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {method: balanced, args: ["([]{})"], expect: true}
+    - {method: balanced, args: ["(]"], expect: false}
+    - {method: balanced, args: [""], expect: true}
+    - {name: "uses a Deque", source_contains: ["Deque"]}
+  hidden:
+    - {method: balanced, args: ["(("], expect: false}
+    - {method: balanced, args: ["]["], expect: false}
+    - {method: balanced, args: ["a(b)c"], expect: true}
+    - {method: balanced, args: ["{[()]}"], expect: true}
+    - {method: balanced, args: ["{[(])}"], expect: false}
+    - {method: balanced, args: [")"], expect: false}
+    - {method: balanced, args: ["no brackets at all"], expect: true}
+hints:
+  h1: "Push openers. On a closer, the stack must be non-empty and its top must match. At the end, nothing should be left open."
+  h2: "open.push(c); ... char top = open.pop(); ... return open.isEmpty();"
+ai_assisted: true

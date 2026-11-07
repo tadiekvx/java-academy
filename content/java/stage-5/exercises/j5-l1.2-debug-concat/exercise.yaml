@@ -1,0 +1,31 @@
+id: j5-l1.2-debug-concat
+type: debug
+title: "A string built the slow way"
+lesson: j5-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J5.02]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `build(n)` returns the numbers `0,1,2,...` up to `n - 1`, separated by commas. The driver `run` returns the length of the result. It's correct but, for 200,000 numbers, far too slow. Find out why, and fix it **without changing the result**.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: run, args: [0], expect: 0}
+    - {method: run, args: [5], expect: 9}
+    - {method: run, args: [11], expect: 22}
+    - {name: "builds with a StringBuilder", source_contains: ["StringBuilder"]}
+  hidden:
+    - {method: run, args: [1], expect: 1}
+    - {method: run, args: [1000], expect: 3889}
+    - {method: run, args: [200000], expect: 1288889}
+    - {method: run, args: [100000], expect: 588889}
+    - {method: run, args: [12], expect: 25}
+hints:
+  h1: "Every += on a String copies the whole string built so far. What mutable type avoids that?"
+  h2: "Use a StringBuilder and append."
+ai_assisted: true

@@ -1,0 +1,19 @@
+id: j1-l4.1-modify-countdown
+type: modify
+title: "Count down in twos"
+lesson: j1-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J1.07]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program counts down from 10 to 1 and then prints `Go!`. Change it to count down **in twos**: it should print `10`, `8`, `6`, `4`, `2`, then `Go!`.
+tests:
+  visible:
+    - {name: "counts down in twos", stdin: "", stdout_equals: "10\n8\n6\n4\n2\nGo!"}
+hints:
+  h1: "Which line decides how far n moves each pass?"
+  h2: "Change n--; to n -= 2;"
+ai_assisted: true

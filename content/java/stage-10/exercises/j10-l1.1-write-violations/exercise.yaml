@@ -1,0 +1,31 @@
+id: j10-l1.1-write-violations
+type: write
+title: "Which dependencies point the wrong way"
+lesson: j10-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J10.01]
+evidence: [IMPL]
+misconceptions: [MC198]
+difficulty: 2
+prompt: |
+  The layers are listed from the top (closest to the user) to the bottom. A layer may depend on itself or on a layer **below** it; a dependency on a layer above it, or on a name that is not a layer, is a violation. Each dependency is `from>to`. Write `layerViolations(layers, deps)` returning the violating dependencies in the order they were given.
+entry:
+  methods:
+    - {name: layerViolations, params: [{name: layers, type: "List<String>"}, {name: deps, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "a clean design", method: layerViolations, args: [["controller", "service", "repository"], ["controller>service", "service>repository"]], expect: []}
+    - {name: "the bottom calls the middle", method: layerViolations, args: [["controller", "service", "repository"], ["repository>service"]], expect: ["repository>service"]}
+    - {name: "no dependencies", method: layerViolations, args: [["controller", "service", "repository"], []], expect: []}
+  hidden:
+    - {name: "two upward calls", method: layerViolations, args: [["controller", "service", "repository"], ["service>controller", "controller>repository", "repository>controller"]], expect: ["service>controller", "repository>controller"]}
+    - {name: "within a layer", method: layerViolations, args: [["controller", "service", "repository"], ["service>service"]], expect: []}
+    - {name: "an unknown layer", method: layerViolations, args: [["controller", "service", "repository"], ["service>cache"]], expect: ["service>cache"]}
+    - {name: "an unknown source", method: layerViolations, args: [["controller", "service", "repository"], ["cache>service"]], expect: ["cache>service"]}
+    - {name: "a single layer", method: layerViolations, args: [["a"], ["a>a", "a>b"]], expect: ["a>b"]}
+    - {name: "order is kept", method: layerViolations, args: [["controller", "service", "repository"], ["service>controller", "repository>service", "controller>service"]], expect: ["service>controller", "repository>service"]}
+hints:
+  h1: "Compare the positions of the two layers in the list."
+  h2: "What does `indexOf` return for a name that is not there?"
+ai_assisted: true

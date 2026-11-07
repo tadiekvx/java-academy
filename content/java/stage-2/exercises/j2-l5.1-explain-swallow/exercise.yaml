@@ -1,0 +1,32 @@
+id: j2-l5.1-explain-swallow
+type: explain
+title: "The empty catch"
+lesson: j2-l5.1
+role: ladder
+assesses: [o3]
+concepts: [J2.12]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  In a code review you find `try { process(order); } catch (Exception e) { }`. Explain three problems with it, and say what you'd write instead if the only expected failure is an `InvalidOrderException` that should be reported to the user.
+rubric:
+  criteria: |
+    A full answer names that it catches every exception, including unexpected bugs; that the empty block swallows the error so nothing is reported or logged and the program continues in an unknown state; that it makes the failure hard to diagnose later; and suggests catching only InvalidOrderException and reporting a message to the user, letting others propagate.
+  levels:
+    - score: 2
+      descriptor: "Gives at least three problems (catches everything including bugs, silently swallows the error, leaves the program in an unknown state or makes diagnosis hard) and proposes catching only InvalidOrderException and telling the user."
+      samples:
+        - "It catches every exception, including bugs like a NullPointerException I never expected. The empty block swallows the error, so nothing is logged or shown and nobody knows an order failed. And the program carries on as if it worked, in a state that may be wrong. I'd catch only InvalidOrderException and show the user a message, and let anything else propagate."
+        - "Problems: too broad, silent, and it hides the evidence for debugging. Instead: catch (InvalidOrderException e) { tell the user what was wrong }, and leave other exceptions to be handled elsewhere."
+    - score: 1
+      descriptor: "Gives one or two problems, or gives the fix without explaining the problems."
+      samples:
+        - "It hides errors."
+        - "Catch the specific exception."
+    - score: 0
+      descriptor: "Incorrect, for example says an empty catch is the safest way to keep a program running."
+      samples:
+        - "It keeps the program running, so it's fine."
+        - "Exceptions should never be caught."
+ai_assisted: true

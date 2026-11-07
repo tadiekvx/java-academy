@@ -1,0 +1,23 @@
+id: j5-l1.1-predict-counts
+type: predict
+title: "Count the steps"
+lesson: j5-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J5.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints. Each method counts how many times its inner statement runs.
+expected_output: |
+  16
+  256
+  120
+  4
+  9
+  0
+hints:
+  h1: "Work out each loop's repeat count as a formula in n, then substitute."
+  h2: "linear n, nested n squared, triangle 0+1+...+15 = 120, halving 16 -> 8 -> 4 -> 2 -> 1 is 4 steps."
+ai_assisted: true

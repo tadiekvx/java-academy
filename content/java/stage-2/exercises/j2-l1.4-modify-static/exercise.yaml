@@ -1,0 +1,31 @@
+id: j2-l1.4-modify-static
+type: modify
+title: "A tax helper that needs no object"
+lesson: j2-l1.4
+role: ladder
+assesses: [o1]
+concepts: [J2.04]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Shop.priceWithTax` doesn't use any field, so it shouldn't need a `Shop` object. The driver `total` calls it as `Shop.priceWithTax(pence)`, which doesn't compile yet. Make the method `static`, and replace the number `20` with a `static final int TAX_PERCENT = 20;` constant. It adds the tax and rounds down: `price * (100 + 20) / 100` in whole pence.
+entry:
+  methods:
+    - {name: total, params: [{name: pence, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: total, args: [1000], expect: 1200}
+    - {method: total, args: [0], expect: 0}
+    - {method: total, args: [99], expect: 118}
+  hidden:
+    - {method: total, args: [1], expect: 1}
+    - {method: total, args: [5], expect: 6}
+    - {method: total, args: [12345], expect: 14814}
+    - {method: total, args: [250], expect: 300}
+    - {method: total, args: [3], expect: 3}
+starter_compiles: false
+hints:
+  h1: "Two changes: add static to the method, and move the 20 into a static final field."
+  h2: "static final int TAX_PERCENT = 20; static int priceWithTax(int pence) { return pence * (100 + TAX_PERCENT) / 100; }"
+ai_assisted: true

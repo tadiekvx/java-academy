@@ -1,0 +1,33 @@
+id: j5-l3.2-debug-first
+type: debug
+title: "Two off-by-one bugs"
+lesson: j5-l3.2
+role: ladder
+assesses: [o3]
+concepts: [J5.10]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `firstIndex` should return the **first** index of `target` in a sorted array that contains repeats. It's fast, but it returns wrong answers: sometimes a later copy of the target, and sometimes `-1` for a value that's there. Find the two bugs.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}, {name: target, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [10, 1], expect: "3 fast=true"}
+    - {method: run, args: [10, 5], expect: "-1 fast=true"}
+    - {method: run, args: [1, 0], expect: "0 fast=true"}
+  hidden:
+    - {method: run, args: [1000000, 0], expect: "0 fast=true"}
+    - {method: run, args: [1000000, 333332], expect: "999996 fast=true"}
+    - {method: run, args: [1000000, 333333], expect: "999999 fast=true"}
+    - {method: run, args: [1000000, 17], expect: "51 fast=true"}
+    - {method: run, args: [999999, 333332], expect: "999996 fast=true"}
+    - {method: run, args: [3, 0], expect: "0 fast=true"}
+    - {method: run, args: [3, 1], expect: "-1 fast=true"}
+    - {method: run, args: [2000000, 600000], expect: "1800000 fast=true"}
+hints:
+  h1: "One bug is in the loop condition: is the range low..high inclusive? The other is what happens when the middle value matches: is it necessarily the first match?"
+  h2: "Use while (low <= high), and on a match record found = mid and continue with high = mid - 1."
+ai_assisted: true

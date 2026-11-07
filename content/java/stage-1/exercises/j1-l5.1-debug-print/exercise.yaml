@@ -1,0 +1,31 @@
+id: j1-l5.1-debug-print
+type: debug
+title: "The method that prints"
+lesson: j1-l5.1
+role: ladder
+assesses: [o2]
+concepts: [J1.08]
+evidence: [DEBUG]
+misconceptions: [MC07]
+difficulty: 2
+prompt: |
+  `square` should return the square of a number, so `square(5)` is 25. It doesn't compile. Read the error and fix it, so that it returns the answer rather than printing it.
+entry:
+  methods:
+    - {name: square, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [5], expect: 25}
+    - {args: [0], expect: 0}
+    - {args: [-3], expect: 9}
+  hidden:
+    - {name: "one", args: [1], expect: 1}
+    - {name: "ten", args: [10], expect: 100}
+    - {name: "twelve", args: [12], expect: 144}
+    - {name: "hundred", args: [100], expect: 10000}
+    - {name: "minus one", args: [-1], expect: 1}
+starter_compiles: false
+hints:
+  h1: "Read the error: what does the method promise to do, and what does it do instead?"
+  h2: "Replace the println with return n * n;"
+ai_assisted: true

@@ -1,0 +1,31 @@
+id: j1-l3.4-retrieve-letters
+type: write
+title: "Vowel or consonant"
+lesson: j1-l3.4
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: switch-mapping
+prompt: |
+  Complete `letterType` with a switch expression. For a lower-case letter, return `"vowel"` for a, e, i, o and u, and `"consonant"` for any other letter.
+entry:
+  methods:
+    - {name: letterType, params: [{name: letter, type: "char"}], returns: "String"}
+tests:
+  visible:
+    - {args: ["a"], expect: "vowel"}
+    - {args: ["b"], expect: "consonant"}
+    - {args: ["u"], expect: "vowel"}
+  hidden:
+    - {name: "e", args: ["e"], expect: "vowel"}
+    - {name: "i", args: ["i"], expect: "vowel"}
+    - {name: "o", args: ["o"], expect: "vowel"}
+    - {name: "z", args: ["z"], expect: "consonant"}
+    - {name: "y", args: ["y"], expect: "consonant"}
+hints:
+  h1: "The vowels share one case; everything else is the default."
+  h2: "case 'a', 'e', 'i', 'o', 'u' -> \"vowel\"; default -> \"consonant\";"
+ai_assisted: true

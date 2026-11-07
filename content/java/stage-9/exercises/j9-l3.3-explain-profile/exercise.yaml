@@ -1,0 +1,77 @@
+id: j9-l3.3-explain-profile
+type: explain
+title: "Fix what the profile says"
+lesson: j9-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J9.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague says the report is slow and is sure the fix is `fastTotal`, 'the loop over the list'. You record a 6-second Java Flight Recorder profile of this program and count the samples per method of your own class. The program and the result follow.
+
+  ```java
+  import java.util.ArrayList;
+  import java.util.List;
+
+  public class Report {
+      static long slowTotal(List<Integer> values) {
+          long total = 0;
+          for (int i = 0; i < values.size(); i++) {
+              total += values.stream().skip(i).limit(1).mapToInt(Integer::intValue).sum();
+          }
+          return total;
+      }
+
+      static long fastTotal(List<Integer> values) {
+          long total = 0;
+          for (int v : values) {
+              total += v;
+          }
+          return total;
+      }
+
+      public static void main(String[] args) {
+          List<Integer> values = new ArrayList<>();
+          for (int i = 0; i < 20_000; i++) {
+              values.add(i);
+          }
+          long end = System.nanoTime() + 6_000_000_000L;
+          long sink = 0;
+          while (System.nanoTime() < end) {
+              sink += slowTotal(values);
+              sink += fastTotal(values);
+          }
+          System.out.println("done " + (sink != 0));
+      }
+  }
+  ```
+
+  ```text
+  $ jfr print --stack-depth 64 --events jdk.ExecutionSample rec.jfr   (each sample counted under the first frame of our own class on its stack)
+    531  Report.slowTotal   100%
+  total samples: 531
+  ```
+
+  Explain what the profile tells you about where the time goes, why the colleague's guess is wrong, what is expensive about the slow method (look at what it does for every index), and what the faster version looks like. Say why you would profile again after the change.
+rubric:
+  criteria: |
+    All 531 execution samples had `slowTotal` on their stack and none had `fastTotal`, so essentially all the time is in `slowTotal`. For every index it builds a stream, skips `i` elements and takes one, which makes the method quadratic (the work grows with the square of the list size); `fastTotal` is already a single pass. The fix is to sum in one pass, as `fastTotal` does, or to use a single stream sum. Profile again after the change to confirm that the total time fell and to see what the new hot spot is; guessing, or assuming a fix worked, is how tuning goes wrong.
+  levels:
+    - score: 2
+      descriptor: "The answer reads the samples, rejects the guess, explains the quadratic cost and the fix, and re-profiles."
+      samples:
+        - "All 531 samples are under slowTotal and none under fastTotal, so the guess is wrong. slowTotal builds a stream, skips i elements and takes one for each index, so it does about n squared work. The fix is a single pass like fastTotal. Then I would profile again to confirm the time fell and see what is hot next."
+        - "The profile puts 100% of samples in slowTotal. It re-walks the list from the start for every index (skip(i)), which is quadratic. Replace it with a single loop or one stream sum, then re-measure."
+    - score: 1
+      descriptor: "The answer reads the profile but does not explain the cost or the re-measurement."
+      samples:
+        - "slowTotal is where the time goes, not fastTotal."
+        - "The colleague should have measured first."
+    - score: 0
+      descriptor: "The answer follows the guess."
+      samples:
+        - "Optimise fastTotal because loops are slow."
+        - "The profile cannot tell us anything about which method is slow."
+ai_assisted: true

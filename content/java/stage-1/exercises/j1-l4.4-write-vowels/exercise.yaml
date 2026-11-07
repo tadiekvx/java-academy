@@ -1,0 +1,31 @@
+id: j1-l4.4-write-vowels
+type: write
+title: "Counting vowels"
+lesson: j1-l4.4
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: loop-patterns
+prompt: |
+  Complete `countVowels` so it returns how many vowels (a, e, i, o, u, in any capitals) a word contains.
+entry:
+  methods:
+    - {name: countVowels, params: [{name: word, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["Education"], expect: 5}
+    - {args: ["rhythm"], expect: 0}
+    - {args: ["AEIOU"], expect: 5}
+  hidden:
+    - {name: "empty", args: [""], expect: 0}
+    - {name: "one vowel", args: ["a"], expect: 1}
+    - {name: "a longer word", args: ["Programming"], expect: 3}
+    - {name: "repeated vowels", args: ["queue"], expect: 4}
+    - {name: "two words", args: ["Hello World"], expect: 3}
+hints:
+  h1: "Which pattern is 'how many'? How will you deal with capital letters?"
+  h2: "Lower-case the word first, then count characters for which \"aeiou\".indexOf(c) != -1."
+ai_assisted: true

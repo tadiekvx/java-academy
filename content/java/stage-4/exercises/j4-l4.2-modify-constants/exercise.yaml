@@ -1,0 +1,32 @@
+id: j4-l4.2-modify-constants
+type: modify
+title: "Name the magic numbers"
+lesson: j4-l4.2
+role: ladder
+assesses: [o2]
+concepts: [J4.08]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `total` has three unexplained numbers. Replace them with **named constants**, exactly named `TAX_PERCENT` (20), `FREE_DELIVERY_FROM` (5000 pence) and `DELIVERY_FEE` (499 pence), without changing any result. Write the tax as `pence * (100 + TAX_PERCENT) / 100`.
+entry:
+  methods:
+    - {name: total, params: [{name: pence, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: total, args: [1000], expect: 1699}
+    - {method: total, args: [5000], expect: 6000}
+    - {method: total, args: [4999], expect: 6497}
+    - {name: "the three constants exist", source_contains: ["TAX_PERCENT", "FREE_DELIVERY_FROM", "DELIVERY_FEE"], source_not_contains: ["pence >= 5000", "+ 499", "* 120"]}
+  hidden:
+    - {method: total, args: [0], expect: 499}
+    - {method: total, args: [1], expect: 500}
+    - {method: total, args: [10000], expect: 12000}
+    - {method: total, args: [4000], expect: 5299}
+    - {method: total, args: [5001], expect: 6001}
+    - {method: total, args: [99], expect: 617}
+hints:
+  h1: "Declare the three constants as static final ints, then use them in the formula and the condition in place of the numbers."
+  h2: "static final int TAX_PERCENT = 20; ... pence * (100 + TAX_PERCENT) / 100; ... pence >= FREE_DELIVERY_FROM; ... taxed + DELIVERY_FEE;"
+ai_assisted: true

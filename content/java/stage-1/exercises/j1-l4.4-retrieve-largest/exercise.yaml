@@ -1,0 +1,31 @@
+id: j1-l4.4-retrieve-largest
+type: write
+title: "The largest digit"
+lesson: j1-l4.4
+role: retrieval
+assesses: [o1]
+concepts: [J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: loop-patterns
+prompt: |
+  Complete `largestDigit` so it returns the largest digit of a non-negative whole number. For example, `largestDigit(4071)` is 7. Hint: `n % 10` is the last digit and `n / 10` removes it.
+entry:
+  methods:
+    - {name: largestDigit, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [4071], expect: 7}
+    - {args: [5], expect: 5}
+    - {args: [0], expect: 0}
+  hidden:
+    - {name: "all nines", args: [999], expect: 9}
+    - {name: "ten", args: [10], expect: 1}
+    - {name: "increasing", args: [123456], expect: 6}
+    - {name: "middle zero", args: [907], expect: 9}
+    - {name: "big first digit", args: [800000], expect: 8}
+hints:
+  h1: "Track the largest digit seen so far, taking digits off the end one at a time."
+  h2: "best = 0; while (n > 0) { digit = n % 10; if (digit > best) best = digit; n = n / 10; }"
+ai_assisted: true

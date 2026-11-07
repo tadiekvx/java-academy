@@ -1,0 +1,32 @@
+id: j3-l5.2-write-total
+type: write
+title: "A total with VAT"
+lesson: j3-l5.2
+role: ladder
+assesses: [o2]
+concepts: [J3.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `total(List<String> prices, int vatPercent)`: add up the prices (text such as `"19.99"`) **exactly**, add the VAT percentage, and return the result **rounded to 2 decimal places, halves rounding up**, as plain text, e.g. `30.59`. Use `BigDecimal`.
+entry:
+  methods:
+    - {name: total, params: [{name: prices, type: "List<String>"}, {name: vatPercent, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: total, args: [["19.99", "5.50"], 20], expect: "30.59"}
+    - {method: total, args: [[], 20], expect: "0.00"}
+    - {method: total, args: [["10.00"], 0], expect: "10.00"}
+    - {name: "uses BigDecimal", source_contains: ["BigDecimal"], source_not_contains: ["double", "Double"]}
+  hidden:
+    - {method: total, args: [["0.10", "0.20"], 0], expect: "0.30"}
+    - {method: total, args: [["9.99"], 20], expect: "11.99"}
+    - {method: total, args: [["1.25"], 10], expect: "1.38"}
+    - {method: total, args: [["100.00", "0.01"], 5], expect: "105.01"}
+    - {method: total, args: [["0.05"], 10], expect: "0.06"}
+    - {method: total, args: [["2.50", "2.50", "2.50"], 20], expect: "9.00"}
+hints:
+  h1: "Make BigDecimals from the strings, add them, multiply by (100 + vat) and divide by 100, then setScale(2, RoundingMode.HALF_UP)."
+  h2: "sum.multiply(BigDecimal.valueOf(100 + vatPercent)).divide(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)"
+ai_assisted: true

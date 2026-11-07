@@ -1,0 +1,32 @@
+id: j1-l2.3-parsons-split-minutes
+type: parsons
+title: Hours and minutes
+lesson: j1-l2.3
+role: ladder
+assesses: [o4]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: [MC04]
+difficulty: 1
+prompt: |
+  Arrange the blocks into a program that prints the number of whole hours in 135 minutes,
+  then the number of minutes left over. It should print `2` and then `15`.
+  Two of the blocks are not needed.
+blocks:
+  - "void main() {"
+  - "    int totalMinutes = 135;"
+  - "    int hours = totalMinutes / 60;"
+  - "    int minutes = totalMinutes % 60;"
+  - "    IO.println(hours);"
+  - "    IO.println(minutes);"
+  - "}"
+distractors:
+  - "    int minutes = totalMinutes / 60;"
+  - "    double hours = totalMinutes / 60.0;"
+tests:
+  visible:
+    - {name: prints hours then minutes, stdin: "", stdout_equals: "2\n15"}
+hints:
+  h1: Which operator gives the whole number of hours, and which gives what's left over?
+  h2: "/ gives the whole hours (2); % gives the leftover minutes (15). A double would print 2.25."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j12-l2.3-explain-estimate
+type: explain
+title: "Saying how long it will take"
+lesson: j12-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J12.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Your manager asks 'how long will the transfer-limits feature take?' You have an estimate of 2 days optimistic, 5 likely and 14 pessimistic. Compute the three-point (PERT) figure by hand, and then write the answer you would give your manager in three or four sentences: what you say, what assumptions you state, what could change it, and when you will update them.
+rubric:
+  criteria: |
+    (2 + 4 times 5 + 14) divided by 6 = 36 / 6 = 6 days. A good answer gives the range, not just the number: about 6 days expected, most likely 5, and it could take up to 14 if the unknowns go badly. It states the assumptions (the limits rules are already agreed, the existing transfer code can be extended without refactoring, review and testing are included) and names the biggest risks (unclear rules, the legacy fee code, dependency on another team). It commits to an update at a specific point, for example after the first two days when the unknowns have shrunk, and says what would trigger an earlier warning. It avoids both a single confident date and a refusal to answer.
+  levels:
+    - score: 2
+      descriptor: "The answer computes 6 days and communicates a range with assumptions, risks and an update point."
+      samples:
+        - "(2 + 4*5 + 14)/6 = 6 days. I would say: expect about 6 working days, likely 5, but up to 14 if the rules turn out unclear or the old fee code needs refactoring. This assumes the limits are agreed and that testing is included. I will update you after two days, and sooner if the rules change."
+        - "6 days by the formula. Tell the manager: about a week, range 2 to 14, depends on the rules being settled and on the legacy code. Review again after the first spike."
+    - score: 1
+      descriptor: "The answer computes the number or communicates a range, not both."
+      samples:
+        - "It will take 6 days."
+        - "It could be anywhere from 2 to 14 days."
+    - score: 0
+      descriptor: "The answer refuses or gives false certainty."
+      samples:
+        - "Exactly 5 days, I promise."
+        - "It is impossible to estimate software."
+ai_assisted: true

@@ -1,0 +1,27 @@
+id: j1-l3.1-write-greeting
+type: write
+title: "A friendly greeting"
+lesson: j1-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J1.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Write a program that asks `What's your name? ` and then prints `Hello, NAME!` with the name the person typed. For example, if they type `Ada`, it prints `Hello, Ada!`.
+tests:
+  visible:
+    - {name: "Ada", stdin: "Ada\n", stdout_contains: ["Hello, Ada!\n"]}
+    - {name: "Grace", stdin: "Grace\n", stdout_contains: ["Hello, Grace!\n"]}
+    - {name: "two words", stdin: "Mary Jane\n", stdout_contains: ["Hello, Mary Jane!\n"]}
+  hidden:
+    - {name: "short name", stdin: "Bo\n", stdout_contains: ["Hello, Bo!\n"]}
+    - {name: "lower case", stdin: "linus\n", stdout_contains: ["Hello, linus!\n"]}
+    - {name: "long name", stdin: "Bartholomew\n", stdout_contains: ["Hello, Bartholomew!\n"]}
+    - {name: "hyphenated", stdin: "Jean-Luc\n", stdout_contains: ["Hello, Jean-Luc!\n"]}
+    - {name: "capitals", stdin: "ZOE\n", stdout_contains: ["Hello, ZOE!\n"]}
+hints:
+  h1: "IO.readln shows the prompt and gives back what was typed. Store it in a String variable."
+  h2: "String name = IO.readln(\"What's your name? \"); then IO.println(\"Hello, \" + name + \"!\");"
+ai_assisted: true

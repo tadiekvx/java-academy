@@ -1,0 +1,22 @@
+id: j1-l1.1-predict-print
+type: predict
+title: Same line or new line?
+lesson: j1-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J1.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints. Watch for `print` versus `println`, and for the empty
+  `println()`. Include blank lines in your prediction.
+expected_output: |
+  ABC
+  D
+
+  E
+hints:
+  h1: IO.print stays on the same line; IO.println moves to a new line after printing.
+  h2: "A, B and C end up on one line. IO.println() with nothing inside prints an empty line."
+ai_assisted: true

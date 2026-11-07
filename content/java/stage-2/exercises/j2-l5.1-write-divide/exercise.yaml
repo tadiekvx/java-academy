@@ -1,0 +1,32 @@
+id: j2-l5.1-write-divide
+type: write
+title: "Two things that can go wrong"
+lesson: j2-l5.1
+role: ladder
+assesses: [o1]
+concepts: [J2.12]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `safeDivide(String a, String b)`: parse both texts as whole numbers (ignoring spaces) and return `a / b` as text (whole-number division). If either isn't a number, return `"not a number"`. If `b` is zero, return `"divide by zero"`. Use **two separate `catch` blocks**, one for each exception.
+entry:
+  methods:
+    - {name: safeDivide, params: [{name: a, type: "String"}, {name: b, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: safeDivide, args: ["10", "2"], expect: "5"}
+    - {method: safeDivide, args: ["x", "2"], expect: "not a number"}
+    - {method: safeDivide, args: ["5", "0"], expect: "divide by zero"}
+    - {name: "catches both specific exceptions", source_contains: ["catch (NumberFormatException", "catch (ArithmeticException"]}
+  hidden:
+    - {method: safeDivide, args: ["7", "2"], expect: "3"}
+    - {method: safeDivide, args: ["-9", "2"], expect: "-4"}
+    - {method: safeDivide, args: ["4", ""], expect: "not a number"}
+    - {method: safeDivide, args: [" 8 ", " 4 "], expect: "2"}
+    - {method: safeDivide, args: ["0", "5"], expect: "0"}
+    - {method: safeDivide, args: ["abc", "0"], expect: "not a number"}
+hints:
+  h1: "Integer.parseInt can throw NumberFormatException; x / y with y == 0 throws ArithmeticException. Catch each one separately."
+  h2: "catch (NumberFormatException e) { return \"not a number\"; } catch (ArithmeticException e) { return \"divide by zero\"; }"
+ai_assisted: true

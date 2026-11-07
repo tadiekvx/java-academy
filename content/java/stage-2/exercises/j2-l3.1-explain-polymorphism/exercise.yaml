@@ -1,0 +1,32 @@
+id: j2-l3.1-explain-polymorphism
+type: explain
+title: "A new shape arrives"
+lesson: j2-l3.1
+role: ladder
+assesses: [o3]
+concepts: [J2.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A program has `Rect` and `Square` implementing `Shape`, and a method that loops over a `Shape[]` adding up `area()`. A new requirement adds a `Circle`. (a) What changes in the adding-up method? (b) Why? (c) Say one thing you *can't* do with a `Shape` variable even if every shape class has more methods.
+rubric:
+  criteria: |
+    A full answer says nothing changes in the loop; Circle just implements Shape with its own area; because the loop is written against the Shape contract and the object's own area() runs (polymorphism); and a Shape variable can only call methods declared in Shape, not methods that exist only in a class like Rect.
+  levels:
+    - score: 2
+      descriptor: "Says the adding-up method doesn't change, because it only uses the Shape contract and each object's own area() runs; and that a Shape variable can only use methods declared in Shape."
+      samples:
+        - "Nothing changes in the loop. I just write Circle implements Shape with its own area(). The loop only calls area() on a Shape, and Java runs the version belonging to the actual object, so circles work automatically. A Shape variable can only call the methods Shape declares, so I couldn't call something that exists only in Rect, like a width() method."
+        - "The loop stays exactly the same: it's written against the interface and polymorphism runs Circle's area(). What you can't do is call methods that aren't in Shape, even if the object has them."
+    - score: 1
+      descriptor: "Says nothing changes but doesn't explain why, or explains polymorphism without the restriction on what a Shape variable can call."
+      samples:
+        - "Nothing changes in the loop."
+        - "Each object runs its own area()."
+    - score: 0
+      descriptor: "Incorrect, for example says every existing class must be edited, or that the loop needs a new if for circles."
+      samples:
+        - "You have to add an if for circles in the loop."
+        - "All the classes need to be changed."
+ai_assisted: true

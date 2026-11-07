@@ -1,0 +1,32 @@
+id: j6-l3.1-explain-injection
+type: explain
+title: "Why parameters are the fix"
+lesson: j6-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J6.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A bank logs every search term. Why is the query that concatenates the search term into the SQL string a security hole, and why is the parameterised query not?
+rubric:
+  criteria: |
+    SQL injection lets untrusted data become SQL. The fix is a parameterised query; escaping quotes is not enough.
+  levels:
+    - score: 2
+      descriptor: "The answer names the hole and the parameterised fix, and is precise about escaping."
+      samples:
+        - "A value that is concatenated can close the string and start a new statement."
+        - "A parameter is bound as data, never as SQL."
+    - score: 1
+      descriptor: "The answer names the fix but not the hole."
+      samples:
+        - "The answer says to use parameters without saying why."
+        - "Use a PreparedStatement instead of building the string; that is what the docs recommend."
+    - score: 0
+      descriptor: "The answer suggests escaping quotes as the fix."
+      samples:
+        - "The answer proposes single-quote escaping as sufficient."
+        - "Replace every single quote in the search term by two quotes before building the string, and the query is safe."
+ai_assisted: true

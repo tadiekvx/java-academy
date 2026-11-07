@@ -1,0 +1,32 @@
+id: j1-l4.2-write-collatz
+type: write
+title: "The 3n + 1 puzzle"
+lesson: j1-l4.2
+role: ladder
+assesses: [o1, o3]
+concepts: [J1.07]
+evidence: [XFER]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Start with a whole number `n`. If it's even, halve it; if it's odd, multiply by 3 and add 1. Repeat until you reach 1. Mathematicians believe every starting number gets to 1 eventually, but nobody has proved it!
+
+  Complete `steps` so it returns how many steps it takes to reach 1. For example, 6 → 3 → 10 → 5 → 16 → 8 → 4 → 2 → 1 is 8 steps. `n` is always at least 1.
+entry:
+  methods:
+    - {name: steps, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [6], expect: 8}
+    - {args: [1], expect: 0}
+    - {args: [8], expect: 3}
+  hidden:
+    - {name: "two", args: [2], expect: 1}
+    - {name: "three", args: [3], expect: 7}
+    - {name: "seven", args: [7], expect: 16}
+    - {name: "twenty-seven", args: [27], expect: 111}
+    - {name: "ninety-seven", args: [97], expect: 118}
+hints:
+  h1: "Loop while n isn't 1. Inside, decide even or odd with n % 2, update n, and count the step."
+  h2: "while (n != 1) { if (n % 2 == 0) n = n / 2; else n = 3 * n + 1; count++; } return count;"
+ai_assisted: true

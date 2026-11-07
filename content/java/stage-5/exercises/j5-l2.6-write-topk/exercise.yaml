@@ -1,0 +1,32 @@
+id: j5-l2.6-write-topk
+type: write
+title: "The k smallest of a stream"
+lesson: j5-l2.6
+role: ladder
+assesses: [o3]
+concepts: [J5.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Write `kSmallest(int[] values, int k)`: the `k` smallest values, in ascending order (all of them if there are fewer than `k`). Use a `PriorityQueue` that keeps at most `k` items: a **max**-heap (`Comparator.reverseOrder()`), so the head is the largest kept value and is the one to drop when the queue grows past `k`. Remember: iterating a `PriorityQueue` isn't sorted, so sort the result at the end.
+entry:
+  methods:
+    - {name: kSmallest, params: [{name: values, type: "int[]"}, {name: k, type: "int"}], returns: "List<Integer>"}
+tests:
+  visible:
+    - {method: kSmallest, args: [[5, 1, 9, 3, 7], 3], expect: [1, 3, 5]}
+    - {method: kSmallest, args: [[], 2], expect: []}
+    - {method: kSmallest, args: [[4, 4, 4], 2], expect: [4, 4]}
+    - {name: "uses a PriorityQueue", source_contains: ["PriorityQueue"]}
+  hidden:
+    - {method: kSmallest, args: [[10, 20], 5], expect: [10, 20]}
+    - {method: kSmallest, args: [[3, 1, 2], 0], expect: []}
+    - {method: kSmallest, args: [[-1, -5, 4, 0, -3], 2], expect: [-5, -3]}
+    - {method: kSmallest, args: [[9, 8, 7, 6, 5, 4, 3, 2, 1], 4], expect: [1, 2, 3, 4]}
+    - {method: kSmallest, args: [[1], 1], expect: [1]}
+    - {method: kSmallest, args: [[2, 2, 1, 1, 3, 3], 3], expect: [1, 1, 2]}
+hints:
+  h1: "A max-heap of size k holds the k smallest so far. Its head is the largest kept value: poll it whenever the size exceeds k."
+  h2: "new PriorityQueue<>(Comparator.reverseOrder()); if (kept.size() > k) kept.poll();"
+ai_assisted: true

@@ -1,0 +1,30 @@
+id: j1-l2.4-debug-answer
+type: debug
+title: "Capital of France"
+lesson: j1-l2.4
+role: ladder
+assesses: [o3]
+concepts: [J1.04]
+evidence: [DEBUG]
+misconceptions: [MC05]
+difficulty: 2
+prompt: |
+  A quiz accepts `paris` as the answer in any capitals and with stray spaces around it, so `"Paris"` and `"  PARIS "` should both be correct. Learners who type `Paris` are being told they're wrong. Find and fix the bug.
+entry:
+  methods:
+    - {name: isCorrect, params: [{name: answer, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: ["paris"], expect: true}
+    - {args: ["Paris"], expect: true}
+    - {args: ["London"], expect: false}
+  hidden:
+    - {name: "capitals and spaces", args: ["  PARIS "], expect: true}
+    - {name: "odd capitals", args: ["pAris"], expect: true}
+    - {name: "wrong city", args: ["Rome"], expect: false}
+    - {name: "space in the middle", args: ["par is"], expect: false}
+    - {name: "no answer", args: [""], expect: false}
+hints:
+  h1: "The cleaning looks right. Look at how the cleaned answer is compared with \"paris\"."
+  h2: "== checks whether two strings are the same object, not whether they hold the same characters. Use cleaned.equals(\"paris\")."
+ai_assisted: true

@@ -1,0 +1,120 @@
+id: j11-p1-release-pipeline
+title: "A release you can undo"
+category: B
+status: in_review
+summary: "Model a release pipeline: quality gates, a rolling deploy with health checks, a smoke test and automatic rollback."
+brief: |
+  You will write the decision logic of a release, the part that a CI/CD pipeline and an orchestrator carry out: run the gates in order, update the service in two batches, smoke-test the result, and go back to the old version whenever something fails after the deploy has started.
+
+  This course had no CI server and no cloud account, so the project models the logic in plain Java; lessons 11.2.1 and 11.2.2 show the real tools. In your design note, say which real tool does each stage and what the model leaves out.
+estimated_hours: 3
+prerequisites: [j11-l2.1, j11-l2.2]
+concepts: [J11.05, J11.06]
+requirements:
+  - "The gates run in order and stop at the first failure."
+  - "A bad batch ends the deploy with a rollback."
+  - "A failed smoke test ends with a rollback and the old version live."
+constraints:
+  - "Plain Java only."
+  - "Run all the checks after each milestone."
+acceptance:
+  - "Given a failing gate, then the old version stays live."
+  - "Given a bad batch, then the log ends with a rollback."
+  - "Given a failed smoke test, then the new version is not live."
+milestones:
+  - id: m1
+    title: "The gates"
+    instructions: |
+      A release goes through the gates `build`, `test`, `scan` and `push`, in that order. For each, add `stage:result` to the log (the result is `ok` unless `outcomes` says otherwise, as in `test=fail`). At the first result that is not `ok`, add `stopped` and `live=v1` (the old version stays live) and finish. The checks of this milestone are all releases that fail a gate; what happens when all four pass is the job of the next milestones.
+    entry:
+      methods:
+        - {name: release, params: [{name: version, type: "String"}, {name: outcomes, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "the tests fail", method: release, args: ["v2", ["test=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "the build fails", method: release, args: ["v2", ["build=fail"]], expect: ["build:fail", "stopped", "live=v1"]}
+        - {name: "the scan fails", method: release, args: ["v2", ["scan=fail"]], expect: ["build:ok", "test:ok", "scan:fail", "stopped", "live=v1"]}
+      hidden:
+        - {name: "the tests fail", method: release, args: ["v2", ["test=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "the build fails", method: release, args: ["v2", ["build=fail"]], expect: ["build:fail", "stopped", "live=v1"]}
+        - {name: "the scan fails", method: release, args: ["v2", ["scan=fail"]], expect: ["build:ok", "test:ok", "scan:fail", "stopped", "live=v1"]}
+        - {name: "the push fails", method: release, args: ["v2", ["push=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:fail", "stopped", "live=v1"]}
+        - {name: "two gates fail, only the first counts", method: release, args: ["v3", ["test=fail", "scan=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "a gate outcome with another word", method: release, args: ["v2", ["scan=warn"]], expect: ["build:ok", "test:ok", "scan:warn", "stopped", "live=v1"]}
+        - {name: "a different version", method: release, args: ["v10", ["build=ok"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v10"]}
+  - id: m2
+    title: "A rolling deploy"
+    instructions: |
+      After the gates pass, add `deploy:start` and update two batches in turn: add `update:batch1`, check `batch1` (the outcome `batch1=bad` means the new version is unhealthy there), then the same for batch 2. A bad batch adds `rollback` and `live=v1` and finishes. If both are healthy add `deploy:done` (milestone 3 adds the smoke test and the final `live=` line). The checks of this milestone are all releases with a bad batch.
+    entry:
+      methods:
+        - {name: release, params: [{name: version, type: "String"}, {name: outcomes, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "the second batch is bad", method: release, args: ["v2", ["batch2=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "rollback", "live=v1"]}
+        - {name: "the first batch is bad", method: release, args: ["v2", ["batch1=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+        - {name: "both batches are bad", method: release, args: ["v2", ["batch1=bad", "batch2=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+      hidden:
+        - {name: "the second batch is bad", method: release, args: ["v2", ["batch2=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "rollback", "live=v1"]}
+        - {name: "the first batch is bad", method: release, args: ["v2", ["batch1=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+        - {name: "both batches are bad", method: release, args: ["v2", ["batch1=bad", "batch2=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+        - {name: "the tests fail", method: release, args: ["v2", ["test=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "the build fails", method: release, args: ["v2", ["build=fail"]], expect: ["build:fail", "stopped", "live=v1"]}
+        - {name: "the scan fails", method: release, args: ["v2", ["scan=fail"]], expect: ["build:ok", "test:ok", "scan:fail", "stopped", "live=v1"]}
+        - {name: "the push fails", method: release, args: ["v2", ["push=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:fail", "stopped", "live=v1"]}
+        - {name: "two gates fail, only the first counts", method: release, args: ["v3", ["test=fail", "scan=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "a gate outcome with another word", method: release, args: ["v2", ["scan=warn"]], expect: ["build:ok", "test:ok", "scan:warn", "stopped", "live=v1"]}
+        - {name: "a different version", method: release, args: ["v10", ["build=ok"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v10"]}
+        - {name: "a gate failure means no deploy at all", method: release, args: ["v2", ["scan=fail", "batch1=bad"]], expect: ["build:ok", "test:ok", "scan:fail", "stopped", "live=v1"]}
+        - {name: "the smoke result is irrelevant after a bad batch", method: release, args: ["v2", ["batch1=bad", "smoke=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+  - id: m3
+    title: "The smoke test and rollback"
+    instructions: |
+      After `deploy:done`, run the smoke test: add `smoke:` and its result (`ok` unless `smoke=fail` or another word is given). Only if it is `ok` does the new version go live: add `live=` followed by the new version. If it is not, add `rollback` and `live=v1`. A release that stopped earlier has no smoke test. From this milestone on, every release that passes everything ends with `live=` and the new version.
+    entry:
+      methods:
+        - {name: release, params: [{name: version, type: "String"}, {name: outcomes, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "the whole release succeeds", method: release, args: ["v2", []], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v2"]}
+        - {name: "the smoke test fails", method: release, args: ["v2", ["smoke=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:fail", "rollback", "live=v1"]}
+        - {name: "the smoke test is ok explicitly", method: release, args: ["v2", ["smoke=ok"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v2"]}
+      hidden:
+        - {name: "the whole release succeeds", method: release, args: ["v2", []], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v2"]}
+        - {name: "the smoke test fails", method: release, args: ["v2", ["smoke=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:fail", "rollback", "live=v1"]}
+        - {name: "the smoke test is ok explicitly", method: release, args: ["v2", ["smoke=ok"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v2"]}
+        - {name: "the second batch is bad", method: release, args: ["v2", ["batch2=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "rollback", "live=v1"]}
+        - {name: "the first batch is bad", method: release, args: ["v2", ["batch1=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+        - {name: "both batches are bad", method: release, args: ["v2", ["batch1=bad", "batch2=bad"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+        - {name: "the tests fail", method: release, args: ["v2", ["test=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "the build fails", method: release, args: ["v2", ["build=fail"]], expect: ["build:fail", "stopped", "live=v1"]}
+        - {name: "the scan fails", method: release, args: ["v2", ["scan=fail"]], expect: ["build:ok", "test:ok", "scan:fail", "stopped", "live=v1"]}
+        - {name: "the push fails", method: release, args: ["v2", ["push=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:fail", "stopped", "live=v1"]}
+        - {name: "two gates fail, only the first counts", method: release, args: ["v3", ["test=fail", "scan=fail"]], expect: ["build:ok", "test:fail", "stopped", "live=v1"]}
+        - {name: "a gate outcome with another word", method: release, args: ["v2", ["scan=warn"]], expect: ["build:ok", "test:ok", "scan:warn", "stopped", "live=v1"]}
+        - {name: "a different version", method: release, args: ["v10", ["build=ok"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v10"]}
+        - {name: "a gate failure means no deploy at all", method: release, args: ["v2", ["scan=fail", "batch1=bad"]], expect: ["build:ok", "test:ok", "scan:fail", "stopped", "live=v1"]}
+        - {name: "the smoke result is irrelevant after a bad batch", method: release, args: ["v2", ["batch1=bad", "smoke=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "rollback", "live=v1"]}
+        - {name: "smoke fails but batches fine", method: release, args: ["v7", ["smoke=fail"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:fail", "rollback", "live=v1"]}
+        - {name: "only the smoke result is odd", method: release, args: ["v2", ["smoke=unknown"]], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:unknown", "rollback", "live=v1"]}
+        - {name: "a different version goes live", method: release, args: ["v10", []], expect: ["build:ok", "test:ok", "scan:ok", "push:ok", "deploy:start", "update:batch1", "update:batch2", "deploy:done", "smoke:ok", "live=v10"]}
+rubric:
+  - criterion: "Gates"
+    zero: "Later stages run after a failed gate"
+    one: "Stops at a failure but leaves the wrong version live"
+    two: "Stops at the first failure with the old version live, in the stated order"
+  - criterion: "Rollback"
+    zero: "A failed deploy or smoke test leaves the new version live"
+    one: "Rolls back in one case only"
+    two: "Every failure after the deploy starts ends with a rollback and the old version live"
+  - criterion: "Smoke test"
+    zero: "No check after the deploy"
+    one: "A check that cannot fail the release"
+    two: "A check after `deploy:done` that decides whether the version goes live"
+  - criterion: "Design note"
+    zero: "Missing, or repeats the instructions"
+    one: "Describes the stages without trade-offs"
+    two: "Maps each stage to a real tool (CI job, rolling update, health check, smoke test) and says what the model leaves out, honestly"
+design_note_prompt: |
+  In 150 words or fewer: For each stage of your release (gates, deploy, smoke test, rollback) name the real tool or feature that would do it (for example a CI job with `needs`, an orchestrator's rolling update, a health check) and say one thing this model leaves out that a real release must handle, such as database changes or traffic switching.
+ai_assisted: true

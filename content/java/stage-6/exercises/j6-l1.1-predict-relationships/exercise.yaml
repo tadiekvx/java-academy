@@ -1,0 +1,23 @@
+id: j6-l1.1-predict-relationships
+type: predict
+title: "What the keys guarantee"
+lesson: j6-l1.1
+role: ladder
+assesses: [o3]
+concepts: [J6.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below creates a small bank schema in an in-memory database, puts five customers and five accounts in it, and prints what it found. Predict the output exactly.
+expected_output: |
+  customers=5
+  customers with accounts=4
+  ada accounts=1,5
+  orphan insert=23506
+  duplicate customer=23505
+  balance sum=2330.75
+hints:
+  h1: "What does the primary key of customers guarantee about Ada Lovelace?"
+  h2: "Why does the orphan insert get SQLState 23506?"
+ai_assisted: true

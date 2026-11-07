@@ -1,0 +1,34 @@
+id: j1-l2.3-retrieve-average-of-three
+type: write
+title: Average of three
+lesson: j1-l2.3
+role: retrieval
+assesses: [o1, o3]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: [MC04]
+difficulty: 2
+variant_group: exact-division
+prompt: |
+  Complete `averageOfThree` so it returns the exact average of `a`, `b` and `c`. For example,
+  `averageOfThree(1, 2, 2)` should be about `1.6667`.
+entry:
+  methods:
+    - name: averageOfThree
+      params: [{name: a, type: int}, {name: b, type: int}, {name: c, type: int}]
+      returns: double
+tests:
+  visible:
+    - {args: [1, 2, 3], expect: 2.0}
+    - {args: [1, 2, 2], expect: 1.6666666666666667}
+    - {args: [0, 0, 1], expect: 0.3333333333333333}
+  hidden:
+    - {name: all the same, args: [3, 3, 3], expect: 3.0}
+    - {name: negatives, args: [-1, -2, -2], expect: -1.6666666666666667}
+    - {name: one large value, args: [10, 0, 0], expect: 3.3333333333333335}
+    - {name: two thirds, args: [1, 1, 0], expect: 0.6666666666666666}
+    - {name: consecutive, args: [5, 6, 7], expect: 6.0}
+hints:
+  h1: Two things to check. What gets divided by 3? And what type is the division done in?
+  h2: Add all three inside parentheses, then divide by 3.0.
+ai_assisted: true

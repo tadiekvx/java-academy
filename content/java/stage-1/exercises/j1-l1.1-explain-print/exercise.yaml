@@ -1,0 +1,44 @@
+id: j1-l1.1-explain-print
+type: explain
+title: print or println?
+lesson: j1-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J1.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 1
+prompt: |
+  In your own words, explain the difference between `IO.print` and `IO.println`. Use a small example:
+  two statements, and what they print.
+rubric:
+  criteria: |
+    A full answer says that println moves to a new line after printing and print does not, so
+    the next output continues on the same line. It backs this up with a correct example.
+  levels:
+    - score: 2
+      descriptor: >
+        States that println ends the line (the next output starts on a new line) and print doesn't
+        (the next output continues on the same line), with a correct example of the output.
+      samples:
+        - >
+          println moves to the next line after printing, print stays on the same line. So
+          IO.print("Hi "); IO.println("there"); prints "Hi there" on one line, and anything after
+          that goes on a new line.
+        - >
+          IO.print("a") then IO.print("b") prints ab on one line. If the first one was println it
+          would print a, then b underneath, because println finishes the line.
+    - score: 1
+      descriptor: >
+        Gets the idea of new line versus same line, but the example is missing or wrong, or the
+        explanation is vague about when the line break happens.
+      samples:
+        - println puts things on separate lines and print doesn't.
+        - print keeps everything together. println("a"); println("b") gives "a b".
+    - score: 0
+      descriptor: >
+        Incorrect, for example says print doesn't show anything, or that println adds a space.
+      samples:
+        - print just stores the text and println actually shows it on the screen.
+        - println adds a space after the text so words don't stick together.
+ai_assisted: true

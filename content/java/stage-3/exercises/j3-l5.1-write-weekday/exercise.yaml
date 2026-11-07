@@ -1,0 +1,31 @@
+id: j3-l5.1-write-weekday
+type: write
+title: "The last working day"
+lesson: j3-l5.1
+role: ladder
+assesses: [o2]
+concepts: [J3.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `lastWeekday(String date)`: given a date such as `2026-10-15` (`yyyy-MM-dd`), return the **last weekday** (Monday to Friday) of that date's month, in the same format. If the month ends on a weekend, go back to the Friday.
+entry:
+  methods:
+    - {name: lastWeekday, params: [{name: date, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: lastWeekday, args: ["2026-10-15"], expect: "2026-10-30"}
+    - {method: lastWeekday, args: ["2026-11-06"], expect: "2026-11-30"}
+    - {method: lastWeekday, args: ["2026-02-01"], expect: "2026-02-27"}
+  hidden:
+    - {method: lastWeekday, args: ["2026-05-20"], expect: "2026-05-29"}
+    - {method: lastWeekday, args: ["2024-02-10"], expect: "2024-02-29"}
+    - {method: lastWeekday, args: ["2025-08-01"], expect: "2025-08-29"}
+    - {method: lastWeekday, args: ["2026-01-31"], expect: "2026-01-30"}
+    - {method: lastWeekday, args: ["2023-12-25"], expect: "2023-12-29"}
+    - {method: lastWeekday, args: ["2027-04-30"], expect: "2027-04-30"}
+hints:
+  h1: "Start at the last day of the month (withDayOfMonth(lengthOfMonth())), and step back while the day is a Saturday or Sunday."
+  h2: "while (weekend) { last = last.minusDays(1); }"
+ai_assisted: true

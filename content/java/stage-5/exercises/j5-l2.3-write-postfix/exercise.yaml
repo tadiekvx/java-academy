@@ -1,0 +1,33 @@
+id: j5-l2.3-write-postfix
+type: write
+title: "Evaluate postfix"
+lesson: j5-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J5.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `evalPostfix(String expr)`: evaluate a postfix expression whose tokens are whole numbers (possibly negative, like `-3`) and the operators `+ - * /`, separated by single spaces. `3 4 + 2 *` is `14`. Division is whole-number division, as in Java. The expression is always valid.
+entry:
+  methods:
+    - {name: evalPostfix, params: [{name: expr, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {method: evalPostfix, args: ["3 4 + 2 *"], expect: 14}
+    - {method: evalPostfix, args: ["7 2 -"], expect: 5}
+    - {method: evalPostfix, args: ["42"], expect: 42}
+    - {name: "uses a Deque", source_contains: ["Deque"]}
+  hidden:
+    - {method: evalPostfix, args: ["5 1 2 + 4 * + 3 -"], expect: 14}
+    - {method: evalPostfix, args: ["10 2 /"], expect: 5}
+    - {method: evalPostfix, args: ["2 3 -"], expect: -1}
+    - {method: evalPostfix, args: ["9 -3 /"], expect: -3}
+    - {method: evalPostfix, args: ["7 2 /"], expect: 3}
+    - {method: evalPostfix, args: ["-7 2 /"], expect: -3}
+    - {method: evalPostfix, args: ["1 2 3 * +"], expect: 7}
+hints:
+  h1: "On a number, push it. On an operator, pop the right operand first, then the left, apply, and push the result."
+  h2: "int right = stack.pop(); stack.push(stack.pop() - right);"
+ai_assisted: true

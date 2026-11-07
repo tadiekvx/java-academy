@@ -1,0 +1,32 @@
+id: j10-l2.4-explain-breaker
+type: explain
+title: "Why stop calling"
+lesson: j10-l2.4
+role: ladder
+assesses: [o2]
+concepts: [J10.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The accounts service calls a currency-rates service on every request, with a 3-second timeout. The rates service becomes very slow. Within a minute the accounts service is also unusable. Explain why that cascade happens, how a circuit breaker (together with a fallback such as the last known rate) changes it, and what a team must still do about the open breaker.
+rubric:
+  criteria: |
+    Each request waits up to 3 seconds for the slow dependency, holding a thread and a connection, so under load all the accounts service's threads end up waiting and it cannot serve anything, even requests that do not need rates: the failure spreads. A circuit breaker counts failures; once they reach a threshold it trips and further calls fail immediately without calling the dependency, so the accounts service stays responsive. A fallback such as the last known rate lets it keep serving degraded results. Periodically the breaker lets a trial call through and closes if it succeeds. The team must still alert on the open breaker (the problem is hidden from users, not solved) and fix or scale the dependency.
+  levels:
+    - score: 2
+      descriptor: "The answer explains thread exhaustion, the fail-fast breaker and fallback, the trial call, and the need to alert."
+      samples:
+        - "Every request blocks for up to 3 seconds on the slow service, so threads and connections fill with waiting calls and the whole accounts service stalls: a cascading failure. A breaker trips after enough failures, so calls fail at once instead of waiting; with a fallback like the last known rate the service keeps working in a degraded way. It lets a trial call through after a cooldown and closes again if it works. The breaker only hides the problem, so you must alert and repair the rates service."
+        - "Slow calls tie up all the threads so everything stops. The breaker rejects calls immediately while open, the fallback gives a stale rate, and a half-open probe checks recovery. We still have to be told it tripped and fix the dependency."
+    - score: 1
+      descriptor: "The answer describes the breaker without the cascade or the follow-up."
+      samples:
+        - "The breaker stops calls to the failing service."
+        - "Use a fallback rate."
+    - score: 0
+      descriptor: "The answer treats a longer timeout or more threads as the solution."
+      samples:
+        - "Raise the timeout to 30 seconds so it has time to answer."
+        - "Add more threads so there are enough to wait."
+ai_assisted: true

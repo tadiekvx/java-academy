@@ -1,0 +1,19 @@
+id: j6-l2.3-predict-lost-update
+type: predict
+title: "A lost update"
+lesson: j6-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J6.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below reads the same balance twice from two connections, debits once, then debits again from the stale read. Predict the final balance, and explain what went wrong.
+expected_output: |
+  read 1200.00 1200.00
+  final 1150.00
+hints:
+  h1: "What does each connection think the balance is?"
+  h2: "Who wrote last, and what does the other connection still believe?"
+ai_assisted: true

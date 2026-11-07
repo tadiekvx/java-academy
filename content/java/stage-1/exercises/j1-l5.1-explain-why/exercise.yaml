@@ -1,0 +1,32 @@
+id: j1-l5.1-explain-why
+type: explain
+title: "Why methods?"
+lesson: j1-l5.1
+role: ladder
+assesses: [o3]
+concepts: [J1.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A program works out the area of a rectangle in three different places, each time with `width * height` written out. Give two reasons it would be better to write an `area` method and call it.
+rubric:
+  criteria: |
+    A full answer gives two valid reasons, such as: avoids repeating code (change it in one place), gives the calculation a clear name, makes the code shorter and easier to read, or lets the calculation be tested on its own.
+  levels:
+    - score: 2
+      descriptor: "Gives two clear, valid reasons (for example no repetition so a change is made once, a descriptive name, easier to read, or testable alone)."
+      samples:
+        - "It avoids repeating the same code, so if the rule changes you only fix it in one place. And area(w, h) is easier to read than width * height everywhere."
+        - "You can test the method on its own, and it gives the calculation a name that explains what it does."
+    - score: 1
+      descriptor: "Gives one valid reason, or two vague ones."
+      samples:
+        - "So you don't repeat yourself."
+        - "It's neater and better."
+    - score: 0
+      descriptor: "Gives no valid reason, or an incorrect one."
+      samples:
+        - "Methods make the program run faster."
+        - "Because Java requires every calculation to be a method."
+ai_assisted: true

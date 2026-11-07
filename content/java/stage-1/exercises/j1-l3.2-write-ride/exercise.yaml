@@ -1,0 +1,30 @@
+id: j1-l3.2-write-ride
+type: write
+title: "The rollercoaster rule"
+lesson: j1-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A rollercoaster lets you ride if you're at least 120 cm tall, **or** if you're at least 100 cm tall **and** riding with an adult. Complete `canRide`.
+entry:
+  methods:
+    - {name: canRide, params: [{name: heightCm, type: "int"}, {name: withAdult, type: "boolean"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: [130, false], expect: true}
+    - {args: [110, true], expect: true}
+    - {args: [110, false], expect: false}
+  hidden:
+    - {name: "exactly 120 alone", args: [120, false], expect: true}
+    - {name: "exactly 100 with an adult", args: [100, true], expect: true}
+    - {name: "too short even with an adult", args: [99, true], expect: false}
+    - {name: "tall with an adult", args: [150, true], expect: true}
+    - {name: "just too short alone", args: [119, false], expect: false}
+hints:
+  h1: "There are two ways to be allowed on. Write each as a condition, then join them."
+  h2: "heightCm >= 120 || (heightCm >= 100 && withAdult)"
+ai_assisted: true

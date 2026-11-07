@@ -1,0 +1,30 @@
+id: j3-l1.1-write-common
+type: write
+title: "Items in both lists"
+lesson: j3-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J3.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `commonCount(List<String> a, List<String> b)`: the number of **different** items that appear in both lists. `[x, x, y]` and `[x, z]` have one in common.
+entry:
+  methods:
+    - {name: commonCount, params: [{name: a, type: "List<String>"}, {name: b, type: "List<String>"}], returns: "int"}
+tests:
+  visible:
+    - {method: commonCount, args: [["x", "x", "y"], ["x", "z"]], expect: 1}
+    - {method: commonCount, args: [[], ["a"]], expect: 0}
+    - {method: commonCount, args: [["a", "b"], ["b", "a"]], expect: 2}
+  hidden:
+    - {method: commonCount, args: [["a", "a", "a"], ["a", "a"]], expect: 1}
+    - {method: commonCount, args: [["p", "q", "r"], ["x", "y"]], expect: 0}
+    - {method: commonCount, args: [["a", "b", "c", "d"], ["d", "c", "e"]], expect: 2}
+    - {method: commonCount, args: [["m"], ["m"]], expect: 1}
+    - {method: commonCount, args: [["k", "k", "j"], ["j", "j", "k", "k"]], expect: 2}
+hints:
+  h1: "Duplicates shouldn't count twice, so use sets. Keep only the items of one set that are also in the other."
+  h2: "Set<String> common = new HashSet<>(a); common.retainAll(new HashSet<>(b)); return common.size();"
+ai_assisted: true

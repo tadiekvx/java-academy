@@ -1,0 +1,32 @@
+id: j1-l7.1-modify-summary
+type: modify
+title: "Say 'item' for one"
+lesson: j1-l7.1
+role: ladder
+assesses: [o3]
+concepts: [J1.15]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `summary` describes a basket. Change it so that it says `1 item` (singular) when there is exactly one price, and keeps saying `items` otherwise (including for `0 items`). Don't change `total`.
+
+  For example `{10, 20, 30}` gives `3 items, total 60`, and `{5}` gives `1 item, total 5`.
+entry:
+  methods:
+    - {name: summary, params: [{name: prices, type: "int[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: summary, args: [[10, 20, 30]], expect: "3 items, total 60"}
+    - {method: summary, args: [[5]], expect: "1 item, total 5"}
+    - {method: summary, args: [[]], expect: "0 items, total 0"}
+  hidden:
+    - {method: summary, args: [[1, 1]], expect: "2 items, total 2"}
+    - {method: summary, args: [[100]], expect: "1 item, total 100"}
+    - {method: summary, args: [[-3]], expect: "1 item, total -3"}
+    - {method: summary, args: [[2, 4, 6, 8, 10]], expect: "5 items, total 30"}
+    - {method: summary, args: [[0]], expect: "1 item, total 0"}
+hints:
+  h1: "Only summary builds the sentence, so only summary should change. Pick the word first."
+  h2: "A conditional expression: prices.length == 1 ? \"item\" : \"items\"."
+ai_assisted: true

@@ -1,0 +1,24 @@
+id: j7-l1.1-predict-request
+type: predict
+title: "Reading a raw request"
+lesson: j7-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J7.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  The program below takes a raw HTTP request, exactly as it travels over the connection, and picks it apart. Predict the exact output.
+expected_output: |
+  method=POST
+  target=/api/accounts
+  version=HTTP/1.1
+  headers=3
+  type=application/json
+  body chars=15
+  length matches=true
+hints:
+  h1: "Where does the request line end and where do the headers end?"
+  h2: "What separates the headers from the body?"
+ai_assisted: true

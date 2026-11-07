@@ -1,0 +1,36 @@
+id: j1-l2.1-write-literals
+type: write
+title: Your train ticket
+lesson: j1-l2.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Your train to **Leeds** leaves from **platform 4**. The fare is **£12.50**, the train is
+  **direct**, and your seat is in **coach C**.
+
+  Each method below should return one of those facts. Replace every `____` with the right
+  **type** (in the header) and the right **value** (after `return`). The program won't compile
+  until you've replaced them all.
+entry:
+  methods:
+    - {name: platform, params: [], returns: int}
+    - {name: fare, params: [], returns: double}
+    - {name: isDirect, params: [], returns: boolean}
+    - {name: coach, params: [], returns: char}
+    - {name: destination, params: [], returns: String}
+tests:
+  visible:
+    - {method: platform, args: [], expect: 4}
+    - {method: fare, args: [], expect: 12.5}
+    - {method: isDirect, args: [], expect: true}
+    - {method: coach, args: [], expect: "C"}
+    - {method: destination, args: [], expect: "Leeds"}
+starter_compiles: false
+hints:
+  h1: For each fact, ask the questions from the worked example. Is it a number? Does it have a decimal point? Is it yes/no? One character, or text?
+  h2: "int, double, boolean, char and String, in that order. The char goes in single quotes, the String in double quotes."
+ai_assisted: true

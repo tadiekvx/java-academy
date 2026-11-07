@@ -1,0 +1,31 @@
+id: j5-l3.5-write-lcs
+type: write
+title: "What two texts have in common"
+lesson: j5-l3.5
+role: ladder
+assesses: [o2]
+concepts: [J5.13]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 5
+prompt: |
+  Write `lcs(String a, String b)`: the **length of the longest common subsequence**: the longest run of characters that appear in both strings **in the same order**, though not necessarily next to each other. For `"ABCBDAB"` and `"BDCABA"` it is 4. The checks include strings of 1,200 characters, which only a table (not plain recursion) can handle in time.
+entry:
+  methods:
+    - {name: lcs, params: [{name: a, type: "String"}, {name: b, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {method: lcs, args: ["ABCBDAB", "BDCABA"], expect: 4}
+    - {method: lcs, args: ["", "abc"], expect: 0}
+    - {method: lcs, args: ["abc", "abc"], expect: 3}
+  hidden:
+    - {method: lcs, args: ["abc", "xyz"], expect: 0}
+    - {method: lcs, args: ["AGGTAB", "GXTXAYB"], expect: 4}
+    - {method: lcs, args: ["aaaa", "aa"], expect: 2}
+    - {method: lcs, args: ["abcdef", "fedcba"], expect: 1}
+    - {method: lcs, args: ["aedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaedeaffaed", "afdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafdcafecagecbgedbgfdbafd"], expect: 572}
+    - {method: lcs, args: ["x", "x"], expect: 1}
+hints:
+  h1: "len[i][j] is the answer for the first i characters of a and the first j of b. If the last characters match, add 1 to len[i-1][j-1]; otherwise take the better of len[i-1][j] and len[i][j-1]."
+  h2: "if (a.charAt(i - 1) == b.charAt(j - 1)) len[i][j] = len[i - 1][j - 1] + 1; else len[i][j] = Math.max(len[i - 1][j], len[i][j - 1]);"
+ai_assisted: true

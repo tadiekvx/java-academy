@@ -1,0 +1,33 @@
+id: j1-l2.2-parsons-swap
+type: parsons
+title: Swap the cupboards
+lesson: j1-l2.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.03]
+evidence: [IMPL]
+misconceptions: [MC02]
+difficulty: 2
+prompt: |
+  There are 3 cups and 8 plates. Arrange the blocks into a program that swaps the two values, so it
+  prints `8` (cups) and then `3` (plates). Two blocks aren't needed.
+blocks:
+  - "void main() {"
+  - "    int cups = 3;"
+  - "    int plates = 8;"
+  - "    int saved = cups;"
+  - "    cups = plates;"
+  - "    plates = saved;"
+  - "    IO.println(cups);"
+  - "    IO.println(plates);"
+  - "}"
+distractors:
+  - "    plates = cups;"
+  - "    int saved = plates;"
+tests:
+  visible:
+    - {name: prints the swapped values, stdin: "", stdout_equals: "8\n3"}
+hints:
+  h1: Before you overwrite a value, where will you keep a copy of it?
+  h2: "Save cups first, then copy plates into cups, then put the saved value into plates."
+ai_assisted: true

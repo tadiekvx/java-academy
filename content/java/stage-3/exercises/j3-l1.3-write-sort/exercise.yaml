@@ -1,0 +1,30 @@
+id: j3-l1.3-write-sort
+type: write
+title: "Sort by length, then alphabetically"
+lesson: j3-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J3.03]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `sortedByLength(List<String> words)`: return a **new** sorted list: shortest words first, and words of the same length in alphabetical order. Don't change the list you were given.
+entry:
+  methods:
+    - {name: sortedByLength, params: [{name: words, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {method: sortedByLength, args: [["pear", "fig", "kiwi", "ax"]], expect: ["ax", "fig", "kiwi", "pear"]}
+    - {method: sortedByLength, args: [[]], expect: []}
+    - {method: sortedByLength, args: [["b", "a"]], expect: ["a", "b"]}
+  hidden:
+    - {method: sortedByLength, args: [["banana", "apple", "cherry", "fig"]], expect: ["fig", "apple", "banana", "cherry"]}
+    - {method: sortedByLength, args: [["zz", "aa", "m", "bb"]], expect: ["m", "aa", "bb", "zz"]}
+    - {method: sortedByLength, args: [["one"]], expect: ["one"]}
+    - {method: sortedByLength, args: [["dd", "cc", "bb", "aa"]], expect: ["aa", "bb", "cc", "dd"]}
+    - {method: sortedByLength, args: [["xyz", "ab", "abc", "a"]], expect: ["a", "ab", "abc", "xyz"]}
+hints:
+  h1: "Use Comparator.comparing(String::length) for the first key, and thenComparing to break ties."
+  h2: "copy.sort(Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder()));"
+ai_assisted: true

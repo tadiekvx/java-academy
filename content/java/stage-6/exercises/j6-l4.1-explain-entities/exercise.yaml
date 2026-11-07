@@ -1,0 +1,32 @@
+id: j6-l4.1-explain-entities
+type: explain
+title: "Why an entity is not a record"
+lesson: j6-l4.1
+role: ladder
+assesses: [o2]
+concepts: [J6.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A teammate wants to declare `Account` as a record and annotate it as a JPA entity because records are shorter. Explain what the specification requires of an entity class and why a record does not fit.
+rubric:
+  criteria: |
+    Jakarta Persistence requires an entity to be a top-level or static nested class, not an enum, record or interface, with a public or protected no-argument constructor, and not final. An entity also needs mutable state and a stable identity, because the persistence context manages one instance per identifier and changes its fields.
+  levels:
+    - score: 2
+      descriptor: "The answer cites the specification's rules and ties them to managed, mutable state and identity."
+      samples:
+        - "The specification says an entity may not be a record and needs a no-argument constructor and must not be final. A record is immutable and final, but the ORM needs to create it empty and change fields as it tracks the row."
+        - "An entity is managed: the context keeps one instance per id and updates its fields. Records are final and immutable with no no-argument constructor, so the specification excludes them."
+    - score: 1
+      descriptor: "The answer says records are not allowed without the reason."
+      samples:
+        - "Records cannot be entities in Jakarta Persistence."
+        - "An entity has to be a normal class, not a record."
+    - score: 0
+      descriptor: "The answer treats the choice as style."
+      samples:
+        - "A record would work fine, it is just shorter and nobody cares."
+        - "Entities are plain objects, so records are interchangeable with them."
+ai_assisted: true

@@ -1,0 +1,21 @@
+id: j8-l1.2-predict-salt
+type: predict
+title: "What a salt changes"
+lesson: j8-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J8.02]
+evidence: [MIST]
+misconceptions: [MC179]
+difficulty: 2
+prompt: |
+  The program hashes the same password twice with one salt and once with another, and also prints the start of the SHA-256 digest of `abc` (a published test vector). Predict the exact output.
+expected_output: |
+  same password, same salt equal=true
+  same password, other salt equal=false
+  hash length=64
+  sha-256 of abc starts with ba7816bf
+hints:
+  h1: "Is the hash a function of the password alone?"
+  h2: "How many hex characters is a 256-bit value?"
+ai_assisted: true

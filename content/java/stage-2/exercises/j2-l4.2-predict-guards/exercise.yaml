@@ -1,0 +1,21 @@
+id: j2-l4.2-predict-guards
+type: predict
+title: "Which case runs?"
+lesson: j2-l4.2
+role: ladder
+assesses: [o2]
+concepts: [J2.11]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints. Cases are tried from top to bottom.
+expected_output: |
+  circle
+  big circle
+  big square
+  square
+hints:
+  h1: "For each value, find the first case that matches: both the type and the when condition."
+  h2: "Circle(3): not over 10, so \"circle\". Square(10): 10 > 10 is false, so \"square\"."
+ai_assisted: true

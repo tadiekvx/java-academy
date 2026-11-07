@@ -1,0 +1,137 @@
+id: j5-p1-brightbank
+title: "Brightbank at scale"
+category: B
+status: in_review
+summary: "Search a huge sorted statement, find duplicate ids, and rank customers, within real time limits, then absorb a change request."
+brief: |
+  Brightbank now handles statements with millions of transactions. This stage's tools (binary search, hash sets and maps, sorting) are what make that possible, and the checks will tell you if you chose wrong: they use **large inputs and a time limit**, and for the binary search they **count array reads**.
+
+  You'll write three methods: `countInRange` (how many amounts fall in a range of a sorted statement), `duplicates` (which transaction ids repeat), and `topSpenders` (who spent the most).
+
+  This is an **independent build** with a twist: partway through, a **change request** arrives (milestone 4): ids and names must ignore case. Where you do the lower-casing decides how painful that is.
+estimated_hours: 5
+prerequisites: [j5-l3.2, j5-l2.4, j5-l1.2]
+concepts: [J5.02, J5.06, J5.10]
+requirements:
+  - "`countInRange` reads only O(log n) elements of the sorted `CountingArray`."
+  - "`duplicates` and `topSpenders` handle hundreds of thousands of items in under two seconds."
+  - "Totals are added as `long`."
+  - "Results follow the orderings stated in each milestone."
+constraints:
+  - "No method scans a list inside a loop over the same data."
+  - "Don't change the drivers."
+acceptance:
+  - "Given a sorted array of five million amounts, when the range is counted, then at most about 4 log2(n) elements are read."
+  - "Given 200,000 ids with 500 repeats at the end, then `duplicates` returns in time, in order of second sighting."
+  - "Given customers with equal totals, then they appear in alphabetical order."
+  - "Given the change request, then milestones 1 to 3 still pass unchanged."
+milestones:
+  - id: m1
+    title: "Count a range in a sorted statement"
+    instructions: |
+      A statement's amounts are kept **sorted**. Write `countInRange(amounts, low, high)`, which counts how many amounts `x` satisfy `low <= x <= high`. The amounts are wrapped in a `CountingArray` (it counts every `get`), and the check also requires `fast=true`: you may read only about `4 * log2(n)` elements. So use **binary search**, twice: find the first index with a value at least `low`, and the first index with a value greater than `high`. The answer is the difference. If `low > high` the count is 0.
+
+      The driver `m1` builds the amounts `0, 2, 4, ...` for you.
+    entry:
+      methods:
+        - {name: m1, params: [{name: n, type: "int"}, {name: low, type: "int"}, {name: high, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [10, 3, 9], expect: "3 fast=true"}
+        - {args: [10, 0, 18], expect: "10 fast=true"}
+        - {args: [10, 100, 200], expect: "0 fast=true"}
+      hidden:
+        - {name: "a million amounts", args: [1000000, 500, 1500], expect: "501 fast=true"}
+        - {name: "five million amounts, nearly all", args: [5000000, 1, 9999998], expect: "4999999 fast=true"}
+        - {name: "a single value", args: [10, 4, 4], expect: "1 fast=true"}
+        - {name: "an absent value", args: [10, 5, 5], expect: "0 fast=true"}
+        - {name: "low above high", args: [10, 9, 3], expect: "0 fast=true"}
+        - {name: "one amount", args: [1, 0, 0], expect: "1 fast=true"}
+        - {name: "range starting below the data", args: [100, -50, 10], expect: "6 fast=true"}
+  - id: m2
+    title: "Duplicate transaction ids"
+    instructions: |
+      Write `duplicates(ids)`: the ids that appear **more than once**, each reported **once**, in the order in which each id is first seen **a second time**. For `[a, b, a, c, b, a]` that is `[a, b]`.
+
+      It has to be fast: the driver `m2` calls it with 200,000 ids under a 2-second limit. Think about which structure answers "have I seen this before?" in constant time.
+    entry:
+      methods:
+        - {name: duplicates, params: [{name: ids, type: "List<String>"}], returns: "List<String>"}
+        - {name: m2, params: [{name: n, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {method: duplicates, args: [["a", "b", "a", "c", "b", "a"]], expect: ["a", "b"]}
+        - {method: duplicates, args: [[]], expect: []}
+        - {method: duplicates, args: [["x", "y", "z"]], expect: []}
+      hidden:
+        - {name: "one id three times", method: duplicates, args: [["q", "q", "q"]], expect: ["q"]}
+        - {name: "order of second appearance", method: duplicates, args: [["a", "b", "b", "a"]], expect: ["b", "a"]}
+        - {name: "two hundred thousand ids", method: m2, args: [200000], expect: "size=500 first=t0 last=t499"}
+        - {name: "a thousand ids", method: m2, args: [1000], expect: "size=500 first=t0 last=t499"}
+        - {name: "ten ids", method: m2, args: [10], expect: "size=5 first=t0 last=t4"}
+        - {name: "no ids", method: m2, args: [0], expect: "size=0 first=- last=-"}
+  - id: m3
+    title: "The top spenders"
+    instructions: |
+      Each transaction is a customer's name and an amount in pence (`names[i]` spent `pence[i]`). Write `topSpenders(names, pence, n)`: the `n` customers with the **highest total**, highest first; customers with equal totals are ordered **alphabetically**. If there are fewer than `n` customers, return all of them.
+
+      Totals can be large: add them as `long`. The driver `m3` calls it with hundreds of thousands of transactions, so total with a map rather than searching a list.
+    entry:
+      methods:
+        - {name: topSpenders, params: [{name: names, type: "String[]"}, {name: pence, type: "int[]"}, {name: n, type: "int"}], returns: "List<String>"}
+        - {name: m3, params: [{name: customers, type: "int"}, {name: n, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {method: topSpenders, args: [["ann", "bo", "ann"], [100, 250, 200], 2], expect: ["ann", "bo"]}
+        - {method: topSpenders, args: [[], [], 3], expect: []}
+        - {method: topSpenders, args: [["x"], [5], 5], expect: ["x"]}
+      hidden:
+        - {name: "tie broken alphabetically", method: topSpenders, args: [["b", "a"], [10, 10], 2], expect: ["a", "b"]}
+        - {name: "ties and a limit", method: topSpenders, args: [["b", "a", "c"], [10, 10, 5], 1], expect: ["a"]}
+        - {name: "a hundred thousand customers", method: m3, args: [100000, 5], expect: "c10027,c1027,c11027,c12027,c13027"}
+        - {name: "a thousand customers", method: m3, args: [1000, 3], expect: "c27,c54,c81"}
+        - {name: "more asked for than exist", method: m3, args: [7, 20], expect: "c6,c5,c4,c3,c2,c1,c0"}
+        - {name: "totals add up", method: topSpenders, args: [["z", "y", "z"], [1, 5, 4], 3], expect: ["y", "z"]}
+  - id: m4
+    title: "Change request: ids and names ignore case"
+    instructions: |
+      **A change request has arrived.** The bank's systems write the same id or name with different capital letters (`T7` and `t7`). They must now count as **the same**. Without breaking milestones 1 to 3:
+
+      - `duplicates` compares ids ignoring case, and reports each in **lower case**.
+      - `topSpenders` adds up a customer's spending across all spellings, and reports the name in **lower case**.
+
+      Decide where in your code the one change belongs, and keep it fast.
+    entry:
+      methods:
+        - {name: duplicates, params: [{name: ids, type: "List<String>"}], returns: "List<String>"}
+        - {name: topSpenders, params: [{name: names, type: "String[]"}, {name: pence, type: "int[]"}, {name: n, type: "int"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {method: duplicates, args: [["T7", "t7", "A", "a", "a"]], expect: ["t7", "a"]}
+        - {method: topSpenders, args: [["Ann", "ann", "Bo"], [100, 100, 150], 2], expect: ["ann", "bo"]}
+      hidden:
+        - {name: "one id in two cases", method: duplicates, args: [["Q", "q", "Q"]], expect: ["q"]}
+        - {name: "order by second sighting", method: duplicates, args: [["a", "B", "b", "A"]], expect: ["b", "a"]}
+        - {name: "totals merged across cases", method: topSpenders, args: [["Ann", "ANN", "bo"], [1, 1, 3], 1], expect: ["bo"]}
+        - {name: "ties after lower-casing", method: topSpenders, args: [["B", "a"], [5, 5], 2], expect: ["a", "b"]}
+        - {name: "no duplicates", method: duplicates, args: [["X", "y"]], expect: []}
+rubric:
+  - criterion: "Correct and fast"
+    zero: "Fails the large inputs (timeouts or too many reads)"
+    one: "Passes small cases but one large check is too slow"
+    two: "Every large check passes: binary search for the range, a hash set for duplicates, a map for totals"
+  - criterion: "Choice of structure"
+    zero: "A list is searched repeatedly, or a loop rescans the data for each item"
+    one: "Mostly the right structures, one avoidable scan remains"
+    two: "Each job uses the structure that answers its question in constant or logarithmic time"
+  - criterion: "Handling the change request"
+    zero: "Milestones 1 to 3 broke, or the case rule was added in several places"
+    one: "It works, but the lower-casing is repeated in many places"
+    two: "The rule sits in one place and milestones 1 to 3 still pass"
+  - criterion: "Design note"
+    zero: "Missing, or describes the code line by line"
+    one: "Names the structures but not why"
+    two: "Explains each cost in big-O terms and why the sorted array and the hash set were the right tools"
+design_note_prompt: |
+  In 150 words or fewer: What is the growth rate of each of your three methods, and which structure made it so? Where does your code decide that two ids are the same, and what would you change if the bank said case should matter again?
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j1-l3.3-write-grade
+type: write
+title: "Exam grades"
+lesson: j1-l3.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: if-chains
+prompt: |
+  Complete `grade`: 70 or more is `"A"`, 60 or more is `"B"`, 50 or more is `"C"`, and anything lower is `"Fail"`.
+entry:
+  methods:
+    - {name: grade, params: [{name: score, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {args: [75], expect: "A"}
+    - {args: [62], expect: "B"}
+    - {args: [30], expect: "Fail"}
+  hidden:
+    - {name: "exactly 70", args: [70], expect: "A"}
+    - {name: "exactly 60", args: [60], expect: "B"}
+    - {name: "exactly 50", args: [50], expect: "C"}
+    - {name: "just failing", args: [49], expect: "Fail"}
+    - {name: "full marks", args: [100], expect: "A"}
+    - {name: "zero", args: [0], expect: "Fail"}
+hints:
+  h1: "Which condition is the most demanding? Check that one first."
+  h2: "if (score >= 70) return \"A\"; else if (score >= 60) return \"B\"; else if (score >= 50) return \"C\"; else return \"Fail\";"
+ai_assisted: true

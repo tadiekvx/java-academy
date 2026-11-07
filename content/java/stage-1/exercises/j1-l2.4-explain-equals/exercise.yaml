@@ -1,0 +1,32 @@
+id: j1-l2.4-explain-equals
+type: explain
+title: "Why equals?"
+lesson: j1-l2.4
+role: ladder
+assesses: [o3]
+concepts: [J1.04]
+evidence: [EXPL]
+misconceptions: [MC05]
+difficulty: 2
+prompt: |
+  A learner's program compares a typed password with `typed == "open sesame"`. Sometimes it works and sometimes it says the password is wrong even when it's right. Explain what `==` is really checking for strings, and what to use instead.
+rubric:
+  criteria: |
+    A full answer says that == checks whether the two strings are the same object, not whether they contain the same characters; strings built while the program runs are separate objects, so == can be false; equals compares the characters and should be used.
+  levels:
+    - score: 2
+      descriptor: "Explains that == compares whether they are the same object (not the characters), so equal text can still give false, and recommends equals, which compares the characters."
+      samples:
+        - "== checks if it's the very same string object in memory. A password the user typed is a different object from the one in the code, even with the same letters, so == can be false. equals compares the actual characters, so use typed.equals(\"open sesame\")."
+        - "With strings, == asks 'same object?' not 'same text?'. Sometimes Java reuses an object so it happens to work, which is why it's only sometimes wrong. Use equals to compare the text."
+    - score: 1
+      descriptor: "Says to use equals instead of ==, but the explanation of what == checks is missing or vague."
+      samples:
+        - "You should use .equals for strings, not ==."
+        - "== doesn't work properly with strings, equals does."
+    - score: 0
+      descriptor: "Incorrect, for example says == is fine, or that the problem is capital letters or spaces."
+      samples:
+        - "The problem is that passwords are case-sensitive."
+        - "== is right, the user must have typed it wrong."
+ai_assisted: true

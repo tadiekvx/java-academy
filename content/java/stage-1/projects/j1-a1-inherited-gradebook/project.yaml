@@ -1,0 +1,154 @@
+id: j1-a1-inherited-gradebook
+title: "Stage 1 assessment: the inherited gradebook"
+category: C
+status: in_review
+summary: "Independent assessment: fix bugs you didn't write, add a feature, and absorb a change request."
+brief: |
+  This is the **Stage 1 independent assessment**. There are no lessons for it and no step-by-step instructions. You've been given a working-looking program that someone else wrote, **three bug reports**, a **new feature** and a **change request**. That's what the first week of a real job looks like.
+
+  The AI mentor isn't available inside projects, so this shows what you can do on your own. If part of it is hard, that's useful information: it tells you what to revisit.
+
+  Work like a professional: **reproduce** each report, form a hypothesis, change **one thing at a time**, and check your earlier milestones still pass. A bug can have more than one cause.
+
+  Money isn't involved. Marks are whole numbers from 0 to 100.
+estimated_hours: 3
+prerequisites: [j1-l6.5, j1-l5.5]
+concepts: [J1.07, J1.08, J1.10, J1.13, J1.14]
+requirements:
+  - "Fix the three reported bugs without changing what already works."
+  - "Add `highest` and `summary` as described, reusing existing methods."
+  - "Marks are whole numbers from 0 to 100; a class may be empty."
+constraints:
+  - "Do not rewrite the program from scratch: change as little as possible."
+  - "Fix one fault at a time and re-check."
+acceptance:
+  - "Given {70, 80, 90, 91}, then average is 82.75."
+  - "Given 70 marks of 85, then grade is A."
+  - "Given a pass mark of 50 and a student on exactly 50, then they are counted as passing."
+  - "Given an empty class, then average is 0.0, highest is -1 and summary is No students."
+milestones:
+  - id: m1
+    title: "Bug report 1: the wrong averages"
+    instructions: |
+      **Bug report:** *"The average for {70, 80, 90, 91} shows 82.0 but should be 82.75. And the program crashed when I tried an empty class."*
+
+      Find the causes in the inherited `average` and fix them. An empty class has an average of `0.0`.
+    entry:
+      methods:
+        - {name: average, params: [{name: marks, type: "int[]"}], returns: "double"}
+    tests:
+      visible:
+        - {args: [[70, 80, 90, 91]], expect: 82.75}
+        - {args: [[]], expect: 0.0}
+        - {args: [[50, 51]], expect: 50.5}
+      hidden:
+        - {name: "one mark", args: [[1]], expect: 1.0}
+        - {name: "all zero", args: [[0, 0, 0]], expect: 0.0}
+        - {name: "high marks", args: [[99, 100]], expect: 99.5}
+        - {name: "thirds", args: [[33, 33, 34]], expect: 33.333333333333336}
+        - {name: "extremes", args: [[100, 0]], expect: 50.0}
+  - id: m2
+    title: "Bug report 2: nobody gets an A"
+    instructions: |
+      **Bug report:** *"A student with 85 was given a C."*
+
+      The rules are: 70 or more is `"A"`, 60 or more is `"B"`, 50 or more is `"C"`, anything lower is `"Fail"`. Find the cause in `grade` and fix it.
+    entry:
+      methods:
+        - {name: grade, params: [{name: mark, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [85], expect: "A"}
+        - {args: [65], expect: "B"}
+        - {args: [20], expect: "Fail"}
+      hidden:
+        - {name: "exactly 70", args: [70], expect: "A"}
+        - {name: "just under 70", args: [69], expect: "B"}
+        - {name: "exactly 60", args: [60], expect: "B"}
+        - {name: "just under 60", args: [59], expect: "C"}
+        - {name: "exactly 50", args: [50], expect: "C"}
+        - {name: "just failing", args: [49], expect: "Fail"}
+        - {name: "full marks", args: [100], expect: "A"}
+        - {name: "zero", args: [0], expect: "Fail"}
+  - id: m3
+    title: "Bug report 3: the pass count is off"
+    instructions: |
+      **Bug report:** *"With a pass mark of 50, the class {50, 60, 40, 70} shows 1 pass. It should be 3: a student on exactly the pass mark passes. And a pass by the last student in the list is never counted."*
+
+      There are two separate faults in `countPassing`. Find both, fixing one at a time and checking after each.
+    entry:
+      methods:
+        - {name: countPassing, params: [{name: marks, type: "int[]"}, {name: passMark, type: "int"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [[50, 60, 40, 70], 50], expect: 3}
+        - {args: [[], 50], expect: 0}
+        - {args: [[10, 20, 80], 50], expect: 1}
+      hidden:
+        - {name: "single student on the mark", args: [[50], 50], expect: 1}
+        - {name: "either side", args: [[49, 50, 51], 50], expect: 2}
+        - {name: "all on a high mark", args: [[100, 100], 100], expect: 2}
+        - {name: "pass mark zero", args: [[0, 0], 0], expect: 2}
+        - {name: "only the last passes", args: [[40, 41, 42, 43], 43], expect: 1}
+  - id: m4
+    title: "New feature: the top mark"
+    instructions: |
+      **Feature request:** *"Please add `highest`, which returns the highest mark in the class, or -1 if there are no marks."*
+
+      The inherited program doesn't have it. Add `int highest(int[] marks)`.
+    entry:
+      methods:
+        - {name: highest, params: [{name: marks, type: "int[]"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [[72, 58, 91, 40]], expect: 91}
+        - {args: [[]], expect: -1}
+        - {args: [[5]], expect: 5}
+      hidden:
+        - {name: "all zero", args: [[0, 0]], expect: 0}
+        - {name: "first is highest", args: [[91, 72]], expect: 91}
+        - {name: "last is highest", args: [[1, 2, 3, 4, 5]], expect: 5}
+        - {name: "tie", args: [[50, 50]], expect: 50}
+        - {name: "repeated top", args: [[100, 99, 100]], expect: 100}
+  - id: m5
+    title: "Change request: the class summary"
+    instructions: |
+      **Change request:** *"The head teacher wants a one-line summary of each class."*
+
+      Add `String summary(int[] marks, int passMark)` returning `N students, K passed (P%), highest H`, where K is the number who passed, P is K as a whole-number percentage of N (rounded **down**), and H is the highest mark. For example, `{72, 58, 91, 40}` with a pass mark of 50 gives `4 students, 3 passed (75%), highest 91`. An empty class gives `No students`.
+
+      Reuse the methods you've already fixed and added.
+    entry:
+      methods:
+        - {name: summary, params: [{name: marks, type: "int[]"}, {name: passMark, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [[72, 58, 91, 40], 50], expect: "4 students, 3 passed (75%), highest 91"}
+        - {args: [[], 50], expect: "No students"}
+        - {args: [[50], 50], expect: "1 students, 1 passed (100%), highest 50"}
+      hidden:
+        - {name: "nobody passes", args: [[10, 20, 30], 50], expect: "3 students, 0 passed (0%), highest 30"}
+        - {name: "everybody passes", args: [[60, 70, 80], 50], expect: "3 students, 3 passed (100%), highest 80"}
+        - {name: "two thirds", args: [[50, 49, 51], 50], expect: "3 students, 2 passed (66%), highest 51"}
+        - {name: "just below the mark", args: [[100], 101], expect: "1 students, 0 passed (0%), highest 100"}
+        - {name: "awkward percentage", args: [[70, 30, 31, 32, 33, 34, 35], 33], expect: "7 students, 4 passed (57%), highest 70"}
+rubric:
+  - criterion: "Diagnosis"
+    zero: "Changed code at random until tests passed, or fixed only the symptom"
+    one: "Found the causes for most reports, but could not explain one"
+    two: "Reproduced each report, named its cause, and fixed that cause only"
+  - criterion: "Safe change"
+    zero: "Fixes broke earlier behaviour"
+    one: "No regressions, but changed more than necessary"
+    two: "Smallest change per fault; earlier milestones still pass"
+  - criterion: "Reuse"
+    zero: "New methods repeat logic that already existed"
+    one: "Some reuse"
+    two: "summary builds on countPassing and highest"
+  - criterion: "Explanation"
+    zero: "Missing, or only says what the code does"
+    one: "Names the faults but not how they were found"
+    two: "States each fault, how it was found, and what a test for it would look like"
+design_note_prompt: |
+  In 150 words or fewer: For each bug report, say what the fault was and how you found it. Then say what test you would have added to stop it coming back.
+ai_assisted: true

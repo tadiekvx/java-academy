@@ -1,0 +1,30 @@
+id: j6-l1.4-write-fee
+type: write
+title: "Charging a fee"
+lesson: j6-l1.4
+role: ladder
+assesses: [o1, o3]
+concepts: [J6.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write the statement that charges a fee from one account and reports the new balance. If the account does not exist, or the fee would overdraw it, report that.
+entry:
+  methods:
+    - {name: chargeFee, params: [{name: accountId, type: "int"}, {name: fee, type: "double"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a fee that leaves the account open", method: chargeFee, args: [1, 100.0], expect: "1|1100.00"}
+    - {name: "a fee the balance cannot cover", method: chargeFee, args: [3, 0.01], expect: "23513"}
+    - {name: "an account that does not exist", method: chargeFee, args: [99, 10.0], expect: "missing"}
+  hidden:
+    - {name: "a fee that drains the account", method: chargeFee, args: [1, 1200.0], expect: "1|0.00"}
+    - {name: "a fee that drains the last account", method: chargeFee, args: [5, 50.0], expect: "5|0.00"}
+    - {name: "a small fee", method: chargeFee, args: [2, 0.5], expect: "2|300.00"}
+    - {name: "a fee that drains another account", method: chargeFee, args: [4, 780.25], expect: "4|0.00"}
+    - {name: "a zero fee", method: chargeFee, args: [3, 0.0], expect: "3|0.00"}
+hints:
+  h1: "What does the WHERE clause add to an UPDATE?"
+  h2: "How do you report a balance that cannot be covered?"
+ai_assisted: true

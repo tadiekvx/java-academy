@@ -1,0 +1,33 @@
+id: j2-l5.2-write-insufficient
+type: write
+title: "A wallet that refuses"
+lesson: j2-l5.2
+role: ladder
+assesses: [o1]
+concepts: [J2.13]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write the **checked** exception `InsufficientFundsException` (extend `Exception`; its constructor takes how many pence the wallet is short by, and its message is `short by <n>`). Then make `Wallet.spend` declare it with `throws` and throw it when the amount is more than the balance, **without** changing the balance. The driver spends a list of amounts and shows each result.
+entry:
+  methods:
+    - {name: run, params: [{name: start, type: "int"}, {name: amounts, type: "int[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [100, [30, 80]], expect: "ok short by 10 balance 70"}
+    - {method: run, args: [50, [60]], expect: "short by 10 balance 50"}
+    - {method: run, args: [10, []], expect: "balance 10"}
+    - {name: "the exception is checked", source_contains: ["class InsufficientFundsException extends Exception"]}
+    - {name: "spend declares it", source_contains: ["throws InsufficientFundsException"]}
+  hidden:
+    - {method: run, args: [100, [100, 1]], expect: "ok short by 1 balance 0"}
+    - {method: run, args: [0, [5]], expect: "short by 5 balance 0"}
+    - {method: run, args: [20, [5, 5, 5, 5, 5]], expect: "ok ok ok ok short by 5 balance 0"}
+    - {method: run, args: [10, [11, 10]], expect: "short by 1 ok balance 0"}
+    - {method: run, args: [1000, [400, 400, 400]], expect: "ok ok short by 200 balance 200"}
+starter_compiles: false
+hints:
+  h1: "Write the exception class first. Then in spend: check, throw, and only then change the balance."
+  h2: "if (amount > balance) { throw new InsufficientFundsException(amount - balance); } balance -= amount;"
+ai_assisted: true

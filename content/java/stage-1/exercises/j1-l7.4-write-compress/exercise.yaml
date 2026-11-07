@@ -1,0 +1,30 @@
+id: j1-l7.4-write-compress
+type: write
+title: "Run-length text"
+lesson: j1-l7.4
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.16, J1.07]
+evidence: [XFER]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `compress(String text)`. It replaces each run of the same character with that character and the length of the run. `"aaabcc"` becomes `"a3b1c2"`, and `"a"` becomes `"a1"`. An empty string gives an empty string.
+entry:
+  methods:
+    - {name: compress, params: [{name: text, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: compress, args: ["aaabcc"], expect: "a3b1c2"}
+    - {method: compress, args: ["a"], expect: "a1"}
+    - {method: compress, args: [""], expect: ""}
+  hidden:
+    - {method: compress, args: ["aab"], expect: "a2b1"}
+    - {method: compress, args: ["abc"], expect: "a1b1c1"}
+    - {method: compress, args: ["zzzzzzzzzzz"], expect: "z11"}
+    - {method: compress, args: ["aabbaa"], expect: "a2b2a2"}
+    - {method: compress, args: ["xyyx"], expect: "x1y2x1"}
+hints:
+  h1: "Keep the current character and a run count. When the character changes, write the old one out. What happens to the last run?"
+  h2: "After the loop, append the final current character and run count."
+ai_assisted: true

@@ -1,0 +1,22 @@
+id: j1-l7.1-predict-program
+type: predict
+title: "Trace a program of three methods"
+lesson: j1-l7.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.15]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Without running it, work out what this program prints. Trace the position after each move.
+expected_output: |
+  8
+  10
+  1
+  0
+  2
+hints:
+  h1: "Make a table: for each move, work out position + move, then apply clamp's 0 to 10 limits."
+  h2: "3+5=8; 8+4=12→10; 10-9=1; 1-4=-3→0; 0+2=2."
+ai_assisted: true

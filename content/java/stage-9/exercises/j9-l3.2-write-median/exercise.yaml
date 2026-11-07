@@ -1,0 +1,33 @@
+id: j9-l3.2-write-median
+type: write
+title: "A fairer timing"
+lesson: j9-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J9.10]
+evidence: [IMPL]
+misconceptions: [MC196]
+difficulty: 3
+prompt: |
+  Benchmark timings from repeated runs include a slow warm-up while the JIT compiles the code. Write `steadyMedian(timings, warmup)`: ignore the first `warmup` timings, then return the median of the rest (the middle value of the sorted list; for an even count, the average of the two middle values rounded down). If nothing is left after the warm-up, return -1.
+entry:
+  methods:
+    - {name: steadyMedian, params: [{name: timings, type: "List<Long>"}, {name: warmup, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {name: "the numbers from the lesson", method: steadyMedian, args: [[2750, 2143, 1736, 1725, 1728], 2], expect: 1728}
+    - {name: "odd count, no warm-up", method: steadyMedian, args: [[5, 1, 3], 0], expect: 3}
+    - {name: "nothing left", method: steadyMedian, args: [[1, 2], 2], expect: -1}
+  hidden:
+    - {name: "even count", method: steadyMedian, args: [[9, 1, 8, 2, 7, 3], 0], expect: 5}
+    - {name: "a slow first run is ignored", method: steadyMedian, args: [[100, 10, 11, 12, 13], 1], expect: 11}
+    - {name: "equal values", method: steadyMedian, args: [[4, 4, 4, 4], 1], expect: 4}
+    - {name: "no timings", method: steadyMedian, args: [[], 0], expect: -1}
+    - {name: "an outlier does not move the median", method: steadyMedian, args: [[10, 20, 30, 1000000], 0], expect: 25}
+    - {name: "a single run", method: steadyMedian, args: [[7], 0], expect: 7}
+    - {name: "warm-up is all of them", method: steadyMedian, args: [[3, 1, 2, 9, 8], 5], expect: -1}
+    - {name: "even count after warm-up", method: steadyMedian, args: [[1, 2, 3, 4, 5], 1], expect: 3}
+hints:
+  h1: "Sort a copy of the remaining values."
+  h2: "For an even count take both middle values."
+ai_assisted: true

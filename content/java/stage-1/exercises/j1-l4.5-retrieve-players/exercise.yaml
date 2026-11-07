@@ -1,0 +1,29 @@
+id: j1-l4.5-retrieve-players
+type: write
+title: "Ask for the players"
+lesson: j1-l4.5
+role: retrieval
+assesses: [o1, o2, o3]
+concepts: [J1.05, J1.07]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+variant_group: validation-loop
+prompt: |
+  Write `main` so it keeps asking `Players (2-6): ` until the person types a whole number from 2 to 6. Each time the input is bad, print `Please enter a whole number from 2 to 6.` When it's good, print `Players accepted: N`. `isWholeNumber` is provided.
+tests:
+  visible:
+    - {name: "valid first time", stdin: "4\n", stdout_contains: ["Players accepted: 4"]}
+    - {name: "one bad then good", stdin: "abc\n6\n", stdout_contains: ["Players accepted: 6", "Please enter a whole number from 2 to 6."]}
+    - {name: "range edge", stdin: "7\n2\n", stdout_contains: ["Players accepted: 2", "Please enter a whole number from 2 to 6."]}
+  hidden:
+    - {name: "empty line first", stdin: "\n2\n", stdout_contains: ["Players accepted: 2", "Please enter a whole number from 2 to 6."]}
+    - {name: "negative then good", stdin: "-3\n2\n", stdout_contains: ["Players accepted: 2", "Please enter a whole number from 2 to 6."]}
+    - {name: "decimal then good", stdin: "2.5\n6\n", stdout_contains: ["Players accepted: 6", "Please enter a whole number from 2 to 6."]}
+    - {name: "several bad", stdin: "x\n56\n 7 7\n6\n", stdout_contains: ["Players accepted: 6", "Please enter a whole number from 2 to 6."]}
+    - {name: "spaces around", stdin: "  2  \n", stdout_contains: ["Players accepted: 2"]}
+    - {name: "huge number", stdin: "99999999999999999999\n6\n", stdout_contains: ["Players accepted: 6", "Please enter a whole number from 2 to 6."]}
+hints:
+  h1: "Loop until valid; check the digits before converting."
+  h2: "Same shape as asking for an age, with the range 2 to 6."
+ai_assisted: true

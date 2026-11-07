@@ -1,0 +1,32 @@
+id: j2-l3.3-write-stack
+type: write
+title: "A stack that has a list"
+lesson: j2-l3.3
+role: ladder
+assesses: [o1]
+concepts: [J2.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  This `Stack` **is a** list (it `extends ArrayList<Integer>`), so callers can do things a stack shouldn't allow. Redesign it by composition: remove the `extends`, keep a private list inside, and offer only `push`, `pop` (removes and returns the last pushed value), `peek` (returns it without removing) and `size`. The driver runs a list of operations and shows the values it popped or peeked, then `|` and the final size.
+entry:
+  methods:
+    - {name: run, params: [{name: ops, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [["push:1", "push:2", "pop", "peek"]], expect: "2,1|1"}
+    - {method: run, args: [["push:5"]], expect: "|1"}
+    - {method: run, args: [["push:1", "push:2", "push:3", "pop", "pop"]], expect: "3,2|1"}
+    - {name: "the stack no longer extends ArrayList", source_not_contains: ["extends ArrayList"]}
+  hidden:
+    - {method: run, args: [["push:7", "peek", "peek"]], expect: "7,7|1"}
+    - {method: run, args: [["push:1", "pop", "push:2", "pop"]], expect: "1,2|0"}
+    - {method: run, args: [[]], expect: "|0"}
+    - {method: run, args: [["push:-4", "push:0", "pop", "peek", "size"]], expect: "0,-4|1"}
+    - {method: run, args: [["push:9", "push:8", "push:7", "peek", "pop", "peek"]], expect: "7,7,8|2"}
+starter_compiles: false
+hints:
+  h1: "Remove extends ArrayList<Integer>. Add a private field holding the list, and write the four methods using it."
+  h2: "private final ArrayList<Integer> items = new ArrayList<>(); ... items.add(value); items.remove(items.size() - 1);"
+ai_assisted: true

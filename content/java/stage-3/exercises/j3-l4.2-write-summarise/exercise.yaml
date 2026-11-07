@@ -1,0 +1,31 @@
+id: j3-l4.2-write-summarise
+type: write
+title: "Totals from messy lines"
+lesson: j3-l4.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J3.09]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 4
+prompt: |
+  Each line should be `category,amount` (amount a whole number of pence, not negative). Write `summarise(List<String> lines)` so that it **skips** blank lines and the header line `category,amount` (any case), counts as **bad** any other line that doesn't have exactly two fields, an empty category, or an amount that isn't digits, and ignores spaces around fields. It returns the totals per category, **sorted by category**, as `food=2000,rent=50000`, then ` | bad=` and the number of bad lines. If no line was good, the totals part is `none`.
+entry:
+  methods:
+    - {name: summarise, params: [{name: lines, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {method: summarise, args: [["category,amount", "food,1250", "rent,50000", "food,", "", "food, 750 "]], expect: "food=2000,rent=50000 | bad=1"}
+    - {method: summarise, args: [[]], expect: "none | bad=0"}
+    - {method: summarise, args: [["a,1", "a,2"]], expect: "a=3 | bad=0"}
+  hidden:
+    - {method: summarise, args: [["x,-5", "y,12.5", "z,abc"]], expect: "none | bad=3"}
+    - {method: summarise, args: [[",100", "a,b,c", "just text"]], expect: "none | bad=3"}
+    - {method: summarise, args: [["  tea , 300 ", "TEA,200"]], expect: "TEA=200,tea=300 | bad=0"}
+    - {method: summarise, args: [["CATEGORY,AMOUNT", "pear,5"]], expect: "pear=5 | bad=0"}
+    - {method: summarise, args: [["", "   ", "\t"]], expect: "none | bad=0"}
+    - {method: summarise, args: [["b,2", "a,1", "c,3", "a,4"]], expect: "a=5,b=2,c=3 | bad=0"}
+hints:
+  h1: "Work through each line: skip, count fields (split with -1), strip, check, then total with a TreeMap."
+  h2: "line.split(\",\", -1); parts.length != 2 -> bad; !amount.matches(\"[0-9]+\") -> bad; totals.merge(category, n, Integer::sum)"
+ai_assisted: true

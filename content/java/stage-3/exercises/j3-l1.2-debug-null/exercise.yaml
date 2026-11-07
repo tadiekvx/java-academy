@@ -1,0 +1,31 @@
+id: j3-l1.2-debug-null
+type: debug
+title: "The first one always crashes"
+lesson: j3-l1.2
+role: ladder
+assesses: [o3]
+concepts: [J3.02]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `mostRepeated` should return how many times the most repeated item occurs (0 for an empty list). It throws a `NullPointerException` on the first item. Find out why, and fix it.
+entry:
+  methods:
+    - {name: mostRepeated, params: [{name: items, type: "List<String>"}], returns: "int"}
+tests:
+  visible:
+    - {method: mostRepeated, args: [["a", "b", "a"]], expect: 2}
+    - {method: mostRepeated, args: [[]], expect: 0}
+    - {method: mostRepeated, args: [["x"]], expect: 1}
+    - {name: "no get(item) + 1", source_not_contains: ["counts.get(item) + 1"]}
+  hidden:
+    - {method: mostRepeated, args: [["a", "a", "a"]], expect: 3}
+    - {method: mostRepeated, args: [["p", "q", "r"]], expect: 1}
+    - {method: mostRepeated, args: [["k", "j", "k", "j", "k"]], expect: 3}
+    - {method: mostRepeated, args: [["z", "z"]], expect: 2}
+    - {method: mostRepeated, args: [["m", "n", "m", "o", "o", "o"]], expect: 3}
+hints:
+  h1: "What does counts.get(item) return the first time an item is seen? What happens to null + 1?"
+  h2: "Use counts.merge(item, 1, Integer::sum), or getOrDefault(item, 0) + 1."
+ai_assisted: true

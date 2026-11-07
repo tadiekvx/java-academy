@@ -1,0 +1,28 @@
+id: j1-l3.1-retrieve-total
+type: write
+title: "Shopping total"
+lesson: j1-l3.1
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: read-convert
+prompt: |
+  Write a program that asks `Price in pence: ` and then `How many? `, and prints `Total: N pence`. For example, with `45` and `3` it prints `Total: 135 pence`.
+tests:
+  visible:
+    - {name: "45 x 3", stdin: "45\n3\n", stdout_contains: ["Total: 135 pence\n"]}
+    - {name: "100 x 1", stdin: "100\n1\n", stdout_contains: ["Total: 100 pence\n"]}
+    - {name: "nothing bought", stdin: "99\n0\n", stdout_contains: ["Total: 0 pence\n"]}
+  hidden:
+    - {name: "a dozen", stdin: "30\n12\n", stdout_contains: ["Total: 360 pence\n"]}
+    - {name: "free item", stdin: "0\n5\n", stdout_contains: ["Total: 0 pence\n"]}
+    - {name: "big order", stdin: "250\n40\n", stdout_contains: ["Total: 10000 pence\n"]}
+    - {name: "two", stdin: "75\n2\n", stdout_contains: ["Total: 150 pence\n"]}
+    - {name: "pound coins", stdin: "100\n7\n", stdout_contains: ["Total: 700 pence\n"]}
+hints:
+  h1: "Two IO.readln calls, two conversions, one multiplication."
+  h2: "Convert both with Integer.parseInt, then print \"Total: \" + (price * quantity) + \" pence\"."
+ai_assisted: true

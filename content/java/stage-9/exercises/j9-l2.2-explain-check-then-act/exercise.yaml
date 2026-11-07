@@ -1,0 +1,32 @@
+id: j9-l2.2-explain-check-then-act
+type: explain
+title: "Thread-safe parts, unsafe whole"
+lesson: j9-l2.2
+role: ladder
+assesses: [o2]
+concepts: [J9.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A developer writes `if (!cache.containsKey(key)) { cache.put(key, load(key)); }` on a `ConcurrentHashMap` and says 'it is a concurrent map, so this is safe'. Explain what can still go wrong, what the map offers instead, and what it does and does not promise about reads that overlap with updates.
+rubric:
+  criteria: |
+    Each call is safe on its own, but the pair is not atomic: two threads can both see the key missing and both call load, so the work is done twice and one result overwrites the other. ConcurrentHashMap provides atomic compound methods (putIfAbsent, computeIfAbsent, compute, merge) that do the check and the update as one step. Its retrievals do not block and may overlap with updates, so a get reflects the most recently completed updates but is not a snapshot of the whole map.
+  levels:
+    - score: 2
+      descriptor: "The answer explains the check-then-act gap, names an atomic method, and states the retrieval guarantee accurately."
+      samples:
+        - "containsKey and put are each safe but another thread can slip between them, so both threads load and one overwrites the other. Use computeIfAbsent (or putIfAbsent/merge), which do check and update atomically. Reads do not block and can overlap with updates, so they see completed updates but not a frozen snapshot."
+        - "The two calls together are not atomic: a race between the check and the put. computeIfAbsent solves it. get never blocks and reflects the latest completed updates."
+    - score: 1
+      descriptor: "The answer names the atomic method without the race, or the race without the fix."
+      samples:
+        - "Use computeIfAbsent instead."
+        - "Two threads could both put."
+    - score: 0
+      descriptor: "The answer trusts the concurrent map."
+      samples:
+        - "It is a ConcurrentHashMap so everything done with it is safe."
+        - "The only problem is speed."
+ai_assisted: true

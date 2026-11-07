@@ -1,0 +1,32 @@
+id: j6-l4.1-explain-context
+type: explain
+title: "What the persistence context is"
+lesson: j6-l4.1
+role: ladder
+assesses: [o1]
+concepts: [J6.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  What does an ORM's persistence context do while a transaction is open, and why does changing a field on a loaded entity not need an explicit save call?
+rubric:
+  criteria: |
+    The persistence context is a cache of the entities read or made persistent in one unit of work, with one instance per identifier. Because it remembers what it loaded, it can compare each managed entity with that state when it is flushed and write only the differences (automatic dirty checking).
+  levels:
+    - score: 2
+      descriptor: "The answer names the cache of managed entities, one instance per identifier, and dirty checking at flush."
+      samples:
+        - "It is a first-level cache for one unit of work: asking for the same id twice gives the same object, and at flush the ORM compares each managed entity with what it loaded and issues an UPDATE for the ones that changed."
+        - "The context holds the managed entities. Because it remembers their loaded state, changes are detected and written when the session flushes, so no explicit update call is needed."
+    - score: 1
+      descriptor: "The answer names the cache but not how changes reach the database."
+      samples:
+        - "It is a cache of the entities that were loaded in the current transaction."
+        - "It keeps one object per row so the same row is not read twice."
+    - score: 0
+      descriptor: "The answer treats the context as the database or as a long-lived application cache."
+      samples:
+        - "The context is the database itself, so a change is saved the moment the field is set."
+        - "It is a cache shared by the whole application that lives until the server restarts."
+ai_assisted: true

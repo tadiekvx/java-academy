@@ -1,0 +1,32 @@
+id: j6-l3.2-explain-repository
+type: explain
+title: "Where the SQL lives"
+lesson: j6-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J6.09]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A team asks you to add a new report. What should you add, and where should the query live?
+rubric:
+  criteria: |
+    A repository owns the queries for one concept.
+  levels:
+    - score: 2
+      descriptor: "The answer names the repository and keeps the rest of the app free of SQL."
+      samples:
+        - "One repository per concept, with the queries inside it."
+        - "Add a method to the account repository that runs the new query and returns domain objects; the caller never sees SQL."
+    - score: 1
+      descriptor: "The answer names a repository but leaks a query elsewhere."
+      samples:
+        - "The answer allows a query in the calling code."
+        - "Write the new query in the report class that needs it, and keep the repository for the old ones."
+    - score: 0
+      descriptor: "The answer puts the SQL back into the domain model."
+      samples:
+        - "The answer suggests the domain object runs a query."
+        - "Give the Account class a method that opens a connection and loads its own transactions."
+ai_assisted: true

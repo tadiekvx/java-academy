@@ -1,0 +1,32 @@
+id: j4-l1.2-explain-undo
+type: explain
+title: "Which undo?"
+lesson: j4-l1.2
+role: ladder
+assesses: [o3]
+concepts: [J4.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  For each situation, say which command you'd use, and whether it is safe to use if other people already have the commit: (a) you edited `Price.java`, haven't committed, and want the last committed version back; (b) you committed a change that breaks the build, **and pushed it**, and colleagues have pulled; (c) you made a commit locally by mistake and haven't pushed it. Then (d) you ran `git reset --hard HEAD~1` and lost a commit you needed: how can you get it back?
+rubric:
+  criteria: |
+    A full answer says git restore for (a) (it only discards uncommitted edits); git revert for (b) because it adds a new commit and doesn't rewrite shared history; git reset --hard HEAD~1 (or amend) for (c) since nobody else has the commit; and for (d) use git reflog to find the commit's hash and git reset --hard to that hash.
+  levels:
+    - score: 2
+      descriptor: "Gives git restore for (a), git revert for (b) explaining it adds a commit and doesn't rewrite shared history, reset --hard HEAD~1 or amend for (c) because it isn't shared, and git reflog then reset to the hash for (d)."
+      samples:
+        - "(a) git restore Price.java, which discards my uncommitted edits. (b) git revert on that commit, because it adds a new commit that undoes it and doesn't rewrite history others already have. (c) git reset --hard HEAD~1 is fine because nobody else has the commit, as long as I really want to discard it. (d) git reflog shows where HEAD has been, so I find the lost commit's hash and git reset --hard to it."
+        - "a: restore. b: revert, safe for shared commits since it adds history. c: reset --hard HEAD~1 or amend, since it's not pushed. d: look in git reflog for the hash and reset back to it."
+    - score: 1
+      descriptor: "Gets two or three of the four right, or names commands without the safety reasoning."
+      samples:
+        - "(a) git restore (b) git reset --hard (c) git revert."
+        - "Use git reflog."
+    - score: 0
+      descriptor: "Incorrect, for example says to use reset --hard on shared commits, or that a reset commit is gone for good."
+      samples:
+        - "(b) git reset --hard HEAD~1 and force push."
+        - "A reset commit can never be recovered."
+ai_assisted: true

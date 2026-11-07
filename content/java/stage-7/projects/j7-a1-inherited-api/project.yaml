@@ -1,0 +1,128 @@
+id: j7-a1-inherited-api
+title: "The API that cried 500"
+category: C
+status: in_review
+summary: "Take over an inherited request handler: fix a wrong status, a crash that should be a 404, and answer a review about 405."
+brief: |
+  You have inherited the request handler of an older accounts API. Two tickets and a review are waiting, and each is a mistake about HTTP: the wrong success status, an error reported as a server failure, and a missing method check.
+
+  Fix them one at a time, running all the checks after each, and say in your design note what you would commit separately.
+estimated_hours: 3
+prerequisites: [j7-l1.3, j7-l1.4, j7-l3.2]
+concepts: [J7.03, J7.04, J7.09]
+requirements:
+  - "Creating an account answers 201 with its address."
+  - "A missing account, or a malformed id, answers 404 and never 500."
+  - "A known path with an unsupported method answers 405."
+constraints:
+  - "Fix one ticket at a time."
+  - "Run all the checks after every change."
+acceptance:
+  - "Given a created account, then the status is 201."
+  - "Given an unknown account or id, then 404."
+  - "Given DELETE on a known path, then 405."
+milestones:
+  - id: m1
+    title: "Ticket 701: created is 201"
+    instructions: |
+      **Ticket 701:** *"Creating an account answers `200`. Clients expect `201 Created` with the new address."*
+
+      Reproduce it with `POST /accounts Alan Turing;500`, find the cause and make the smallest fix. Leave everything else as it is.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "create", method: handleAll, args: [["POST /accounts Alan Turing;500", "GET /accounts"]], expect: ["201|/accounts/3", "200|1,2,3"]}
+        - {name: "created id in the response", method: handleAll, args: [["POST /accounts Zed;5", "POST /accounts Amy;6"]], expect: ["201|/accounts/3", "201|/accounts/4"]}
+        - {name: "bad body", method: handleAll, args: [["POST /accounts ;5", "POST /accounts Zed;abc"]], expect: ["400|Bad Request", "400|Bad Request"]}
+      hidden:
+        - {name: "create", method: handleAll, args: [["POST /accounts Alan Turing;500", "GET /accounts"]], expect: ["201|/accounts/3", "200|1,2,3"]}
+        - {name: "created id in the response", method: handleAll, args: [["POST /accounts Zed;5", "POST /accounts Amy;6"]], expect: ["201|/accounts/3", "201|/accounts/4"]}
+        - {name: "bad body", method: handleAll, args: [["POST /accounts ;5", "POST /accounts Zed;abc"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "create then read", method: handleAll, args: [["POST /accounts Alan;9", "GET /accounts/3"]], expect: ["201|/accounts/3", "200|3;Alan;9"]}
+        - {name: "blank owner", method: handleAll, args: [["POST /accounts   ;5"]], expect: ["400|Bad Request"]}
+        - {name: "reads still work", method: handleAll, args: [["GET /accounts", "GET /accounts/1"]], expect: ["200|1,2", "200|1;Ada Lovelace;120000"]}
+  - id: m2
+    title: "Ticket 702: a missing account is a 404"
+    instructions: |
+      **Ticket 702:** *"Asking for an account that does not exist, or for `/accounts/abc`, crashes with a 500."*
+
+      A missing resource is a `404 Not Found`. Fix the cause (not by hiding it behind a catch-all), and keep every earlier answer the same.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "missing account", method: handleAll, args: [["GET /accounts/9"]], expect: ["404|Not Found"]}
+        - {name: "non-numeric id", method: handleAll, args: [["GET /accounts/abc"]], expect: ["404|Not Found"]}
+        - {name: "extra segment", method: handleAll, args: [["GET /accounts/1/deposit"]], expect: ["404|Not Found"]}
+      hidden:
+        - {name: "missing account", method: handleAll, args: [["GET /accounts/9"]], expect: ["404|Not Found"]}
+        - {name: "non-numeric id", method: handleAll, args: [["GET /accounts/abc"]], expect: ["404|Not Found"]}
+        - {name: "extra segment", method: handleAll, args: [["GET /accounts/1/deposit"]], expect: ["404|Not Found"]}
+        - {name: "create", method: handleAll, args: [["POST /accounts Alan Turing;500", "GET /accounts"]], expect: ["201|/accounts/3", "200|1,2,3"]}
+        - {name: "created id in the response", method: handleAll, args: [["POST /accounts Zed;5", "POST /accounts Amy;6"]], expect: ["201|/accounts/3", "201|/accounts/4"]}
+        - {name: "bad body", method: handleAll, args: [["POST /accounts ;5", "POST /accounts Zed;abc"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "create then read", method: handleAll, args: [["POST /accounts Alan;9", "GET /accounts/3"]], expect: ["201|/accounts/3", "200|3;Alan;9"]}
+        - {name: "blank owner", method: handleAll, args: [["POST /accounts   ;5"]], expect: ["400|Bad Request"]}
+        - {name: "reads still work", method: handleAll, args: [["GET /accounts", "GET /accounts/1"]], expect: ["200|1,2", "200|1;Ada Lovelace;120000"]}
+        - {name: "a huge id", method: handleAll, args: [["GET /accounts/12345678901234"]], expect: ["404|Not Found"]}
+        - {name: "empty id", method: handleAll, args: [["GET /accounts/"]], expect: ["404|Not Found"]}
+        - {name: "two missing", method: handleAll, args: [["GET /accounts/3", "GET /accounts/4"]], expect: ["404|Not Found", "404|Not Found"]}
+  - id: m3
+    title: "Review: 405 for the wrong method"
+    instructions: |
+      The reviewer writes:
+
+      > *"`DELETE /accounts/1` answers 404, as if the address did not exist. It exists; it just does not allow that method. RFC 9110 has a status for this."*
+
+      A known path with a method it does not support answers `405|Method Not Allowed`. The known paths are `/accounts` (GET, POST) and `/accounts/{id}` (GET). Anything else is still a 404.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "delete the collection", method: handleAll, args: [["DELETE /accounts"]], expect: ["405|Method Not Allowed"]}
+        - {name: "delete an account", method: handleAll, args: [["DELETE /accounts/1"]], expect: ["405|Method Not Allowed"]}
+        - {name: "post to an account", method: handleAll, args: [["POST /accounts/1 x;1"]], expect: ["405|Method Not Allowed"]}
+      hidden:
+        - {name: "delete the collection", method: handleAll, args: [["DELETE /accounts"]], expect: ["405|Method Not Allowed"]}
+        - {name: "delete an account", method: handleAll, args: [["DELETE /accounts/1"]], expect: ["405|Method Not Allowed"]}
+        - {name: "post to an account", method: handleAll, args: [["POST /accounts/1 x;1"]], expect: ["405|Method Not Allowed"]}
+        - {name: "missing account", method: handleAll, args: [["GET /accounts/9"]], expect: ["404|Not Found"]}
+        - {name: "non-numeric id", method: handleAll, args: [["GET /accounts/abc"]], expect: ["404|Not Found"]}
+        - {name: "extra segment", method: handleAll, args: [["GET /accounts/1/deposit"]], expect: ["404|Not Found"]}
+        - {name: "create", method: handleAll, args: [["POST /accounts Alan Turing;500", "GET /accounts"]], expect: ["201|/accounts/3", "200|1,2,3"]}
+        - {name: "created id in the response", method: handleAll, args: [["POST /accounts Zed;5", "POST /accounts Amy;6"]], expect: ["201|/accounts/3", "201|/accounts/4"]}
+        - {name: "bad body", method: handleAll, args: [["POST /accounts ;5", "POST /accounts Zed;abc"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "create then read", method: handleAll, args: [["POST /accounts Alan;9", "GET /accounts/3"]], expect: ["201|/accounts/3", "200|3;Alan;9"]}
+        - {name: "blank owner", method: handleAll, args: [["POST /accounts   ;5"]], expect: ["400|Bad Request"]}
+        - {name: "reads still work", method: handleAll, args: [["GET /accounts", "GET /accounts/1"]], expect: ["200|1,2", "200|1;Ada Lovelace;120000"]}
+        - {name: "a huge id", method: handleAll, args: [["GET /accounts/12345678901234"]], expect: ["404|Not Found"]}
+        - {name: "empty id", method: handleAll, args: [["GET /accounts/"]], expect: ["404|Not Found"]}
+        - {name: "two missing", method: handleAll, args: [["GET /accounts/3", "GET /accounts/4"]], expect: ["404|Not Found", "404|Not Found"]}
+        - {name: "put on a missing account", method: handleAll, args: [["PUT /accounts/9 x;1"]], expect: ["405|Method Not Allowed"]}
+        - {name: "patch", method: handleAll, args: [["PATCH /accounts"]], expect: ["405|Method Not Allowed"]}
+        - {name: "delete a missing account", method: handleAll, args: [["DELETE /accounts/9"]], expect: ["405|Method Not Allowed"]}
+        - {name: "unknown path", method: handleAll, args: [["GET /nothing", "DELETE /nothing"]], expect: ["404|Not Found", "404|Not Found"]}
+rubric:
+  - criterion: "Reproduce, then fix"
+    zero: "Changed code without reproducing the ticket"
+    one: "Fixed it but did not show the failing request first"
+    two: "Reproduced each ticket with a specific request, found the cause, made the smallest fix"
+  - criterion: "Fixing the cause"
+    zero: "Hid the crash behind a catch-all or a default value"
+    one: "Fixed the symptom for one input"
+    two: "Fixed the cause, so bad ids and missing accounts are both 404"
+  - criterion: "Handling review"
+    zero: "Ignored the comment, or broke an earlier answer"
+    one: "Added 405 but changed another response"
+    two: "405 for known paths, 404 for unknown ones, every earlier check still passing"
+  - criterion: "Design note"
+    zero: "Missing or only describes the code"
+    one: "Describes the changes but not the reasoning"
+    two: "Explains the difference between 404 and 405 and why a catch-all 500 hides bugs"
+design_note_prompt: |
+  In 150 words or fewer: What did each ticket's wrong response actually tell a client? Why is a catch-all that turns every exception into a 500 a problem? What is the difference between 404 and 405, and what header does a 405 need? What would your commits have been?
+ai_assisted: true

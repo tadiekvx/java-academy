@@ -1,0 +1,31 @@
+id: j11-l1.1-write-cache
+type: write
+title: "How many layers can Docker reuse"
+lesson: j11-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J11.01]
+evidence: [IMPL]
+misconceptions: [MC205]
+difficulty: 2
+prompt: |
+  Docker builds an image layer by layer and can reuse a layer from its cache only if its instruction is unchanged **and every earlier layer was reused**. A `COPY` instruction is written here with a version of its files after an `@` (for example `COPY app.jar@v2 app.jar`), so a change in the files changes the instruction. Write `cachedLayers(before, after)`: the number of leading instructions of `after` that can come from the cache of the `before` build.
+entry:
+  methods:
+    - {name: cachedLayers, params: [{name: before, type: "List<String>"}, {name: after, type: "List<String>"}], returns: "int"}
+tests:
+  visible:
+    - {name: "the application changed", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v2 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"]], expect: 2}
+    - {name: "nothing changed", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"]], expect: 5}
+    - {name: "the base image changed", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], ["FROM eclipse-temurin:26-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"]], expect: 0}
+  hidden:
+    - {name: "the same lines in another order", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY content@v1 /content", "COPY app.jar@v1 app.jar", "ENTRYPOINT java -jar app.jar"]], expect: 2}
+    - {name: "a line added at the end", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar", "EXPOSE 8080"]], expect: 5}
+    - {name: "a line removed from the end", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar", "EXPOSE 8080"], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"]], expect: 5}
+    - {name: "no earlier build", method: cachedLayers, args: [[], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"]], expect: 0}
+    - {name: "an empty new file", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], []], expect: 0}
+    - {name: "a change in the second line breaks all that follow", method: cachedLayers, args: [["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"], ["FROM eclipse-temurin:25-jre-alpine", "WORKDIR /srv", "COPY app.jar@v1 app.jar", "COPY content@v1 /content", "ENTRYPOINT java -jar app.jar"]], expect: 1}
+hints:
+  h1: "Stop at the first instruction that differs."
+  h2: "Do not count a later identical line once an earlier one changed."
+ai_assisted: true

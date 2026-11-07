@@ -1,0 +1,21 @@
+id: j1-l6.3-predict-list
+type: predict
+title: "What's in the list?"
+lesson: j1-l6.3
+role: ladder
+assesses: [o1, o2, o4]
+concepts: [J1.11]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Predict exactly what this program prints.
+expected_output: |
+  [30, 99, 20]
+  [99, 20]
+  [99] 1
+  true
+hints:
+  h1: "set replaces; remove(0) is an index; remove(Integer.valueOf(20)) is a value."
+  h2: "After set: [30, 99, 20]. remove(0) takes off 30. Then the value 20 is removed, leaving [99]."
+ai_assisted: true

@@ -1,0 +1,27 @@
+id: j1-l2.1-debug-types
+type: debug
+title: The café's opening sign
+lesson: j1-l2.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.02]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A café's app needs two facts: a coffee costs **£2.75**, and the café **is open** today. Neither
+  method compiles. Read each error message, and fix the methods so `coffeePrice()` returns `2.75`
+  and `isOpen()` returns `true`.
+entry:
+  methods:
+    - {name: coffeePrice, params: [], returns: double}
+    - {name: isOpen, params: [], returns: boolean}
+tests:
+  visible:
+    - {method: coffeePrice, args: [], expect: 2.75}
+    - {method: isOpen, args: [], expect: true}
+starter_compiles: false
+hints:
+  h1: "Read the words after incompatible types: in each error. What type is the value, and what type does the header say?"
+  h2: "A price with pence needs double, not int. And \"true\" in quotes is text: the boolean value true has no quotes."
+ai_assisted: true

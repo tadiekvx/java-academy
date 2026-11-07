@@ -1,0 +1,34 @@
+id: j1-l7.2-explain-plan
+type: explain
+title: "Plan before you code"
+lesson: j1-l7.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.16]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A cinema asks for a program: *"Tickets cost 8 pounds. Groups of 4 or more people get a discount of 1 pound off each ticket. Work out the total price for a group."*
+
+  Without writing any Java, write the plan: (a) the input and output, (b) the rules, (c) at least four test cases with the answer for each, including the edge where the discount starts, and (d) one thing the request does not say that you would ask about.
+rubric:
+  criteria: |
+    A full answer gives input = number of people, output = total price, rules (8 each; 7 each from 4 people), cases such as 1 -> 8, 3 -> 24, 4 -> 28, 10 -> 70 with the edge at 3 and 4, and a sensible question such as what happens for 0 or whether the discount applies to the whole group.
+  levels:
+    - score: 2
+      descriptor: "States input and output, the rule, at least four correct cases including 3 and 4 at the edge (3 people cost 24, 4 people cost 28), and one reasonable open question."
+      samples:
+        - "Input: the number of people. Output: total price. Rule: 8 pounds each, but if there are 4 or more, 7 pounds each. Cases: 1 -> 8, 3 -> 24, 4 -> 28, 10 -> 70. I'd ask what happens for 0 people, or whether a group means exactly 4 or more."
+        - "In: group size. Out: total. 8 per ticket, 7 per ticket from 4 upwards. 0 -> 0, 3 -> 24, 4 -> 28, 5 -> 35. Question: does the discount apply to everyone in the group or only extra tickets?"
+    - score: 1
+      descriptor: "Has some of the plan, but misses the edge at 3 and 4, has an arithmetic error, or asks no question."
+      samples:
+        - "Number of people in, price out. 8 each, 7 each for 4 or more."
+        - "1 -> 8, 4 -> 28, 10 -> 70."
+    - score: 0
+      descriptor: "Incorrect or missing the main rule, for example applies the discount to groups of 3 or applies 1 pound off the total."
+      samples:
+        - "Just write the code and see."
+        - "Total is 8 minus 1 for groups."
+ai_assisted: true

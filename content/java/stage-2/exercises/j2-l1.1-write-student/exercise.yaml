@@ -1,0 +1,30 @@
+id: j2-l1.1-write-student
+type: write
+title: "Complete the constructor"
+lesson: j2-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J2.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `Student` has fields and a constructor, but the constructor doesn't store anything yet. Finish it, so that `best(...)` returns the name of the student with the higher grade (the first student if they tie).
+entry:
+  methods:
+    - {name: best, params: [{name: name1, type: "String"}, {name: grade1, type: "int"}, {name: name2, type: "String"}, {name: grade2, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: best, args: ["Ada", 90, "Bo", 80], expect: "Ada"}
+    - {method: best, args: ["Ada", 70, "Bo", 80], expect: "Bo"}
+    - {method: best, args: ["Ada", 80, "Bo", 80], expect: "Ada"}
+  hidden:
+    - {method: best, args: ["X", 0, "Y", 0], expect: "X"}
+    - {method: best, args: ["Mia", 100, "Leo", 99], expect: "Mia"}
+    - {method: best, args: ["Mia", 99, "Leo", 100], expect: "Leo"}
+    - {method: best, args: ["A", 51, "B", 50], expect: "A"}
+    - {method: best, args: ["A", 49, "B", 50], expect: "B"}
+hints:
+  h1: "Inside the constructor, use this.name and this.grade for the fields, and the plain names for the parameters."
+  h2: "this.name = name; this.grade = grade;"
+ai_assisted: true

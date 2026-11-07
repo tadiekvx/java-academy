@@ -1,0 +1,32 @@
+id: j8-l1.4-write-redact
+type: write
+title: "Logging without leaking"
+lesson: j8-l1.4
+role: ladder
+assesses: [o1]
+concepts: [J8.04]
+evidence: [IMPL]
+misconceptions: [MC181]
+difficulty: 3
+prompt: |
+  A log line is a list of space-separated words. A word of the form `key=value` whose key is `password`, `token`, `secret`, `apikey` or `authorization` (in any letter case) must have its value replaced by `***`. Every other word is unchanged, and the spacing of the line is preserved. Write `redact(line)`.
+entry:
+  methods:
+    - {name: redact, params: [{name: line, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a password", method: redact, args: ["login user=ada password=hunter2 ok"], expect: "login user=ada password=*** ok"}
+    - {name: "nothing secret", method: redact, args: ["GET /accounts/7 status=200"], expect: "GET /accounts/7 status=200"}
+    - {name: "just a token", method: redact, args: ["token=abc123"], expect: "token=***"}
+  hidden:
+    - {name: "any letter case", method: redact, args: ["PASSWORD=x Token=y"], expect: "PASSWORD=*** Token=***"}
+    - {name: "every occurrence", method: redact, args: ["password=a password=b"], expect: "password=*** password=***"}
+    - {name: "the word password in a value", method: redact, args: ["note=password reset sent"], expect: "note=password reset sent"}
+    - {name: "two keys", method: redact, args: ["apikey=k1 authorization=Bearer"], expect: "apikey=*** authorization=***"}
+    - {name: "empty line", method: redact, args: [""], expect: ""}
+    - {name: "double space preserved", method: redact, args: ["user=ada  password=x"], expect: "user=ada  password=***"}
+    - {name: "a different key", method: redact, args: ["passwordhint=blue"], expect: "passwordhint=blue"}
+hints:
+  h1: "Look at one word at a time and split it at the first `=`."
+  h2: "Should `Password` and `password` be treated the same?"
+ai_assisted: true

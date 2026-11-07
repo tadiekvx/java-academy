@@ -1,0 +1,31 @@
+id: j6-l1.4-debug-delete
+type: debug
+title: "Deleting in the wrong order"
+lesson: j6-l1.4
+role: ladder
+assesses: [o1]
+concepts: [J6.04]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  The delete statements have the foreign key backwards: the account is deleted before the transactions that reference it. Write the delete so it removes the child rows first.
+entry:
+  methods:
+    - {name: deleteAccount, params: [{name: accountId, type: "int"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "deleting an account that other transactions reference", method: deleteAccount, args: [2], expect: ["1|1200.00", "3|0.00", "4|780.25", "5|50.00"]}
+    - {name: "deleting an unknown account", method: deleteAccount, args: [99], expect: ["1|1200.00", "2|300.50", "3|0.00", "4|780.25", "5|50.00"]}
+    - {name: "deleting the account that belongs to Ada again", method: deleteAccount, args: [5], expect: ["1|1200.00", "2|300.50", "3|0.00", "4|780.25"]}
+    - {name: "deleting an unknown account", method: deleteAccount, args: [0], expect: ["1|1200.00", "2|300.50", "3|0.00", "4|780.25", "5|50.00"]}
+  hidden:
+    - {name: "deleting an account that other transactions reference", method: deleteAccount, args: [2], expect: ["1|1200.00", "3|0.00", "4|780.25", "5|50.00"]}
+    - {name: "deleting an unknown account", method: deleteAccount, args: [99], expect: ["1|1200.00", "2|300.50", "3|0.00", "4|780.25", "5|50.00"]}
+    - {name: "deleting the account that belongs to Ada again", method: deleteAccount, args: [5], expect: ["1|1200.00", "2|300.50", "3|0.00", "4|780.25"]}
+    - {name: "deleting the first account", method: deleteAccount, args: [1], expect: ["2|300.50", "3|0.00", "4|780.25", "5|50.00"]}
+    - {name: "deleting a middle account", method: deleteAccount, args: [4], expect: ["1|1200.00", "2|300.50", "3|0.00", "5|50.00"]}
+hints:
+  h1: "Which side is the child, and which side is the parent?"
+  h2: "What happens when you delete a parent that children still point at?"
+ai_assisted: true

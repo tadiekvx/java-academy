@@ -1,0 +1,31 @@
+id: j3-l5.3-modify-textblock
+type: modify
+title: "Concatenation to a text block"
+lesson: j3-l5.3
+role: ladder
+assesses: [o3]
+concepts: [J3.12]
+evidence: [MOD]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `letter` builds a three-line message with `+` and `\n`. Rewrite it with a **text block** and `formatted`, so the text is easy to read, and returns exactly the same string: `Dear <name>,`, a blank line, `Your order has shipped.`, and a final newline.
+entry:
+  methods:
+    - {name: letter, params: [{name: name, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: letter, args: ["Ada"], expect: "Dear Ada,\n\nYour order has shipped.\n"}
+    - {method: letter, args: [""], expect: "Dear ,\n\nYour order has shipped.\n"}
+    - {method: letter, args: ["Bo Lee"], expect: "Dear Bo Lee,\n\nYour order has shipped.\n"}
+    - {name: "uses a text block", source_contains: ["\"\"\"", ".formatted("], source_not_contains: ["\\n"]}
+  hidden:
+    - {method: letter, args: ["Grace"], expect: "Dear Grace,\n\nYour order has shipped.\n"}
+    - {method: letter, args: ["O'Brien"], expect: "Dear O'Brien,\n\nYour order has shipped.\n"}
+    - {method: letter, args: ["100%"], expect: "Dear 100%,\n\nYour order has shipped.\n"}
+    - {method: letter, args: ["x"], expect: "Dear x,\n\nYour order has shipped.\n"}
+    - {method: letter, args: ["Zed Z"], expect: "Dear Zed Z,\n\nYour order has shipped.\n"}
+hints:
+  h1: "Start the text on the line after the opening \"\"\", put %s where the name goes, and end with .formatted(name). Put the closing \"\"\" on its own line for the final newline."
+  h2: "return \"\"\"\\n    Dear %s,\\n\\n    Your order has shipped.\\n    \"\"\".formatted(name);"
+ai_assisted: true

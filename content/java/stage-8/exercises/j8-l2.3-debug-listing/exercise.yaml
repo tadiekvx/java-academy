@@ -1,0 +1,31 @@
+id: j8-l2.3-debug-listing
+type: debug
+title: "The list that shows everyone's accounts"
+lesson: j8-l2.3
+role: ladder
+assesses: [o2]
+concepts: [J8.07]
+evidence: [DEBUG]
+misconceptions: [MC184]
+difficulty: 3
+prompt: |
+  `visibleAccounts(user, role, accounts)` should return the ids of the accounts a caller may see. Each account is `id:owner`. `admin` and `teller` see all; a `customer` sees only the accounts they own; any other role sees none. The starter returns every id, an insecure direct object reference. Fix it.
+entry:
+  methods:
+    - {name: visibleAccounts, params: [{name: user, type: "String"}, {name: role, type: "String"}, {name: accounts, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "a customer with two accounts", method: visibleAccounts, args: ["ada", "customer", ["1:ada", "2:grace", "3:ada"]], expect: ["1", "3"]}
+    - {name: "a teller sees all", method: visibleAccounts, args: ["tess", "teller", ["1:ada", "2:grace"]], expect: ["1", "2"]}
+    - {name: "an unknown role", method: visibleAccounts, args: ["mallory", "visitor", ["1:ada"]], expect: []}
+  hidden:
+    - {name: "another customer", method: visibleAccounts, args: ["grace", "customer", ["1:ada", "2:grace", "3:ada"]], expect: ["2"]}
+    - {name: "a customer with none", method: visibleAccounts, args: ["zed", "customer", ["1:ada"]], expect: []}
+    - {name: "a name that is a prefix of another", method: visibleAccounts, args: ["ad", "customer", ["1:ada", "2:ad"]], expect: ["2"]}
+    - {name: "no accounts", method: visibleAccounts, args: ["root", "admin", []], expect: []}
+    - {name: "empty list", method: visibleAccounts, args: ["ada", "customer", []], expect: []}
+    - {name: "empty role", method: visibleAccounts, args: ["bob", "", ["1:bob"]], expect: []}
+hints:
+  h1: "Which condition decides whether an account is included?"
+  h2: "Is `ad` the same user as `ada`?"
+ai_assisted: true

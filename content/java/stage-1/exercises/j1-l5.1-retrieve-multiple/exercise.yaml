@@ -1,0 +1,32 @@
+id: j1-l5.1-retrieve-multiple
+type: write
+title: "A multiple?"
+lesson: j1-l5.1
+role: retrieval
+assesses: [o1]
+concepts: [J1.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: define-method
+prompt: |
+  Write a method called `isMultipleOf` that is given two whole numbers, `n` and `k` (`k` is at least 1), and returns `true` if `n` is a multiple of `k`, and `false` otherwise. For example, `isMultipleOf(12, 4)` is `true`.
+entry:
+  methods:
+    - {name: isMultipleOf, params: [{name: n, type: "int"}, {name: k, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: [12, 4], expect: true}
+    - {args: [10, 3], expect: false}
+    - {args: [0, 5], expect: true}
+  hidden:
+    - {name: "same number", args: [7, 7], expect: true}
+    - {name: "multiple of one", args: [7, 1], expect: true}
+    - {name: "smaller than k", args: [5, 10], expect: false}
+    - {name: "hundred", args: [100, 25], expect: true}
+    - {name: "odd", args: [99, 2], expect: false}
+starter_compiles: false
+hints:
+  h1: "A yes/no answer is a boolean. Which operator gives a remainder?"
+  h2: "return n % k == 0;"
+ai_assisted: true

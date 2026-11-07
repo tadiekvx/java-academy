@@ -1,0 +1,35 @@
+id: j1-l2.3-retrieve-price-per-item
+type: write
+title: Price per item
+lesson: j1-l2.3
+role: retrieval
+assesses: [o3]
+concepts: [J1.02]
+evidence: [IMPL]
+misconceptions: [MC04]
+difficulty: 2
+variant_group: exact-division
+prompt: |
+  A multipack costs `totalPence` pence and contains `items` items. Complete `pricePerItem` so
+  it returns the exact price of one item in pence, including any fraction of a penny. For
+  example, `pricePerItem(99, 2)` should be `49.5`.
+entry:
+  methods:
+    - name: pricePerItem
+      params: [{name: totalPence, type: int}, {name: items, type: int}]
+      returns: double
+tests:
+  visible:
+    - {args: [500, 4], expect: 125.0}
+    - {args: [99, 2], expect: 49.5}
+    - {args: [500, 3], expect: 166.66666666666666}
+  hidden:
+    - {name: free, args: [0, 7], expect: 0.0}
+    - {name: less than a penny each, args: [1, 4], expect: 0.25}
+    - {name: one item, args: [7, 1], expect: 7.0}
+    - {name: half pence, args: [3, 2], expect: 1.5}
+    - {name: tenths, args: [10, 4], expect: 2.5}
+hints:
+  h1: What type is the result when you divide an int by an int?
+  h2: Make one side of the division a double, for example with a (double) cast in front of totalPence.
+ai_assisted: true

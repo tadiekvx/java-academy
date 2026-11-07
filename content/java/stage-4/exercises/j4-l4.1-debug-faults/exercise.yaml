@@ -1,0 +1,31 @@
+id: j4-l4.1-debug-faults
+type: debug
+title: "Three faults in one method"
+lesson: j4-l4.1
+role: ladder
+assesses: [o2]
+concepts: [J4.07]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `report(marks)` should return `avg=<average, rounded down> grade=<letter>`: **A** for an average of 70 or more, **B** for 50 to 69, **C** below 50. With no marks it returns `avg=0 grade=C`. It has **three separate faults**. Find them one at a time: make a tiny failing case, find where the wrong value appears, fix just that, and run everything again.
+entry:
+  methods:
+    - {name: report, params: [{name: marks, type: "int[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: report, args: [[70, 70, 70]], expect: "avg=70 grade=A"}
+    - {method: report, args: [[40, 60]], expect: "avg=50 grade=B"}
+    - {method: report, args: [[]], expect: "avg=0 grade=C"}
+  hidden:
+    - {method: report, args: [[100]], expect: "avg=100 grade=A"}
+    - {method: report, args: [[50, 50]], expect: "avg=50 grade=B"}
+    - {method: report, args: [[69, 70, 71]], expect: "avg=70 grade=A"}
+    - {method: report, args: [[49]], expect: "avg=49 grade=C"}
+    - {method: report, args: [[0, 0, 100]], expect: "avg=33 grade=C"}
+    - {method: report, args: [[90, 10, 80, 20]], expect: "avg=50 grade=B"}
+hints:
+  h1: "Start with report([70, 70, 70]). What total does the loop reach? Then check the grade boundary, then the empty array."
+  h2: "Loop to marks.length, use >= for the grade boundary, and return early for an empty array."
+ai_assisted: true

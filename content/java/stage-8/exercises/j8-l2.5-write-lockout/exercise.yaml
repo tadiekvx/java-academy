@@ -1,0 +1,33 @@
+id: j8-l2.5-write-lockout
+type: write
+title: "Account lockout"
+lesson: j8-l2.5
+role: ladder
+assesses: [o1]
+concepts: [J8.09]
+evidence: [IMPL]
+misconceptions: [MC186]
+difficulty: 4
+prompt: |
+  Events for one account arrive in time order as `seconds:fail` or `seconds:ok`. Write `lockedOut(events, maxFailures, windowSeconds, now)`: the account is locked when, counting only events up to `now`, there are at least `maxFailures` failures within the last `windowSeconds` (a failure at time `t` counts if `now - windowSeconds < t <= now`), **since the most recent successful login**. A success clears the count.
+entry:
+  methods:
+    - {name: lockedOut, params: [{name: events, type: "List<String>"}, {name: maxFailures, type: "int"}, {name: windowSeconds, type: "int"}, {name: now, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {name: "three quick failures", method: lockedOut, args: [["10:fail", "11:fail", "12:fail"], 3, 60, 20], expect: true}
+    - {name: "only two", method: lockedOut, args: [["10:fail", "11:fail"], 3, 60, 20], expect: false}
+    - {name: "a success resets", method: lockedOut, args: [["10:fail", "11:fail", "12:ok", "13:fail"], 3, 60, 20], expect: false}
+  hidden:
+    - {name: "the failures are too old", method: lockedOut, args: [["10:fail", "11:fail", "12:fail"], 3, 5, 20], expect: false}
+    - {name: "exactly at the window edge", method: lockedOut, args: [["10:fail", "11:fail", "12:fail"], 3, 10, 20], expect: false}
+    - {name: "just inside the window", method: lockedOut, args: [["10:fail", "11:fail", "12:fail"], 3, 11, 20], expect: true}
+    - {name: "a future failure is ignored", method: lockedOut, args: [["10:fail", "11:fail", "50:fail"], 3, 60, 20], expect: false}
+    - {name: "no events", method: lockedOut, args: [[], 3, 60, 20], expect: false}
+    - {name: "more than the limit", method: lockedOut, args: [["1:fail", "2:fail", "3:fail", "4:fail"], 3, 60, 5], expect: true}
+    - {name: "two before and two after a success", method: lockedOut, args: [["1:fail", "2:fail", "3:ok", "4:fail", "5:fail"], 3, 60, 6], expect: false}
+    - {name: "a success after now does not reset", method: lockedOut, args: [["1:fail", "2:fail", "30:ok"], 2, 60, 20], expect: true}
+hints:
+  h1: "Find where the count starts: just after the last success up to `now`."
+  h2: "Which comparison excludes a failure exactly `windowSeconds` old?"
+ai_assisted: true

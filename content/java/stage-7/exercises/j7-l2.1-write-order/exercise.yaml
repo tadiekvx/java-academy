@@ -1,0 +1,32 @@
+id: j7-l2.1-write-order
+type: write
+title: "In what order are beans created"
+lesson: j7-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J7.05]
+evidence: [IMPL]
+misconceptions: [MC170]
+difficulty: 4
+prompt: |
+  A container must create a bean's dependencies before the bean itself. An edge `A>B` means A depends on B. Write `creationOrder(edges, target)`: the beans to create so that `target` can be built, dependencies first, each bean once, and the dependencies of one bean taken in alphabetical order. If the target's dependencies contain a cycle, return the single element `cycle`.
+entry:
+  methods:
+    - {name: creationOrder, params: [{name: edges, type: "List<String>"}, {name: target, type: "String"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "a chain", method: creationOrder, args: [["controller>service", "service>repository"], "controller"], expect: ["repository", "service", "controller"]}
+    - {name: "a shared dependency is created once", method: creationOrder, args: [["a>b", "a>c", "b>d", "c>d"], "a"], expect: ["d", "b", "c", "a"]}
+    - {name: "a cycle", method: creationOrder, args: [["a>b", "b>a"], "a"], expect: ["cycle"]}
+  hidden:
+    - {name: "no dependencies", method: creationOrder, args: [[], "x"], expect: ["x"]}
+    - {name: "alphabetical order", method: creationOrder, args: [["app>zeta", "app>alpha"], "app"], expect: ["alpha", "zeta", "app"]}
+    - {name: "a cycle that the target does not reach", method: creationOrder, args: [["x>y", "y>x", "a>b"], "a"], expect: ["b", "a"]}
+    - {name: "a bean that needs itself", method: creationOrder, args: [["a>a"], "a"], expect: ["cycle"]}
+    - {name: "the leaf only", method: creationOrder, args: [["service>repository", "controller>service"], "repository"], expect: ["repository"]}
+    - {name: "a cycle below the target", method: creationOrder, args: [["a>b", "b>c", "c>b"], "a"], expect: ["cycle"]}
+    - {name: "diamond, alphabetical", method: creationOrder, args: [["a>c", "a>b", "c>d", "b>d"], "a"], expect: ["d", "b", "c", "a"]}
+hints:
+  h1: "Visit each dependency before you add the bean to the result."
+  h2: "How do you notice that you are already in the middle of creating a bean?"
+ai_assisted: true

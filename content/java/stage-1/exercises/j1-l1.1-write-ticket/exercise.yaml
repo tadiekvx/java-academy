@@ -1,0 +1,26 @@
+id: j1-l1.1-write-ticket
+type: write
+title: A cinema ticket
+lesson: j1-l1.1
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+variant_group: exact-output
+prompt: |
+  Write a program that prints this ticket exactly, including capital letters, spaces and punctuation:
+
+  ```
+  ADMIT ONE
+  Screen 4, Seat G12
+  Enjoy the film!
+  ```
+tests:
+  visible:
+    - {name: prints the ticket exactly, stdin: "", stdout_equals: "ADMIT ONE\nScreen 4, Seat G12\nEnjoy the film!"}
+hints:
+  h1: Write the output down line by line first. How many statements do you need?
+  h2: Use one IO.println per line, in order, with each line's text copied exactly inside double quotes.
+ai_assisted: true

@@ -1,0 +1,38 @@
+id: j1-l2.2-write-score
+type: write
+title: The bonus round
+lesson: j1-l2.2
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.03]
+evidence: [IMPL]
+misconceptions: [MC01]
+difficulty: 2
+variant_group: variable-updates
+prompt: |
+  A player starts a game with `start` points. Then, in this order:
+
+  1. they earn 15 points,
+  2. they lose 4 points,
+  3. the bonus round doubles their score.
+
+  Complete `finalScore` so it returns the score at the end. Use a variable and update it one step
+  at a time. For example, `finalScore(10)` is `42`.
+entry:
+  methods:
+    - {name: finalScore, params: [{name: start, type: int}], returns: int}
+tests:
+  visible:
+    - {args: [0], expect: 22}
+    - {args: [1], expect: 24}
+    - {args: [10], expect: 42}
+  hidden:
+    - {name: five, args: [5], expect: 32}
+    - {name: a hundred, args: [100], expect: 222}
+    - {name: a negative start, args: [-11], expect: 0}
+    - {name: three, args: [3], expect: 28}
+    - {name: fifty, args: [50], expect: 122}
+hints:
+  h1: Start with int score = start; and then write one line per step, each using the current score.
+  h2: "score = score + 15; then score = score - 4; then score = score * 2; then return score."
+ai_assisted: true

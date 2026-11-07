@@ -1,0 +1,63 @@
+id: j8-l2.1-explain-401-403
+type: explain
+title: "401 or 403"
+lesson: j8-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J8.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Compare these two real responses from this platform. The first is a request with no login to a protected endpoint; the second is a `DELETE` with no CSRF token.
+
+  ```text
+  $ curl -i http://localhost:8092/api/progress
+  HTTP/1.1 401 
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  X-Frame-Options: DENY
+  Content-Length: 0
+  Date: Sat, 07 Nov 2026 12:01:39 GMT
+  ```
+
+  ```text
+  $ curl -i -X DELETE http://localhost:8092/api/curriculum
+  HTTP/1.1 403 
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+  X-Frame-Options: DENY
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Date: Sat, 07 Nov 2026 12:01:39 GMT
+
+  {"timestamp":"2026-11-07T12:01:39.707Z","status":403,"error":"Forbidden","path":"/api/curriculum"}
+  ```
+
+  Explain the difference between authentication and authorisation, say which status each response uses and why, and say what is missing from the 401 response according to RFC 9110. Use the line `.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))` from this platform's `SecurityConfig` to explain why.
+rubric:
+  criteria: |
+    Authentication is establishing who the caller is; authorisation is deciding what that caller may do. The first request has no identity, so the answer is 401. The second is refused because it lacks the CSRF token, a permission check on the request itself, so the answer is 403. RFC 9110 says a 401 must carry a WWW-Authenticate header, and this response has none: the application configured an HttpStatusEntryPoint, which only sets the status. That is a reasonable choice for a single-page app that handles login itself, but it departs from the RFC.
+  levels:
+    - score: 2
+      descriptor: "The answer distinguishes the two ideas, assigns 401 and 403 correctly, and explains the missing header from the entry point."
+      samples:
+        - "Authentication is who you are, authorisation is what you may do. No login means no identity, so 401. A request with no CSRF token is refused as not allowed, so 403. RFC 9110 says a 401 must include WWW-Authenticate, and there is none here because the HttpStatusEntryPoint only sets the status code, which suits a SPA that shows its own login form."
+        - "401 is for missing or invalid credentials (authentication); 403 is for a known caller who is not allowed or whose request fails a check such as CSRF (authorisation). The 401 lacks the WWW-Authenticate header the RFC requires because the platform's entry point just returns the status."
+    - score: 1
+      descriptor: "The answer assigns the codes without the missing-header point."
+      samples:
+        - "401 means not logged in and 403 means forbidden."
+        - "The first one has no login and the second has no token."
+    - score: 0
+      descriptor: "The answer treats the two as the same or reverses them."
+      samples:
+        - "They are the same thing, both mean access denied."
+        - "403 means you need to log in and 401 means you are not allowed."
+ai_assisted: true

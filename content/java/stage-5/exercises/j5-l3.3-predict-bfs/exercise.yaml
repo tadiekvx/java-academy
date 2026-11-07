@@ -1,0 +1,19 @@
+id: j5-l3.3-predict-bfs
+type: predict
+title: "In what order are nodes visited?"
+lesson: j5-l3.3
+role: ladder
+assesses: [o2]
+concepts: [J5.11]
+evidence: [MIST]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Work out what this program prints. The first line is the order in which breadth-first search visits the nodes, starting at 0, taking each node's neighbours in the order its edges were listed. The second line is node 3's neighbour list. Draw the graph first.
+expected_output: |
+  [0, 1, 2, 3, 4, 5]
+  [1, 2, 5]
+hints:
+  h1: "Build the adjacency lists in edge order, then process the queue: visit a node, queue its unvisited neighbours."
+  h2: "From 0: queue 1 and 2. Process 1: queue 3. Process 2: queue 4 (3 is seen). Process 3: queue 5. So the order is 0 1 2 3 4 5."
+ai_assisted: true

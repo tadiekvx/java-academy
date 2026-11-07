@@ -1,0 +1,23 @@
+id: j3-l1.1-predict-sets
+type: predict
+title: "Three kinds of collection"
+lesson: j3-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J3.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints. (Only collections whose order is guaranteed are printed.)
+expected_output: |
+  4
+  3
+  [a, b, c]
+  [b, a, c]
+  true
+  [a, b, c]
+hints:
+  h1: "Which of these collections drop duplicates? What does each do about order? remove(Object) removes only the first match."
+  h2: "The list keeps all four. The three sets keep b, a, c. After removing the first \"b\" from the list, [a, b, c] is left."
+ai_assisted: true

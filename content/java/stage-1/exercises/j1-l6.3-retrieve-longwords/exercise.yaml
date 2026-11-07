@@ -1,0 +1,31 @@
+id: j1-l6.3-retrieve-longwords
+type: write
+title: "Keep the long words"
+lesson: j1-l6.3
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: list-filter
+prompt: |
+  Write a method called `longWords` that is given an `ArrayList<String>` called `words` and an `int` called `minLength` (in that order), and returns a **new** `ArrayList<String>` containing the words with **more than** `minLength` characters, in the same order.
+entry:
+  methods:
+    - {name: longWords, params: [{name: words, type: "ArrayList<String>"}, {name: minLength, type: "int"}], returns: "ArrayList<String>"}
+tests:
+  visible:
+    - {args: [["cat", "elephant", "dog", "giraffe"], 3], expect: ["elephant", "giraffe"]}
+    - {args: [[], 3], expect: []}
+    - {args: [["a", "bb"], 5], expect: []}
+  hidden:
+    - {name: "boundary", args: [["abc", "abcd"], 3], expect: ["abcd"]}
+    - {name: "min zero", args: [["x"], 0], expect: ["x"]}
+    - {name: "empty word", args: [["", "a"], 0], expect: ["a"]}
+    - {name: "short list", args: [["Java", "is", "fun"], 2], expect: ["Java", "fun"]}
+    - {name: "repeats", args: [["same", "same", "same"], 3], expect: ["same", "same", "same"]}
+hints:
+  h1: "Filter: strings use length() with brackets."
+  h2: "if (word.length() > minLength) result.add(word);"
+ai_assisted: true

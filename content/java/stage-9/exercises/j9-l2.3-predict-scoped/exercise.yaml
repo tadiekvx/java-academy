@@ -1,0 +1,22 @@
+id: j9-l2.3-predict-scoped
+type: predict
+title: "A value with a lifetime"
+lesson: j9-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J9.08]
+evidence: [MIST]
+misconceptions: [MC194]
+difficulty: 2
+prompt: |
+  A scoped value is bound to a value only while a block of code runs, and a nested block can bind it again. Predict the exact output.
+expected_output: |
+  bound before=false
+  inside=ada
+  inner=grace
+  after inner=ada
+  bound after=false
+hints:
+  h1: "Where is `USER` bound, and where is it not?"
+  h2: "What does the value go back to when the inner block ends?"
+ai_assisted: true

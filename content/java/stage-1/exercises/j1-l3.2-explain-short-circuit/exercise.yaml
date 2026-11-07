@@ -1,0 +1,37 @@
+id: j1-l3.2-explain-short-circuit
+type: explain
+title: "Order matters"
+lesson: j1-l3.2
+role: ladder
+assesses: [o3]
+concepts: [J1.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  These two conditions look the same, but the second one crashes for an empty word. Explain why.
+
+  ```java
+  word.length() > 0 && word.charAt(0) == 'A'
+  word.charAt(0) == 'A' && word.length() > 0
+  ```
+rubric:
+  criteria: |
+    A full answer says && is checked left to right and stops at the first false (short-circuit); in the first version an empty word makes the length check false so charAt(0) is never run; in the second, charAt(0) runs first on an empty word and crashes because there's no character at index 0.
+  levels:
+    - score: 2
+      descriptor: "Explains short-circuiting (&& stops at the first false, left to right) and why the order means charAt(0) runs on an empty word only in the second version, causing the crash."
+      samples:
+        - "&& goes left to right and stops when it finds false. In the first one, an empty word fails the length check so charAt(0) is skipped. In the second, charAt(0) runs first, and there is no index 0 in an empty string, so it crashes."
+        - "Short-circuiting: if the left of && is false, the right is never checked. Putting the length check first protects charAt; putting it second means charAt runs on \"\" and throws an error."
+    - score: 1
+      descriptor: "Says the second one checks charAt first, or that charAt fails on an empty word, but doesn't explain that && skips the right side when the left is false."
+      samples:
+        - "Because charAt(0) doesn't work on an empty word."
+        - "The second one checks the character before the length."
+    - score: 0
+      descriptor: "Incorrect, for example says the conditions are identical, or blames the capital A."
+      samples:
+        - "They're the same, the crash must be somewhere else."
+        - "It crashes because 'A' should be in double quotes."
+ai_assisted: true

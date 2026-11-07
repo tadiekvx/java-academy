@@ -1,0 +1,48 @@
+id: j1-l1.2-explain-first-error
+type: explain
+title: Why start with the first error?
+lesson: j1-l1.2
+role: ladder
+assesses: [o4, o1]
+concepts: [J1.13]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Java lists four compiler errors for a program. A friend starts fixing them from the bottom of the
+  list. In two or three sentences, explain why it's better to fix the first error, run the program
+  again, and then look at the errors that remain.
+rubric:
+  criteria: |
+    A full answer says that one mistake can cause later knock-on errors (or confuse the compiler),
+    so later messages may not be real problems; fixing the first and recompiling makes those
+    disappear and shows which errors are genuine.
+  levels:
+    - score: 2
+      descriptor: >
+        Explains that later errors can be caused by an earlier one (knock-on effects, the compiler
+        getting confused), so fixing the first and re-running can make them vanish or change, and
+        avoids chasing problems that aren't real.
+      samples:
+        - >
+          One mistake, like a missing quote, can confuse Java so it reports errors on lines that are
+          actually fine. If you fix the first one and run again, a lot of the later errors disappear,
+          so you don't waste time on ones that weren't really there.
+        - >
+          The later errors might just be knock-on effects of the first one. Fixing the first and
+          recompiling shows you which errors are real.
+    - score: 1
+      descriptor: >
+        Gives a partly correct reason, for example that it's more organised, or that Java reads
+        top to bottom, without saying that later errors can be caused by earlier ones.
+      samples:
+        - Java reads the program from the top, so you should fix things in the same order.
+        - It's more organised to go in order and you won't miss any.
+    - score: 0
+      descriptor: >
+        Incorrect or no reason, for example claims only the first error is real, or that the order
+        doesn't matter.
+      samples:
+        - Only the first error is ever a real error, the others are always fake.
+        - The order doesn't matter as long as you fix all four.
+ai_assisted: true

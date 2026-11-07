@@ -1,0 +1,31 @@
+id: j7-l3.1-write-variables
+type: write
+title: "Path variables"
+lesson: j7-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J7.08]
+evidence: [IMPL]
+misconceptions: [MC173]
+difficulty: 3
+prompt: |
+  A mapping like `@GetMapping("/accounts/{id}/transactions/{tid}")` is a template. Write `extractVariables(template, path)`. A path matches when it has the same number of `/`-separated segments, every fixed segment is equal, and every `{name}` segment is non-empty. Return the variables in order as `name=value` joined by commas (an empty string if the template has none), or `no-match`.
+entry:
+  methods:
+    - {name: extractVariables, params: [{name: template, type: "String"}, {name: path, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "one variable", method: extractVariables, args: ["/accounts/{id}", "/accounts/7"], expect: "id=7"}
+    - {name: "two variables", method: extractVariables, args: ["/accounts/{id}/transactions/{tid}", "/accounts/7/transactions/12"], expect: "id=7,tid=12"}
+    - {name: "a fixed segment differs", method: extractVariables, args: ["/accounts/{id}", "/customers/7"], expect: "no-match"}
+  hidden:
+    - {name: "no variables", method: extractVariables, args: ["/accounts", "/accounts"], expect: ""}
+    - {name: "an empty variable", method: extractVariables, args: ["/accounts/{id}", "/accounts/"], expect: "no-match"}
+    - {name: "too many segments", method: extractVariables, args: ["/accounts/{id}", "/accounts/7/transactions"], expect: "no-match"}
+    - {name: "too few segments", method: extractVariables, args: ["/accounts/{id}/transactions", "/accounts/7"], expect: "no-match"}
+    - {name: "variables anywhere", method: extractVariables, args: ["/{kind}/{id}", "/accounts/abc"], expect: "kind=accounts,id=abc"}
+    - {name: "the value is kept as sent", method: extractVariables, args: ["/accounts/{id}", "/accounts/a%20b"], expect: "id=a%20b"}
+hints:
+  h1: "Compare the two lists of segments one position at a time."
+  h2: "What should happen when the counts differ?"
+ai_assisted: true

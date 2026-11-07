@@ -1,0 +1,32 @@
+id: j12-l2.1-explain-safe-change
+type: explain
+title: "Two ways to change safely"
+lesson: j12-l2.1
+role: ladder
+assesses: [o2]
+concepts: [J12.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  The accounts table has a `balance_text` column that must become a numeric `balance_cents` column, with the service running all the time and several instances deployed one after another. Describe the phases you would use (expand, migrate, contract) and which release does what; explain why a single release that renames the column breaks the rolling update of lesson 11.2.2; and explain how a feature flag helps with the switch of reads and what it costs.
+rubric:
+  criteria: |
+    Expand: add the new nullable balance_cents column (old code ignores it). Migrate: release code that writes both columns (dual write), backfill the old rows, then release code that reads the new column, switching back is possible while the old column is still written. Contract: stop writing the old column, then drop it in a later release. A single rename breaks the rolling update because during the rollout old and new instances run together and share the database: whichever version does not know the new name fails. A flag lets you switch reads for a percentage of users and switch back instantly without a deploy, so the risky step is small and reversible; the cost is complexity: every flag adds branches to test, and old flags must be removed once the change is done.
+  levels:
+    - score: 2
+      descriptor: "The answer gives the phases with releases, explains the coexisting versions problem, and states the flag benefit and cost."
+      samples:
+        - "Release 1: add balance_cents (expand). Release 2: dual-write both columns and backfill old rows (migrate). Release 3: read from balance_cents, possibly behind a flag. Release 4: stop writing the old column. Release 5: drop it (contract). A one-step rename fails because during a rolling update old and new versions run at once against one database, and one of them will not know the column. A flag allows switching reads gradually and back without a deploy, but adds branches that must be tested and later removed."
+        - "Add the new column first, then write to both and backfill, then switch reads, then stop writing the old one, and only then drop it. Rename in one go breaks the mixed-version period. A flag makes the read switch reversible but is extra complexity to clean up."
+    - score: 1
+      descriptor: "The answer lists some phases or the flag point, not both with the reason."
+      samples:
+        - "Add the new column, copy the data, then drop the old one."
+        - "Use a feature flag."
+    - score: 0
+      descriptor: "The answer renames in one step."
+      samples:
+        - "Rename the column and deploy at night."
+        - "Take the service down while changing it."
+ai_assisted: true

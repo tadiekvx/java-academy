@@ -1,0 +1,38 @@
+id: j1-l6.4-explain-trace
+type: explain
+title: "Reading a stack trace"
+lesson: j1-l6.4
+role: ladder
+assesses: [o1]
+concepts: [J1.12]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Here is a stack trace. What went wrong, which line of your code would you look at first, and how did the program get there?
+
+  ```
+  Exception in thread "main" java.lang.ArithmeticException: / by zero
+  	at Main.share(Main.java:3)
+  	at Main.main(Main.java:8)
+  ```
+rubric:
+  criteria: |
+    A full answer says a number was divided by zero (ArithmeticException); look first at line 3 of Main.java in method share, the first line in the program's own code; and that main called share at line 8, which is how it got there.
+  levels:
+    - score: 2
+      descriptor: "Says it's a division by zero, points to line 3 in share as the first place to look, and says it was called from main at line 8."
+      samples:
+        - "It divided by zero (ArithmeticException). I'd look at line 3 in the share method first. main called share on line 8, so I'd also check what main passed in."
+        - "A / by zero error. The top line, Main.java:3 in share, is where it happened, and share was called from main at line 8."
+    - score: 1
+      descriptor: "Gets the type of problem or the line, but not both, or doesn't mention how the program got there."
+      samples:
+        - "A divide by zero."
+        - "Look at line 3."
+    - score: 0
+      descriptor: "Incorrect, for example says it's a compile error, or points to the wrong line."
+      samples:
+        - "It's a compile error on line 8."
+        - "Something is wrong with main."
+ai_assisted: true

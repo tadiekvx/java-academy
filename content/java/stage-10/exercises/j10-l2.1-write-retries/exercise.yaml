@@ -1,0 +1,31 @@
+id: j10-l2.1-write-retries
+type: write
+title: "Give up at some point"
+lesson: j10-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J10.04]
+evidence: [IMPL]
+misconceptions: [MC201]
+difficulty: 2
+prompt: |
+  `outcomes` lists what each attempt of a call would do (`ok` or `fail`); attempts beyond the list always fail. Write `callWithRetries(outcomes, maxAttempts)`: try up to `maxAttempts` times and stop at the first `ok`. Return `ok@N` with the attempt number N (counting from 1), or `failed@M` where M is `maxAttempts`.
+entry:
+  methods:
+    - {name: callWithRetries, params: [{name: outcomes, type: "List<String>"}, {name: maxAttempts, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {name: "succeeds on the third try", method: callWithRetries, args: [["fail", "fail", "ok"], 5], expect: "ok@3"}
+    - {name: "gives up", method: callWithRetries, args: [["fail", "fail", "fail"], 3], expect: "failed@3"}
+    - {name: "first time", method: callWithRetries, args: [["ok"], 1], expect: "ok@1"}
+  hidden:
+    - {name: "success would come one attempt too late", method: callWithRetries, args: [["fail", "fail", "ok"], 2], expect: "failed@2"}
+    - {name: "no outcomes always fail", method: callWithRetries, args: [[], 4], expect: "failed@4"}
+    - {name: "no attempts allowed", method: callWithRetries, args: [["fail", "ok"], 0], expect: "failed@0"}
+    - {name: "attempts past the list fail", method: callWithRetries, args: [["fail"], 3], expect: "failed@3"}
+    - {name: "stops at the first success", method: callWithRetries, args: [["ok", "fail"], 5], expect: "ok@1"}
+    - {name: "last allowed attempt", method: callWithRetries, args: [["fail", "fail", "fail", "fail", "ok"], 5], expect: "ok@5"}
+hints:
+  h1: "Count attempts from 1."
+  h2: "What happens past the end of the list?"
+ai_assisted: true

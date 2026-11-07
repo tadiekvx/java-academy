@@ -1,0 +1,31 @@
+id: j5-l1.2-write-firstrepeat
+type: write
+title: "Where does the first repeat appear?"
+lesson: j5-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J5.02]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `firstRepeat(List<Integer> values)`: the **index** of the first value that has already appeared earlier in the list, or `-1` if every value is new. It must be fast: the checks use 200,000 values. The driver builds a list and plants repeats.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}, {name: repeatAt, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [10, 4], expect: "4"}
+    - {method: run, args: [10, 0], expect: "-1"}
+    - {method: run, args: [5, 99], expect: "-1"}
+  hidden:
+    - {method: run, args: [2, 1], expect: "1"}
+    - {method: run, args: [200000, 199999], expect: "199999"}
+    - {method: run, args: [200000, 100000], expect: "100000"}
+    - {method: run, args: [200000, 0], expect: "-1"}
+    - {method: run, args: [100000, 50000], expect: "50000"}
+    - {method: run, args: [1, 1], expect: "-1"}
+hints:
+  h1: "Go through the list once, remembering what you've seen in a set. add returns false when the value was already there."
+  h2: "if (!seen.add(values.get(i))) return i;"
+ai_assisted: true

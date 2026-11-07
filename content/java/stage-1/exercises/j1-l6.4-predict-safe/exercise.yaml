@@ -1,0 +1,21 @@
+id: j1-l6.4-predict-safe
+type: predict
+title: "Checked before it crashes"
+lesson: j1-l6.4
+role: ladder
+assesses: [o3]
+concepts: [J1.12]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  Predict exactly what this program prints. Nothing here should crash: work out which checks protect the risky lines.
+expected_output: |
+  3
+  0
+  J
+  ?
+hints:
+  h1: "Each method checks the dangerous case first and returns a fallback."
+  h2: "b == 0 gives 0 without dividing; an empty text gives '?' without calling charAt."
+ai_assisted: true

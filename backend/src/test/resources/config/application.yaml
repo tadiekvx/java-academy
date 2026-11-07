@@ -1,0 +1,4 @@
+# Test overrides (loaded in addition to the main application.yaml). Needs `scripts/db.sh start`.
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/academy_test

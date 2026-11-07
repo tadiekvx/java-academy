@@ -1,0 +1,202 @@
+id: j12-a1-capstone
+title: "Capstone: take over, change, operate"
+category: C
+status: in_review
+summary: "Take over an acquired company's API and carry it through four changes: a new requirement, reliability, observability and a production incident; then justify your decisions in writing."
+brief: |
+  This is the last project. There is no tutorial for it. You inherit a small account API from a company Brightbank has acquired. It reads accounts and nothing more. Over four changes you will make it do what the business needs and then deal with the consequences:
+
+  1. A **new requirement**: transfers between accounts.
+  2. **Reliability**: retries must not repeat a transfer; a failed credit must not lose money.
+  3. **Observability**: a health endpoint and structured audit lines that leak nothing.
+  4. An **incident**: an input that crashes the service.
+
+  Change one thing at a time and run all the checks after each. Your written note is part of the assessment: two decision records and a post-incident review. The platform cannot run a real service, a database or a pipeline, so the project models the API logic; say in your note what a real deployment would add.
+estimated_hours: 8
+prerequisites: [j7-l3.2, j8-l2.3, j10-l2.2, j10-l2.3, j12-l1.1, j12-l1.4]
+concepts: [J7.09, J8.07, J10.05, J10.06, J12.01, J12.04]
+requirements:
+  - "Transfers follow the rules of the first change, then the reliability rules, then the observability rules."
+  - "An oversized amount is a 400, never a 500."
+  - "Nothing sensitive is written to an audit line."
+constraints:
+  - "Change one thing at a time."
+  - "Run all the checks after every change."
+  - "Do not catch everything and hide it."
+acceptance:
+  - "Given another customer's account, then 403."
+  - "Given a retried transfer, then the same response and one effect."
+  - "Given a crash, then the balances are unchanged and a retry works."
+  - "Given an amount with ten digits, then 400."
+milestones:
+  - id: m1
+    title: "Change 1: a new requirement"
+    instructions: |
+      The partner's API can only read accounts. Product now wants **transfers**: `actor POST /transfers key from to cents`. Rules, in this order: a malformed body (four words, or five with the last one `crash`, and `cents` 1 to 9 digits) is `400|Bad Request`; unknown or identical accounts or an amount of zero is `400|Bad Request`; the actor must own the `from` account, or be the teller `tess`, otherwise `403|Forbidden`; not enough money is `422|Insufficient funds`; otherwise move the money and answer `200|` followed by all balances as `id:balance` separated by `;` in id order. Other methods on `/transfers` are `405|Method Not Allowed`. (Ignore `crash` and repeated keys for now; later changes handle them.)
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+        - {name: auditLines, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "own money, enough funds", method: handleAll, args: [["ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000"]}
+        - {name: "someone else's money", method: handleAll, args: [["ada POST /transfers k1 2 1 100"]], expect: ["403|Forbidden"]}
+        - {name: "not enough money", method: handleAll, args: [["ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds"]}
+      hidden:
+        - {name: "own money, enough funds", method: handleAll, args: [["ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000"]}
+        - {name: "someone else's money", method: handleAll, args: [["ada POST /transfers k1 2 1 100"]], expect: ["403|Forbidden"]}
+        - {name: "not enough money", method: handleAll, args: [["ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds"]}
+        - {name: "a teller may move any money", method: handleAll, args: [["tess POST /transfers k1 2 3 50"]], expect: ["200|1:1000;2:950;3:1050"]}
+        - {name: "unknown account", method: handleAll, args: [["ada POST /transfers k1 1 9 10"]], expect: ["400|Bad Request"]}
+        - {name: "same account", method: handleAll, args: [["ada POST /transfers k1 1 1 10"]], expect: ["400|Bad Request"]}
+        - {name: "zero amount", method: handleAll, args: [["ada POST /transfers k1 1 2 0"]], expect: ["400|Bad Request"]}
+        - {name: "malformed body", method: handleAll, args: [["ada POST /transfers k1 1 2", "ada POST /transfers k1 1 2 x"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "balances accumulate", method: handleAll, args: [["ada POST /transfers a 1 2 100", "grace POST /transfers b 2 3 300", "ada GET /accounts/2"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:800;3:1300", "403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- POST /transfers k1 1 2 10"]], expect: ["401|Unauthorized"]}
+        - {name: "wrong method", method: handleAll, args: [["ada GET /transfers"]], expect: ["405|Method Not Allowed"]}
+        - {name: "reads as before", method: handleAll, args: [["ada GET /accounts/1", "ada GET /accounts/2", "ada GET /accounts/9", "tess GET /accounts/2"]], expect: ["200|1;ada;1000", "403|Forbidden", "404|Not Found", "200|2;grace;1000"]}
+  - id: m2
+    title: "Change 2: make it reliable"
+    instructions: |
+      Apply lessons 10.2.2 and 10.2.3. The `key` is an idempotency key: the first request with a key is processed and its response stored; the same key with the same body returns the stored response; the same key with a different body is `409|Conflict`. Invalid, forbidden and malformed requests are not stored. A transfer ending in `crash` (the credit step fails) must leave the balances unchanged, answer `502|Credit failed, debit reversed`, and must **not** store the key.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+        - {name: auditLines, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "a retried transfer", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:1100;3:1000"]}
+        - {name: "a crash is compensated", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada GET /accounts/1"]], expect: ["502|Credit failed, debit reversed", "200|1;ada;1000"]}
+        - {name: "retry after a crash", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada POST /transfers k1 1 2 100"]], expect: ["502|Credit failed, debit reversed", "200|1:900;2:1100;3:1000"]}
+      hidden:
+        - {name: "a retried transfer", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:1100;3:1000"]}
+        - {name: "a crash is compensated", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada GET /accounts/1"]], expect: ["502|Credit failed, debit reversed", "200|1;ada;1000"]}
+        - {name: "retry after a crash", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada POST /transfers k1 1 2 100"]], expect: ["502|Credit failed, debit reversed", "200|1:900;2:1100;3:1000"]}
+        - {name: "own money, enough funds", method: handleAll, args: [["ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000"]}
+        - {name: "someone else's money", method: handleAll, args: [["ada POST /transfers k1 2 1 100"]], expect: ["403|Forbidden"]}
+        - {name: "not enough money", method: handleAll, args: [["ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds"]}
+        - {name: "a teller may move any money", method: handleAll, args: [["tess POST /transfers k1 2 3 50"]], expect: ["200|1:1000;2:950;3:1050"]}
+        - {name: "unknown account", method: handleAll, args: [["ada POST /transfers k1 1 9 10"]], expect: ["400|Bad Request"]}
+        - {name: "same account", method: handleAll, args: [["ada POST /transfers k1 1 1 10"]], expect: ["400|Bad Request"]}
+        - {name: "zero amount", method: handleAll, args: [["ada POST /transfers k1 1 2 0"]], expect: ["400|Bad Request"]}
+        - {name: "malformed body", method: handleAll, args: [["ada POST /transfers k1 1 2", "ada POST /transfers k1 1 2 x"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "balances accumulate", method: handleAll, args: [["ada POST /transfers a 1 2 100", "grace POST /transfers b 2 3 300", "ada GET /accounts/2"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:800;3:1300", "403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- POST /transfers k1 1 2 10"]], expect: ["401|Unauthorized"]}
+        - {name: "wrong method", method: handleAll, args: [["ada GET /transfers"]], expect: ["405|Method Not Allowed"]}
+        - {name: "reads as before", method: handleAll, args: [["ada GET /accounts/1", "ada GET /accounts/2", "ada GET /accounts/9", "tess GET /accounts/2"]], expect: ["200|1;ada;1000", "403|Forbidden", "404|Not Found", "200|2;grace;1000"]}
+        - {name: "a key reused with another body", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 3 100"]], expect: ["200|1:900;2:1100;3:1000", "409|Conflict"]}
+        - {name: "a rejected transfer is remembered", method: handleAll, args: [["ada POST /transfers k1 1 2 5000", "ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds", "422|Insufficient funds"]}
+        - {name: "an invalid request leaves the key free", method: handleAll, args: [["ada POST /transfers k1 1 1 10", "ada POST /transfers k1 1 2 10"]], expect: ["400|Bad Request", "200|1:990;2:1010;3:1000"]}
+        - {name: "forbidden does not use up the key", method: handleAll, args: [["ada POST /transfers k1 2 1 10", "grace POST /transfers k1 2 1 10"]], expect: ["403|Forbidden", "200|1:1010;2:990;3:1000"]}
+        - {name: "several retries and crashes", method: handleAll, args: [["ada POST /transfers a 1 2 10 crash", "ada POST /transfers a 1 2 10", "ada POST /transfers a 1 2 10", "ada POST /transfers b 1 3 10 crash"]], expect: ["502|Credit failed, debit reversed", "200|1:990;2:1010;3:1000", "200|1:990;2:1010;3:1000", "502|Credit failed, debit reversed"]}
+  - id: m3
+    title: "Change 3: make it observable"
+    instructions: |
+      Apply lessons 12.1.1 and 8.1.4. First, `GET /health` answers `200|ok` for **anybody**, signed in or not; other methods on it are `405|Method Not Allowed`. Second, `auditLines(requests)` returns one structured JSON line per request, after handling them in order: `{"actor":"ada","method":"GET","path":"/accounts/1","status":200}` with no spaces, exactly those four members in that order, the status as a number, and `"` and `\` escaped inside the strings. Missing parts of a short request are empty strings. **Never log the body**: transfer keys and amounts do not belong in an audit line.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+        - {name: auditLines, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "audit lines for a few requests", method: auditLines, args: [["ada GET /accounts/1", "- GET /accounts/1", "ada POST /transfers k1 1 2 100", "ada GET /acc\"ounts", "", "grace GET /health"]], expect: ["{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":200}", "{\"actor\":\"-\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":401}", "{\"actor\":\"ada\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":200}", "{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/acc\\\"ounts\",\"status\":404}", "{\"actor\":\"\",\"method\":\"\",\"path\":\"\",\"status\":400}", "{\"actor\":\"grace\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200}"]}
+        - {name: "health needs no login", method: handleAll, args: [["- GET /health"]], expect: ["200|ok"]}
+        - {name: "health is read-only", method: handleAll, args: [["ada POST /health"]], expect: ["405|Method Not Allowed"]}
+      hidden:
+        - {name: "audit lines for a few requests", method: auditLines, args: [["ada GET /accounts/1", "- GET /accounts/1", "ada POST /transfers k1 1 2 100", "ada GET /acc\"ounts", "", "grace GET /health"]], expect: ["{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":200}", "{\"actor\":\"-\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":401}", "{\"actor\":\"ada\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":200}", "{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/acc\\\"ounts\",\"status\":404}", "{\"actor\":\"\",\"method\":\"\",\"path\":\"\",\"status\":400}", "{\"actor\":\"grace\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200}"]}
+        - {name: "health needs no login", method: handleAll, args: [["- GET /health"]], expect: ["200|ok"]}
+        - {name: "health is read-only", method: handleAll, args: [["ada POST /health"]], expect: ["405|Method Not Allowed"]}
+        - {name: "a retried transfer", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:1100;3:1000"]}
+        - {name: "a crash is compensated", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada GET /accounts/1"]], expect: ["502|Credit failed, debit reversed", "200|1;ada;1000"]}
+        - {name: "retry after a crash", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada POST /transfers k1 1 2 100"]], expect: ["502|Credit failed, debit reversed", "200|1:900;2:1100;3:1000"]}
+        - {name: "own money, enough funds", method: handleAll, args: [["ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000"]}
+        - {name: "someone else's money", method: handleAll, args: [["ada POST /transfers k1 2 1 100"]], expect: ["403|Forbidden"]}
+        - {name: "not enough money", method: handleAll, args: [["ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds"]}
+        - {name: "a teller may move any money", method: handleAll, args: [["tess POST /transfers k1 2 3 50"]], expect: ["200|1:1000;2:950;3:1050"]}
+        - {name: "unknown account", method: handleAll, args: [["ada POST /transfers k1 1 9 10"]], expect: ["400|Bad Request"]}
+        - {name: "same account", method: handleAll, args: [["ada POST /transfers k1 1 1 10"]], expect: ["400|Bad Request"]}
+        - {name: "zero amount", method: handleAll, args: [["ada POST /transfers k1 1 2 0"]], expect: ["400|Bad Request"]}
+        - {name: "malformed body", method: handleAll, args: [["ada POST /transfers k1 1 2", "ada POST /transfers k1 1 2 x"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "balances accumulate", method: handleAll, args: [["ada POST /transfers a 1 2 100", "grace POST /transfers b 2 3 300", "ada GET /accounts/2"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:800;3:1300", "403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- POST /transfers k1 1 2 10"]], expect: ["401|Unauthorized"]}
+        - {name: "wrong method", method: handleAll, args: [["ada GET /transfers"]], expect: ["405|Method Not Allowed"]}
+        - {name: "reads as before", method: handleAll, args: [["ada GET /accounts/1", "ada GET /accounts/2", "ada GET /accounts/9", "tess GET /accounts/2"]], expect: ["200|1;ada;1000", "403|Forbidden", "404|Not Found", "200|2;grace;1000"]}
+        - {name: "a key reused with another body", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 3 100"]], expect: ["200|1:900;2:1100;3:1000", "409|Conflict"]}
+        - {name: "a rejected transfer is remembered", method: handleAll, args: [["ada POST /transfers k1 1 2 5000", "ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds", "422|Insufficient funds"]}
+        - {name: "an invalid request leaves the key free", method: handleAll, args: [["ada POST /transfers k1 1 1 10", "ada POST /transfers k1 1 2 10"]], expect: ["400|Bad Request", "200|1:990;2:1010;3:1000"]}
+        - {name: "forbidden does not use up the key", method: handleAll, args: [["ada POST /transfers k1 2 1 10", "grace POST /transfers k1 2 1 10"]], expect: ["403|Forbidden", "200|1:1010;2:990;3:1000"]}
+        - {name: "several retries and crashes", method: handleAll, args: [["ada POST /transfers a 1 2 10 crash", "ada POST /transfers a 1 2 10", "ada POST /transfers a 1 2 10", "ada POST /transfers b 1 3 10 crash"]], expect: ["502|Credit failed, debit reversed", "200|1:990;2:1010;3:1000", "200|1:990;2:1010;3:1000", "502|Credit failed, debit reversed"]}
+        - {name: "no requests", method: auditLines, args: [[]], expect: []}
+        - {name: "a path with a backslash", method: auditLines, args: [["ada GET /a\\b"]], expect: ["{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/a\\\\b\",\"status\":404}"]}
+        - {name: "bodies are not logged", method: auditLines, args: [["ada POST /transfers secret-key 1 2 5"]], expect: ["{\"actor\":\"ada\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":200}"]}
+        - {name: "every status is a number", method: auditLines, args: [["ada DELETE /accounts/1", "mallory GET /accounts/1", "tess POST /transfers k 1 2 10 crash"]], expect: ["{\"actor\":\"ada\",\"method\":\"DELETE\",\"path\":\"/accounts/1\",\"status\":405}", "{\"actor\":\"mallory\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":401}", "{\"actor\":\"tess\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":502}"]}
+        - {name: "health with odd methods", method: handleAll, args: [["- DELETE /health", "tess GET /health"]], expect: ["405|Method Not Allowed", "200|ok"]}
+  - id: m4
+    title: "Change 4: the incident"
+    instructions: |
+      At 03:12 the on-call phone rings: `POST /transfers` with an amount of `99999999999` made the service answer `500` and fill the logs with stack traces; at 03:20 someone found that it is the same for any amount with more than nine digits. The cause is in the input check. Fix it so that any amount that is not 1 to 9 digits is a `400|Bad Request`, keep every earlier behaviour, and then answer the questions in the design note. Do not hide the failure behind a catch-all.
+    entry:
+      methods:
+        - {name: handleAll, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+        - {name: auditLines, params: [{name: requests, type: "List<String>"}], returns: "List<String>"}
+    tests:
+      visible:
+        - {name: "an enormous amount", method: handleAll, args: [["ada POST /transfers k1 1 2 99999999999"]], expect: ["400|Bad Request"]}
+        - {name: "a negative amount", method: handleAll, args: [["ada POST /transfers k1 1 2 -5"]], expect: ["400|Bad Request"]}
+        - {name: "the largest accepted amount", method: handleAll, args: [["tess POST /transfers k1 1 2 999999999"]], expect: ["422|Insufficient funds"]}
+      hidden:
+        - {name: "an enormous amount", method: handleAll, args: [["ada POST /transfers k1 1 2 99999999999"]], expect: ["400|Bad Request"]}
+        - {name: "a negative amount", method: handleAll, args: [["ada POST /transfers k1 1 2 -5"]], expect: ["400|Bad Request"]}
+        - {name: "the largest accepted amount", method: handleAll, args: [["tess POST /transfers k1 1 2 999999999"]], expect: ["422|Insufficient funds"]}
+        - {name: "audit lines for a few requests", method: auditLines, args: [["ada GET /accounts/1", "- GET /accounts/1", "ada POST /transfers k1 1 2 100", "ada GET /acc\"ounts", "", "grace GET /health"]], expect: ["{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":200}", "{\"actor\":\"-\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":401}", "{\"actor\":\"ada\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":200}", "{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/acc\\\"ounts\",\"status\":404}", "{\"actor\":\"\",\"method\":\"\",\"path\":\"\",\"status\":400}", "{\"actor\":\"grace\",\"method\":\"GET\",\"path\":\"/health\",\"status\":200}"]}
+        - {name: "health needs no login", method: handleAll, args: [["- GET /health"]], expect: ["200|ok"]}
+        - {name: "health is read-only", method: handleAll, args: [["ada POST /health"]], expect: ["405|Method Not Allowed"]}
+        - {name: "a retried transfer", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:1100;3:1000"]}
+        - {name: "a crash is compensated", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada GET /accounts/1"]], expect: ["502|Credit failed, debit reversed", "200|1;ada;1000"]}
+        - {name: "retry after a crash", method: handleAll, args: [["ada POST /transfers k1 1 2 100 crash", "ada POST /transfers k1 1 2 100"]], expect: ["502|Credit failed, debit reversed", "200|1:900;2:1100;3:1000"]}
+        - {name: "own money, enough funds", method: handleAll, args: [["ada POST /transfers k1 1 2 100"]], expect: ["200|1:900;2:1100;3:1000"]}
+        - {name: "someone else's money", method: handleAll, args: [["ada POST /transfers k1 2 1 100"]], expect: ["403|Forbidden"]}
+        - {name: "not enough money", method: handleAll, args: [["ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds"]}
+        - {name: "a teller may move any money", method: handleAll, args: [["tess POST /transfers k1 2 3 50"]], expect: ["200|1:1000;2:950;3:1050"]}
+        - {name: "unknown account", method: handleAll, args: [["ada POST /transfers k1 1 9 10"]], expect: ["400|Bad Request"]}
+        - {name: "same account", method: handleAll, args: [["ada POST /transfers k1 1 1 10"]], expect: ["400|Bad Request"]}
+        - {name: "zero amount", method: handleAll, args: [["ada POST /transfers k1 1 2 0"]], expect: ["400|Bad Request"]}
+        - {name: "malformed body", method: handleAll, args: [["ada POST /transfers k1 1 2", "ada POST /transfers k1 1 2 x"]], expect: ["400|Bad Request", "400|Bad Request"]}
+        - {name: "balances accumulate", method: handleAll, args: [["ada POST /transfers a 1 2 100", "grace POST /transfers b 2 3 300", "ada GET /accounts/2"]], expect: ["200|1:900;2:1100;3:1000", "200|1:900;2:800;3:1300", "403|Forbidden"]}
+        - {name: "nobody signed in", method: handleAll, args: [["- POST /transfers k1 1 2 10"]], expect: ["401|Unauthorized"]}
+        - {name: "wrong method", method: handleAll, args: [["ada GET /transfers"]], expect: ["405|Method Not Allowed"]}
+        - {name: "reads as before", method: handleAll, args: [["ada GET /accounts/1", "ada GET /accounts/2", "ada GET /accounts/9", "tess GET /accounts/2"]], expect: ["200|1;ada;1000", "403|Forbidden", "404|Not Found", "200|2;grace;1000"]}
+        - {name: "a key reused with another body", method: handleAll, args: [["ada POST /transfers k1 1 2 100", "ada POST /transfers k1 1 3 100"]], expect: ["200|1:900;2:1100;3:1000", "409|Conflict"]}
+        - {name: "a rejected transfer is remembered", method: handleAll, args: [["ada POST /transfers k1 1 2 5000", "ada POST /transfers k1 1 2 5000"]], expect: ["422|Insufficient funds", "422|Insufficient funds"]}
+        - {name: "an invalid request leaves the key free", method: handleAll, args: [["ada POST /transfers k1 1 1 10", "ada POST /transfers k1 1 2 10"]], expect: ["400|Bad Request", "200|1:990;2:1010;3:1000"]}
+        - {name: "forbidden does not use up the key", method: handleAll, args: [["ada POST /transfers k1 2 1 10", "grace POST /transfers k1 2 1 10"]], expect: ["403|Forbidden", "200|1:1010;2:990;3:1000"]}
+        - {name: "several retries and crashes", method: handleAll, args: [["ada POST /transfers a 1 2 10 crash", "ada POST /transfers a 1 2 10", "ada POST /transfers a 1 2 10", "ada POST /transfers b 1 3 10 crash"]], expect: ["502|Credit failed, debit reversed", "200|1:990;2:1010;3:1000", "200|1:990;2:1010;3:1000", "502|Credit failed, debit reversed"]}
+        - {name: "no requests", method: auditLines, args: [[]], expect: []}
+        - {name: "a path with a backslash", method: auditLines, args: [["ada GET /a\\b"]], expect: ["{\"actor\":\"ada\",\"method\":\"GET\",\"path\":\"/a\\\\b\",\"status\":404}"]}
+        - {name: "bodies are not logged", method: auditLines, args: [["ada POST /transfers secret-key 1 2 5"]], expect: ["{\"actor\":\"ada\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":200}"]}
+        - {name: "every status is a number", method: auditLines, args: [["ada DELETE /accounts/1", "mallory GET /accounts/1", "tess POST /transfers k 1 2 10 crash"]], expect: ["{\"actor\":\"ada\",\"method\":\"DELETE\",\"path\":\"/accounts/1\",\"status\":405}", "{\"actor\":\"mallory\",\"method\":\"GET\",\"path\":\"/accounts/1\",\"status\":401}", "{\"actor\":\"tess\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":502}"]}
+        - {name: "health with odd methods", method: handleAll, args: [["- DELETE /health", "tess GET /health"]], expect: ["405|Method Not Allowed", "200|ok"]}
+        - {name: "an amount that overflows an int", method: handleAll, args: [["ada POST /transfers k1 1 2 2147483648"]], expect: ["400|Bad Request"]}
+        - {name: "ten digits", method: handleAll, args: [["ada POST /transfers k1 1 2 1000000000"]], expect: ["400|Bad Request"]}
+        - {name: "garbage after valid requests", method: handleAll, args: [["ada GET /accounts/1", "ada POST /transfers k1 1 2 99999999999999999999", "ada GET /accounts/1"]], expect: ["200|1;ada;1000", "400|Bad Request", "200|1;ada;1000"]}
+        - {name: "the oversized request is logged as a 400", method: auditLines, args: [["ada POST /transfers k1 1 2 99999999999"]], expect: ["{\"actor\":\"ada\",\"method\":\"POST\",\"path\":\"/transfers\",\"status\":400}"]}
+rubric:
+  - criterion: "Correctness and tests"
+    zero: "Changes break earlier behaviour, or only the visible checks pass"
+    one: "All checks pass but the changes were made in one step"
+    two: "Each change made separately with all checks run after it; the code handles the cases the hidden checks probe"
+  - criterion: "Security and reliability"
+    zero: "Ownership, idempotency or compensation is missing or inconsistent"
+    one: "Each present but a gap remains (a stored key on a crash, a body in a log)"
+    two: "Ownership is checked before funds, keys are stored only for definite outcomes, a crash is compensated, and nothing sensitive is logged"
+  - criterion: "Operability"
+    zero: "Health and audit lines are missing or leak data"
+    one: "They work but are not structured or escaped"
+    two: "A health endpoint with no login, structured audit lines with escaping, and the incident fixed at its cause"
+  - criterion: "Written justification"
+    zero: "Missing, or repeats the code"
+    one: "Describes what was done without alternatives or evidence"
+    two: "ADRs for the two significant decisions, a blameless post-incident review with timeline, cause, fix and follow-ups, and honest limits of the model"
+design_note_prompt: |
+  Write (400 words or fewer, three parts). (1) Two short ADRs (Title, Status, Context, Decision, Consequences): one for how you made transfers safe to retry, one for your choice of what the audit line contains and omits. (2) A blameless post-incident review of change 4: timeline (03:12, 03:20, your fix), cause, why the checks of the earlier changes did not catch it, what you fixed, and two follow-up actions with an owner each (for example an alert, a test). (3) Three things this model does not cover that a real deployment of this API would need (name at least one from each of Stage 8, Stage 10 and Stage 11).
+ai_assisted: true

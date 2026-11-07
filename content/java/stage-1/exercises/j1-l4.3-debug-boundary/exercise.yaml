@@ -1,0 +1,30 @@
+id: j1-l4.3-debug-boundary
+type: debug
+title: "The missing space"
+lesson: j1-l4.3
+role: ladder
+assesses: [o2]
+concepts: [J1.07]
+evidence: [DEBUG]
+misconceptions: [MC09]
+difficulty: 2
+prompt: |
+  `countSpaces` should count the spaces in a message. It gets most messages right, but it misses a space at the very start. Find and fix the bug.
+entry:
+  methods:
+    - {name: countSpaces, params: [{name: message, type: "String"}], returns: "int"}
+tests:
+  visible:
+    - {args: ["a b c"], expect: 2}
+    - {args: [" hello"], expect: 1}
+    - {args: ["none"], expect: 0}
+  hidden:
+    - {name: "empty", args: [""], expect: 0}
+    - {name: "just a space", args: [" "], expect: 1}
+    - {name: "space at the end", args: ["ends with "], expect: 2}
+    - {name: "two at the start", args: ["  two at start"], expect: 4}
+    - {name: "several", args: ["one two three four"], expect: 3}
+hints:
+  h1: "What is the index of the first character of a string? Where does this loop start?"
+  h2: "Indexes start at 0. Start the loop at int i = 0."
+ai_assisted: true

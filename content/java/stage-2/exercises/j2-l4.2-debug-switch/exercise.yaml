@@ -1,0 +1,33 @@
+id: j2-l4.2-debug-switch
+type: debug
+title: "The switch that misses a shape"
+lesson: j2-l4.2
+role: ladder
+assesses: [o3]
+concepts: [J2.11]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This code doesn't compile: the compiler says the `switch` doesn't cover all possible input values. Find the missing kind and add its case, so a triangle is described as `triangle base=3 height=4`. **Don't** add a `default` branch: it would hide the same mistake in future.
+entry:
+  methods:
+    - {name: run, params: [{name: kind, type: "String"}, {name: a, type: "int"}, {name: b, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: ["circle", 3, 0], expect: "circle r=3"}
+    - {method: run, args: ["square", 5, 0], expect: "square side=5"}
+    - {method: run, args: ["triangle", 3, 4], expect: "triangle base=3 height=4"}
+    - {name: "handles Triangle explicitly", source_contains: ["case Triangle"]}
+    - {name: "no default branch", source_not_contains: ["default"]}
+  hidden:
+    - {method: run, args: ["triangle", 10, 2], expect: "triangle base=10 height=2"}
+    - {method: run, args: ["circle", 1, 9], expect: "circle r=1"}
+    - {method: run, args: ["square", 0, 0], expect: "square side=0"}
+    - {method: run, args: ["triangle", 1, 1], expect: "triangle base=1 height=1"}
+    - {method: run, args: ["circle", 7, 7], expect: "circle r=7"}
+starter_compiles: false
+hints:
+  h1: "Which of the three records has no case in the switch?"
+  h2: "case Triangle t -> \"triangle base=\" + t.base() + \" height=\" + t.height();"
+ai_assisted: true

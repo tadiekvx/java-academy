@@ -1,0 +1,23 @@
+id: j3-l3.3-predict-optional
+type: predict
+title: "Present or empty?"
+lesson: j3-l3.3
+role: ladder
+assesses: [o1]
+concepts: [J3.07]
+evidence: [MIST]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Work out what this program prints.
+expected_output: |
+  KIWI
+  ?
+  false
+  false
+  has kiwi
+  4
+hints:
+  h1: "map only does something when there's a value. ifPresent only runs its action then."
+  h2: "some becomes KIWI; none stays empty so orElse gives ?. ofNullable(null) is empty. Only some prints \"has kiwi\". length of kiwi is 4."
+ai_assisted: true

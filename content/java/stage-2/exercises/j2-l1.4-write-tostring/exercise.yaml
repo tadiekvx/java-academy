@@ -1,0 +1,30 @@
+id: j2-l1.4-write-tostring
+type: write
+title: "Make a point printable"
+lesson: j2-l1.4
+role: ladder
+assesses: [o2]
+concepts: [J2.04]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `toString` for `Point` so that a point at x=3, y=4 appears as `(3, 4)`. The driver `show` wraps it as `P=(3, 4)`. Remember `toString` must be `public`.
+entry:
+  methods:
+    - {name: show, params: [{name: x, type: "int"}, {name: y, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {method: show, args: [3, 4], expect: "P=(3, 4)"}
+    - {method: show, args: [0, 0], expect: "P=(0, 0)"}
+    - {method: show, args: [-1, 5], expect: "P=(-1, 5)"}
+  hidden:
+    - {method: show, args: [10, 20], expect: "P=(10, 20)"}
+    - {method: show, args: [-7, -8], expect: "P=(-7, -8)"}
+    - {method: show, args: [100, 0], expect: "P=(100, 0)"}
+    - {method: show, args: [1, 1], expect: "P=(1, 1)"}
+    - {method: show, args: [0, -9], expect: "P=(0, -9)"}
+hints:
+  h1: "Write public String toString() and build the text from the fields, with the brackets and the comma and space."
+  h2: "return \"(\" + x + \", \" + y + \")\";"
+ai_assisted: true

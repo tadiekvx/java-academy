@@ -1,0 +1,30 @@
+id: j1-l3.2-debug-month
+type: debug
+title: "January and December"
+lesson: j1-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J1.06]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `isValidMonth` should accept month numbers 1 to 12. Users report that January and December are rejected. Find and fix the bug.
+entry:
+  methods:
+    - {name: isValidMonth, params: [{name: month, type: "int"}], returns: "boolean"}
+tests:
+  visible:
+    - {args: [6], expect: true}
+    - {args: [1], expect: true}
+    - {args: [12], expect: true}
+  hidden:
+    - {name: "zero", args: [0], expect: false}
+    - {name: "thirteen", args: [13], expect: false}
+    - {name: "February", args: [2], expect: true}
+    - {name: "November", args: [11], expect: true}
+    - {name: "negative", args: [-1], expect: false}
+hints:
+  h1: "Try the boundary values 1 and 12 by hand. Is 1 > 1?"
+  h2: "Use >= 1 and <= 12 so the boundary months are included."
+ai_assisted: true

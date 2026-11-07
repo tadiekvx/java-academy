@@ -1,0 +1,31 @@
+id: j1-l6.3-retrieve-positives
+type: write
+title: "Keep the positives"
+lesson: j1-l6.3
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.11]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: list-filter
+prompt: |
+  Write a method called `positives` that is given an `ArrayList<Integer>` called `numbers` and returns a **new** `ArrayList<Integer>` containing only the numbers greater than zero, in the same order.
+entry:
+  methods:
+    - {name: positives, params: [{name: numbers, type: "ArrayList<Integer>"}], returns: "ArrayList<Integer>"}
+tests:
+  visible:
+    - {args: [[3, -1, 0, 8]], expect: [3, 8]}
+    - {args: [[]], expect: []}
+    - {args: [[-5, -6]], expect: []}
+  hidden:
+    - {name: "one", args: [[1]], expect: [1]}
+    - {name: "just zero", args: [[0]], expect: []}
+    - {name: "repeats", args: [[5, 5, -5, 5]], expect: [5, 5, 5]}
+    - {name: "alternating", args: [[-1, 1, -1, 1]], expect: [1, 1]}
+    - {name: "all positive", args: [[100, 200, 300]], expect: [100, 200, 300]}
+hints:
+  h1: "Filter again, with a different condition."
+  h2: "if (number > 0) result.add(number);"
+ai_assisted: true

@@ -1,0 +1,28 @@
+id: j1-l3.1-write-next-age
+type: write
+title: "Next birthday"
+lesson: j1-l3.1
+role: ladder
+assesses: [o2]
+concepts: [J1.05]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+variant_group: read-convert
+prompt: |
+  Write a program that asks `How old are you? ` and prints `Next year you will be N.`, where N is one more than the age typed. For example, with `34` it prints `Next year you will be 35.`
+tests:
+  visible:
+    - {name: "34", stdin: "34\n", stdout_contains: ["Next year you will be 35.\n"]}
+    - {name: "9", stdin: "9\n", stdout_contains: ["Next year you will be 10.\n"]}
+    - {name: "0", stdin: "0\n", stdout_contains: ["Next year you will be 1.\n"]}
+  hidden:
+    - {name: "teenager", stdin: "15\n", stdout_contains: ["Next year you will be 16.\n"]}
+    - {name: "very old", stdin: "104\n", stdout_contains: ["Next year you will be 105.\n"]}
+    - {name: "twenties", stdin: "29\n", stdout_contains: ["Next year you will be 30.\n"]}
+    - {name: "one", stdin: "1\n", stdout_contains: ["Next year you will be 2.\n"]}
+    - {name: "fifty", stdin: "50\n", stdout_contains: ["Next year you will be 51.\n"]}
+hints:
+  h1: "What type does IO.readln give back? What do you need before you can add 1?"
+  h2: "Convert with Integer.parseInt, then print \"Next year you will be \" + (age + 1) + \".\" with the brackets."
+ai_assisted: true

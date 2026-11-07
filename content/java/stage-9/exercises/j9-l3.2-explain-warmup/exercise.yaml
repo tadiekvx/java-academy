@@ -1,0 +1,81 @@
+id: j9-l3.2-explain-warmup
+type: explain
+title: "Why the first number is not the speed"
+lesson: j9-l3.2
+role: ladder
+assesses: [o2]
+concepts: [J9.10]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Below are a small program, the timings it printed on this machine, and the start of the JIT compilation log (`-XX:+PrintCompilation`, filtered to the method `work`).
+
+  ```java
+  public class Hot {
+      static long work(long n) {
+          long sum = 0;
+          for (long i = 0; i < n; i++) {
+              sum += i % 7;
+          }
+          return sum;
+      }
+
+      public static void main(String[] args) {
+          long result = 0;
+          for (int round = 0; round < 40; round++) {
+              long start = System.nanoTime();
+              result += work(5_000_000L);
+              long micros = (System.nanoTime() - start) / 1000;
+              if (round < 4 || round % 10 == 0) {
+                  System.out.println("round " + round + ": " + micros + " us");
+              }
+          }
+          System.out.println("result=" + result);
+      }
+  }
+  ```
+
+  ```text
+  $ java Hot
+  round 0: 2750 us
+  round 1: 2143 us
+  round 2: 1736 us
+  round 3: 1725 us
+  round 10: 1728 us
+  round 20: 1730 us
+  round 30: 1731 us
+  result=599999800
+  ```
+
+  ```text
+  $ java -XX:+PrintCompilation Hot | grep Hot::work   (first lines)
+  10    8 %     3       Hot::work @ 5 (32 bytes)
+  10    9       3       Hot::work (32 bytes)
+  10   10 %     4       Hot::work @ 5 (32 bytes)
+  10    8 %     3       Hot::work @ 5 (32 bytes)   made not entrant: OSR invalidation of lower level
+  12   10 %     4       Hot::work @ 5 (32 bytes)   made not entrant: uncommon trap
+  17   58 %     4       Hot::work @ 5 (32 bytes)
+  ```
+
+  Explain: how much slower was round 0 than the steady rounds, what the compilation log shows happened to `Hot::work`, why a benchmark that runs the method once would mislead, and what you would do to measure it fairly.
+rubric:
+  criteria: |
+    Round 0 took 2750 microseconds against about 1730 in the steady rounds, roughly 1.6 times as long. The log shows the same method compiled several times at different levels (3, then 4), plus notes that earlier compilations were made not entrant: the JVM starts by interpreting and then compiles hot code with increasing optimisation, replacing earlier versions. A single timing therefore measures the interpreter and compiler warming up, not the steady speed. Run the method many times, discard the early runs, and report a robust statistic such as the median of the rest.
+  levels:
+    - score: 2
+      descriptor: "The answer quantifies the difference, reads the compilation log, and describes a fair measurement."
+      samples:
+        - "Round 0 was 2750 us against about 1730 in later rounds, about 1.6 times slower. The log shows work compiled at level 3 and then level 4, with older versions made not entrant, so the JVM was progressively optimising it. A one-off measurement times the warm-up. I would repeat many times, throw away the first runs and use the median of the rest."
+        - "First round is around 60% slower. The JIT compiles Hot::work more than once, moving to a higher level and retiring the older code. So measure after warm-up, many repetitions, and use the median."
+    - score: 1
+      descriptor: "The answer notes the first run is slower without the log or the method."
+      samples:
+        - "The first run is slower because of the JIT."
+        - "Run it a few times and average."
+    - score: 0
+      descriptor: "The answer treats the first timing as the speed."
+      samples:
+        - "The program runs at 2750 microseconds, the later numbers are noise."
+        - "JIT compilation makes no difference to timing."
+ai_assisted: true

@@ -1,0 +1,32 @@
+id: j3-l5.2-explain-money
+type: explain
+title: "Why not double?"
+lesson: j3-l5.2
+role: ladder
+assesses: [o1, o3]
+concepts: [J3.11]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  (a) Explain, using `0.1 + 0.2`, why `double` is a bad choice for money. (b) Describe two correct ways to represent money in Java. (c) A test does `new BigDecimal("2.0").equals(new BigDecimal("2.00"))` and gets `false`. Explain why, and what to use to ask whether two amounts are numerically equal.
+rubric:
+  criteria: |
+    A full answer says double is binary and can't store 0.1 and 0.2 exactly so 0.1 + 0.2 gives 0.30000000000000004 and errors accumulate; two correct ways are whole pence in an int or long, or BigDecimal built from strings with an explicit scale and rounding mode; and equals on BigDecimal also compares scale so 2.0 and 2.00 differ, so use compareTo(...) == 0.
+  levels:
+    - score: 2
+      descriptor: "Explains that double is binary and gives 0.30000000000000004 with accumulating errors; names whole pence and BigDecimal (from strings, explicit rounding); and says BigDecimal.equals compares scale too, so use compareTo == 0."
+      samples:
+        - "A double stores numbers in binary and can't hold 0.1 or 0.2 exactly, so 0.1 + 0.2 is 0.30000000000000004, and small errors build up. I'd use whole pence in an int or long, or BigDecimal created from strings with an explicit RoundingMode. BigDecimal.equals compares the scale as well as the value, so 2.0 and 2.00 aren't equal; use compareTo and check for 0."
+        - "double can't represent 0.1 exactly, so sums are slightly off and == fails. Correct options: whole pence, or BigDecimal with a stated scale and rounding. 2.0 and 2.00 have different scales so equals is false; compareTo(...) == 0 compares the values."
+    - score: 1
+      descriptor: "Covers one or two parts well, for example the double problem but not the equals/compareTo point."
+      samples:
+        - "double isn't exact."
+        - "Use compareTo."
+    - score: 0
+      descriptor: "Incorrect, for example says double is fine if you round at the end, or that BigDecimal.equals compares only the value."
+      samples:
+        - "double is fine for money."
+        - "equals ignores scale."
+ai_assisted: true

@@ -1,0 +1,20 @@
+id: j1-l1.2-predict-comment
+type: predict
+title: What does Java check?
+lesson: j1-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J1.01]
+evidence: [MIST]
+misconceptions: []
+difficulty: 1
+prompt: |
+  This program compiles and runs without any errors, even though parts of it look wrong. Predict
+  exactly what it prints, then run it.
+expected_output: |
+  io.printn is not a real method
+  but this text is only printed, never run
+hints:
+  h1: Java checks the code, but not the text inside double quotes, and it ignores comments completely.
+  h2: "Text inside quotes is printed exactly as it is, however code-like it looks. The comment line is skipped."
+ai_assisted: true

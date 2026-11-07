@@ -1,0 +1,42 @@
+id: j2-l2.1-explain-encapsulation
+type: explain
+title: "Break the class"
+lesson: j2-l2.1
+role: ladder
+assesses: [o3, o1]
+concepts: [J2.05]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This class is meant to guarantee that a balance is **never negative**:
+
+  ```java
+  class Account {
+      public int balance;
+      public Account(int balance) { this.balance = balance; }
+      public void setBalance(int balance) { this.balance = balance; }
+  }
+  ```
+
+  (a) Find **three different ways** to put an `Account` into a state with a negative balance. (b) Say how you would redesign the class so that none of them works. (c) Give one reason why keeping the field private makes the class easier to change later.
+rubric:
+  criteria: |
+    A full answer lists the three routes (the constructor with a negative value, setBalance with a negative value, and direct assignment to the public field), redesigns with a private field, a constructor check and checked operations such as deposit/withdraw, and gives a reason such as callers only depend on the methods so the internal representation can change.
+  levels:
+    - score: 2
+      descriptor: "Finds all three routes (constructor, setBalance, the public field), redesigns with a private field, validation in the constructor and in the methods that change it, and gives a valid reason such as other code only depends on the methods so the inside can change."
+      samples:
+        - "Three ways: new Account(-5); acct.setBalance(-5); and acct.balance = -5 directly, since the field is public. I'd make balance private, check in the constructor and refuse a negative amount, and replace setBalance with deposit and withdraw that check the rule. Because outside code only uses those methods, I could change how the balance is stored later without breaking anything."
+        - "The constructor accepts any number, setBalance accepts any number, and the public field can be assigned directly. Fix: private field, throw in the constructor for negative values, and only offer operations that keep it valid. A private field also means I can change its type later without touching callers."
+    - score: 1
+      descriptor: "Finds one or two of the routes, or redesigns without closing all of them, or gives no reason about future change."
+      samples:
+        - "You can call setBalance with a negative number."
+        - "Make the field private."
+    - score: 0
+      descriptor: "Incorrect, for example says the class is already safe, or that making the setter private is enough."
+      samples:
+        - "It's already safe."
+        - "Just make the constructor private."
+ai_assisted: true

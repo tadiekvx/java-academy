@@ -1,0 +1,30 @@
+id: j1-l4.1-debug-forever
+type: debug
+title: "The loop that never ends"
+lesson: j1-l4.1
+role: ladder
+assesses: [o3]
+concepts: [J1.07]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `sumUpTo` should return 1 + 2 + … + n. When you check it against the tests, every test takes too long. Find and fix the bug.
+entry:
+  methods:
+    - {name: sumUpTo, params: [{name: n, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [4], expect: 10}
+    - {args: [1], expect: 1}
+    - {args: [0], expect: 0}
+  hidden:
+    - {name: "ten", args: [10], expect: 55}
+    - {name: "a hundred", args: [100], expect: 5050}
+    - {name: "two", args: [2], expect: 3}
+    - {name: "three", args: [3], expect: 6}
+    - {name: "fifty", args: [50], expect: 1275}
+hints:
+  h1: "Which variable is in the condition? Does anything in the body change it?"
+  h2: "i never changes, so i <= n stays true. Add i++; inside the loop."
+ai_assisted: true

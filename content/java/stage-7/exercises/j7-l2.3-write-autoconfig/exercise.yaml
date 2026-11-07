@@ -1,0 +1,31 @@
+id: j7-l2.3-write-autoconfig
+type: write
+title: "A model of auto-configuration"
+lesson: j7-l2.3
+role: ladder
+assesses: [o1]
+concepts: [J7.07]
+evidence: [IMPL]
+misconceptions: [MC172]
+difficulty: 2
+prompt: |
+  This is a model, not Spring's real rule set. Auto-configuration adds a bean when its library is on the classpath **and** you have not defined that bean yourself (it backs off). The rules are: `jdbc` gives `DataSource`, `webmvc` gives `DispatcherServlet`, `jackson` gives `ObjectMapper`. Write `autoConfigure(classpath, userBeans)`, the beans the framework adds, in alphabetical order.
+entry:
+  methods:
+    - {name: autoConfigure, params: [{name: classpath, type: "List<String>"}, {name: userBeans, type: "List<String>"}], returns: "List<String>"}
+tests:
+  visible:
+    - {name: "two libraries, no beans of your own", method: autoConfigure, args: [["jdbc", "webmvc"], []], expect: ["DataSource", "DispatcherServlet"]}
+    - {name: "you defined it: backs off", method: autoConfigure, args: [["jdbc"], ["DataSource"]], expect: []}
+    - {name: "an empty classpath", method: autoConfigure, args: [[], []], expect: []}
+  hidden:
+    - {name: "all three", method: autoConfigure, args: [["jackson", "jdbc", "webmvc"], []], expect: ["DataSource", "DispatcherServlet", "ObjectMapper"]}
+    - {name: "one backs off", method: autoConfigure, args: [["jackson", "jdbc", "webmvc"], ["ObjectMapper"]], expect: ["DataSource", "DispatcherServlet"]}
+    - {name: "your bean is for another library", method: autoConfigure, args: [["webmvc"], ["DataSource"]], expect: ["DispatcherServlet"]}
+    - {name: "everything backs off", method: autoConfigure, args: [["jackson"], ["ObjectMapper", "DataSource"]], expect: []}
+    - {name: "an unrelated library", method: autoConfigure, args: [["h2"], []], expect: []}
+    - {name: "two back off", method: autoConfigure, args: [["webmvc", "jdbc"], ["DispatcherServlet", "DataSource"]], expect: []}
+hints:
+  h1: "Two conditions must both hold for a bean to be added."
+  h2: "Does the framework return beans you defined yourself?"
+ai_assisted: true

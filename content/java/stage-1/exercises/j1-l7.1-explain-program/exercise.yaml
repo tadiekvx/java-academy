@@ -1,0 +1,46 @@
+id: j1-l7.1-explain-program
+type: explain
+title: "What does this really do?"
+lesson: j1-l7.1
+role: ladder
+assesses: [o2]
+concepts: [J1.15]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague wrote this method and called it `process`:
+
+  ```java
+  int process(int[] data) {
+      int result = 0;
+      for (int value : data) {
+          if (value > data[0]) {
+              result++;
+          }
+      }
+      return result;
+  }
+  ```
+
+  Say in plain words what it returns, and use the array `{4, 9, 2, 9, 4}` to show that you are right. Then suggest a better name.
+rubric:
+  criteria: |
+    A full answer says it counts how many values are larger than the first element, traces {4,9,2,9,4} to 2 (the two 9s), and suggests a name such as countLargerThanFirst.
+  levels:
+    - score: 2
+      descriptor: "Says it counts the values greater than the first element, gets 2 for the example (the two 9s), and gives a name that says that."
+      samples:
+        - "It counts how many values are bigger than the first one. For {4, 9, 2, 9, 4} the first is 4, and only the two 9s are greater, so it returns 2. A better name would be countLargerThanFirst."
+        - "It returns the number of elements strictly greater than data[0]. With 4 first, the 9 and the other 9 count, 2 does not, and the last 4 does not, so 2. Name: countAboveFirst."
+    - score: 1
+      descriptor: "Gets the idea of comparing with the first element, or traces the example, but not both, or the answer for the example is wrong."
+      samples:
+        - "It compares the values with the first one and counts some."
+        - "It returns 2 for that array."
+    - score: 0
+      descriptor: "Incorrect, for example says it adds up the values or finds the largest."
+      samples:
+        - "It returns the sum of the array."
+        - "It finds the biggest number."
+ai_assisted: true

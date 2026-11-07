@@ -1,0 +1,32 @@
+id: j1-l6.2-explain-alias
+type: explain
+title: "Two names, one array"
+lesson: j1-l6.2
+role: ladder
+assesses: [o2]
+concepts: [J1.10]
+evidence: [EXPL]
+misconceptions: [MC12]
+difficulty: 2
+prompt: |
+  After `int[] a = {1, 2, 3}; int[] b = a; b[0] = 99;`, `a[0]` is also 99. Explain why, and how you would get an independent copy.
+rubric:
+  criteria: |
+    A full answer says that b = a copies the reference, so a and b both refer to the same single array (aliases); changing an element through b changes the one array that a also sees; to get an independent copy use Arrays.copyOf.
+  levels:
+    - score: 2
+      descriptor: "Says b = a makes both names refer to the same array (a reference is copied, not the elements), so a change via b shows through a, and names Arrays.copyOf for a real copy."
+      samples:
+        - "An array variable holds a reference. b = a copies the reference, so a and b are two names for the same array. Changing b[0] changes that one array, so a[0] shows 99. For a separate copy use Arrays.copyOf(a, a.length)."
+        - "There's only one array. a and b are aliases. To get an independent copy you have to copy the elements, e.g. with Arrays.copyOf."
+    - score: 1
+      descriptor: "Says they're the same array or are linked, but doesn't explain references, or doesn't give a way to copy."
+      samples:
+        - "Because a and b are the same array."
+        - "They're linked so use copyOf."
+    - score: 0
+      descriptor: "Incorrect, for example says b is a separate copy, or that Java made a mistake."
+      samples:
+        - "b is a copy so a shouldn't change, it's a bug."
+        - "a[0] changes because 99 is bigger."
+ai_assisted: true

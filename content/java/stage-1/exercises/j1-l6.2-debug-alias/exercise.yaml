@@ -1,0 +1,30 @@
+id: j1-l6.2-debug-alias
+type: debug
+title: "The backup that wasn't"
+lesson: j1-l6.2
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.10]
+evidence: [DEBUG]
+misconceptions: [MC12]
+difficulty: 2
+prompt: |
+  `bonusTotals` gives every score a 10-point bonus in a separate `boosted` array, then returns two numbers in an array: the total of the **original** scores, and the total with the bonus. For `{1, 2, 3}` it should return `{6, 36}`, but it returns `{36, 36}`: the original total has changed too. Find and fix the bug.
+entry:
+  methods:
+    - {name: bonusTotals, params: [{name: scores, type: "int[]"}], returns: "int[]"}
+tests:
+  visible:
+    - {args: [[1, 2, 3]], expect: [6, 36]}
+    - {args: [[]], expect: [0, 0]}
+    - {args: [[10]], expect: [10, 20]}
+  hidden:
+    - {name: "two scores", args: [[50, 60]], expect: [110, 130]}
+    - {name: "negatives", args: [[-10, 0, 10]], expect: [0, 30]}
+    - {name: "one score", args: [[100]], expect: [100, 110]}
+    - {name: "four", args: [[5, 5, 5, 5]], expect: [20, 60]}
+    - {name: "six", args: [[1, 2, 3, 4, 5, 6]], expect: [21, 81]}
+hints:
+  h1: "Trace boosted = scores. How many arrays exist after that line?"
+  h2: "boosted and scores are two names for one array. Make boosted a separate copy with Arrays.copyOf(scores, scores.length)."
+ai_assisted: true

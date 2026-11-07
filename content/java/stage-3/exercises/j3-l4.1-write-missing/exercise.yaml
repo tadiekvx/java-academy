@@ -1,0 +1,31 @@
+id: j3-l4.1-write-missing
+type: write
+title: "A file that might not be there"
+lesson: j3-l4.1
+role: ladder
+assesses: [o2]
+concepts: [J3.08]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  Write `firstLineOr(Path path, String fallback)`: return the **first line** of the file, or `fallback` if the file **doesn't exist** or is **empty**. It must not throw. (The driver creates the file, or not, with the content you'd expect.)
+entry:
+  methods:
+    - {name: readFirst, params: [{name: content, type: "String"}, {name: fileExists, type: "boolean"}, {name: fallback, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: readFirst, args: ["hello\nworld", true, "none"], expect: "hello"}
+    - {method: readFirst, args: ["", false, "none"], expect: "none"}
+    - {method: readFirst, args: ["", true, "empty"], expect: "empty"}
+    - {name: "catches IOException", source_contains: ["catch (IOException"]}
+  hidden:
+    - {method: readFirst, args: ["only line", true, "x"], expect: "only line"}
+    - {method: readFirst, args: ["\nsecond", true, "x"], expect: ""}
+    - {method: readFirst, args: ["a\nb\nc", true, "x"], expect: "a"}
+    - {method: readFirst, args: ["ignored", false, "missing"], expect: "missing"}
+    - {method: readFirst, args: ["café\nthé", true, "x"], expect: "café"}
+hints:
+  h1: "Two things can go wrong: reading throws IOException when the file is missing, and an empty file has no first line."
+  h2: "try { List<String> lines = Files.readAllLines(path); return lines.isEmpty() ? fallback : lines.get(0); } catch (IOException e) { return fallback; }"
+ai_assisted: true

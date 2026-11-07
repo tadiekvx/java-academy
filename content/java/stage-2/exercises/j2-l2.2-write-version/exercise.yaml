@@ -1,0 +1,31 @@
+id: j2-l2.2-write-version
+type: write
+title: "Version numbers that never change"
+lesson: j2-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J2.06]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `Version` is meant to be immutable, but `bumpMinor` and `bumpMajor` change `this`. Make the fields `private final`, and make both methods return a **new** `Version` and leave the original alone. `run` applies a list of `"minor"` and `"major"` bumps and shows the result next to the original, e.g. `1.6 (was 1.4)`. A major bump sets the minor part back to 0.
+entry:
+  methods:
+    - {name: run, params: [{name: major, type: "int"}, {name: minor, type: "int"}, {name: ops, type: "String[]"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [1, 4, ["minor", "minor"]], expect: "1.6 (was 1.4)"}
+    - {method: run, args: [2, 7, ["major"]], expect: "3.0 (was 2.7)"}
+    - {method: run, args: [0, 0, []], expect: "0.0 (was 0.0)"}
+    - {name: "fields are final", source_contains: ["private final int major", "private final int minor"]}
+  hidden:
+    - {method: run, args: [1, 0, ["major", "minor"]], expect: "2.1 (was 1.0)"}
+    - {method: run, args: [5, 9, ["minor", "major", "minor"]], expect: "6.1 (was 5.9)"}
+    - {method: run, args: [3, 3, ["major", "major"]], expect: "5.0 (was 3.3)"}
+    - {method: run, args: [0, 1, ["minor"]], expect: "0.2 (was 0.1)"}
+    - {method: run, args: [9, 9, ["minor", "minor", "minor"]], expect: "9.12 (was 9.9)"}
+hints:
+  h1: "Don't write to the fields in the bump methods. Build and return a new Version instead."
+  h2: "return new Version(major, minor + 1); and return new Version(major + 1, 0);"
+ai_assisted: true

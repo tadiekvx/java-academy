@@ -1,0 +1,32 @@
+id: j2-l1.3-explain-references
+type: explain
+title: "Two players with the same name"
+lesson: j2-l1.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J2.03]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Given `Player a = new Player("Sam"); Player b = a; Player c = new Player("Sam");`: (a) explain what is in the variables `a`, `b` and `c`, (b) say whether `a == b` and `a == c` are true and why, and (c) say what happens to `a.score` if you run `b.score = 50;`, and what happens to `c.score`.
+rubric:
+  criteria: |
+    A full answer says each variable holds a reference; a and b hold references to the same object but c refers to a separate object; so a == b is true and a == c is false even though the names match; b.score = 50 changes the shared object so a.score is 50, and c.score is unchanged.
+  levels:
+    - score: 2
+      descriptor: "Says variables hold references; a and b refer to the same object and c to a different one; a == b true, a == c false because == compares references; a.score becomes 50 and c.score is unchanged."
+      samples:
+        - "a, b and c each hold a reference. a and b refer to the same Player object, because b = a copied the reference, while c is a separate object that happens to have the same name. So a == b is true and a == c is false. Setting b.score = 50 changes that one shared object, so a.score is 50, but c is a different object and keeps its own score."
+        - "The variables store arrows to objects, not the objects. a and b point to one object; c points to another. == checks if two arrows go to the same object, so a == b is true and a == c is false. b.score = 50 also changes a.score, and c.score stays as it was."
+    - score: 1
+      descriptor: "Correct on one or two of the parts, for example gets a == b and a == c right but doesn't explain, or doesn't say what happens to c."
+      samples:
+        - "a == b is true and a == c is false."
+        - "a.score becomes 50."
+    - score: 0
+      descriptor: "Incorrect, for example says b is a copy of the object, or that a == c is true because the names match."
+      samples:
+        - "b is a copy, so a.score stays 0."
+        - "a == c is true because both are Sam."
+ai_assisted: true

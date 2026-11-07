@@ -1,0 +1,19 @@
+id: j9-l1.1-predict-partials
+type: predict
+title: "Three workers, no sharing"
+lesson: j9-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J9.01]
+evidence: [MIST]
+misconceptions: [MC187]
+difficulty: 1
+prompt: |
+  Three threads each add up their own range of 1 to 100 and store the result in their own slot of an array. The main thread waits for all three. Predict the exact output.
+expected_output: |
+  partials=[561, 1650, 2839]
+  total=5050
+hints:
+  h1: "Which numbers does the third worker add, and why does it stop at 100?"
+  h2: "Why can the main thread safely read the array after the loop of joins?"
+ai_assisted: true

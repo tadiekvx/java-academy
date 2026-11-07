@@ -1,0 +1,32 @@
+id: j8-l1.2-explain-storage
+type: explain
+title: "How to store a password"
+lesson: j8-l1.2
+role: ladder
+assesses: [o2]
+concepts: [J8.02]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague proposes storing passwords encrypted with AES, so that support staff can read them back when a customer forgets. Another proposes storing `SHA-256(password)`. Explain what is wrong with each, and what to store instead. Mention what a salt is for.
+rubric:
+  criteria: |
+    A password never needs to be read back: the system only needs to check an attempt, so it should store a one-way hash. Encryption is reversible, so anyone with the key (or a copy of the database and the key) gets every password. A plain SHA-256 is one-way but fast, which lets an attacker try huge numbers of guesses, and identical passwords give identical hashes. Store the result of a slow, purpose-built algorithm (Argon2id, bcrypt or PBKDF2) with a unique random salt per password, which defeats precomputed tables and makes equal passwords differ. A library encoder such as Spring Security's PasswordEncoder does this and records the algorithm so it can be upgraded.
+  levels:
+    - score: 2
+      descriptor: "The answer rejects both, explains reversibility and speed, and names a slow salted hash and the salt's purpose."
+      samples:
+        - "Encryption can be reversed, so a stolen database plus the key reveals every password, and there is no need to read a password back at all. A bare SHA-256 is fast, so an attacker can try billions of guesses, and equal passwords give equal hashes. Store a slow salted hash such as bcrypt, Argon2id or PBKDF2. The unique salt means precomputed tables do not work and two users with the same password get different hashes."
+        - "Neither. Support never needs the original password, so store only a one-way hash. SHA-256 alone is too fast to resist guessing. Use a slow algorithm like Argon2id or PBKDF2 with a random salt per user; the salt stops rainbow tables. In Spring I would use the PasswordEncoder."
+    - score: 1
+      descriptor: "The answer rejects one proposal, or names the right algorithm without saying why."
+      samples:
+        - "Encryption is bad because it can be decrypted."
+        - "Use bcrypt."
+    - score: 0
+      descriptor: "The answer accepts one of the proposals."
+      samples:
+        - "SHA-256 is fine because a hash cannot be reversed."
+        - "Encryption is safest, since only the key holder can read it."
+ai_assisted: true

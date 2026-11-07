@@ -1,0 +1,32 @@
+id: j8-l1.2-write-verify
+type: write
+title: "Checking a login attempt"
+lesson: j8-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J8.02]
+evidence: [IMPL]
+misconceptions: [MC179]
+difficulty: 3
+prompt: |
+  Write `verify(attempt, saltHex, iterations, expectedHex)` returning `true` or `false`: hash the attempt with `pbkdf2Hex` (provided as a method you must also keep correct) and compare it with the stored hash using `MessageDigest.isEqual`, not `equals`. The stored hash is lower case hex.
+entry:
+  methods:
+    - {name: verify, params: [{name: attempt, type: "String"}, {name: saltHex, type: "String"}, {name: iterations, type: "int"}, {name: expectedHex, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {name: "the right password", method: verify, args: ["s3cret!", "0a0b0c0d", 1000, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "true"}
+    - {name: "a wrong password", method: verify, args: ["s3cret?", "0a0b0c0d", 1000, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "false"}
+    - {name: "the wrong salt", method: verify, args: ["s3cret!", "0a0b0c0e", 1000, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "false"}
+    - {name: "compares with MessageDigest.isEqual", source_contains: ["MessageDigest.isEqual"]}
+  hidden:
+    - {name: "case matters", method: verify, args: ["S3CRET!", "0a0b0c0d", 1000, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "false"}
+    - {name: "empty attempt", method: verify, args: ["", "0a0b0c0d", 1000, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "false"}
+    - {name: "the wrong iteration count", method: verify, args: ["s3cret!", "0a0b0c0d", 999, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "false"}
+    - {name: "the stored hash is lower case", method: verify, args: ["s3cret!", "0a0b0c0d", 1000, "28762540D6159E48B076FAF96578EDE4D394124D82DB43F6A712688F57828198"], expect: "false"}
+    - {name: "no stored hash", method: verify, args: ["s3cret!", "0a0b0c0d", 1000, ""], expect: "false"}
+    - {name: "a trailing space", method: verify, args: ["s3cret! ", "0a0b0c0d", 1000, "28762540d6159e48b076faf96578ede4d394124d82db43f6a712688f57828198"], expect: "false"}
+hints:
+  h1: "Hash the attempt exactly as you hashed the original."
+  h2: "Compare as byte arrays with the JDK's digest comparison."
+ai_assisted: true

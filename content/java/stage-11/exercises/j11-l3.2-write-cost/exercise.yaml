@@ -1,0 +1,30 @@
+id: j11-l3.2-write-cost
+type: write
+title: "A monthly estimate"
+lesson: j11-l3.2
+role: ladder
+assesses: [o1]
+concepts: [J11.08]
+evidence: [IMPL]
+misconceptions: [MC213]
+difficulty: 2
+prompt: |
+  Each resource is `name:centsPerHour:instances`. Write `estimateCents(items, hoursPerMonth)`: the total cost in cents for a month, the sum of `centsPerHour * instances * hoursPerMonth` over the items, as a `long`. (The prices in the checks are invented for practice and are not any provider's prices.)
+entry:
+  methods:
+    - {name: estimateCents, params: [{name: items, type: "List<String>"}, {name: hoursPerMonth, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {name: "an app and a database", method: estimateCents, args: [["app:12:2", "db:40:1"], 730], expect: 46720}
+    - {name: "no resources", method: estimateCents, args: [[], 730], expect: 0}
+    - {name: "switched off all month", method: estimateCents, args: [["app:12:2"], 0], expect: 0}
+  hidden:
+    - {name: "the total needs a long", method: estimateCents, args: [["big:2000000:300"], 730], expect: 438000000000}
+    - {name: "three resources", method: estimateCents, args: [["a:1:1", "b:2:3", "c:3:2"], 100], expect: 1300}
+    - {name: "part of the month", method: estimateCents, args: [["spot:5:10"], 200], expect: 10000}
+    - {name: "free resources", method: estimateCents, args: [["x:0:5"], 730], expect: 0}
+    - {name: "two similar services", method: estimateCents, args: [["app:12:4", "app2:12:4"], 730], expect: 70080}
+hints:
+  h1: "Multiply as long values."
+  h2: "Hours are per month, not per day."
+ai_assisted: true

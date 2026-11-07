@@ -1,0 +1,20 @@
+id: j1-l2.2-predict-trace
+type: predict
+title: Follow the values
+lesson: j1-l2.2
+role: ladder
+assesses: [o3]
+concepts: [J1.03]
+evidence: [MIST]
+misconceptions: [MC01]
+difficulty: 2
+prompt: |
+  Trace this program line by line in a table with columns for `x` and `y`. Then predict exactly
+  what it prints, and run it to check.
+expected_output: |
+  4
+  8
+hints:
+  h1: Each line works out its right-hand side using the current values, then stores the result on the left.
+  h2: "After x = y, x is 5. Then y = x + 3 makes y 8, and x = x - 1 makes x 4."
+ai_assisted: true

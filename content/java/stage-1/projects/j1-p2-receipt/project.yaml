@@ -1,0 +1,128 @@
+id: j1-p2-receipt
+title: "Shopping basket and receipt"
+category: B
+status: in_review
+summary: "Price a basket with bulk discounts and print an exact receipt, designing the program yourself."
+brief: |
+  A small shop needs a receipt generator. You're given **requirements and tests, but no instructions**: decide how to split the problem into methods, write them, and check them.
+
+  This is an **independent build**: nobody writes your design for you. (The AI mentor isn't available inside projects yet.) If you want a refresher on any idea, the lessons are linked from [Decomposing problems](/lessons/j1-l5.4).
+
+  Money is **whole pence in an `int`**. A basket is three parallel arrays: item names, unit prices and quantities, where item *i* uses index *i* of each.
+estimated_hours: 4
+prerequisites: [j1-l5.4, j1-l6.2]
+concepts: [J1.02, J1.04, J1.07, J1.08, J1.09, J1.10]
+requirements:
+  - "Prices, quantities and totals are whole pence in an int, never a double."
+  - "A line with 10 or more of an item gets 10% off that line, in whole pence rounded down."
+  - "VAT is 20% of the subtotal, in whole pence rounded down."
+  - "The receipt layout in milestone 4 is exact: spaces, capitals and line order all count."
+constraints:
+  - "Use at least four methods, and keep each one to 25 lines or fewer."
+  - "Never repeat a calculation: reuse a method instead."
+acceptance:
+  - "Given an empty basket, then the receipt has only the Subtotal, VAT and Total lines, all £0.00."
+  - "Given 10 of an item at 49p, then its line shows £4.41 (10% off £4.90) and VAT is calculated from the discounted subtotal."
+  - "Given 9 of an item, then no discount is applied."
+  - "Given a negative or zero-pence amount, then formatMoney shows two digits of pence, with a leading minus sign for negatives."
+milestones:
+  - id: m1
+    title: "Money as text"
+    instructions: |
+      `formatMoney(int pence)` returns whole pence as pounds and pence: `1234` → `£12.34`, `5` → `£0.05`, `0` → `£0.00`, `-105` → `-£1.05`. Always exactly two digits of pence. The pound sign is `£`.
+    entry:
+      methods:
+        - {name: formatMoney, params: [{name: pence, type: "int"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [1234], expect: "£12.34"}
+        - {args: [5], expect: "£0.05"}
+        - {args: [-105], expect: "-£1.05"}
+      hidden:
+        - {name: "zero", args: [0], expect: "£0.00"}
+        - {name: "exactly a pound", args: [100], expect: "£1.00"}
+        - {name: "ten pence", args: [10], expect: "£0.10"}
+        - {name: "large", args: [99999], expect: "£999.99"}
+        - {name: "negative pence", args: [-5], expect: "-£0.05"}
+        - {name: "one pound one", args: [101], expect: "£1.01"}
+  - id: m2
+    title: "One line of the basket"
+    instructions: |
+      `lineTotal(unitPrice, quantity)` returns the cost of one line, in pence. Buying **10 or more** of an item takes **10% off that line**, with the discount worked out in whole pence and rounded **down**. Under 10, there is no discount.
+    entry:
+      methods:
+        - {name: lineTotal, params: [{name: unitPrice, type: "int"}, {name: quantity, type: "int"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [250, 2], expect: 500}
+        - {args: [250, 10], expect: 2250}
+        - {args: [199, 12], expect: 2150}
+      hidden:
+        - {name: "just under the discount", args: [250, 9], expect: 2250}
+        - {name: "awkward discount", args: [199, 10], expect: 1791}
+        - {name: "rounds the discount down to zero", args: [1, 10], expect: 9}
+        - {name: "none bought", args: [100, 0], expect: 0}
+        - {name: "eleven", args: [333, 11], expect: 3297}
+        - {name: "a hundred", args: [5, 100], expect: 450}
+  - id: m3
+    title: "The basket subtotal"
+    instructions: |
+      `subtotal(unitPrices, quantities)` returns the sum of every line's `lineTotal`. The two arrays always have the same length; item *i* has price `unitPrices[i]` and quantity `quantities[i]`. An empty basket costs 0.
+    entry:
+      methods:
+        - {name: subtotal, params: [{name: unitPrices, type: "int[]"}, {name: quantities, type: "int[]"}], returns: "int"}
+    tests:
+      visible:
+        - {args: [[], []], expect: 0}
+        - {args: [[250], [1]], expect: 250}
+        - {args: [[250, 199], [2, 12]], expect: 2650}
+      hidden:
+        - {name: "three items", args: [[115, 299, 140], [1, 6, 2]], expect: 2189}
+        - {name: "one discounted", args: [[49], [10]], expect: 441}
+        - {name: "mixed", args: [[1, 3333], [10, 1]], expect: 3342}
+        - {name: "none bought", args: [[100, 100], [0, 0]], expect: 0}
+        - {name: "boundary of the discount", args: [[500, 20], [9, 10]], expect: 4680}
+  - id: m4
+    title: "The receipt"
+    instructions: |
+      `receipt(names, unitPrices, quantities)` returns the receipt as one string, lines separated by `\n`, with **no** `\n` after the last line.
+
+      - One line per item, in basket order: `NAME xQUANTITY AMOUNT`, where AMOUNT is that line's total (after any discount) as money. Example: `Tea x2 £5.00`.
+      - Then `Subtotal: ` and the subtotal as money.
+      - Then `VAT (20%): ` and 20% of the subtotal, in whole pence rounded **down**, as money.
+      - Then `Total: ` and the subtotal plus VAT, as money.
+
+      An empty basket has just the three totals lines.
+    entry:
+      methods:
+        - {name: receipt, params: [{name: names, type: "String[]"}, {name: unitPrices, type: "int[]"}, {name: quantities, type: "int[]"}], returns: "String"}
+    tests:
+      visible:
+        - {args: [[], [], []], expect: "Subtotal: £0.00\nVAT (20%): £0.00\nTotal: £0.00"}
+        - {args: [["Tea"], [250], [1]], expect: "Tea x1 £2.50\nSubtotal: £2.50\nVAT (20%): £0.50\nTotal: £3.00"}
+        - {args: [["Tea", "Biscuits"], [250, 199], [2, 12]], expect: "Tea x2 £5.00\nBiscuits x12 £21.50\nSubtotal: £26.50\nVAT (20%): £5.30\nTotal: £31.80"}
+      hidden:
+        - {name: "three items", args: [["Milk", "Eggs", "Bread"], [115, 299, 140], [1, 6, 2]], expect: "Milk x1 £1.15\nEggs x6 £17.94\nBread x2 £2.80\nSubtotal: £21.89\nVAT (20%): £4.37\nTotal: £26.26"}
+        - {name: "discounted item", args: [["Pens"], [49], [10]], expect: "Pens x10 £4.41\nSubtotal: £4.41\nVAT (20%): £0.88\nTotal: £5.29"}
+        - {name: "mixed", args: [["A", "B"], [1, 3333], [10, 1]], expect: "A x10 £0.09\nB x1 £33.33\nSubtotal: £33.42\nVAT (20%): £6.68\nTotal: £40.10"}
+        - {name: "vat rounds down", args: [["Cake"], [1999], [1]], expect: "Cake x1 £19.99\nSubtotal: £19.99\nVAT (20%): £3.99\nTotal: £23.98"}
+rubric:
+  - criterion: "Decomposition"
+    zero: "Everything in one long method, or the same calculation written twice"
+    one: "Some helper methods, but with repetition or an unclear split"
+    two: "Small methods with clear names; receipt and subtotal reuse lineTotal and formatMoney"
+  - criterion: "Naming and readability"
+    zero: "Single-letter names and no structure a reader can follow"
+    one: "Mostly clear, with some confusing names or layout"
+    two: "Names say what things mean; consistent layout; no unnecessary comments or tricks"
+  - criterion: "Edge cases"
+    zero: "Fails for empty baskets or boundary quantities"
+    one: "Handles most edges but misses one (for example exactly 10, or the sign of money)"
+    two: "Empty basket, exactly 10, 9, zero quantity, rounding, all behave as specified"
+  - criterion: "Design note"
+    zero: "Missing or only describes what the code does"
+    one: "Explains the split but not the trade-offs or the hardest case"
+    two: "Explains the decomposition, names the hardest edge case, and says how it is handled"
+design_note_prompt: |
+  In 150 words or fewer: How did you split the program into methods, and why there? Which case was hardest to get right, and how did you handle it?
+ai_assisted: true

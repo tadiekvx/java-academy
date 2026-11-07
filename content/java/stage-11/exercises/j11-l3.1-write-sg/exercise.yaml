@@ -1,0 +1,34 @@
+id: j11-l3.1-write-sg
+type: write
+title: "Does the firewall let it in"
+lesson: j11-l3.1
+role: ladder
+assesses: [o1]
+concepts: [J11.07]
+evidence: [IMPL]
+misconceptions: [MC211]
+difficulty: 4
+prompt: |
+  A security group lets in only the traffic that one of its allow rules permits (everything else is denied). A rule is `protocol:port:cidr` or `protocol:low-high:cidr` (IPv4). Write `sgAllows(rules, protocol, port, ip)`: true if some rule has the same protocol, a port range containing `port` (both ends included) and a CIDR block containing `ip`. An `ip` that is not a valid IPv4 address is refused.
+entry:
+  methods:
+    - {name: sgAllows, params: [{name: rules, type: "List<String>"}, {name: protocol, type: "String"}, {name: port, type: "int"}, {name: ip, type: "String"}], returns: "boolean"}
+tests:
+  visible:
+    - {name: "https from anywhere", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 443, "203.0.113.9"], expect: true}
+    - {name: "the database from inside", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 5432, "10.0.7.1"], expect: true}
+    - {name: "the database from outside", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 5432, "203.0.113.9"], expect: false}
+  hidden:
+    - {name: "another protocol", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "udp", 443, "203.0.113.9"], expect: false}
+    - {name: "the first port of a range", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 8000, "192.168.1.200"], expect: true}
+    - {name: "the last port of a range", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 8100, "192.168.1.1"], expect: true}
+    - {name: "one past the range", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 8101, "192.168.1.1"], expect: false}
+    - {name: "the wrong block", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 8050, "192.168.2.1"], expect: false}
+    - {name: "an invalid address", method: sgAllows, args: [["tcp:443:0.0.0.0/0", "tcp:5432:10.0.0.0/16", "tcp:8000-8100:192.168.1.0/24"], "tcp", 443, "not-an-ip"], expect: false}
+    - {name: "no rules", method: sgAllows, args: [[], "tcp", 443, "1.2.3.4"], expect: false}
+    - {name: "a single address", method: sgAllows, args: [["tcp:22:203.0.113.5/32"], "tcp", 22, "203.0.113.5"], expect: true}
+    - {name: "the next address", method: sgAllows, args: [["tcp:22:203.0.113.5/32"], "tcp", 22, "203.0.113.6"], expect: false}
+hints:
+  h1: "Turn each IPv4 address into a number and compare under the CIDR mask."
+  h2: "What is the mask for /0?"
+ai_assisted: true

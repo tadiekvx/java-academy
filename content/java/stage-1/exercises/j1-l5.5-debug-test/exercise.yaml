@@ -1,0 +1,30 @@
+id: j1-l5.5-debug-test
+type: debug
+title: "Which case fails?"
+lesson: j1-l5.5
+role: ladder
+assesses: [o1]
+concepts: [J1.14]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Here are the tests for `ticketPrice`: under 12 pays 5, 65 and over pays 6, everyone else pays 10. The method passes most of them, but fails some at the boundaries. Find which case is wrong, and fix the method.
+entry:
+  methods:
+    - {name: ticketPrice, params: [{name: age, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {args: [8], expect: 5}
+    - {args: [30], expect: 10}
+    - {args: [70], expect: 6}
+  hidden:
+    - {name: "youngest ten-pound", args: [11], expect: 5}
+    - {name: "just 12", args: [12], expect: 10}
+    - {name: "just under 65", args: [64], expect: 10}
+    - {name: "exactly 65", args: [65], expect: 6}
+    - {name: "newborn", args: [0], expect: 5}
+hints:
+  h1: "The failing tests are named after boundaries. Which two ages are on the boundaries, and what do the comparisons do with them?"
+  h2: "Both conditions are off by one: use age < 12 and age >= 65."
+ai_assisted: true

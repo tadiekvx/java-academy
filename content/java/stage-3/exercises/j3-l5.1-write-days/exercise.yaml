@@ -1,0 +1,31 @@
+id: j3-l5.1-write-days
+type: write
+title: "Days between two dates"
+lesson: j3-l5.1
+role: ladder
+assesses: [o2]
+concepts: [J3.10]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Write `daysBetween(String from, String to)`: the number of days from the first date to the second (`yyyy-MM-dd`). It is **negative** if the second date is earlier. Use `java.time`, not your own calendar arithmetic.
+entry:
+  methods:
+    - {name: daysBetween, params: [{name: from, type: "String"}, {name: to, type: "String"}], returns: "long"}
+tests:
+  visible:
+    - {method: daysBetween, args: ["2026-03-01", "2026-04-01"], expect: 31}
+    - {method: daysBetween, args: ["2026-04-01", "2026-03-01"], expect: -31}
+    - {method: daysBetween, args: ["2026-05-05", "2026-05-05"], expect: 0}
+    - {name: "uses java.time", source_contains: ["ChronoUnit"]}
+  hidden:
+    - {method: daysBetween, args: ["2024-02-28", "2024-03-01"], expect: 2}
+    - {method: daysBetween, args: ["2025-02-28", "2025-03-01"], expect: 1}
+    - {method: daysBetween, args: ["2026-01-01", "2027-01-01"], expect: 365}
+    - {method: daysBetween, args: ["2000-01-01", "2026-11-06"], expect: 9806}
+    - {method: daysBetween, args: ["2026-12-31", "2026-01-01"], expect: -364}
+hints:
+  h1: "ChronoUnit.DAYS.between(a, b) counts from a to b. Parse the text into LocalDate values first."
+  h2: "ChronoUnit.DAYS.between(LocalDate.parse(from), LocalDate.parse(to))"
+ai_assisted: true

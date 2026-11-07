@@ -1,0 +1,30 @@
+id: j1-l6.5-debug-stats
+type: debug
+title: "Three bugs in one method"
+lesson: j1-l6.5
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.13]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 3
+prompt: |
+  `stats` is given a non-empty array and should return a new array of three ints: the **smallest** element, the **largest** element and the **sum** of all elements. For `{3, 1, 2}` it should return `{1, 3, 6}`. This version has **three separate bugs**. Use the method from the lesson: find a small failing case, form a hypothesis, fix **one** thing, and check again.
+entry:
+  methods:
+    - {name: stats, params: [{name: values, type: "int[]"}], returns: "int[]"}
+tests:
+  visible:
+    - {args: [[3, 1, 2]], expect: [1, 3, 6]}
+    - {args: [[5]], expect: [5, 5, 5]}
+    - {args: [[-4, -2, -9]], expect: [-9, -2, -15]}
+  hidden:
+    - {name: "ascending", args: [[1, 2, 3]], expect: [1, 3, 6]}
+    - {name: "descending", args: [[9, 8, 7]], expect: [7, 9, 24]}
+    - {name: "zeros", args: [[0, 0, 0]], expect: [0, 0, 0]}
+    - {name: "balanced", args: [[10, -10]], expect: [-10, 10, 0]}
+    - {name: "scrambled", args: [[100, 5, 50, 1, 75]], expect: [1, 100, 231]}
+hints:
+  h1: "Start with the smallest input that fails, {5}. Which of the three results is wrong, and why?"
+  h2: "The bugs: smallest starts at 0 (should be values[0]); largest uses < (should be >); the loop starts at index 1 (should start at 0), so the first element is left out of the sum."
+ai_assisted: true

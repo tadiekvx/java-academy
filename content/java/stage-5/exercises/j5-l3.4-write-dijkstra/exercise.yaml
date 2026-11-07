@@ -1,0 +1,33 @@
+id: j5-l3.4-write-dijkstra
+type: write
+title: "The cheapest route cost"
+lesson: j5-l3.4
+role: ladder
+assesses: [o1]
+concepts: [J5.12]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 5
+prompt: |
+  Write `shortest(n, edges, from, to)`: the **lowest total weight** of any path between two nodes in an undirected weighted graph with nodes `0..n-1`. Edges are strings like `"0-1:4"` (nodes 0 and 1, weight 4). Weights are never negative. It is 0 when `from == to`, and `-1` if there is no path. Use Dijkstra's algorithm with a `PriorityQueue`.
+entry:
+  methods:
+    - {name: shortest, params: [{name: n, type: "int"}, {name: edges, type: "String[]"}, {name: from, type: "int"}, {name: to, type: "int"}], returns: "int"}
+tests:
+  visible:
+    - {method: shortest, args: [4, ["0-1:4", "0-2:1", "2-1:2", "1-3:1", "2-3:5"], 0, 3], expect: 4}
+    - {method: shortest, args: [3, ["0-1:5"], 0, 2], expect: -1}
+    - {method: shortest, args: [2, [], 1, 1], expect: 0}
+    - {name: "uses a PriorityQueue", source_contains: ["PriorityQueue"]}
+  hidden:
+    - {method: shortest, args: [6, ["0-1:7", "0-2:9", "0-5:14", "1-2:10", "1-3:15", "2-3:11", "2-5:2", "3-4:6", "4-5:9"], 0, 4], expect: 20}
+    - {method: shortest, args: [6, ["0-1:7", "0-2:9", "0-5:14", "1-2:10", "1-3:15", "2-3:11", "2-5:2", "3-4:6", "4-5:9"], 3, 0], expect: 20}
+    - {method: shortest, args: [5, ["0-1:1", "1-2:1", "2-3:1", "0-3:10", "3-4:2"], 0, 4], expect: 5}
+    - {method: shortest, args: [4, ["0-1:1", "2-3:1"], 0, 3], expect: -1}
+    - {method: shortest, args: [3, ["0-1:2", "1-2:2", "0-2:3"], 0, 2], expect: 3}
+    - {method: shortest, args: [3, ["0-1:1", "1-2:1", "0-2:1"], 0, 2], expect: 1}
+    - {method: shortest, args: [5, ["0-1:100", "0-2:1", "2-3:1", "3-1:1", "1-4:1"], 0, 4], expect: 4}
+hints:
+  h1: "Keep the best known cost for each node. Repeatedly take the cheapest queued node and try to improve its neighbours' costs."
+  h2: "if (newCost < cost[next]) { cost[next] = newCost; queue.offer(new int[] {next, newCost}); }"
+ai_assisted: true

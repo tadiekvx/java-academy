@@ -1,0 +1,20 @@
+id: j6-l4.2-predict-nplusone
+type: predict
+title: "How many queries"
+lesson: j6-l4.2
+role: ladder
+assesses: [o1]
+concepts: [J6.12]
+evidence: [MIST]
+misconceptions: [MC164]
+difficulty: 1
+prompt: |
+  A plain-Java store counts every query it is asked to run. One report loads each customer's accounts lazily, one customer at a time. The other loads customers and accounts together. Predict the exact output.
+expected_output: |
+  lazy queries=5
+  join fetch queries=1
+  same report=true
+hints:
+  h1: "How many customers are there, and how many queries does the loop add for each?"
+  h2: "Does the second report show different data, or only cost less?"
+ai_assisted: true

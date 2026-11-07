@@ -1,0 +1,26 @@
+id: j1-l1.1-retrieve-weather
+type: write
+title: A weather report
+lesson: j1-l1.1
+role: retrieval
+assesses: [o1, o2]
+concepts: [J1.01]
+evidence: [IMPL]
+misconceptions: []
+difficulty: 1
+variant_group: exact-output
+prompt: |
+  Write a program that prints exactly this, including capital letters, spaces and punctuation:
+
+  ```
+  Weather for Leeds
+  Morning: rain
+  Afternoon: sunny spells
+  ```
+tests:
+  visible:
+    - {name: prints exactly the right lines, stdin: "", stdout_equals: "Weather for Leeds\nMorning: rain\nAfternoon: sunny spells"}
+hints:
+  h1: Write the output down line by line first. How many statements do you need?
+  h2: Use one IO.println per line, in order, with each line's text copied exactly inside double quotes.
+ai_assisted: true

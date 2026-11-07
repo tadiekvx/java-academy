@@ -1,0 +1,69 @@
+id: j11-l1.1-explain-dockerfile
+type: explain
+title: "Reading a Dockerfile and its history"
+lesson: j11-l1.1
+role: ladder
+assesses: [o2]
+concepts: [J11.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This is a Dockerfile for a tiny Java program and what Docker reported about the image it built, on this machine.
+
+  ```dockerfile
+  FROM eclipse-temurin:25-jdk-alpine
+  WORKDIR /app
+  COPY Hello.java .
+  RUN javac Hello.java
+  CMD ["java", "-cp", "/app", "Hello"]
+  ```
+
+  ```text
+  $ docker images hello
+  REPOSITORY:TAG   SIZE
+  hello:multi      304MB
+  hello:single     421MB
+
+  $ docker run --rm hello:multi
+  Brightbank service starting, Java 25
+
+  $ docker history hello:multi
+  CREATED BY                                      SIZE
+  CMD ["java" "-cp" "/app" "Hello"]               0B
+  COPY /out /app # buildkit                       12.3kB
+  WORKDIR /app                                    8.19kB
+  ENTRYPOINT ["/__cacert_entrypoint.sh"]          0B
+  COPY --chmod=755 entrypoint.sh /__cacert_ent…   12.3kB
+  RUN /bin/sh -c set -eux;     echo "Verifying…   12.3kB
+  RUN /bin/sh -c set -eux;     ARCH="$(apk --p…   196MB
+  ENV JAVA_VERSION=jdk-25.0.5+8                   0B
+  RUN /bin/sh -c set -eux;     apk add --no-ca…   23.7MB
+  ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_AL…   0B
+  ENV PATH=/opt/java/openjdk/bin:/usr/local/sb…   0B
+  ENV JAVA_HOME=/opt/java/openjdk                 0B
+  CMD ["/bin/sh"]                                 0B
+  ADD alpine-minirootfs-3.24.4-aarch64.tar.gz …   9.31MB
+  ```
+
+  Explain: what each instruction in the Dockerfile does; what a *layer* is and what the `docker history` output shows about them; why, in the Compose file's Dockerfile you will meet next, `COPY app.jar` comes before `COPY content` and both come after the base image; and how a container differs from a virtual machine.
+rubric:
+  criteria: |
+    FROM chooses the base image, WORKDIR sets the working directory, COPY adds files from the build context, RUN executes a command at build time (here javac), CMD says what runs when a container starts. Each instruction that changes the file system produces a layer, an immutable slice of the image; docker history lists the layers with their sizes (the Java runtime layers are tens or hundreds of megabytes, our own copy is a few kilobytes). Layers are cached, so instructions that change rarely should come first and ones that change often last, so a code change rebuilds only the last layers. A container is a process (or group of processes) isolated from others on the host, sharing the host's operating system kernel and starting from an image; a virtual machine runs a whole guest kernel on emulated hardware, so it is heavier and slower to start.
+  levels:
+    - score: 2
+      descriptor: "The answer explains the instructions, layers and the history output, the ordering for the cache, and containers versus VMs."
+      samples:
+        - "FROM picks the base, WORKDIR sets the directory, COPY brings in files, RUN runs javac at build time and CMD is what the container runs. Each file-changing instruction makes a layer; docker history shows them, with the JDK layers large and our COPY a few KB. Docker caches layers, so put what changes rarely (base image, dependencies) first and the application last so a code change rebuilds little. A container shares the host kernel and is just isolated processes; a VM boots its own kernel on virtual hardware."
+        - "The Dockerfile starts from the JDK image, copies Hello.java, compiles it and sets the start command. The history lists layers by size. Order matters for caching: stable layers first. Containers share the host kernel, VMs do not."
+    - score: 1
+      descriptor: "The answer explains the instructions but not caching or the VM comparison."
+      samples:
+        - "FROM is the base image and RUN compiles the code."
+        - "A container is like a lightweight VM."
+    - score: 0
+      descriptor: "The answer treats a container as a virtual machine."
+      samples:
+        - "A container is a small virtual machine with its own operating system."
+        - "The order of instructions does not matter."
+ai_assisted: true

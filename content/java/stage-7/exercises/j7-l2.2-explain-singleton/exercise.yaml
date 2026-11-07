@@ -1,0 +1,32 @@
+id: j7-l2.2-explain-singleton
+type: explain
+title: "State in a singleton"
+lesson: j7-l2.2
+role: ladder
+assesses: [o1]
+concepts: [J7.06]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A developer adds a field `private User currentUser;` to a `@Service` class and sets it at the start of each request. In testing it works. In production, users sometimes see each other's data. Explain why, using what you know about the default bean scope.
+rubric:
+  criteria: |
+    The default scope is singleton: the container creates one instance of the bean and shares it, so every request that uses the service uses the same object and the same field. Concurrent requests overwrite currentUser and read each other's value. A singleton bean should hold no per-request state; pass the user as a method argument or use a request-scoped bean.
+  levels:
+    - score: 2
+      descriptor: "The answer uses the singleton default, shows the shared field is overwritten, and gives a fix."
+      samples:
+        - "Spring beans are singletons by default, so all requests share one service object and one currentUser field. Two requests at the same time overwrite each other. Keep per-request data in method arguments or locals, or use a request-scoped bean."
+        - "The service is created once for the whole container, so the field is shared across all users. Under load one request sets the field and another reads it. The fix is to pass the user in as a parameter instead of storing it."
+    - score: 1
+      descriptor: "The answer says the bean is shared without explaining the overwrite or the fix."
+      samples:
+        - "The service is a singleton so the field is shared."
+        - "There is only one instance of the class."
+    - score: 0
+      descriptor: "The answer blames something else."
+      samples:
+        - "The database is returning the wrong user."
+        - "Each request gets its own copy of the service, so this cannot happen."
+ai_assisted: true

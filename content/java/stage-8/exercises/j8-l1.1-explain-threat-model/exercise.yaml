@@ -1,0 +1,32 @@
+id: j8-l1.1-explain-threat-model
+type: explain
+title: "A threat model for a transfer"
+lesson: j8-l1.1
+role: ladder
+assesses: [o1]
+concepts: [J8.01]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  Brightbank lets a signed-in customer transfer money between accounts through `POST /accounts/{id}/transfers`. Build a small threat model: name what is worth protecting, who might attack and from where, and give three concrete threats with the control that would stop each. Link at least two of the threats to a category of the OWASP Top 10:2025.
+rubric:
+  criteria: |
+    A threat model names the assets (balances, the ability to move money, credentials), the actors (an outsider, another customer, a malicious insider) and the entry points (the endpoint, the session, the database). Concrete threats could be: another customer transferring from an account they do not own (A01 Broken Access Control, stopped by an ownership check on every request); a forged request made from another site while the customer is signed in (stopped by a CSRF token); guessing a customer's password (A07 Authentication Failures, slowed by lockout and slow password hashing). Each threat is paired with a control.
+  levels:
+    - score: 2
+      descriptor: "The answer names assets, actors and entry points, and gives three threats each with a specific control and at least two OWASP categories."
+      samples:
+        - "Assets: balances and the right to move money. Actors: an outsider and another customer. Entry point: the transfer endpoint and the session cookie. Threats: (1) customer A transfers from customer B's account by changing the id, A01 Broken Access Control, stopped by checking ownership on every request; (2) a malicious site makes the browser send the POST, stopped by a CSRF token; (3) password guessing, A07 Authentication Failures, stopped by lockout and a slow password hash."
+        - "Protect the accounts and the credentials. Attackers: a stranger on the internet and a logged-in customer. Threats and controls: changing the account id in the URL (A01, check that the account belongs to the caller); sending many password guesses (A07, lockout and generic errors); injecting SQL through the amount or note field (A05 Injection, bound parameters)."
+    - score: 1
+      descriptor: "The answer lists threats without controls, or without the actors and assets."
+      samples:
+        - "Someone could steal money by changing the id, or guess passwords."
+        - "Threats: injection, broken access control and weak passwords."
+    - score: 0
+      descriptor: "The answer lists generic advice, not threats to this feature."
+      samples:
+        - "Use HTTPS and a firewall and the system will be secure."
+        - "There is no threat because the user is signed in."
+ai_assisted: true

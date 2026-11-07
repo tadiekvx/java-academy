@@ -1,0 +1,32 @@
+id: j3-l2.1-modify-box
+type: modify
+title: "One Box instead of two"
+lesson: j3-l2.1
+role: ladder
+assesses: [o1]
+concepts: [J3.04]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `IntBox` and `StringBox` are the same code with a different type. The driver `run` has already been changed to use a generic `Box<T>`. Replace both classes with one generic class `Box<T>` (a constructor taking the value, `get()` and `set(...)`), and delete the two old ones.
+entry:
+  methods:
+    - {name: run, params: [{name: n, type: "int"}, {name: s, type: "String"}], returns: "String"}
+tests:
+  visible:
+    - {method: run, args: [1, "a"], expect: "2a"}
+    - {method: run, args: [0, ""], expect: "1"}
+    - {method: run, args: [-3, "x"], expect: "-2x"}
+    - {name: "one generic class", source_contains: ["class Box<T>"], source_not_contains: ["class IntBox", "class StringBox"]}
+  hidden:
+    - {method: run, args: [10, "ten"], expect: "11ten"}
+    - {method: run, args: [99, "!"], expect: "100!"}
+    - {method: run, args: [5, "five"], expect: "6five"}
+    - {method: run, args: [0, "zero"], expect: "1zero"}
+    - {method: run, args: [-1, "neg"], expect: "0neg"}
+starter_compiles: false
+hints:
+  h1: "Make the field's type a type parameter T on the class: class Box<T>. Then get returns T and set takes T."
+  h2: "class Box<T> { private T value; Box(T value) {...} T get() {...} void set(T value) {...} }"
+ai_assisted: true

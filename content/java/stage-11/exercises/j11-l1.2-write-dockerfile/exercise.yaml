@@ -1,0 +1,33 @@
+id: j11-l1.2-write-dockerfile
+type: write
+title: "Reading a multi-stage Dockerfile"
+lesson: j11-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J11.02]
+evidence: [IMPL]
+misconceptions: [MC206]
+difficulty: 3
+prompt: |
+  In a multi-stage Dockerfile each `FROM` starts a new stage and the **last** stage is the image you get; `COPY --from=NAME` brings files from an earlier stage. Write two methods over the lines of a Dockerfile: `copyFromTargets(lines)` returns, in order, the stage names or numbers after `COPY --from=`; `finalBaseImage(lines)` returns the image named by the last `FROM` (the first word after `FROM`, so `FROM x AS y` gives `x`). Instruction names are case-insensitive and may be indented.
+entry:
+  methods:
+    - {name: copyFromTargets, params: [{name: lines, type: "List<String>"}], returns: "List<String>"}
+    - {name: finalBaseImage, params: [{name: lines, type: "List<String>"}], returns: "String"}
+tests:
+  visible:
+    - {name: "the course's Dockerfile", method: copyFromTargets, args: [["FROM eclipse-temurin:25-jdk-alpine AS build", "WORKDIR /src", "COPY Hello.java .", "RUN javac -d /out Hello.java", "", "FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY --from=build /out /app", "CMD [\"java\", \"-cp\", \"/app\", \"Hello\"]"]], expect: ["build"]}
+    - {name: "its final image", method: finalBaseImage, args: [["FROM eclipse-temurin:25-jdk-alpine AS build", "WORKDIR /src", "COPY Hello.java .", "RUN javac -d /out Hello.java", "", "FROM eclipse-temurin:25-jre-alpine", "WORKDIR /app", "COPY --from=build /out /app", "CMD [\"java\", \"-cp\", \"/app\", \"Hello\"]"]], expect: "eclipse-temurin:25-jre-alpine"}
+    - {name: "a plain COPY", method: copyFromTargets, args: [["FROM a", "COPY x /x"]], expect: []}
+  hidden:
+    - {name: "one stage with a name", method: finalBaseImage, args: [["FROM a AS build", "RUN x"]], expect: "a"}
+    - {name: "lower case", method: finalBaseImage, args: [["from a", "from b AS second", "COPY --from=0 /x /y"]], expect: "b"}
+    - {name: "indented and lower case", method: copyFromTargets, args: [["FROM a", "FROM b", "  copy --from=0 /x /x", "COPY --from=a /y /y"]], expect: ["0", "a"]}
+    - {name: "empty file", method: copyFromTargets, args: [[]], expect: []}
+    - {name: "no FROM", method: finalBaseImage, args: [[]], expect: ""}
+    - {name: "another COPY flag", method: copyFromTargets, args: [["COPY --chown=1:1 x /x"]], expect: []}
+    - {name: "a comment is not an instruction", method: finalBaseImage, args: [["# FROM a", "FROM b"]], expect: "b"}
+hints:
+  h1: "Split each line into words; the instruction is the first word."
+  h2: "Which FROM decides what the final image is based on?"
+ai_assisted: true

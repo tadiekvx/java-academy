@@ -1,0 +1,30 @@
+id: j8-l1.2-write-pbkdf2
+type: write
+title: "A salted, slow hash"
+lesson: j8-l1.2
+role: ladder
+assesses: [o1]
+concepts: [J8.02]
+evidence: [IMPL]
+misconceptions: [MC179]
+difficulty: 3
+prompt: |
+  Write `pbkdf2Hex(password, saltHex, iterations)`: the PBKDF2 key, using `PBKDF2WithHmacSHA256` with a 256-bit result, as 64 lowercase hex characters. The salt arrives as hex text. (The checks use few iterations so they run fast; real systems use far more, and a library such as Spring Security's `PasswordEncoder` chooses and stores the parameters for you.)
+entry:
+  methods:
+    - {name: pbkdf2Hex, params: [{name: password, type: "String"}, {name: saltHex, type: "String"}, {name: iterations, type: "int"}], returns: "String"}
+tests:
+  visible:
+    - {name: "a normal password", method: pbkdf2Hex, args: ["correct horse", "000102030405060708090a0b0c0d0e0f", 1000], expect: "c914cc4f06cc6e8f46d157e3a1b5aa7abceebb17bb0444cd4c4ac16ca2ae9864"}
+    - {name: "the same password, another salt", method: pbkdf2Hex, args: ["correct horse", "ffeeddccbbaa99887766554433221100", 1000], expect: "42ed0c898639edce5ccdfed4de6862d45b0f8dd130444749f94f84176b210002"}
+    - {name: "an empty password", method: pbkdf2Hex, args: ["", "00", 1], expect: "5b85c829ba96b569522c97070171ad6717d1b8ad414007c75e1e764e5365d2f0"}
+  hidden:
+    - {name: "one iteration", method: pbkdf2Hex, args: ["password", "73616c74", 1], expect: "120fb6cffcf8b32c43e7225256c4f837a86548c92ccc35480805987cb70be17b"}
+    - {name: "two iterations", method: pbkdf2Hex, args: ["password", "73616c74", 2], expect: "ae4d0c95af6b46d32d0adff928f06dd02a303f8ef3c251dfd6e2d85a95474c43"}
+    - {name: "non-ASCII is UTF-8", method: pbkdf2Hex, args: ["pässwörd", "73616c74", 1000], expect: "cf2d684cc373233b60f2331556aa47cb35abe3ae19e7c461380769577b523a22"}
+    - {name: "a long passphrase", method: pbkdf2Hex, args: ["a much longer passphrase with spaces in it", "0102030405060708", 5000], expect: "8f971954acc0691a013d193e89100a8b37d33adb52febd96c04e268f62c9b7b1"}
+    - {name: "salt bytes above 0x7f", method: pbkdf2Hex, args: ["x", "00ff", 10], expect: "c618a9e39a6ce2680b389f506d536ed74d1fff77bddc544a13a5c9b4edaf8d13"}
+hints:
+  h1: "`SecretKeyFactory` with the `PBKDF2WithHmacSHA256` algorithm and a `PBEKeySpec`."
+  h2: "Convert each pair of hex characters to one byte for the salt."
+ai_assisted: true

@@ -1,0 +1,27 @@
+id: j1-l3.1-debug-join
+type: debug
+title: "The sum that isn't"
+lesson: j1-l3.1
+role: ladder
+assesses: [o2, o3]
+concepts: [J1.05]
+evidence: [DEBUG]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This program should ask for two whole numbers and print their sum. With `2` and `3` it should print `Sum: 5`, but it prints `Sum: 23`. Find and fix the bug.
+tests:
+  visible:
+    - {name: "2 and 3", stdin: "2\n3\n", stdout_contains: ["Sum: 5\n"]}
+    - {name: "10 and 5", stdin: "10\n5\n", stdout_contains: ["Sum: 15\n"]}
+    - {name: "zeros", stdin: "0\n0\n", stdout_contains: ["Sum: 0\n"]}
+  hidden:
+    - {name: "negative", stdin: "-4\n10\n", stdout_contains: ["Sum: 6\n"]}
+    - {name: "large", stdin: "1000\n2345\n", stdout_contains: ["Sum: 3345\n"]}
+    - {name: "both negative", stdin: "-3\n-3\n", stdout_contains: ["Sum: -6\n"]}
+    - {name: "one zero", stdin: "0\n7\n", stdout_contains: ["Sum: 7\n"]}
+    - {name: "big and small", stdin: "99\n1\n", stdout_contains: ["Sum: 100\n"]}
+hints:
+  h1: "What type are first and second? What does + do with that type?"
+  h2: "They're Strings, so + joins them. Convert both with Integer.parseInt, and put the addition in parentheses when you print."
+ai_assisted: true

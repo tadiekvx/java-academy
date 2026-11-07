@@ -1,0 +1,32 @@
+id: j4-l4.2-explain-safe
+type: explain
+title: "Refactor safely"
+lesson: j4-l4.2
+role: ladder
+assesses: [o1]
+concepts: [J4.08]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  A colleague wants to "clean up" a 300-line method that has no tests, and says: "I'll just rewrite it and see if it still works." (a) What is refactoring, and why is that plan risky? (b) What should happen first? (c) Describe the cycle you would follow for each small change. (d) Why should a bug fix not be mixed into the same step as a refactor?
+rubric:
+  criteria: |
+    A full answer says refactoring changes structure without changing behaviour, and rewriting an untested method risks changing behaviour without noticing; tests that pin down the current behaviour (including edge cases) should be written first; the cycle is make one small change, run the tests, and undo or fix if they fail, committing often; and mixing a bug fix with a refactor means that when a test fails you can't tell which change caused it.
+  levels:
+    - score: 2
+      descriptor: "Defines refactoring as changing structure but not behaviour, says rewriting without tests risks silent behaviour changes, says to write tests for current behaviour first, describes a small change then run tests then undo or fix, and explains mixing changes hides which one broke something."
+      samples:
+        - "Refactoring is improving the structure of code without changing what it does. Rewriting an untested method is risky because I'd have no way to know if the behaviour changed. First I'd write tests that capture what it does now, including edge cases. Then for each small change I'd run the tests, and undo or fix if they fail, committing as I go. A bug fix shouldn't be mixed in, because if something breaks I wouldn't know whether the refactor or the fix caused it."
+        - "(a) Changing structure not behaviour; without tests I can't tell if behaviour changed. (b) Write tests for the current behaviour. (c) Small change, run tests, undo if red. (d) Mixing makes it impossible to tell which change broke it."
+    - score: 1
+      descriptor: "Answers some parts, for example says to write tests first without the cycle or the reason for separating fixes."
+      samples:
+        - "Write tests first."
+        - "Change a bit at a time."
+    - score: 0
+      descriptor: "Incorrect, for example says rewriting is the safest way, or that tests slow refactoring down so should be skipped."
+      samples:
+        - "Just rewrite it."
+        - "Tests aren't needed for refactoring."
+ai_assisted: true

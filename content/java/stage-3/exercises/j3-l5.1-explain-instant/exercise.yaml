@@ -1,0 +1,32 @@
+id: j3-l5.1-explain-instant
+type: explain
+title: "Which type?"
+lesson: j3-l5.1
+role: ladder
+assesses: [o1]
+concepts: [J3.10]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  For each, say which of `LocalDate`, `LocalDateTime`, `Instant` and `ZonedDateTime` fits best, and why: (a) the moment an order was placed, stored in a database used by servers in several countries; (b) a customer's date of birth; (c) showing that order time to a customer in Tokyo; (d) "the meeting is at 9:30 on 14 May", before anyone has said whose time-zone it's in.
+rubric:
+  criteria: |
+    A full answer chooses Instant for the order moment (a single exact point that's the same everywhere), LocalDate for the date of birth (a calendar date with no time or zone), ZonedDateTime for showing it in Tokyo (the instant converted to the customer's zone), and LocalDateTime for the unzoned meeting time.
+  levels:
+    - score: 2
+      descriptor: "Gives Instant for (a), LocalDate for (b), ZonedDateTime for (c) and LocalDateTime for (d), each with a correct reason about moments, zones and calendar dates."
+      samples:
+        - "(a) Instant: it's one exact moment, the same in every country. (b) LocalDate: a calendar date needs no time or zone. (c) ZonedDateTime, converting the instant to Asia/Tokyo for display. (d) LocalDateTime: it has a date and time but no zone yet."
+        - "Instant for the order time, LocalDate for the birth date, ZonedDateTime to show it in Tokyo, and LocalDateTime for the meeting before a zone is decided."
+    - score: 1
+      descriptor: "Gets two or three right, or gives choices without reasons."
+      samples:
+        - "(a) Instant (b) LocalDate (c) LocalDateTime (d) ZonedDateTime"
+        - "Use ZonedDateTime for everything."
+    - score: 0
+      descriptor: "Incorrect, for example uses LocalDateTime for the order moment or says a time-zone isn't needed."
+      samples:
+        - "LocalDateTime for all of them."
+        - "Zones are not important."
+ai_assisted: true

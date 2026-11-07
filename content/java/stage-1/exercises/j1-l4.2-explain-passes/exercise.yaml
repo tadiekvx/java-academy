@@ -1,0 +1,40 @@
+id: j1-l4.2-explain-passes
+type: explain
+title: "Checks and passes"
+lesson: j1-l4.2
+role: ladder
+assesses: [o3]
+concepts: [J1.07]
+evidence: [EXPL]
+misconceptions: []
+difficulty: 2
+prompt: |
+  This loop prints `Hi` three times. How many times is the condition `i < 3` checked? Explain how you know.
+
+  ```java
+  int i = 0;
+  while (i < 3) {
+      IO.println("Hi");
+      i++;
+  }
+  ```
+rubric:
+  criteria: |
+    A full answer says the condition is checked 4 times: once before each of the 3 passes (i = 0, 1, 2, all true) and once more when i is 3, which is false and ends the loop.
+  levels:
+    - score: 2
+      descriptor: "Says 4 checks, and explains that there is one check before each of the three passes plus a final false check when i is 3."
+      samples:
+        - "Four times. It's checked when i is 0, 1 and 2, which are true so it prints, and then when i is 3, which is false so the loop stops."
+        - "4. There's always one more check than passes, because the last check is the one that fails and ends the loop."
+    - score: 1
+      descriptor: "Gets the number right without a clear reason, or explains the final check but miscounts."
+      samples:
+        - "4 times."
+        - "It checks once for each Hi and then once more, so 3."
+    - score: 0
+      descriptor: "Says 3 (one check per pass) with no extra check, or another incorrect answer."
+      samples:
+        - "3 times, once for each Hi."
+        - "Only once, at the start."
+ai_assisted: true

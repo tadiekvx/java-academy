@@ -1,0 +1,33 @@
+id: j9-l1.3-write-lock
+type: write
+title: "A counter behind a lock"
+lesson: j9-l1.3
+role: ladder
+assesses: [o1]
+concepts: [J9.03]
+evidence: [IMPL]
+misconceptions: [MC189]
+difficulty: 3
+prompt: |
+  Write `countWithLock(threads, perThread)`: start `threads` threads that each add one to a shared counter `perThread` times, protected with a `synchronized` block on one shared lock object. Wait for all threads and return the counter. The answer is always `threads * perThread`.
+entry:
+  methods:
+    - {name: countWithLock, params: [{name: threads, type: "int"}, {name: perThread, type: "int"}], returns: "long"}
+tests:
+  visible:
+    - {name: "two threads", method: countWithLock, args: [2, 1000], expect: 2000}
+    - {name: "four threads", method: countWithLock, args: [4, 50000], expect: 200000}
+    - {name: "one thread", method: countWithLock, args: [1, 10], expect: 10}
+    - {name: "uses a synchronized block", source_contains: ["synchronized ("]}
+    - {name: "does not create the lock inside the block", source_not_contains: ["synchronized (new "]}
+  hidden:
+    - {name: "eight threads", method: countWithLock, args: [8, 25000], expect: 200000}
+    - {name: "many increments", method: countWithLock, args: [4, 200000], expect: 800000}
+    - {name: "no threads", method: countWithLock, args: [0, 100], expect: 0}
+    - {name: "no work", method: countWithLock, args: [3, 0], expect: 0}
+    - {name: "six threads", method: countWithLock, args: [6, 30000], expect: 180000}
+    - {name: "two busy threads", method: countWithLock, args: [2, 150000], expect: 300000}
+hints:
+  h1: "All threads must lock the **same** object."
+  h2: "Put only the increment inside the block."
+ai_assisted: true

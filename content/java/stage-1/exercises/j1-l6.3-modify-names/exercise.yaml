@@ -1,0 +1,30 @@
+id: j1-l6.3-modify-names
+type: modify
+title: "Skip the blanks"
+lesson: j1-l6.3
+role: ladder
+assesses: [o1, o2]
+concepts: [J1.11]
+evidence: [MOD]
+misconceptions: []
+difficulty: 2
+prompt: |
+  `shout` returns a new list with every name in capitals. Some of the names are blank (empty, or just spaces); change `shout` so those are **left out** of the result. Keep the order of the rest.
+entry:
+  methods:
+    - {name: shout, params: [{name: names, type: "ArrayList<String>"}], returns: "ArrayList<String>"}
+tests:
+  visible:
+    - {args: [["ada", "", "grace"]], expect: ["ADA", "GRACE"]}
+    - {args: [[]], expect: []}
+    - {args: [["alan"]], expect: ["ALAN"]}
+  hidden:
+    - {name: "spaces only", args: [[" ", "x"]], expect: ["X"]}
+    - {name: "all blank", args: [["", "", ""]], expect: []}
+    - {name: "none blank", args: [["a", "b", "c"]], expect: ["A", "B", "C"]}
+    - {name: "padded name", args: [["  padded  ", "ok"]], expect: ["  PADDED  ", "OK"]}
+    - {name: "mixed", args: [["Zed", " ", "Amy", ""]], expect: ["ZED", "AMY"]}
+hints:
+  h1: "Which names should be added, and which skipped? What does strip() do to a name made of spaces?"
+  h2: "Only add when !name.strip().isEmpty()."
+ai_assisted: true
