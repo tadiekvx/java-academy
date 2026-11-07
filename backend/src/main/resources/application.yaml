@@ -2,9 +2,11 @@ spring:
   application:
     name: academy
   # The project-local PostgreSQL started by scripts/db.sh (trusted local connections, no password).
+  # Hosted: set DB_HOST, DB_PORT, DB_NAME, DB_USER and DB_PASSWORD.
   datasource:
-    url: jdbc:postgresql://localhost:5433/academy
-    username: academy
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:academy}
+    username: ${DB_USER:academy}
+    password: ${DB_PASSWORD:}
   # The built frontend (frontend/dist, from `npm run build`) is served directly from disk.
   web:
     resources:
@@ -22,3 +24,12 @@ academy:
     model: claude-opus-5-5
     # Model calls per learner per day: a cost guard.
     daily-request-limit: 60
+
+server:
+  # Render terminates TLS at its proxy; trust X-Forwarded-* so redirects and cookies see https.
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        same-site: lax

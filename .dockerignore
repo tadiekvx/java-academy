@@ -1,0 +1,7 @@
+**/node_modules
+**/target
+frontend/dist
+.git
+.data
+tailadmin-free-tailwind-dashboard-template-main
+scripts/dev-accounts.local

@@ -1,0 +1,34 @@
+# Render Blueprint: one web service (Docker) plus a managed PostgreSQL database.
+services:
+  - type: web
+    name: java-academy
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/auth/me
+    envVars:
+      - key: DB_HOST
+        fromDatabase: { name: academy-db, property: host }
+      - key: DB_PORT
+        fromDatabase: { name: academy-db, property: port }
+      - key: DB_NAME
+        fromDatabase: { name: academy-db, property: database }
+      - key: DB_USER
+        fromDatabase: { name: academy-db, property: user }
+      - key: DB_PASSWORD
+        fromDatabase: { name: academy-db, property: password }
+      - key: ACADEMY_REGISTRATION_OPEN
+        value: "false"
+      - key: ACADEMY_OWNER_EMAIL
+        sync: false
+      - key: ACADEMY_OWNER_PASSWORD
+        sync: false
+      - key: ACADEMY_OWNER_DISPLAY_NAME
+        value: Owner
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+databases:
+  - name: academy-db
+    plan: basic-256mb
+    databaseName: academy
+    user: academy

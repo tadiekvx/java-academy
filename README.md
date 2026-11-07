@@ -95,3 +95,11 @@ API: content (`/api/curriculum`, `/api/lessons/{id}`, `/api/exercises/{id}`) is 
 6. **Platform hardening** before any public launch (sandboxed runner, password reset, rate limiting, persistent sessions).
 7. **Stage 6** (databases: 13 lessons, 34 exercises, 2 projects, JDBC against in-memory H2) and **Stage 7** (Spring and REST: 12 lessons, 30 exercises, 2 projects, plain-Java models plus reading this platform's own code) are written and validated. **Stage 8** (security: 9 lessons, 26 exercises, 1 audit project) and **Stage 9** (concurrency and the JVM: 11 lessons, 27 exercises, 1 project) are written and validated too. **Stages 10 to 12** (distributed systems and architecture, containers and cloud with real Docker output, production engineering and a capstone) are written and validated as well. **All twelve stages now exist as AI drafts; none has been reviewed by a person or tried by a learner.** The build is scoped for a single learner.
 8. Beginner walk-throughs before expanding.
+
+## Hosting on Render (single learner)
+
+`render.yaml` is a Blueprint: one Docker web service plus a managed PostgreSQL database.
+
+1. In the Render dashboard choose **New > Blueprint** and connect this repository.
+2. When prompted, set `ACADEMY_OWNER_EMAIL` and `ACADEMY_OWNER_PASSWORD` (at least 10 characters). The server creates that account on first start. Optionally set `ANTHROPIC_API_KEY` to enable the mentor.
+3. Public registration is closed (`ACADEMY_REGISTRATION_OPEN=false`) because the runner executes submitted Java on the server and is not a sandbox. Do not open registration on a public host.

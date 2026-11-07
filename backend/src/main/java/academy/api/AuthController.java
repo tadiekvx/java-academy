@@ -1,6 +1,9 @@
 package academy.api;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,9 +31,12 @@ class AuthController {
     private final LearnerRepository learners;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
+    private final boolean registrationOpen;
 
     AuthController(AccountService accounts, LearnerRepository learners, AuthenticationManager authenticationManager,
-            SecurityContextRepository securityContextRepository) {
+            SecurityContextRepository securityContextRepository,
+            @Value("${academy.registration-open:true}") boolean registrationOpen) {
+        this.registrationOpen = registrationOpen;
         this.accounts = accounts;
         this.learners = learners;
         this.authenticationManager = authenticationManager;
@@ -66,6 +72,9 @@ class AuthController {
 
     @PostMapping("/auth/register")
     Me register(@RequestBody RegisterRequest body, HttpServletRequest request, HttpServletResponse response) {
+        if (!registrationOpen) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Registration is closed on this server.");
+        }
         accounts.register(body.email(), body.displayName(), body.password());
         return logIn(body.email(), body.password(), request, response);
     }
