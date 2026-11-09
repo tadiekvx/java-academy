@@ -21,6 +21,7 @@ import academy.content.Content;
 import academy.content.ContentRepository;
 import academy.content.Evidence;
 import academy.content.Exercise;
+import academy.content.Lesson;
 import academy.content.ExerciseType;
 import academy.progress.MasteryCalculator.ConceptMastery;
 import tools.jackson.databind.json.JsonMapper;
@@ -31,6 +32,10 @@ public class ProgressService {
 
     /** The highest assistance level that still counts as independent work (H1, a conceptual nudge). */
     static final int MAX_INDEPENDENT_ASSISTANCE = 1;
+
+    /** The exercises a lesson embeds: {@code ::exercise{id=...}} on a line of its own. */
+    private static final java.util.regex.Pattern EXERCISE_DIRECTIVE =
+            java.util.regex.Pattern.compile("^::exercise\\{id=([\\w.-]+)\\}\\s*$", java.util.regex.Pattern.MULTILINE);
 
     private final ContentRepository contentRepository;
     private final AttemptRepository attempts;
@@ -57,7 +62,11 @@ public class ProgressService {
     public long recordAttempt(long learnerId, Exercise exercise, Submission submission, GradeReport report,
             AttemptContext context, int assistanceLevel, boolean solutionViewed) {
         return attempts.record(learnerId, exercise.id(), clock.instant(), context, report, assistanceLevel, solutionViewed,
-                json.writeValueAsString(submission));
+                json.writeValueAsString(submission), json.writeValueAsString(report.forLearner()));
+    }
+
+    public void setLessonCompleted(long learnerId, String lessonId, boolean completed) {
+        visits.setCompleted(learnerId, lessonId, clock.instant(), completed);
     }
 
     /** The learner's attempts, oldest first. */
@@ -118,7 +127,14 @@ public class ProgressService {
 
     public record ProgressView(List<ConceptView> concepts, List<DueCheck> dueChecks, LessonRef recommended) {}
 
-    public record ExerciseStatus(int attempts, boolean passed, boolean passedIndependently, boolean pendingReview) {}
+    /** What the learner last did on an exercise; {@code report} is null for older attempts and for explanations. */
+    public record LastAttempt(Instant at, Submission submission, GradeReport report) {}
+
+    public record ExerciseStatus(int attempts, boolean passed, boolean passedIndependently, boolean pendingReview,
+            LastAttempt last) {}
+
+    /** Where a learner is in a lesson: opened, tried some exercises, or finished. */
+    public record LessonProgress(boolean visited, int exercises, int attempted, int passed, boolean completed) {}
 
     public ProgressView progress(long learnerId) {
         Content content = contentRepository.content();
@@ -140,6 +156,7 @@ public class ProgressService {
         Map<String, List<Attempt>> byExercise = attempts.forLearner(learnerId).stream()
                 .collect(Collectors.groupingBy(Attempt::exerciseId));
         Map<Long, Integer> scores = explanationScores.forLearner(learnerId);
+        Map<String, AttemptRepository.Saved> latest = attempts.latestByExercise(learnerId);
         Map<String, ExerciseStatus> statuses = new LinkedHashMap<>();
         for (Exercise exercise : content.exercises().values()) {
             if (!lessonId.equals(exercise.spec().lesson())) {
@@ -152,9 +169,49 @@ public class ProgressService {
             }
             statuses.put(exercise.id(), new ExerciseStatus(history.size(),
                     history.stream().anyMatch(a -> passed(a, scores)), independent,
-                    history.stream().anyMatch(a -> awaitingReview(a, scores))));
+                    history.stream().anyMatch(a -> awaitingReview(a, scores)),
+                    lastAttempt(exercise, latest.get(exercise.id()))));
         }
         return statuses;
+    }
+
+    private LastAttempt lastAttempt(Exercise exercise, AttemptRepository.Saved saved) {
+        if (saved == null) {
+            return null;
+        }
+        try {
+            Submission submission = json.readValue(saved.submissionJson(), Submission.class);
+            // An explanation's stored report only says "pending"; its real score is shown from the status.
+            GradeReport report = saved.reportJson() == null || exercise.type() == ExerciseType.EXPLAIN ? null
+                    : json.readValue(saved.reportJson(), GradeReport.class);
+            return new LastAttempt(saved.submittedAt(), submission, report);
+        } catch (RuntimeException e) {
+            return null; // Unreadable old data: the learner just starts that exercise fresh.
+        }
+    }
+
+    /** Progress through every lesson the learner has touched, keyed by lesson id. */
+    public Map<String, LessonProgress> lessonProgress(long learnerId) {
+        Content content = contentRepository.content();
+        Set<String> visited = visits.visitedLessons(learnerId);
+        Set<String> marked = visits.markedComplete(learnerId);
+        Map<Long, Integer> scores = explanationScores.forLearner(learnerId);
+        Map<String, List<Attempt>> byExercise = attempts.forLearner(learnerId).stream()
+                .collect(Collectors.groupingBy(Attempt::exerciseId));
+        Map<String, LessonProgress> result = new LinkedHashMap<>();
+        for (Lesson lesson : content.lessons().values()) {
+            List<String> exerciseIds = EXERCISE_DIRECTIVE.matcher(lesson.body()).results().map(m -> m.group(1)).distinct()
+                    .filter(id -> content.exercise(id).isPresent()).toList();
+            int attempted = (int) exerciseIds.stream().filter(id -> byExercise.containsKey(id)).count();
+            int passed = (int) exerciseIds.stream()
+                    .filter(id -> byExercise.getOrDefault(id, List.of()).stream().anyMatch(a -> passed(a, scores))).count();
+            boolean done = marked.contains(lesson.id()) || (!exerciseIds.isEmpty() && passed == exerciseIds.size());
+            boolean seen = visited.contains(lesson.id());
+            if (seen || attempted > 0 || done) {
+                result.put(lesson.id(), new LessonProgress(seen, exerciseIds.size(), attempted, passed, done));
+            }
+        }
+        return result;
     }
 
     /** Per-milestone status for one project: attempts so far, and whether it has been passed on one's own. */
@@ -168,7 +225,7 @@ public class ProgressService {
             boolean passed = history.stream().anyMatch(Attempt::passed);
             boolean independent = history.stream().anyMatch(a -> a.passed()
                     && a.assistanceLevel() <= MAX_INDEPENDENT_ASSISTANCE && !a.solutionViewed());
-            statuses.put(milestone.id(), new ExerciseStatus(history.size(), passed, independent, false));
+            statuses.put(milestone.id(), new ExerciseStatus(history.size(), passed, independent, false, null));
         }
         return statuses;
     }

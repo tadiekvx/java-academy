@@ -156,6 +156,16 @@ export interface ExerciseStatus {
   passed: boolean;
   passedIndependently: boolean;
   pendingReview: boolean;
+  /** The learner's most recent practice attempt, so their work can be put back. */
+  last: { at: string; submission: Submission; report: GradeReport | null } | null;
+}
+
+export interface LessonProgress {
+  visited: boolean;
+  exercises: number;
+  attempted: number;
+  passed: number;
+  completed: boolean;
 }
 
 export type AttemptContext = "practice" | "retrieval";

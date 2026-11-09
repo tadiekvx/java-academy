@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useAuth } from "../../auth";
-import type { ExerciseView } from "../../types";
+import type { ExerciseStatus, ExerciseView } from "../../types";
 import { JavaCode } from "../JavaCode";
 import { LoginPrompt } from "../LoginPrompt";
 import { useAttempt } from "./useAttempt";
 
 /** Learner commits to a prediction; only then is the real output revealed, line by line. */
-export function PredictExercise({ exercise, onRecorded }: { exercise: ExerciseView; onRecorded?: () => void }) {
+export function PredictExercise({ exercise, last, onRecorded }: { exercise: ExerciseView; last?: ExerciseStatus["last"]; onRecorded?: () => void }) {
   const { learner } = useAuth();
-  const [prediction, setPrediction] = useState("");
-  const attempt = useAttempt(exercise.id, "practice", onRecorded);
+  const [prediction, setPrediction] = useState(last?.submission.prediction ?? "");
+  const attempt = useAttempt(exercise.id, "practice", onRecorded, last?.report ?? null);
   const report = attempt.report;
 
   return (

@@ -99,6 +99,32 @@ class LearnerJourneyTest {
     }
 
     @Test
+    void remembersWhatTheLearnerSubmittedAndTracksLessonProgress() throws Exception {
+        ApiClient client = new ApiClient(port).registerNewLearner();
+
+        assertThat(client.get("/api/progress/lessons").body()).isEqualTo("{}");
+
+        client.post("/api/lessons/j1-l2.3/visit", "");
+        assertThat(client.get("/api/progress/lessons").body())
+                .contains("\"j1-l2.3\":{\"visited\":true").contains("\"attempted\":0").contains("\"completed\":false");
+
+        client.post("/api/exercises/j1-l2.3-predict-precedence/attempts", "{\"prediction\":\"14\\n20\\n2\\n3\"}");
+        client.post("/api/exercises/j1-l2.3-write-average/attempts", CORRECT_AVERAGE);
+
+        // The last input comes back with the result the learner was shown.
+        String lesson = client.get("/api/progress/lessons/j1-l2.3").body();
+        assertThat(lesson).contains("\"prediction\":\"14\\n20\\n2\\n3\"").contains("\"actualOutput\":");
+        assertThat(lesson).contains("double average(int a, int b)");
+
+        assertThat(client.get("/api/progress/lessons").body()).contains("\"attempted\":2");
+
+        assertThat(client.post("/api/lessons/j1-l2.3/complete", "").statusCode()).isEqualTo(200);
+        assertThat(client.get("/api/progress/lessons").body()).contains("\"completed\":true");
+        assertThat(client.delete("/api/lessons/j1-l2.3/complete").statusCode()).isEqualTo(200);
+        assertThat(client.get("/api/progress/lessons").body()).contains("\"completed\":false");
+    }
+
+    @Test
     void onlyTheFirstPredictionCountsAsIndependent() throws Exception {
         ApiClient client = new ApiClient(port).registerNewLearner();
         String exercise = "/api/exercises/j1-l2.3-predict-precedence/attempts";

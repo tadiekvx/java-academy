@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router";
-import { CircleCheck, Clock, Eye, GraduationCap, Sparkles } from "lucide-react";
+import { CircleCheck, CircleDot, Clock, GraduationCap, Sparkles } from "lucide-react";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import { ModuleIcon, moduleHue } from "../look";
-import type { CurriculumView, LessonSummary } from "../types";
+import type { CurriculumView, LessonProgress, LessonSummary } from "../types";
 
 export function CurriculumPage() {
   const { learner } = useAuth();
   const location = useLocation();
   const [curriculum, setCurriculum] = useState<CurriculumView | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<Record<string, LessonProgress>>({});
+
+  useEffect(() => {
+    if (learner) {
+      api.lessonsProgress().then(setProgress).catch(() => setProgress({}));
+    } else {
+      setProgress({});
+    }
+  }, [learner]);
 
   useEffect(() => {
     document.title = learner ? "All lessons · Java Engineering Academy" : "Java Engineering Academy";
@@ -49,7 +58,16 @@ export function CurriculumPage() {
       ) : (
         <header className="page-header">
           <h1>All lessons</h1>
-          <p>Work through them in order: each one builds on the ones before.</p>
+          <p>
+            Work through them in order: each one builds on the ones before.
+            {learner && (
+              <>
+                {" "}
+                You've completed {Object.values(progress).filter((p) => p.completed).length} of{" "}
+                {curriculum.stages.flatMap((s) => s.modules).flatMap((m) => m.lessons).filter((l) => l.available).length}.
+              </>
+            )}
+          </p>
         </header>
       )}
 
@@ -83,7 +101,7 @@ export function CurriculumPage() {
                   </p>
                   <ol className="lesson-list">
                     {module.lessons.map((lesson, i) => (
-                      <LessonRow key={lesson.id} lesson={lesson} number={`${module.number}.${i + 1}`} />
+                      <LessonRow key={lesson.id} lesson={lesson} number={`${module.number}.${i + 1}`} progress={learner ? progress[lesson.id] : undefined} />
                     ))}
                   </ol>
                 </article>
@@ -96,21 +114,12 @@ export function CurriculumPage() {
   );
 }
 
-function LessonRow({ lesson, number }: { lesson: LessonSummary; number: string }) {
+function LessonRow({ lesson, number, progress }: { lesson: LessonSummary; number: string; progress?: LessonProgress }) {
   return (
     <li className={lesson.available ? "lesson-row available" : "lesson-row"}>
       <span className="lesson-number">{number}</span>
       {lesson.available ? <Link to={`/lessons/${lesson.id}`}>{lesson.title}</Link> : <span className="muted">{lesson.title}</span>}
-      {lesson.status === "PUBLISHED" && lesson.available && (
-        <span className="chip hue-green">
-          <CircleCheck size={13} aria-hidden="true" /> Ready
-        </span>
-      )}
-      {lesson.status === "IN_REVIEW" && (
-        <span className="chip hue-purple">
-          <Eye size={13} aria-hidden="true" /> In review
-        </span>
-      )}
+      {lesson.available && <ProgressChip progress={progress} />}
       {!lesson.available && (
         <span className="chip hue-gray">
           <Clock size={13} aria-hidden="true" /> Coming soon
@@ -118,4 +127,25 @@ function LessonRow({ lesson, number }: { lesson: LessonSummary; number: string }
       )}
     </li>
   );
+}
+
+function ProgressChip({ progress }: { progress?: LessonProgress }) {
+  if (progress?.completed) {
+    return (
+      <span className="chip hue-green">
+        <CircleCheck size={13} aria-hidden="true" /> Completed
+      </span>
+    );
+  }
+  if (progress && progress.attempted > 0) {
+    return (
+      <span className="chip hue-orange">
+        <CircleDot size={13} aria-hidden="true" /> {progress.passed} of {progress.exercises} done
+      </span>
+    );
+  }
+  if (progress?.visited) {
+    return <span className="chip hue-blue">Viewed</span>;
+  }
+  return null;
 }

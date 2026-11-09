@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
-import { AlertTriangle, Eye, Target, Timer } from "lucide-react";
+import { AlertTriangle, CircleCheck, Target, Timer } from "lucide-react";
 import { api, NotFoundError } from "../api";
 import { useAuth } from "../auth";
 import { Exercise } from "../components/Exercise";
 import { Markdown } from "../components/Markdown";
 import { Resources } from "../components/Resources";
 import { parseSegments } from "../lesson/segments";
-import type { ExerciseStatus, LessonView } from "../types";
+import type { ExerciseStatus, LessonProgress, LessonView } from "../types";
 
 export function LessonPage() {
   const { id = "" } = useParams();
@@ -15,26 +15,44 @@ export function LessonPage() {
   const [error, setError] = useState<"missing" | string | null>(null);
   const { learner } = useAuth();
   const [statuses, setStatuses] = useState<Record<string, ExerciseStatus>>({});
+  // Exercises are only drawn once saved work is known, so they start from what the learner left.
+  const [statusesLoaded, setStatusesLoaded] = useState(false);
+  const [progress, setProgress] = useState<LessonProgress | null>(null);
 
   const refreshStatuses = useCallback(() => {
     if (learner) {
       api
         .lessonProgress(id)
         .then(setStatuses)
-        .catch(() => setStatuses({}));
+        .catch(() => setStatuses({}))
+        .finally(() => setStatusesLoaded(true));
+      api
+        .lessonsProgress()
+        .then((all) => setProgress(all[id] ?? null))
+        .catch(() => setProgress(null));
     }
   }, [id, learner]);
 
+  const toggleComplete = async () => {
+    await (progress?.completed ? api.reopenLesson(id) : api.completeLesson(id));
+    refreshStatuses();
+  };
+
   useEffect(() => {
     if (learner && lesson) {
-      api.visitLesson(lesson.id).catch(() => undefined);
-      refreshStatuses();
+      api
+        .visitLesson(lesson.id)
+        .catch(() => undefined)
+        .finally(refreshStatuses);
     }
   }, [learner, lesson, refreshStatuses]);
 
   useEffect(() => {
     setLesson(null);
     setError(null);
+    setStatuses({});
+    setStatusesLoaded(false);
+    setProgress(null);
     api
       .lesson(id)
       .then((l) => {
@@ -77,11 +95,6 @@ export function LessonPage() {
           <span className="chip hue-teal">
             <Timer size={13} aria-hidden="true" /> About {lesson.estimatedMinutes} minutes
           </span>
-          {lesson.status === "IN_REVIEW" && (
-            <span className="chip hue-purple">
-              <Eye size={13} aria-hidden="true" /> In review: not yet approved for learners
-            </span>
-          )}
         </div>
         <h1>{lesson.title}</h1>
         <section className="objectives" aria-labelledby="objectives-heading">
@@ -96,7 +109,7 @@ export function LessonPage() {
         </section>
       </header>
       <div className="lesson-body">
-        {segments.map((segment, i) => {
+        {learner !== undefined && (learner === null || statusesLoaded) && segments.map((segment, i) => {
           switch (segment.kind) {
             case "markdown":
               return <Markdown key={i} text={segment.text} />;
@@ -123,6 +136,28 @@ export function LessonPage() {
           }
         })}
       </div>
+      {learner && statusesLoaded && (
+        <section className="lesson-complete card" aria-label="Lesson progress">
+          <p style={{ margin: 0 }}>
+            {progress?.completed ? (
+              <>
+                <CircleCheck size={16} aria-hidden="true" /> You've completed this lesson.
+              </>
+            ) : (
+              <>
+                {progress ? `${progress.passed} of ${progress.exercises} exercises done.` : ""} Finished with this lesson?
+              </>
+            )}
+          </p>
+          <div className="button-row">
+            {progress?.completed && progress.exercises > 0 && progress.passed === progress.exercises ? null : (
+              <button type="button" className={progress?.completed ? "button subtle" : "button primary"} onClick={toggleComplete}>
+                {progress?.completed ? "Mark as not finished" : "Mark lesson complete"}
+              </button>
+            )}
+          </div>
+        </section>
+      )}
       <Resources resources={lesson.resources} />
     </article>
   );

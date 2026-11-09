@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api } from "../../api";
 import { useAuth } from "../../auth";
 import { clearDraft, loadDraft, saveDraft } from "../../storage";
-import type { Diagnostic, ExerciseView, ProgramRun } from "../../types";
+import type { Diagnostic, ExerciseStatus, ExerciseView, ProgramRun } from "../../types";
 import { CodeEditor } from "../CodeEditor";
 import { LoginPrompt } from "../LoginPrompt";
 import { MentorPanel } from "../MentorPanel";
@@ -16,15 +16,18 @@ interface Props {
   exercise: ExerciseView;
   /** "check" is a retrieval check: no saved drafts, and the first check against the tests is final. */
   mode?: "practice" | "check";
+  /** The learner's last recorded attempt, put back when no newer unsent draft is saved in this browser. */
+  last?: ExerciseStatus["last"];
   onRecorded?: () => void;
 }
 
 /** Write, debug and modify exercises: edit Main.java, run it, and check it against the tests. */
-export function CodeExercise({ exercise, mode = "practice", onRecorded }: Props) {
+export function CodeExercise({ exercise, mode = "practice", last, onRecorded }: Props) {
   const { learner } = useAuth();
   const isCheck = mode === "check";
   const starter = exercise.files[MAIN_FILE] ?? "";
-  const [source, setSource] = useState(() => (isCheck ? null : loadDraft(`draft:${exercise.id}`)) ?? starter);
+  const lastSource = isCheck ? undefined : last?.submission.files?.[MAIN_FILE];
+  const [source, setSource] = useState(() => (isCheck ? null : loadDraft(`draft:${exercise.id}`) ?? lastSource) ?? starter);
   const [run, setRun] = useState<ProgramRun | null>(null);
   const [stdin, setStdin] = useState("");
   const [running, setRunning] = useState(false);
@@ -33,7 +36,7 @@ export function CodeExercise({ exercise, mode = "practice", onRecorded }: Props)
   const attempt = useAttempt(exercise.id, isCheck ? "retrieval" : "practice", () => {
     setAttemptCount((n) => n + 1);
     onRecorded?.();
-  });
+  }, isCheck || source !== lastSource ? null : (last?.report ?? null));
   const checkFinished = isCheck && attempt.report !== null;
 
   const edit = (value: string) => {

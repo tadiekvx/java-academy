@@ -3,8 +3,8 @@ import { api } from "../../api";
 import type { AttemptContext, GradeReport, Submission } from "../../types";
 
 /** Submits attempts for one exercise and tracks the latest report. {@code onRecorded} runs after each recorded attempt. */
-export function useAttempt(exerciseId: string, context: AttemptContext = "practice", onRecorded?: () => void) {
-  const [report, setReport] = useState<GradeReport | null>(null);
+export function useAttempt(exerciseId: string, context: AttemptContext = "practice", onRecorded?: () => void, initialReport: GradeReport | null = null) {
+  const [report, setReport] = useState<GradeReport | null>(initialReport);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

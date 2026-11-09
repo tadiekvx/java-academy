@@ -101,7 +101,6 @@ export function ProjectPage() {
               <CircleCheck size={13} aria-hidden="true" /> {passed} of {project.milestones.length} milestones
             </span>
           )}
-          {project.status === "IN_REVIEW" && <span className="chip hue-purple">In review</span>}
         </div>
         <h1>{project.title}</h1>
         <p className="muted">{cat.blurb}</p>

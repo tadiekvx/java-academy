@@ -59,12 +59,12 @@ export function Exercise({ id, number, status, onRecorded }: Props) {
       <div className="exercise-prompt">
         <PlainMarkdown text={exercise.prompt} />
       </div>
-      {exercise.type === "PREDICT" && <PredictExercise exercise={exercise} onRecorded={recorded} />}
-      {exercise.type === "PARSONS" && <ParsonsExercise exercise={exercise} onRecorded={recorded} />}
+      {exercise.type === "PREDICT" && <PredictExercise exercise={exercise} last={status?.last} onRecorded={recorded} />}
+      {exercise.type === "PARSONS" && <ParsonsExercise exercise={exercise} last={status?.last} onRecorded={recorded} />}
       {(exercise.type === "WRITE" || exercise.type === "DEBUG" || exercise.type === "MODIFY") && (
-        <CodeExercise exercise={exercise} onRecorded={onRecorded} />
+        <CodeExercise exercise={exercise} last={status?.last} onRecorded={onRecorded} />
       )}
-      {exercise.type === "EXPLAIN" && <ExplainExercise exercise={exercise} onRecorded={recorded} />}
+      {exercise.type === "EXPLAIN" && <ExplainExercise exercise={exercise} last={status?.last} onRecorded={recorded} />}
       {learner && (exercise.type === "PREDICT" || exercise.type === "PARSONS" || exercise.type === "EXPLAIN") && (
         <MentorPanel exerciseId={exercise.id} attemptCount={attemptCount} />
       )}

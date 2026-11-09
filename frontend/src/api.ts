@@ -11,6 +11,7 @@ import type {
   MentorAsk,
   MentorState,
   ProgramRun,
+  LessonProgress,
   ProgressView,
   Submission,
 } from "./types";
@@ -37,7 +38,7 @@ async function csrfToken(): Promise<string> {
   return token ?? "";
 }
 
-async function request<T>(path: string, init?: { method: "POST"; body?: unknown }): Promise<T> {
+async function request<T>(path: string, init?: { method: "POST" | "DELETE"; body?: unknown }): Promise<T> {
   const headers: Record<string, string> = {};
   if (init) {
     headers["X-XSRF-TOKEN"] = await csrfToken();
@@ -110,6 +111,9 @@ export const api = {
   projectProgress: (id: string) =>
     request<Record<string, ExerciseStatus>>(`/api/progress/projects/${encodeURIComponent(id)}`),
 
+  lessonsProgress: () => request<Record<string, LessonProgress>>("/api/progress/lessons"),
+  completeLesson: (id: string) => request<void>(`/api/lessons/${encodeURIComponent(id)}/complete`, { method: "POST" }),
+  reopenLesson: (id: string) => request<void>(`/api/lessons/${encodeURIComponent(id)}/complete`, { method: "DELETE" }),
   progress: () => request<ProgressView>("/api/progress"),
   lessonProgress: (id: string) =>
     request<Record<string, ExerciseStatus>>(`/api/progress/lessons/${encodeURIComponent(id)}`),

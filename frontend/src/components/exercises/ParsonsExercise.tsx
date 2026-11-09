@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useAuth } from "../../auth";
-import type { ExerciseView } from "../../types";
+import type { ExerciseStatus, ExerciseView } from "../../types";
 import { LoginPrompt } from "../LoginPrompt";
 import { Results } from "../Results";
 import { useAttempt } from "./useAttempt";
 
 /** Build a program by moving blocks into order. Buttons (not drag-and-drop) keep it keyboard-accessible. */
-export function ParsonsExercise({ exercise, onRecorded }: { exercise: ExerciseView; onRecorded?: () => void }) {
+export function ParsonsExercise({ exercise, last, onRecorded }: { exercise: ExerciseView; last?: ExerciseStatus["last"]; onRecorded?: () => void }) {
   const { learner } = useAuth();
-  const [order, setOrder] = useState<number[]>([]);
-  const attempt = useAttempt(exercise.id, "practice", onRecorded);
+  const [order, setOrder] = useState<number[]>(last?.submission.order ?? []);
+  const attempt = useAttempt(exercise.id, "practice", onRecorded, last?.report ?? null);
   const text = new Map(exercise.blocks.map((b) => [b.index, b.text]));
   const available = exercise.blocks.filter((b) => !order.includes(b.index));
 

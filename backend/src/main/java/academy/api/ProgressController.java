@@ -3,6 +3,7 @@ package academy.api;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,23 @@ class ProgressController {
     Map<String, ProgressService.ExerciseStatus> lessonProgress(@PathVariable String id, Authentication authentication) {
         access.lesson(id);
         return progress.lessonStatus(CurrentLearner.require(authentication), id);
+    }
+
+    @GetMapping("/progress/lessons")
+    Map<String, ProgressService.LessonProgress> allLessonProgress(Authentication authentication) {
+        return progress.lessonProgress(CurrentLearner.require(authentication));
+    }
+
+    @PostMapping("/lessons/{id}/complete")
+    void complete(@PathVariable String id, Authentication authentication) {
+        access.lesson(id);
+        progress.setLessonCompleted(CurrentLearner.require(authentication), id, true);
+    }
+
+    @DeleteMapping("/lessons/{id}/complete")
+    void reopen(@PathVariable String id, Authentication authentication) {
+        access.lesson(id);
+        progress.setLessonCompleted(CurrentLearner.require(authentication), id, false);
     }
 
     @PostMapping("/lessons/{id}/visit")

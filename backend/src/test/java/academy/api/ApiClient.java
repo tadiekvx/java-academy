@@ -43,6 +43,11 @@ class ApiClient {
                 HttpResponse.BodyHandlers.ofString());
     }
 
+    HttpResponse<String> delete(String path) throws IOException, InterruptedException {
+        return http.send(HttpRequest.newBuilder(uri(path)).header("X-XSRF-TOKEN", csrfToken()).DELETE().build(),
+                HttpResponse.BodyHandlers.ofString());
+    }
+
     HttpResponse<String> postWithoutCsrf(String path, String json) throws IOException, InterruptedException {
         return http.send(HttpRequest.newBuilder(uri(path))
                         .header("Content-Type", "application/json")

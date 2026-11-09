@@ -34,4 +34,24 @@ class LessonVisitRepository {
                 .query(String.class)
                 .list());
     }
+
+    /** Lessons the learner has marked finished by hand. */
+    Set<String> markedComplete(long learnerId) {
+        return Set.copyOf(jdbc.sql("select lesson_id from lesson_visit where learner_id = :learnerId and completed_at is not null")
+                .param("learnerId", learnerId)
+                .query(String.class)
+                .list());
+    }
+
+    void setCompleted(long learnerId, String lessonId, Instant now, boolean completed) {
+        jdbc.sql("""
+                        insert into lesson_visit (learner_id, lesson_id, first_visited_at, completed_at)
+                        values (:learnerId, :lessonId, :now, :completedAt)
+                        on conflict (learner_id, lesson_id) do update set completed_at = excluded.completed_at""")
+                .param("learnerId", learnerId)
+                .param("lessonId", lessonId)
+                .param("now", OffsetDateTime.ofInstant(now, ZoneOffset.UTC))
+                .param("completedAt", completed ? OffsetDateTime.ofInstant(now, ZoneOffset.UTC) : null)
+                .update();
+    }
 }

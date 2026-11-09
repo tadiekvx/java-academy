@@ -2133,3 +2133,12 @@ textarea,
   border-radius: 14px;
   background: #fff;
 }
+
+.lesson-complete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}

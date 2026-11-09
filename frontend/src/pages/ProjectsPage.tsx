@@ -58,7 +58,6 @@ export function ProjectsPage() {
                       <Clock size={13} aria-hidden="true" /> About {p.estimatedHours} hours
                     </span>
                   )}{" "}
-                  {p.status === "IN_REVIEW" && <span className="chip hue-purple">In review</span>}
                 </p>
               </article>
             );
